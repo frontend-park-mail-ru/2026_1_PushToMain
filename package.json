@@ -1,0 +1,26 @@
+{
+  "name": "2026_1_pushtomain",
+  "version": "1.0.0",
+  "description": "Репозиторий команды PushToMain",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/frontend-park-mail-ru/2026_1_PushToMain.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/frontend-park-mail-ru/2026_1_PushToMain/issues"
+  },
+  "homepage": "https://github.com/frontend-park-mail-ru/2026_1_PushToMain#readme",
+  "dependencies": {
+    "express": "^5.2.1"
+  },
+  "devDependencies": {
+    "handlebars": "^4.7.8"
+  }
+}
