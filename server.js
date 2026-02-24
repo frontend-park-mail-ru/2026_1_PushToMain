@@ -7,7 +7,7 @@ const app = express();
 app.use('/public', express.static("public"));
 app.use('/src', express.static("src"));
 
-app.get("/:any", (req, res) => {
+app.get("/{:any}", (req, res) => {
     res.sendFile(__dirname + "/public/index.html");
 });
 

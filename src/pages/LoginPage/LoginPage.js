@@ -25,7 +25,7 @@ export class LoginPage extends BaseComponent {
         const button_reg = new Button().render({
             title: 'Зарегистрироваться',
             onClick: () => {
-                window.app.handleRoute(history.pushState({}, null, '/register'));
+                window.app.handleRoute('/register');
             }
 
         });
@@ -33,7 +33,7 @@ export class LoginPage extends BaseComponent {
         const button_login = new Button().render({
             title: 'Войти',
             onClick: () => {
-                window.app.handleRoute(history.pushState({}, null, '/login'));
+                window.app.handleRoute('/login');
             }
         })
 
