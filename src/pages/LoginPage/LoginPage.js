@@ -1,7 +1,5 @@
 import { BaseComponent } from "../../components/BaseComponent.js";
 import { Button } from "../../components/Button/Button.js";
-import { RegPage } from "../RegPage/RegPage.js";
-
 
 export class LoginPage extends BaseComponent {
     render(props) {
@@ -27,14 +25,17 @@ export class LoginPage extends BaseComponent {
         const button_reg = new Button().render({
             title: 'Зарегистрироваться',
             onClick: () => {
-                window.location.hash = '/register'
+                history.pushState({}, null, '/register');
+                window.app.handleRoute();
             }
+
         });
 
         const button_login = new Button().render({
             title: 'Войти',
             onClick: () => {
-                window.location.hash = '/login'
+                history.pushState({}, null, '/login')
+                window.app.handleRoute();
             }
         })
 

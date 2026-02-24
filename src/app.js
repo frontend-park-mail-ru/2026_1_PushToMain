@@ -1,23 +1,29 @@
 import { LoginPage } from "./pages/LoginPage/LoginPage.js"
 import { RegPage } from "./pages/RegPage/RegPage.js";
-import { Router } from "./routes.js";
-
 
 class App {
-
     constructor() {
-        this.initRouter();
-    }
-
-    initRouter() {
-        const routes = {
+        this.routes = {
             '/': LoginPage,
             '/login': LoginPage,
             '/register': RegPage
         };
-
-        this.router = new Router(routes)
+        this.handleRoute()
     }
+
+
+    handleRoute() {
+        const path = window.location.pathname || '/';
+        const route = this.routes[path] || this.routes['/'];
+
+        const root = document.getElementById('root');
+        root.innerHTML = '';
+
+        const page = new route().render();
+        root.appendChild(page);
+    }
+
 }
 
-new App();
+window.app = new App();
+
