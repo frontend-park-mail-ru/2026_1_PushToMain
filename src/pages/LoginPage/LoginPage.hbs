@@ -1,0 +1,15 @@
+<div class="auth-page">
+    <div class="auth-page__form-container">
+        <h1 class="logo-title">Smile</h1>
+        <form action="" class="auth-form">
+            <h1 class="auth-form__title">{{title}}</h1>
+            <div class="auth-form__inputs"></div>
+            {{#each inputs}} <div class="auth-input" , data-input-name="{{name}}">
+                <input type=" {{type}}" placeholder="{{placeholder}}" name="{{name}}" maxlength="100">
+                <div class="auth-input__error"></div>
+            </div>
+            {{/each}}
+            <div class="auth-form__actions"></div>
+        </form>
+    </div>
+</div>
