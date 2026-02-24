@@ -8,12 +8,12 @@ class App {
             '/login': LoginPage,
             '/register': RegPage
         };
-        this.handleRoute()
+        this.handleRoute(location.pathname);
     }
 
 
-    handleRoute() {
-        const path = window.location.pathname || '/';
+    handleRoute(path) {
+        history.pushState({}, null, path);
         const route = this.routes[path] || this.routes['/'];
 
         const root = document.getElementById('root');
