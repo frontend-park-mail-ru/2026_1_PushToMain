@@ -25,19 +25,16 @@ export class LoginPage extends BaseComponent {
         });
 
         const button_reg = new Button().render({
-            title: 'Регистрация',
+            title: 'Зарегистрироваться',
             onClick: () => {
-                const root = document.getElementById('root');
-                root.innerHTML = '';
-                const regPage = new RegPage().render();
-                root.appendChild(regPage);
-
+                window.location.hash = '/register'
             }
-        })
+        });
 
         const button_login = new Button().render({
             title: 'Войти',
             onClick: () => {
+                window.location.hash = '/login'
             }
         })
 
