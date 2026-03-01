@@ -7,8 +7,6 @@ export class Button extends BaseComponent {
             title: props.title,
         });
 
-        this.events = {}
-
         element.addEventListener('click', (event) => {
             props?.onClick?.(event);
         });

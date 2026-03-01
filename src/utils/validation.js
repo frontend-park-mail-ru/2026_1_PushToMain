@@ -30,11 +30,11 @@ export function validation(dataForm) {
         if (type == "repassword") {
             if (!data) {
                 errors.push({ field: 'repassword', massege: 'Поле повторный пароль обязательно' })
-                flag = false;
-
             }
         }
     }
+
+    console.log(errors)
 
     return {
         isValid: Object.keys(errors).length === 0,

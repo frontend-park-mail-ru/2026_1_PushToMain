@@ -89,6 +89,9 @@ export class RegPage extends BaseComponent {
                     this.state = 2;
                     this.fullData = { ...this.fullData, ...data };
                     this.updateView();
+                } else {
+                    const error_container = page.querySelector('.auth-input__error');
+                    error_container.innerText = 'Есть пустые поля';
                 }
             }
 
@@ -106,14 +109,19 @@ export class RegPage extends BaseComponent {
             const button_reg_state2 = new Button().render({
                 name: 'button-reg-for-reg',
                 title: 'Зарегистрироваться',
-                onClick: (event) => {
+                onClick: async (event) => {
                     event.preventDefault()
                     const form = event.currentTarget.form
                     const formData = new FormData(form);
                     const data = Object.fromEntries(formData.entries());
                     this.fullData = { ...this.fullData, ...data };
+                    const error_container = page.querySelector('.auth-input__error');
+
                     if (validation(data).isValid) {
-                        postDataReg(this.fullData);
+                        const response = await postDataReg(this.fullData);
+                        error_container.innerText = response.error;
+                    } else {
+                        error_container.innerText = 'Есть пустые поля';
                     }
                 }
             });

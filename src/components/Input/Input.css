@@ -5,7 +5,6 @@ input {
     font-size: 24px;
     padding-left: 8px;
     max-width: 500px;
-    padding: 10px, 10px;
 }
 
 input::placeholder {

@@ -29,18 +29,20 @@ export class LoginPage extends BaseComponent {
         const button_login = new Button().render({
             name: 'button-login-for-login',
             title: 'Войти',
-            onClick: (event) => {
+            onClick: async (event) => {
                 event.preventDefault()
                 const form = event.currentTarget.form
                 const formData = new FormData(form);
                 const data = Object.fromEntries(formData.entries());
+
+                const error_container = page.querySelector('.auth-input__error')
+
+
                 if (validation(data).isValid) {
-                    postDataLogin(data);
+                    const response = await postDataLogin(data);
+                    error_container.innerText = response.error;
                 } else {
-                    const error_container = page.querySelector('.auth-input__error')
-                    error_container.innerHTML = ''
-                    const error = document.createTextNode('Указан неверный пароль или почта')
-                    error_container.appendChild(error)
+                    error_container.innerText = 'Есть пустые поля';
                 }
             }
         });
