@@ -1,14 +1,12 @@
 @import '/src/components/Input/Input.css';
 @import '/src/components/Button/Button.css';
 
-.body {
-    height: auto;
-}
 
 #root {
     display: flex;
     align-items: center;
     justify-content: center;
+    background: linear-gradient(#FFFFFF, #CBE2FF, #77B4FF, #4398FF);
 }
 
 .auth-page {
@@ -19,19 +17,27 @@
     border-radius: 20px;
     width: auto;
     height: auto;
-    padding: 40px 20px;
+    padding: 40px 30px;
+}
+
+.auth-page__form-container {
+    display: flex;
+    flex-direction: column;
+    gap: 28px;
+
 }
 
 .logo-title {
     display: flex;
     justify-content: center;
     font-size: 48px;
-    color: var(--accent);
+    color: var(--accent-2);
 }
 
 .auth-form {
     display: flex;
     flex-direction: column;
+    gap: 5px;
 }
 
 .auth-form__title {
@@ -41,10 +47,15 @@
 
 }
 
+.auth-form__inputs {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
 .auth-input {
     display: flex;
     flex-direction: column;
-    gap: 5px;
 }
 
 .auth-form__actions {
@@ -54,14 +65,22 @@
 
 .auth-input__title {
     font-size: 24px;
+    padding-left: 10px;
 }
 
 .auth-form__actions {
     display: flex;
     flex-direction: column;
-    gap: 10px;
-    margin-top: 30px;
+    gap: 16px;
 }
+
+.auth-input__error {
+    height: 50px;
+    font-size: 20px;
+    padding-left: 10px;
+    color: var(--error-text);
+}
+
 
 [name="button-reg-for-login"] {
     background-color: var(--color-sidebar-background);

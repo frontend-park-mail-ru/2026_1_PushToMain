@@ -1,9 +1,9 @@
 button {
     background-color: var(--button-background);
-    height: 48px;
+    height: 60px;
     color: var(--primary-text);
-    width: 400px;
-    border-radius: 10px;
+    width: 500px;
+    border-radius: 12px;
     font-size: 24px;
 
 }

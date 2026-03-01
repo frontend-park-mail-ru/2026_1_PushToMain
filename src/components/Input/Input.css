@@ -1,9 +1,14 @@
 input {
     background-color: var(--input-background);
-    border-radius: 10px;
-    height: 48px;
+    border-radius: 12px;
+    height: 60px;
     font-size: 24px;
     padding-left: 8px;
-    max-width: 400px;
+    max-width: 500px;
+    padding: 10px, 10px;
+}
 
+input::placeholder {
+    font-size: 20px;
+    padding-left: 3px;
 }
