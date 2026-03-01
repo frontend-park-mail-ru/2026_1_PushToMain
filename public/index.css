@@ -7,7 +7,7 @@
     margin: 0;
     padding: 0;
     border: none;
-    font-family: sans-serif;
+    font-family: "Ubuntu Sans";
 }
 
 html {
@@ -16,7 +16,6 @@ html {
 }
 
 body {
-    background-color: var(--color-main-background);
     height: 100vh;
 }
 
@@ -27,6 +26,7 @@ body {
 :root {
     /* Pallete */
     --accent: #0077FF;
+    --accent-2: #0055FF;
 
     /* Text color */
     --primary-text: #FFFFFF;
@@ -38,7 +38,7 @@ body {
     --color-main-background: #E6F4FF;
     --color-sidebar-background: #FFFFFF;
 
-    --button-background: #0077FF;
+    --button-background: #0055FF;
     --button-hover-background: #499BFF;
     --button-active-background: #005CC6;
 

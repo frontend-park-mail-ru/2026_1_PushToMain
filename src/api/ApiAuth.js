@@ -4,8 +4,7 @@ export async function postDataLogin(data = {}) {
     console.log(data);
 
     const response = await fetch(`${URL}/login`, {
-        method: 'post',
-        mode: 'cors',
+        method: 'POST',
         headers: {
             "Content-Type": "application/json",
         },
@@ -20,8 +19,7 @@ export async function postDataReg(data = {}) {
     console.log(data);
 
     const response = await fetch(`${URL}/register`, {
-        method: 'post',
-        mode: 'cors',
+        method: 'POST',
         headers: {
             "Content-Type": "application/json",
         },

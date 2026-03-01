@@ -3,14 +3,16 @@
         <h1 class="logo-title">SMAIL</h1>
         <form action="" class="auth-form">
             <h1 class="auth-form__title">{{title}}</h1>
-            <div class="auth-form__inputs"></div>
-            {{#each inputs}}
-            <div class="auth-input" , data-input-name="{{name}}">
-                <span class="auth-input__title">{{placeholder}}</span>
-                <input type="{{type}}" placeholder="{{placeholder}}" name="{{name}}" maxlength="100">
-                <div class="auth-input__error"></div>
+            <div class="auth-form__inputs">
+                {{#each inputs}}
+                <div class="auth-input" , data-input-name="{{name}}">
+                    <span class="auth-input__title">{{input_title}}</span>
+                    <input type="{{type}}" placeholder="{{placeholder}}" name="{{name}}" maxlength="100"
+                        value="{{lookup ../input_value name}}">
+                </div>
+                {{/each}}
             </div>
-            {{/each}}
+            <div class="auth-input__error"></div>
             <div class="auth-form__actions"></div>
         </form>
     </div>

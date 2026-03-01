@@ -1,6 +1,7 @@
 import { BaseComponent } from "../../components/BaseComponent.js";
 import { Button } from "../../components/Button/Button.js";
 import { postDataLogin } from "../../api/ApiAuth.js";
+import { validation } from "../../utils/validation.js";
 
 export class LoginPage extends BaseComponent {
     render(props) {
@@ -8,12 +9,14 @@ export class LoginPage extends BaseComponent {
         const inputs = [
             {
                 type: 'email',
-                placeholder: 'Почта',
+                placeholder: 'Введите почту',
+                input_title: 'Почта',
                 name: 'email'
             },
             {
                 type: 'password',
-                placeholder: 'Пароль',
+                placeholder: 'Введите пароль',
+                input_title: 'Пароль',
                 name: 'password'
             }
         ];
@@ -26,13 +29,18 @@ export class LoginPage extends BaseComponent {
         const button_login = new Button().render({
             name: 'button-login-for-login',
             title: 'Войти',
-            onClick: () => {
+            onClick: (event) => {
                 event.preventDefault()
-                const form = document.querySelector(".auth-form");
+                const form = event.currentTarget.form
                 const formData = new FormData(form);
                 const data = Object.fromEntries(formData.entries());
-                if (this.validation(data)) {
+                if (validation(data).isValid) {
                     postDataLogin(data);
+                } else {
+                    const error_container = page.querySelector('.auth-input__error')
+                    error_container.innerHTML = ''
+                    const error = document.createTextNode('Указан неверный пароль или почта')
+                    error_container.appendChild(error)
                 }
             }
         });
@@ -40,7 +48,8 @@ export class LoginPage extends BaseComponent {
         const button_reg = new Button().render({
             name: 'button-reg-for-login',
             title: 'Зарегистрироваться',
-            onClick: () => {
+            onClick: (event) => {
+                event.preventDefault();
                 window.app.handleRoute('/register');
             }
 
@@ -53,31 +62,4 @@ export class LoginPage extends BaseComponent {
         return page;
     }
 
-    validation(data) {
-        const email = data.email;
-        const password = data.password;
-
-        const errors = [];
-
-        let flag = true;
-
-        if (!email) {
-            errors.push({ field: 'email', massege: 'Поле email пустое' })
-            flag = false;
-        }
-
-        if (!password) {
-            errors.push({ field: 'password', massege: 'Поле email пустое' })
-            flag = false;
-
-        }
-
-        console.log(errors);
-
-        if (flag) {
-            return true;
-        } else {
-            return false;
-        }
-    }
 }
