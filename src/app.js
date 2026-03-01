@@ -1,3 +1,5 @@
+'use strict'
+
 import { LoginPage } from "./pages/LoginPage/LoginPage.js"
 import { RegPage } from "./pages/RegPage/RegPage.js";
 

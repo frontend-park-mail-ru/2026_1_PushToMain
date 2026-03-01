@@ -1,4 +1,49 @@
+@import '/src/pages/LoginPage/LoginPage.css';
+@import '/src/pages/RegPage/RegPage.css';
+@import '/src/pages/MainPage/MainPage.css';
+
+
 * {
     margin: 0;
     padding: 0;
+    border: none;
+    font-family: "Ubuntu Sans", sans-serif;
+}
+
+html {
+    height: 100vh;
+
+}
+
+body {
+    height: 100vh;
+}
+
+#root {
+    height: 100vh;
+}
+
+:root {
+    /* Pallete */
+    --accent: #0077FF;
+    --accent-2: #0055FF;
+
+    /* Text color */
+    --primary-text: #FFFFFF;
+    --secondary-text: #656565;
+    --error-text: #FF0000;
+    --tertiary-text: #000000;
+
+    /* Background */
+    --color-main-background: #E6F4FF;
+    --color-sidebar-background: #FFFFFF;
+
+    --button-background: #0055FF;
+    --button-hover-background: #499BFF;
+    --button-active-background: #005CC6;
+
+    --input-error-background: #FFD9D9;
+    --input-background: #E4E4E4;
+    --input-success-background: #E7F1FF;
+
 }
