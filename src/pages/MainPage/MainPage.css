@@ -38,6 +38,39 @@
     overflow: hidden;
 }
 
+.top-bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 40px;
+}
+
+.search-bar {
+    display: flex;
+    align-items: center;
+    background-color: #FFFFFF;
+    border-radius: 20px;
+    padding: 0 20px;
+}
+
+.search-icon {
+    height: 24px;
+    width: 24px;
+    fill: #999999 !important;
+    flex-shrink: 0;
+}
+
+.search-input {
+    background: none;
+    height: 40px;
+    padding-left: 8px;
+    max-width: 500px;
+}
+
+.search-input::placeholder {
+    color: #999999;
+}
+
 .mail-tile {
     background-color: var(--color-sidebar-background);
     border-radius: 20px;
