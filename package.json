@@ -18,6 +18,7 @@
   },
   "homepage": "https://github.com/frontend-park-mail-ru/2026_1_PushToMain#readme",
   "dependencies": {
+    "dotenv": "^17.3.1",
     "express": "^5.2.1"
   },
   "devDependencies": {

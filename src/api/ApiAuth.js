@@ -1,8 +1,8 @@
-import { URL } from "./config.js"
+import { getApiUrl } from "./config.js"
 
 export async function postDataLogin(data = {}) {
 
-    const response = await fetch(`${URL}/login`, {
+    const response = await fetch(`${getApiUrl()}/login`, {
         method: 'POST',
         headers: {
             "Content-Type": "application/json",
