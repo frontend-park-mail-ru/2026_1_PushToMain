@@ -1,6 +1,7 @@
 @import '/src/pages/LoginPage/LoginPage.css';
 @import '/src/pages/RegPage/RegPage.css';
 @import '/src/pages/MainPage/MainPage.css';
+@import '/src/styles/theme.css';
 
 
 * {
@@ -47,3 +48,5 @@ body {
     --input-success-background: #E7F1FF;
 
 }
+
+.

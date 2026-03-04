@@ -47,6 +47,13 @@ export class LoginPage extends BaseComponent {
                 } else {
                     error_container.innerText = 'Есть пустые поля';
                 }
+
+                if (response.error) {
+                    error_container.innerText = response.error;
+                }
+                else {
+                    window.app.handleRoute('/');
+                }
             }
         });
 

@@ -11,7 +11,6 @@ export async function postDataLogin(data = {}) {
             "Content-Type": "application/json",
         },
         body: JSON.stringify(data)
-
     })
 
     if (response.ok) {

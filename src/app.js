@@ -2,11 +2,12 @@
 
 import { LoginPage } from "./pages/LoginPage/LoginPage.js"
 import { RegPage } from "./pages/RegPage/RegPage.js";
+import { MainPage } from "./pages/MainPage/MainPage.js";
 
 class App {
     constructor() {
         this.routes = {
-            '/': LoginPage,
+            '/': MainPage,
             '/login': LoginPage,
             '/register': RegPage
         };

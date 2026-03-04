@@ -10,11 +10,18 @@ const app = express();
 
 app.use('/public', express.static("public"));
 app.use('/src', express.static("src"));
+app.use('/static', express.static("static"));
 
 app.post('/api/login', async (req, res) => {
     try {
         const data = await ApiAuth.postDataLogin(req.body);
+
+        if (data.error) {
+            res.status(400).json({ error: data.error });
+            return;
+        }
         res.json(data);
+        res.redirect(API_BASE_URL);
     } catch (error) {
         res.status(500).json({ error: error.message });
     }
