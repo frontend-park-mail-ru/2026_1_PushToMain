@@ -2,6 +2,15 @@ import { BaseComponent } from "../BaseComponent.js";
 
 
 export class Input extends BaseComponent {
+    /**
+     * Рендерит поле ввода с заданными свойствами.
+     * @param {string} props.type - Тип поля ввода
+     * @param {string} props.placeholder - Подсказка для поля ввода
+     * @param {string} props.input_title - Заголовок поля ввода
+     * @param {string} props.name - Название поля ввода
+     * @param {string} [props.input_value] - Значение поля ввода
+     * @param {string} [props.input_status] - Статус поля ввода
+     */
     render(props) {
         const element = this.renderComponent("Input", {
             type: props.type,

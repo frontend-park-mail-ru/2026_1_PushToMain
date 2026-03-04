@@ -1,3 +1,8 @@
+/**
+ * Проверяет поля формы на валидность
+ * @param {Object} dataForm - Объект с полями формы
+ * @returns {{isValid: boolean, errors: Array<{field: string, message: string}>}}
+ */
 export function validation(dataForm) {
 
     const errors = [];

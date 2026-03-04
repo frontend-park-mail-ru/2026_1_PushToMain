@@ -10,6 +10,11 @@ export class RegPage extends BaseComponent {
         this.fullData = {};
     }
 
+    /**
+     * Обновляет содержимое страницы в соответствии с текущим состоянием (this.state).
+     * Удаляет старый контент из this.rootElement, рендерит новый контент с помощью this.render()
+     * и добавляет его в this.rootElement.
+     */
     updateView() {
         const newContent = this.render();
         this.rootElement.innerHTML = '';
@@ -17,6 +22,11 @@ export class RegPage extends BaseComponent {
     }
 
 
+    /**
+     * Рендерит страницу регистраци с заданными свойствами.
+     * Каждая часть формы регистрации отображается в зависимости от текущего состояния (this.state).
+     * @param {Object} props - Свойства страницы регистрации.
+     */
     render(props) {
 
         const inputs_reg_state1 = [

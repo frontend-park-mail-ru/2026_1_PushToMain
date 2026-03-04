@@ -4,6 +4,9 @@ import { postDataLogin } from "../../api/ApiAuth.js";
 import { validation } from "../../utils/validation.js";
 
 export class LoginPage extends BaseComponent {
+    /**
+     * Рендерит страницу авторизации с заданными свойствами.
+     */
     render(props) {
 
         const inputs = [

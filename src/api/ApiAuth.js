@@ -1,5 +1,8 @@
 import { getApiUrl } from "./config.js"
 
+/**
+ * Отправляет POST-запрос на эндпоинт /login с данными.
+ */
 export async function postDataLogin(data = {}) {
 
     const response = await fetch(`${getApiUrl()}/login`, {
@@ -21,6 +24,9 @@ export async function postDataLogin(data = {}) {
 
 }
 
+/**
+ * Отправляет POST-запрос на эндпоинт /register с данными.
+ */
 export async function postDataReg(data = {}) {
     console.log(data);
 

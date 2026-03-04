@@ -14,6 +14,9 @@ class App {
     }
 
 
+    /**
+     * Обрабатывает эндпоинт и рендерит соответствующую страницу.
+     */
     handleRoute(path) {
         history.pushState({}, null, path);
         const route = this.routes[path] || this.routes['/'];
@@ -28,4 +31,3 @@ class App {
 }
 
 window.app = new App();
-
