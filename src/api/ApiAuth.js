@@ -1,11 +1,11 @@
-import { getApiUrl } from "./config.js"
+import { URL } from "./config.js"
 
 /**
  * Отправляет POST-запрос на эндпоинт /login с данными.
  */
 export async function postDataLogin(data = {}) {
 
-    const response = await fetch(`${getApiUrl()}/login`, {
+    const response = await fetch(`${URL}/login`, {
         method: 'POST',
         headers: {
             "Content-Type": "application/json",

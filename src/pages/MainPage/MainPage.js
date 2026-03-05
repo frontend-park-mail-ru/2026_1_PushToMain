@@ -1,5 +1,5 @@
 import { BaseComponent } from "../../components/BaseComponent.js";
-import { Button } from "../../components/Button/Button.js";
+import { Sidebar } from "../../widgets/Sidebar/Sidebar.js";
 
 export class MainPage extends BaseComponent {
 
@@ -7,6 +7,11 @@ export class MainPage extends BaseComponent {
         const page = this.renderComponent('MainPage', {
             title: 'Главная',
         });
+
+        const sidebar = new Sidebar().render({})
+
+        const SigebarContainer = page.querySelector('.sidebar');
+        SigebarContainer.appendChild(sidebar);
 
         return page;
     }

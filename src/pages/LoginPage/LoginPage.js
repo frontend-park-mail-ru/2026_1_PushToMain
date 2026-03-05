@@ -25,7 +25,7 @@ export class LoginPage extends BaseComponent {
         ];
 
         const page = this.renderComponent('LoginPage', {
-            title: 'Вход',
+            title: 'Авторизация',
             inputs: inputs
         });
 
@@ -43,17 +43,17 @@ export class LoginPage extends BaseComponent {
 
                 if (validation(data).isValid) {
                     const response = await postDataLogin(data);
-                    error_container.innerText = response.error;
+                    if (response.error) {
+                        error_container.innerText = response.error;
+                    }
+                    else {
+                        window.app.handleRoute('/');
+                    }
                 } else {
                     error_container.innerText = 'Есть пустые поля';
                 }
 
-                if (response.error) {
-                    error_container.innerText = response.error;
-                }
-                else {
-                    window.app.handleRoute('/');
-                }
+
             }
         });
 

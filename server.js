@@ -1,16 +1,11 @@
-require('dotenv').config();
 const express = require("express");
-const ApiAuth = require("./src/api/ApiAuth.js");
 
-const API_BASE_URL = `http://localhost:8000/api`;
-
-const port = process.env.PORT || 8000;
+const port = 8000;
 
 const app = express();
 
 app.use('/public', express.static("public"));
 app.use('/src', express.static("src"));
-app.use('/static', express.static("static"));
 
 app.get("/{:any}", (req, res) => {
     res.sendFile(__dirname + "/public/index.html");
