@@ -51,7 +51,8 @@
 .auth-form__inputs {
     display: flex;
     flex-direction: column;
-    gap: 20px;
+    gap: 10px;
+    padding-bottom: 20px;
 }
 
 .auth-input {
@@ -76,7 +77,7 @@
 }
 
 .auth-input__error {
-    height: 50px;
+    height: 20px;
     font-size: 20px;
     padding-left: 10px;
     color: var(--error-text);

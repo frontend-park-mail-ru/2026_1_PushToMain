@@ -2,6 +2,7 @@ import { BaseComponent } from "../../components/BaseComponent.js";
 import { Button } from "../../components/Button/Button.js";
 import { postDataReg } from "../../api/ApiAuth.js";
 import { validation } from "../../utils/validation.js";
+import { Input } from "../../components/Input/Input.js";
 
 export class RegPage extends BaseComponent {
     constructor() {
@@ -29,52 +30,31 @@ export class RegPage extends BaseComponent {
      */
     render(props) {
 
-        const inputs_reg_state1 = [
-            {
-                type: 'text',
-                placeholder: 'Введите имя',
-                input_title: "Имя",
-                name: 'name'
-            },
-            {
-                type: 'text',
-                placeholder: 'Введите фамилию',
-                input_title: "Фамилия",
-                name: 'surname'
-            },
-        ];
-
-        const inputs_reg_state2 = [
-            {
-                type: 'email',
-                placeholder: 'Введите адрес почты',
-                input_title: "Адрес почты",
-                name: 'email'
-            },
-            {
-                type: 'password',
-                placeholder: 'Введите пароль',
-                input_title: "Пароль",
-                name: 'password'
-            },
-            {
-                type: 'password',
-                placeholder: 'Введите пароль',
-                input_title: "Повторите пароль",
-                name: 'repassword'
-            }
-        ];
-
-        const currentInputs = this.state === 1 ? inputs_reg_state1 : inputs_reg_state2;
-
         const page = this.renderComponent('RegPage', {
             title: 'Регистрация',
-            inputs: currentInputs,
-            input_value: this.fullData,
         });
 
         this.rootElement = document.getElementById('root');;
 
+        const inputName = new Input().render({
+            type: 'text',
+            placeholder: 'Введите имя',
+            input_title: "Имя",
+            name: 'name',
+            input_value: this.fullData.name,
+            input: (event) => {
+            }
+        });
+
+        const inputSurname = new Input().render({
+            type: 'text',
+            placeholder: 'Введите фамилию',
+            input_title: "Фамилия",
+            name: 'surname',
+            input_value: this.fullData.surname,
+            input: (event) => {
+            }
+        });
 
 
         const button_login = new Button().render({
@@ -95,27 +75,68 @@ export class RegPage extends BaseComponent {
                 const formData = new FormData(form);
                 const data = Object.fromEntries(formData.entries());
 
-                if (validation(data).isValid) {
+
+                const errorContainer = page.querySelectorAll('.auth-input__error');
+                errorContainer.forEach(container => {
+                    container.innerText = '';
+                })
+                const valid = validation(data);
+
+                if (valid.isValid) {
                     this.state = 2;
                     this.fullData = { ...this.fullData, ...data };
                     this.updateView();
                 } else {
-                    const error_container = page.querySelector('.auth-input__error');
-                    error_container.innerText = 'Есть пустые поля';
+                    valid.errors.forEach(err => {
+                        const fieldErrorContainer = page.querySelector(`.auth-input__error[name="${err.field}"]`);
+                        fieldErrorContainer.innerText = err.message;
+                    })
                 }
             }
 
         });
 
-
         const actionsContainer = page.querySelector('.auth-form__actions');
-
+        const inputContainer = page.querySelector('.auth-form__inputs')
 
         if (this.state === 1) {
+            inputContainer.appendChild(inputName);
+            inputContainer.appendChild(inputSurname);
+
             actionsContainer.appendChild(button_reg_state1);
             actionsContainer.appendChild(button_login);
 
         } else {
+            const inputEmail = new Input().render({
+                type: 'email',
+                placeholder: 'Введите адрес почты',
+                input_title: "Адрес почты",
+                name: 'email',
+                input_value: this.fullData.email,
+                input: (event) => {
+                }
+            });
+
+            const inputPassword = new Input().render({
+                type: 'password',
+                placeholder: 'Введите пароль',
+                input_title: "Пароль",
+                name: 'password',
+                input_value: this.fullData.password,
+                input: (event) => {
+                }
+            });
+
+            const inputRepassword = new Input().render({
+                type: 'password',
+                placeholder: 'Введите пароль',
+                input_title: "Пароль",
+                name: 'repassword',
+                input_value: this.fullData.repassword,
+                input: (event) => {
+                }
+            });
+
             const button_reg_state2 = new Button().render({
                 name: 'button-reg-for-reg',
                 title: 'Зарегистрироваться',
@@ -125,18 +146,27 @@ export class RegPage extends BaseComponent {
                     const formData = new FormData(form);
                     const data = Object.fromEntries(formData.entries());
                     this.fullData = { ...this.fullData, ...data };
-                    const error_container = page.querySelector('.auth-input__error');
 
-                    if (validation(data).isValid) {
+                    const errorContainer = page.querySelectorAll('.auth-input__error');
+                    errorContainer.forEach(container => {
+                        container.innerText = '';
+                    })
+
+                    const valid = validation(data);
+
+                    if (valid.isValid) {
                         const response = await postDataReg(this.fullData);
                         error_container.innerText = response.error;
                     } else {
-                        error_container.innerText = 'Есть пустые поля';
+                        valid.errors.forEach(err => {
+                            const fieldErrorContainer = page.querySelector(`.auth-input__error[name="${err.field}"]`);
+                            fieldErrorContainer.innerText = err.message;
+                        })
                     }
                 }
             });
 
-            const button_back = new Button().render({
+            const buttonBack = new Button().render({
                 name: 'button-login-for-reg',
                 title: 'Назад',
                 onClick: (event) => {
@@ -150,9 +180,12 @@ export class RegPage extends BaseComponent {
                 }
             });
 
+            inputContainer.appendChild(inputEmail);
+            inputContainer.appendChild(inputPassword);
+            inputContainer.appendChild(inputRepassword);
 
             actionsContainer.appendChild(button_reg_state2);
-            actionsContainer.appendChild(button_back);
+            actionsContainer.appendChild(buttonBack);
 
         }
 

@@ -10,31 +10,38 @@ export function validation(dataForm) {
     for (const [type, data] of Object.entries(dataForm)) {
         if (type == "email") {
             if (!data) {
-                errors.push({ field: 'email', massege: 'Поле почты обязательно' })
+                errors.push({ field: 'email', message: 'Поле почты обязательно' });
+            } else {
+                const regex = /^[a-zA-Z0-9]+@[a-zA-Z]+\.[a-zA-Z]{2,}/gm;
+                if (!regex.test(data)) {
+                    errors.push({
+                        field: 'email', message: 'Недопустимый формат почты'
+                    });
+                }
             }
         }
 
         if (type == "password") {
             if (!data) {
-                errors.push({ field: 'password', massege: 'Поле пароля обязательно' })
+                errors.push({ field: 'password', message: 'Поле пароля обязательно' })
             }
         }
 
         if (type == "name") {
             if (!data) {
-                errors.push({ field: 'name', massege: 'Поле имя обязательно' })
+                errors.push({ field: 'name', message: 'Поле имя обязательно' })
             }
         }
 
         if (type == "surname") {
             if (!data) {
-                errors.push({ field: 'surname', massege: 'Поле фамилия обязательно' })
+                errors.push({ field: 'surname', message: 'Поле фамилия обязательно' })
             }
         }
 
         if (type == "repassword") {
             if (!data) {
-                errors.push({ field: 'repassword', massege: 'Поле повторный пароль обязательно' })
+                errors.push({ field: 'repassword', message: 'Поле повторный пароль обязательно' })
             }
         }
     }

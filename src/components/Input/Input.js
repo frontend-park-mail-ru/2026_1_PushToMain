@@ -1,3 +1,4 @@
+import { validation } from "../../utils/validation.js";
 import { BaseComponent } from "../BaseComponent.js";
 
 
@@ -21,6 +22,19 @@ export class Input extends BaseComponent {
             input_status: props.input_status
         });
 
+
+
+        element.addEventListener('input', (event) => {
+            const value = event.target.value;
+            props?.input?.(event);
+            const valid = validation({ [props.type]: value });
+            if (!valid.isValid) {
+                valid.errors.forEach(err => {
+                    const fieldErrorContainer = element.querySelector(`.auth-input__error[name="${err.field}"]`);
+                    fieldErrorContainer.innerText = err.message;
+                })
+            }
+        })
         return element;
     }
 }
