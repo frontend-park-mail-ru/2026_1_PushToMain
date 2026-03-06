@@ -71,6 +71,10 @@ button img {
     font-size: 22px;
 }
 
-.drop-down button img {
+.drop-down button svg {
+    transition: transform 0.3s;
+}
+
+.drop-down button.active svg {
     transform: rotateZ(180deg);
 }

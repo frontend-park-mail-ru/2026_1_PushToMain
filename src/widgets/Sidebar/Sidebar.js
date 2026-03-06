@@ -86,6 +86,12 @@ export class Sidebar extends BaseComponent {
             onClick: (event) => {
                 event.preventDefault();
 
+                const button = event.currentTarget;
+                button.classList.toggle('active');
+        
+                const arrow = button.querySelector('svg');
+                arrow.classList.toggle('rotated');
+
                 const buttonArchive = new Button().render({
                     name: 'button-archive',
                     title: 'Архив',
