@@ -1,4 +1,8 @@
 .sidebar-widget {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+
     background-color: var(--color-sidebar-background);
     border-radius: 0px 20px 20px 0px;
     padding: 40px 30px;
@@ -8,23 +12,48 @@
     overflow-y: auto;
 
     position: sticky;
-    top: 20px;
-
     box-sizing: border-box;
 
-    width: auto;
+    width: 100%;
 }
 
-.main-button-container, .extra-button-container{
+
+.main-button, .main-button-container, .extra-button-container{
     display: flex;
     flex-direction: column;
+    align-items: start;
     gap: 7px;
+    width: 100%;
 }
+
+.main-button button {
+    display: flex;
+    gap: 15px;
+    justify-content: center;
+    align-items: center;
+    padding: 0 20px;
+    width: 100%;
+    font-size: 22px;    
+}
+
 .main-button-container button, .extra-button-container button {
-    width: auto;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    padding: 0 20px;
+    width: 100%;
     background-color: var(--color-sidebar-background);
     color: var(--tertiary-text);
     font-size: 22px;
+}
+
+.extra-button-container button {
+    padding: 0 50px;
+}
+
+button img {
+    width: 40px;
+    height: 40px;
 }
 
 .main-button-container button:hover,  .extra-button-container button:hover {
@@ -32,9 +61,16 @@
 }
 
 .drop-down button {
-    width: auto;
+    display: flex;
+    align-items: center;
+    width: 100%;
     height: 40px;
+    padding: 0 20px;
     background-color: var(--color-sidebar-background);
-    color: var(--secondary-texts);
+    color: var(--secondary-text);
     font-size: 22px;
+}
+
+.drop-down button img {
+    transform: rotateZ(180deg);
 }

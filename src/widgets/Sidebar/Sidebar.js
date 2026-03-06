@@ -2,13 +2,31 @@ import { BaseComponent } from "../../components/BaseComponent.js";
 import { Button } from "../../components/Button/Button.js";
 
 export class Sidebar extends BaseComponent {
+    constructor() {
+        super();
+        this.state = 1;
+    }
     render(props) {
 
         const sidebar = this.renderComponent('Sidebar', {})
 
+        const buttonNewLetter = new Button().render({
+            name: 'button-new-letter',
+            title: 'Новое письмо',
+            svg: '/public/assets/svg/Compose.svg',
+            onClick: (event) => {
+                event.preventDefault();
+            }
+
+        });
+
+        const MainButton = sidebar.querySelector('.main-button');
+        MainButton.appendChild(buttonNewLetter);
+
         const buttonInbox = new Button().render({
             name: 'button-inbox',
             title: 'Входящие',
+            svg: '/public/assets/svg/Inbox.svg',
             onClick: (event) => {
                 event.preventDefault();
             }
@@ -18,6 +36,7 @@ export class Sidebar extends BaseComponent {
         const buttonDrafs = new Button().render({
             name: 'button-drafs',
             title: 'Черновики',
+            svg: '/public/assets/svg/Draft.svg',
             onClick: (event) => {
                 event.preventDefault();
             }
@@ -26,6 +45,7 @@ export class Sidebar extends BaseComponent {
         const buttonSends = new Button().render({
             name: 'button-sends',
             title: 'Отправленные',
+            svg: '/public/assets/svg/Sent.svg',
             onClick: (event) => {
                 event.preventDefault();
             }
@@ -34,6 +54,7 @@ export class Sidebar extends BaseComponent {
         const buttonFavorites = new Button().render({
             name: 'button-favorites',
             title: 'Избранные',
+            svg: '/public/assets/svg/SidebarFavorites.svg',
             onClick: (event) => {
                 event.preventDefault();
             }
@@ -43,6 +64,7 @@ export class Sidebar extends BaseComponent {
         const buttonProject = new Button().render({
             name: 'button-project',
             title: 'VK проект',
+            svg: '/public/assets/svg/Folder.svg',
             onClick: (event) => {
                 event.preventDefault();
             }
@@ -60,12 +82,14 @@ export class Sidebar extends BaseComponent {
         const buttonDropDown = new Button().render({
             name: 'button-drop-down',
             title: 'Скрыть',
+            svg: '/public/assets/svg/DropdownArrow.svg',
             onClick: (event) => {
                 event.preventDefault();
 
                 const buttonArchive = new Button().render({
                     name: 'button-archive',
                     title: 'Архив',
+                    svg: '/public/assets/svg/Archive.svg',
                     onClick: (event) => {
                         event.preventDefault();
                     }
@@ -74,6 +98,7 @@ export class Sidebar extends BaseComponent {
                 const buttonSpam = new Button().render({
                     name: 'button-spam',
                     title: 'Спам',
+                    svg: '/public/assets/svg/Spam.svg',
                     onClick: (event) => {
                         event.preventDefault();
                     }
@@ -82,6 +107,7 @@ export class Sidebar extends BaseComponent {
                 const buttonTrash = new Button().render({
                     name: 'button-trash',
                     title: 'Корзина',
+                    svg: '/public/assets/svg/Trash.svg',
                     onClick: (event) => {
                         event.preventDefault();
                     }
@@ -90,6 +116,7 @@ export class Sidebar extends BaseComponent {
                 const buttonAllLetter = new Button().render({
                     name: 'button-all-letter',
                     title: 'Все письма',
+                    svg: '/public/assets/svg/AllMail.svg',
                     onClick: (event) => {
                         event.preventDefault();
                     }
@@ -99,10 +126,17 @@ export class Sidebar extends BaseComponent {
                 const ExtraButtonContainer = sidebar.querySelector('.extra-button-container');
                 ExtraButtonContainer.innerHTML = '';
 
-                ExtraButtonContainer.appendChild(buttonArchive);
-                ExtraButtonContainer.appendChild(buttonSpam);
-                ExtraButtonContainer.appendChild(buttonTrash);
-                ExtraButtonContainer.appendChild(buttonAllLetter);
+                if (this.state == 1) {
+                    this.state = 0;
+                    ExtraButtonContainer.appendChild(buttonArchive);
+                    ExtraButtonContainer.appendChild(buttonSpam);
+                    ExtraButtonContainer.appendChild(buttonTrash);
+                    ExtraButtonContainer.appendChild(buttonAllLetter);
+                } else {
+                    this.state = 1;
+                    ExtraButtonContainer.innerHTML = '';
+                }
+
 
             }
 

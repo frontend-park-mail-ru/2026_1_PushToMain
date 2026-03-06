@@ -1,0 +1,59 @@
+.mail-list {
+    width: 100%;
+}
+
+.mail {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    border: solid, 2px, var(--muted-text);
+    border-radius: 20px;
+    padding: 10px 20px;
+    gap: 15px;
+    height: 35px;
+    font-size: 20px;
+}
+
+.mail:hover {
+    background-color: var(--color-main-background);
+}
+
+.checkbox-container {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 10px;
+}
+
+.checkbox-container input {
+    height: 20px;
+    width: 20px;
+}
+
+.mail-content {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    width: 100%;
+}
+
+.mail-theme {
+    width: 240px;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+
+}
+
+.mail-title {
+    width: 600px;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+
+.mail-date {
+    margin-left: auto;
+    width: 100px;
+    text-align: right;
+}

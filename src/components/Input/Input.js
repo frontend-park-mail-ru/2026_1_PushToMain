@@ -19,7 +19,9 @@ export class Input extends BaseComponent {
             input_title: props.input_title,
             name: props.name,
             input_value: props.input_value,
-            input_status: props.input_status
+            input_status: props.input_status,
+            svg: props.svg || '/public/assets/svg/blank.svg',
+
         });
 
 
