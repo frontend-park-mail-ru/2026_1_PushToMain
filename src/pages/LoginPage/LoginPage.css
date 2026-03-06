@@ -89,7 +89,7 @@
     display: none;
 }
 
-.auth-input__error {
+.auth-form__inputs .auth-input__error {
     height: 20px;
     font-size: 20px;
     padding-left: 10px;

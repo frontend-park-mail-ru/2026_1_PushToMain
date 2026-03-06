@@ -56,7 +56,7 @@
     width: 24px;
     height: 24px;
 }
-.auth-input__error {
+.search-bar .auth-input__error {
     height: 0;
 }
 
