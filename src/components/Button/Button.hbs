@@ -1,9 +1,11 @@
 <button name="{{name}}">
     {{#if svg}}
     <svg width="40px" height="40px">
-        <use width="40px" height="40px" href="{{svg}}"></use>
+        <use href="{{svg}}"></use>
     </svg>
     {{/if}}
     {{title}}
-    {{count}}
+    {{#if count}}
+    <p class="count">{{count}}</p>
+    {{/if}}
 </button>

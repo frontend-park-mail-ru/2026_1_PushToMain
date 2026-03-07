@@ -31,6 +31,7 @@ export class MainPage extends BaseComponent {
 
         const avatar = new Button().render({
             svg: '/public/assets/svg/Avatar.svg',
+            name: "avatar",
             onclick: (event) => {
                 event.preventDefault()
             }

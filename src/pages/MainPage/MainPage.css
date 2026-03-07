@@ -78,6 +78,11 @@
     background-color: transparent;
 }
 
+.top-right-menu button[name="avatar"] svg {
+    width: 55px;
+    height: 55px;
+}
+
 .mail-box-container {
     width: 100%;
 }

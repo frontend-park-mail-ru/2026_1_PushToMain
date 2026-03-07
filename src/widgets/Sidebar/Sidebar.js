@@ -27,6 +27,7 @@ export class Sidebar extends BaseComponent {
             name: 'button-inbox',
             title: 'Входящие',
             svg: '/public/assets/svg/Inbox.svg',
+            count: 1,
             onClick: (event) => {
                 event.preventDefault();
             }
@@ -37,6 +38,7 @@ export class Sidebar extends BaseComponent {
             name: 'button-drafs',
             title: 'Черновики',
             svg: '/public/assets/svg/Draft.svg',
+            count: 1,
             onClick: (event) => {
                 event.preventDefault();
             }
@@ -123,6 +125,7 @@ export class Sidebar extends BaseComponent {
                     name: 'button-all-letter',
                     title: 'Все письма',
                     svg: '/public/assets/svg/AllMail.svg',
+                    count: 1,
                     onClick: (event) => {
                         event.preventDefault();
                     }

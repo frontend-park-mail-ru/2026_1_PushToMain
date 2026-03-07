@@ -10,6 +10,31 @@
     overflow: hidden;
 }
 
+.mail-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 40px;
+    padding: 4px 20px;
+}
+
+.mail-header__left-container, .mail-header__right-container {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+.mail-header button {
+    background-color: transparent;
+    width: 24px;
+    height: 24px;
+}
+
+.mail-header button svg {
+    width: 24px;
+    height: 24px;
+}
+
 .mail-list {
     width: 100%;
 }
@@ -22,7 +47,7 @@
     border-radius: 20px;
     padding: 10px 20px;
     gap: 15px;
-    height: 35px;
+    max-height: 60px;
     font-size: 20px;
 }
 

@@ -12,7 +12,7 @@ export class Button extends BaseComponent {
             name: props.name,
             title: props.title,
             svg: props.svg,
-            count: props.count || ''
+            count: props.count,
         });
 
         element.addEventListener('click', (event) => {

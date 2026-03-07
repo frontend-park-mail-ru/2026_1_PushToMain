@@ -127,16 +127,6 @@ export class RegPage extends BaseComponent {
                 }
             });
 
-            const inputRepassword = new Input().render({
-                type: 'password',
-                placeholder: 'Введите пароль',
-                input_title: "Повторите пароль",
-                name: 'repassword',
-                input_value: this.fullData.repassword,
-                input: (event) => {
-                }
-            });
-
             const button_reg_state2 = new Button().render({
                 name: 'button-reg-for-reg',
                 title: 'Зарегистрироваться',
@@ -156,7 +146,7 @@ export class RegPage extends BaseComponent {
 
                     if (valid.isValid) {
                         const response = await postDataReg(this.fullData);
-                        error_container.innerText = response.error;
+                        errorContainer.innerText = response.error;
                     } else {
                         valid.errors.forEach(err => {
                             const fieldErrorContainer = page.querySelector(`.auth-input__error[name="${err.field}"]`);
@@ -182,7 +172,6 @@ export class RegPage extends BaseComponent {
 
             inputContainer.appendChild(inputEmail);
             inputContainer.appendChild(inputPassword);
-            inputContainer.appendChild(inputRepassword);
 
             actionsContainer.appendChild(button_reg_state2);
             actionsContainer.appendChild(buttonBack);

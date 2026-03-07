@@ -1,5 +1,5 @@
 input {
-    background-color: var(--input-background);
+    border: solid 2px var(--tertiary-text);
     border-radius: 20px;
     height: 60px;
     font-size: 24px;
