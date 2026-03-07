@@ -11,7 +11,7 @@ export class Button extends BaseComponent {
         const element = this.renderComponent("Button", {
             name: props.name,
             title: props.title,
-            svg: props.svg || '/public/assets/svg/blank.svg',
+            svg: props.svg,
             count: props.count || ''
         });
 

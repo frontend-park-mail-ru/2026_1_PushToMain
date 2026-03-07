@@ -39,6 +39,10 @@
     padding: 0 20px;
 }
 
+.search-bar .input-container {
+    gap: 0;
+}
+
 .input-form {
     display: flex;
     flex-direction: row;
@@ -74,18 +78,10 @@
     background-color: transparent;
 }
 
-
-.mail-tile {
-    background-color: var(--color-sidebar-background);
-    border-radius: 20px;
-    padding: 30px;
-    margin: 20px 0 0 0;
-
-    display: flex;
-    flex-direction: column;
-    height: 100%;
-    overflow: hidden;
+.mail-box-container {
+    width: 100%;
 }
+
 
 
 

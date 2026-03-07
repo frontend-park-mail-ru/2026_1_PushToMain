@@ -1,7 +1,9 @@
 <button name="{{name}}">
+    {{#if svg}}
     <svg width="40px" height="40px">
         <use width="40px" height="40px" href="{{svg}}"></use>
     </svg>
+    {{/if}}
     {{title}}
     {{count}}
 </button>

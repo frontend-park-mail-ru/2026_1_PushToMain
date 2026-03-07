@@ -130,7 +130,7 @@ export class RegPage extends BaseComponent {
             const inputRepassword = new Input().render({
                 type: 'password',
                 placeholder: 'Введите пароль',
-                input_title: "Пароль",
+                input_title: "Повторите пароль",
                 name: 'repassword',
                 input_value: this.fullData.repassword,
                 input: (event) => {
