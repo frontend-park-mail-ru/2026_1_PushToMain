@@ -4,18 +4,18 @@
  * @returns {{isValid: boolean, errors: Array<{field: string, message: string}>}}
  */
 export function validation(dataForm) {
-
     const errors = [];
 
     for (const [type, data] of Object.entries(dataForm)) {
         if (type == "email") {
             if (!data) {
-                errors.push({ field: 'email', message: 'Поле почты обязательно' });
+                errors.push({ field: "email", message: "Поле почты обязательно" });
             } else {
-                const regex = /^[a-zA-Z0-9]+@[a-zA-Z]+\.[a-zA-Z]{2,}/gm;
+                const regex = /^[a-zA-Z0-9._-]+@smail.ru/gm;
                 if (!regex.test(data)) {
                     errors.push({
-                        field: 'email', message: 'Недопустимый формат почты'
+                        field: "email",
+                        message: "Недопустимый формат почты",
                     });
                 }
             }
@@ -23,34 +23,48 @@ export function validation(dataForm) {
 
         if (type == "password") {
             if (!data) {
-                errors.push({ field: 'password', message: 'Поле пароля обязательно' })
+                errors.push({ field: "password", message: "Поле пароля обязательно" });
+            } else {
+                if (data.length < 8) {
+                    errors.push({
+                        field: "password",
+                        message: "Пароль должен быть не менее 8 символов",
+                    });
+                }
             }
         }
 
         if (type == "name") {
             if (!data) {
-                errors.push({ field: 'name', message: 'Поле имя обязательно' })
+                errors.push({ field: "name", message: "Поле имя обязательно" });
+            } else {
+                const regexForName = /^[a-zA-Zа-яА-Я]/gm;
+                if (!regexForName.test(data)) {
+                    errors.push({
+                        field: "name",
+                        message: "Имя должно состоять только из букв",
+                    });
+                }
             }
         }
 
         if (type == "surname") {
             if (!data) {
-                errors.push({ field: 'surname', message: 'Поле фамилия обязательно' })
-            }
-        }
-
-        if (type == "repassword") {
-            if (!data) {
-                errors.push({ field: 'repassword', message: 'Поле повторный пароль обязательно' })
+                errors.push({ field: "surname", message: "Поле фамилия обязательно" });
+            } else {
+                const regexForSurname = /^[a-zA-Zа-яА-Я]/gm;
+                if (!regexForSurname.test(data)) {
+                    errors.push({
+                        field: "surname",
+                        message: "Фамилия должно состоять только из букв",
+                    });
+                }
             }
         }
     }
-
-    console.log(errors)
 
     return {
         isValid: Object.keys(errors).length === 0,
-        errors: errors
-
-    }
+        errors: errors,
+    };
 }

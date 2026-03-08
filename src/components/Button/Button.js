@@ -9,16 +9,17 @@ export class Button extends BaseComponent {
      */
     render(props) {
         const element = this.renderComponent("Button", {
+            type: props.type,
             name: props.name,
             title: props.title,
             svg: props.svg,
             count: props.count,
+            help: props.help,
         });
 
-        element.addEventListener('click', (event) => {
+        element.addEventListener("click", (event) => {
             props?.onClick?.(event);
         });
         return element;
     }
-
 }

@@ -18,10 +18,9 @@ export class RegPage extends BaseComponent {
      */
     updateView() {
         const newContent = this.render();
-        this.rootElement.innerHTML = '';
+        this.rootElement.innerHTML = "";
         this.rootElement.appendChild(newContent);
     }
-
 
     /**
      * Рендерит страницу регистраци с заданными свойствами.
@@ -29,75 +28,71 @@ export class RegPage extends BaseComponent {
      * @param {Object} props - Свойства страницы регистрации.
      */
     render(props) {
-
-        const page = this.renderComponent('RegPage', {
-            title: 'Регистрация',
+        const page = this.renderComponent("RegPage", {
+            title: "Регистрация",
         });
 
-        this.rootElement = document.getElementById('root');;
+        this.rootElement = document.getElementById("root");
 
         const inputName = new Input().render({
-            type: 'text',
-            placeholder: 'Введите имя',
+            type: "text",
+            placeholder: "Введите имя",
             input_title: "Имя",
-            name: 'name',
+            name: "name",
             input_value: this.fullData.name,
-            input: (event) => {
-            }
+            input: (event) => {},
         });
 
         const inputSurname = new Input().render({
-            type: 'text',
-            placeholder: 'Введите фамилию',
+            type: "text",
+            placeholder: "Введите фамилию",
             input_title: "Фамилия",
-            name: 'surname',
+            name: "surname",
             input_value: this.fullData.surname,
-            input: (event) => {
-            }
+            input: (event) => {},
         });
 
-
         const button_login = new Button().render({
-            name: 'button-login-for-reg',
-            title: 'Войти',
+            name: "button-login-for-reg",
+            title: "Войти",
             onClick: (event) => {
                 event.preventDefault();
-                window.app.handleRoute('/login');
-            }
+                window.app.handleRoute("/login");
+            },
         });
 
         const button_reg_state1 = new Button().render({
-            name: 'button-reg-for-reg',
-            title: 'Продолжить',
+            name: "button-reg-for-reg",
+            title: "Продолжить",
             onClick: (event) => {
-                event.preventDefault()
-                const form = event.currentTarget.form
+                event.preventDefault();
+                const form = event.currentTarget.form;
                 const formData = new FormData(form);
                 const data = Object.fromEntries(formData.entries());
 
-
-                const errorContainer = page.querySelectorAll('.auth-input__error');
-                errorContainer.forEach(container => {
-                    container.innerText = '';
-                })
+                const errorContainer = page.querySelectorAll(".auth-input__error");
+                errorContainer.forEach((container) => {
+                    container.innerText = "";
+                });
                 const valid = validation(data);
+
+                new Input().setStatusInput(valid, page);
 
                 if (valid.isValid) {
                     this.state = 2;
                     this.fullData = { ...this.fullData, ...data };
                     this.updateView();
                 } else {
-                    valid.errors.forEach(err => {
+                    valid.errors.forEach((err) => {
                         const fieldErrorContainer = page.querySelector(`.auth-input__error[name="${err.field}"]`);
                         fieldErrorContainer.innerText = err.message;
-                    })
+                    });
                 }
-            }
-
+            },
         });
 
-        const actionsContainer = page.querySelector('.auth-form__actions');
-        const inputContainer = page.querySelector('.auth-form__inputs')
+        const actionsContainer = page.querySelector(".auth-form__actions");
+        const inputContainer = page.querySelector(".auth-form__inputs");
 
         if (this.state === 1) {
             inputContainer.appendChild(inputName);
@@ -105,80 +100,95 @@ export class RegPage extends BaseComponent {
 
             actionsContainer.appendChild(button_reg_state1);
             actionsContainer.appendChild(button_login);
-
         } else {
             const inputEmail = new Input().render({
-                type: 'email',
-                placeholder: 'Введите адрес почты',
+                type: "email",
+                placeholder: "Введите адрес почты",
                 input_title: "Адрес почты",
-                name: 'email',
+                name: "email",
                 input_value: this.fullData.email,
-                input: (event) => {
-                }
+                input: (event) => {},
             });
 
             const inputPassword = new Input().render({
-                type: 'password',
-                placeholder: 'Введите пароль',
+                type: "password",
+                placeholder: "Введите пароль",
                 input_title: "Пароль",
-                name: 'password',
+                name: "password",
                 input_value: this.fullData.password,
+                input: (event) => {},
+            });
+
+            const eyePassword = new Input().render({
+                type: "checkbox",
+                name: "eye-password",
                 input: (event) => {
-                }
+                    const CheckBoxEye = document.querySelector('input[name="eye-password"]');
+                    const visPassword = inputPassword.querySelector("input");
+
+                    if (CheckBoxEye.checked) {
+                        visPassword.type = "text";
+                    } else {
+                        visPassword.type = "password";
+                    }
+                },
             });
 
             const button_reg_state2 = new Button().render({
-                name: 'button-reg-for-reg',
-                title: 'Зарегистрироваться',
+                name: "button-reg-for-reg",
+                title: "Зарегистрироваться",
                 onClick: async (event) => {
-                    event.preventDefault()
-                    const form = event.currentTarget.form
+                    event.preventDefault();
+                    const form = event.currentTarget.form;
                     const formData = new FormData(form);
                     const data = Object.fromEntries(formData.entries());
                     this.fullData = { ...this.fullData, ...data };
 
-                    const errorContainer = page.querySelectorAll('.auth-input__error');
-                    errorContainer.forEach(container => {
-                        container.innerText = '';
-                    })
+                    const errorContainer = page.querySelectorAll(".auth-input__error");
+                    errorContainer.forEach((container) => {
+                        container.innerText = "";
+                    });
 
                     const valid = validation(data);
+
+                    new Input().setStatusInput(valid, page);
 
                     if (valid.isValid) {
                         const response = await postDataReg(this.fullData);
                         errorContainer.innerText = response.error;
                     } else {
-                        valid.errors.forEach(err => {
+                        valid.errors.forEach((err) => {
                             const fieldErrorContainer = page.querySelector(`.auth-input__error[name="${err.field}"]`);
                             fieldErrorContainer.innerText = err.message;
-                        })
+                        });
                     }
-                }
+                },
             });
 
             const buttonBack = new Button().render({
-                name: 'button-login-for-reg',
-                title: 'Назад',
+                name: "button-login-for-reg",
+                title: "Назад",
                 onClick: (event) => {
-                    event.preventDefault()
-                    const form = event.currentTarget.form
+                    event.preventDefault();
+                    const form = event.currentTarget.form;
                     const formData = new FormData(form);
                     const data = Object.fromEntries(formData.entries());
                     this.state = 1;
                     this.fullData = { ...this.fullData, ...data };
                     this.updateView();
-                }
+                },
             });
 
             inputContainer.appendChild(inputEmail);
             inputContainer.appendChild(inputPassword);
 
+            const inputForm = inputPassword.querySelector(".input-form");
+            inputForm.appendChild(eyePassword);
+
             actionsContainer.appendChild(button_reg_state2);
             actionsContainer.appendChild(buttonBack);
-
         }
 
         return page;
     }
-
 }

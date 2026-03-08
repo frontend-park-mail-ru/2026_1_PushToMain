@@ -1,7 +1,6 @@
 import { validation } from "../../utils/validation.js";
 import { BaseComponent } from "../BaseComponent.js";
 
-
 export class Input extends BaseComponent {
     /**
      * Рендерит поле ввода с заданными свойствами.
@@ -19,24 +18,38 @@ export class Input extends BaseComponent {
             input_title: props.input_title,
             name: props.name,
             input_value: props.input_value,
-            input_status: props.input_status,
-            svg: props.svg || '/public/assets/svg/blank.svg',
-
+            svg: props.svg,
+            help: props.help,
         });
 
-
-
-        element.addEventListener('input', (event) => {
+        element.addEventListener("input", (event) => {
             const value = event.target.value;
             props?.input?.(event);
-            const valid = validation({ [props.type]: value });
-            if (!valid.isValid) {
-                valid.errors.forEach(err => {
-                    const fieldErrorContainer = element.querySelector(`.auth-input__error[name="${err.field}"]`);
-                    fieldErrorContainer.innerText = err.message;
-                })
-            }
-        })
+        });
+
         return element;
+    }
+
+    setStatusInput(valid, page) {
+        page.querySelectorAll(".input-form").forEach((inputForm) => {
+            inputForm.classList.remove("error", "success");
+        });
+
+        valid.errors.forEach((err) => {
+            const inputForm = page.querySelector(`input[name="${err.field}"]`)?.closest(".input-form");
+            if (inputForm) {
+                inputForm.classList.add("error");
+            }
+        });
+
+        const fields = ["name", "surname", "password", "email"];
+        fields.forEach((field) => {
+            if (!valid.errors.some((err) => err.field === field)) {
+                const inputForm = page.querySelector(`input[name="${field}"]`)?.closest(".input-form");
+                if (inputForm) {
+                    inputForm.classList.add("success");
+                }
+            }
+        });
     }
 }

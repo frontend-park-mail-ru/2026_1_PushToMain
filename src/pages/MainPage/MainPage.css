@@ -1,6 +1,5 @@
-@import '/src/widgets/Sidebar/Sidebar.css';
-@import '/src/widgets/MailBox/MailBox.css';
-
+@import "/src/widgets/Sidebar/Sidebar.css";
+@import "/src/widgets/MailBox/MailBox.css";
 
 .main-page {
     display: grid;
@@ -9,7 +8,6 @@
     height: 100vh;
     overflow: hidden;
     background: var(--background-gradient);
-
 }
 
 .sidebar {
@@ -34,7 +32,7 @@
 .search-bar {
     display: flex;
     align-items: center;
-    background-color: #FFFFFF;
+    background-color: #ffffff;
     border-radius: 20px;
     padding: 0 20px;
 }
@@ -43,10 +41,16 @@
     gap: 0;
 }
 
-.input-form {
+.search-bar .input-form,
+.mail-box-container .input-form {
     display: flex;
     flex-direction: row;
     align-items: center;
+    border: none;
+}
+
+.input-form input:focus {
+    outline: none;
 }
 
 .search-bar input {
@@ -75,7 +79,17 @@
 }
 
 .top-right-menu button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
     background-color: transparent;
+    width: 60px;
+    height: 60px;
+}
+
+.top-right-menu button:hover {
+    background-color: var(--color-main-background);
+    transition: 400ms;
 }
 
 .top-right-menu button[name="avatar"] svg {
@@ -84,11 +98,14 @@
 }
 
 .mail-box-container {
-    width: 100%;
+    background-color: var(--color-sidebar-background);
+    border-radius: 20px;
+    padding: 30px;
+    margin: 20px 0 0 0;
+    gap: 10px;
+
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    overflow: hidden;
 }
-
-
-
-
-
-

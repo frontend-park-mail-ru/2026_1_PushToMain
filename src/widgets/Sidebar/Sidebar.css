@@ -17,8 +17,9 @@
     width: 100%;
 }
 
-
-.main-button, .main-button-container, .extra-button-container{
+.main-button,
+.main-button-container,
+.extra-button-container {
     display: flex;
     flex-direction: column;
     align-items: start;
@@ -33,10 +34,11 @@
     align-items: center;
     padding: 0 20px;
     width: 100%;
-    font-size: 22px;    
+    font-size: 22px;
 }
 
-.main-button-container button, .extra-button-container button {
+.main-button-container button,
+.extra-button-container button {
     display: flex;
     align-items: center;
     gap: 15px;
@@ -61,7 +63,8 @@ button img {
     font-size: 18px;
 }
 
-.main-button-container button:hover,  .extra-button-container button:hover {
+.main-button-container button:hover,
+.extra-button-container button:hover {
     background-color: var(--color-main-background);
 }
 
