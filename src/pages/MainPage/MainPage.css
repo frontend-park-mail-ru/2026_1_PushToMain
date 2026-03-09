@@ -10,9 +10,6 @@
     background: var(--background-gradient);
 }
 
-.sidebar {
-}
-
 .right-part {
     display: flex;
     flex-direction: column;

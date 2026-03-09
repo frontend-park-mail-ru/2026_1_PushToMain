@@ -5,6 +5,10 @@ import { validation } from "../../utils/validation.js";
 import { Input } from "../../components/Input/Input.js";
 
 export class RegPage extends BaseComponent {
+    /**
+     * Создает экземпляр страницы регистрации
+     * @constructor
+     */
     constructor() {
         super();
         this.state = 1;
@@ -25,9 +29,9 @@ export class RegPage extends BaseComponent {
     /**
      * Рендерит страницу регистраци с заданными свойствами.
      * Каждая часть формы регистрации отображается в зависимости от текущего состояния (this.state).
-     * @param {Object} props - Свойства страницы регистрации.
+     * @returns {HTMLElement} Возвращает DOM-элемент страницы регистрации
      */
-    render(props) {
+    render() {
         const page = this.renderComponent("RegPage", {
             title: "Регистрация",
         });
@@ -40,7 +44,6 @@ export class RegPage extends BaseComponent {
             input_title: "Имя",
             name: "name",
             input_value: this.fullData.name,
-            input: (event) => {},
         });
 
         const inputSurname = new Input().render({
@@ -49,7 +52,6 @@ export class RegPage extends BaseComponent {
             input_title: "Фамилия",
             name: "surname",
             input_value: this.fullData.surname,
-            input: (event) => {},
         });
 
         const button_login = new Button().render({
@@ -103,11 +105,10 @@ export class RegPage extends BaseComponent {
         } else {
             const inputEmail = new Input().render({
                 type: "email",
-                placeholder: "Введите адрес почты",
+                placeholder: "Введите новый адрес *@smail.ru",
                 input_title: "Адрес почты",
                 name: "email",
                 input_value: this.fullData.email,
-                input: (event) => {},
             });
 
             const inputPassword = new Input().render({
@@ -116,13 +117,12 @@ export class RegPage extends BaseComponent {
                 input_title: "Пароль",
                 name: "password",
                 input_value: this.fullData.password,
-                input: (event) => {},
             });
 
             const eyePassword = new Input().render({
                 type: "checkbox",
                 name: "eye-password",
-                input: (event) => {
+                input: () => {
                     const CheckBoxEye = document.querySelector('input[name="eye-password"]');
                     const visPassword = inputPassword.querySelector("input");
 

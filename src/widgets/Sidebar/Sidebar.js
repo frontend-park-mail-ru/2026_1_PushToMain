@@ -2,11 +2,19 @@ import { BaseComponent } from "../../components/BaseComponent.js";
 import { Button } from "../../components/Button/Button.js";
 
 export class Sidebar extends BaseComponent {
+    /**
+     * Создает экземпляр боковой панели
+     * @constructor
+     */
     constructor() {
         super();
         this.state = 1;
     }
-    render(props) {
+    /**
+     * Рендерит боковую панель с заданными свойствами
+     * @returns {HTMLElement} Возвращает DOM-элемент боковую панель
+     */
+    render() {
         const sidebar = this.renderComponent("Sidebar", {});
 
         const buttonNewLetter = new Button().render({
@@ -18,8 +26,8 @@ export class Sidebar extends BaseComponent {
             },
         });
 
-        const MainButton = sidebar.querySelector(".main-button");
-        MainButton.appendChild(buttonNewLetter);
+        const mainButton = sidebar.querySelector(".main-button");
+        mainButton.appendChild(buttonNewLetter);
 
         const buttonInbox = new Button().render({
             name: "button-inbox",
@@ -66,12 +74,12 @@ export class Sidebar extends BaseComponent {
             },
         });
 
-        const MainButtonContainer = sidebar.querySelector(".main-button-container");
-        MainButtonContainer.appendChild(buttonInbox);
-        MainButtonContainer.appendChild(buttonDrafs);
-        MainButtonContainer.appendChild(buttonSends);
-        MainButtonContainer.appendChild(buttonFavorites);
-        MainButtonContainer.appendChild(buttonProject);
+        const mainButtonContainer = sidebar.querySelector(".main-button-container");
+        mainButtonContainer.appendChild(buttonInbox);
+        mainButtonContainer.appendChild(buttonDrafs);
+        mainButtonContainer.appendChild(buttonSends);
+        mainButtonContainer.appendChild(buttonFavorites);
+        mainButtonContainer.appendChild(buttonProject);
 
         const buttonDropDown = new Button().render({
             name: "button-drop-down",
@@ -120,24 +128,24 @@ export class Sidebar extends BaseComponent {
                     },
                 });
 
-                const ExtraButtonContainer = sidebar.querySelector(".extra-button-container");
-                ExtraButtonContainer.innerHTML = "";
+                const extraButtonContainer = sidebar.querySelector(".extra-button-container");
+                extraButtonContainer.innerHTML = "";
 
                 if (this.state == 1) {
                     this.state = 0;
-                    ExtraButtonContainer.appendChild(buttonArchive);
-                    ExtraButtonContainer.appendChild(buttonSpam);
-                    ExtraButtonContainer.appendChild(buttonTrash);
-                    ExtraButtonContainer.appendChild(buttonAllLetter);
+                    extraButtonContainer.appendChild(buttonArchive);
+                    extraButtonContainer.appendChild(buttonSpam);
+                    extraButtonContainer.appendChild(buttonTrash);
+                    extraButtonContainer.appendChild(buttonAllLetter);
                 } else {
                     this.state = 1;
-                    ExtraButtonContainer.innerHTML = "";
+                    extraButtonContainer.innerHTML = "";
                 }
             },
         });
 
-        const DropDownContainer = sidebar.querySelector(".drop-down");
-        DropDownContainer.appendChild(buttonDropDown);
+        const dropDownContainer = sidebar.querySelector(".drop-down");
+        dropDownContainer.appendChild(buttonDropDown);
 
         return sidebar;
     }

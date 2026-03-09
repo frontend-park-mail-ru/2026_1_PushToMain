@@ -50,14 +50,8 @@ input[name="select-checkbox"] {
     background-position: center;
 }
 
-input[name="select-checkbox"]:hover {
-}
-
 input[name="select-checkbox"]:checked {
     background-image: url("/public/assets/svg/CheckboxOn.svg");
-}
-
-input[name="select-checkbox"]:checked:hover {
 }
 
 input[name="favorites-checkbox"] {

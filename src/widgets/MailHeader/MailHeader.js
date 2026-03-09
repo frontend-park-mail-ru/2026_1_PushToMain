@@ -3,10 +3,14 @@ import { Button } from "../../components/Button/Button.js";
 import { Input } from "../../components/Input/Input.js";
 
 export class MailHeader extends BaseComponent {
-    render(props) {
+    /**
+     * Рендерит панель управления письмами с заданными свойствами
+     * @returns {HTMLElement} Возвращает DOM-элемент панель управления письмами
+     */
+    render() {
         const widget = this.renderComponent("MailHeader", {});
 
-        const ArrowLeft = new Button().render({
+        const arrowLeft = new Button().render({
             svg: "/public/assets/svg/ArrowLeft.svg",
             help: "Пред.",
             onclick: (event) => {
@@ -14,7 +18,7 @@ export class MailHeader extends BaseComponent {
             },
         });
 
-        const ArrowRight = new Button().render({
+        const arrowRight = new Button().render({
             svg: "/public/assets/svg/ArrowRight.svg",
             help: "След.",
             onclick: (event) => {
@@ -22,7 +26,7 @@ export class MailHeader extends BaseComponent {
             },
         });
 
-        const ThreeDotsVertical = new Button().render({
+        const threeDotsVertical = new Button().render({
             svg: "/public/assets/svg/ThreeDotsVertical.svg",
             help: "Ещё",
             onclick: (event) => {
@@ -30,7 +34,7 @@ export class MailHeader extends BaseComponent {
             },
         });
 
-        const Refresh = new Button().render({
+        const refresh = new Button().render({
             svg: "/public/assets/svg/Refresh.svg",
             help: "Обновить",
             onclick: (event) => {
@@ -38,14 +42,14 @@ export class MailHeader extends BaseComponent {
             },
         });
 
-        const CheckBoxAll = new Input().render({
+        const checkBoxAll = new Input().render({
             type: "checkbox",
             name: "checkbox-all",
             help: "Выбрать",
-            input: (event) => {
-                const CheckBoxMail = document.querySelectorAll('input[name="select-checkbox"]');
+            input: () => {
+                const checkBoxMail = document.querySelectorAll('input[name="select-checkbox"]');
 
-                CheckBoxMail.forEach((element) => {
+                checkBoxMail.forEach((element) => {
                     if (!element.checked) {
                         element.checked = true;
                     } else {
@@ -55,7 +59,7 @@ export class MailHeader extends BaseComponent {
             },
         });
 
-        const ArrowDonwAll = new Button().render({
+        const arrowDonwAll = new Button().render({
             svg: "/public/assets/svg/ArrowDown.svg",
             help: "Выбрать",
             onclick: (event) => {
@@ -63,16 +67,16 @@ export class MailHeader extends BaseComponent {
             },
         });
 
-        const MailHeaderLeftContainer = widget.querySelector(".mail-header__left-container");
-        const LeftContainerSelectAll = MailHeaderLeftContainer.querySelector(".left-container__select-all");
-        const MailHeaderRightContainer = widget.querySelector(".mail-header__right-container");
+        const mailHeaderLeftContainer = widget.querySelector(".mail-header__left-container");
+        const leftContainerSelectAll = mailHeaderLeftContainer.querySelector(".left-container__select-all");
+        const mailHeaderRightContainer = widget.querySelector(".mail-header__right-container");
 
-        LeftContainerSelectAll.appendChild(CheckBoxAll);
-        LeftContainerSelectAll.appendChild(ArrowDonwAll);
-        MailHeaderLeftContainer.appendChild(Refresh);
-        MailHeaderLeftContainer.appendChild(ThreeDotsVertical);
-        MailHeaderRightContainer.appendChild(ArrowLeft);
-        MailHeaderRightContainer.appendChild(ArrowRight);
+        leftContainerSelectAll.appendChild(checkBoxAll);
+        leftContainerSelectAll.appendChild(arrowDonwAll);
+        mailHeaderLeftContainer.appendChild(refresh);
+        mailHeaderLeftContainer.appendChild(threeDotsVertical);
+        mailHeaderRightContainer.appendChild(arrowLeft);
+        mailHeaderRightContainer.appendChild(arrowRight);
 
         return widget;
     }

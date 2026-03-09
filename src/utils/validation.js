@@ -15,7 +15,7 @@ export function validation(dataForm) {
                 if (!regex.test(data)) {
                     errors.push({
                         field: "email",
-                        message: "Недопустимый формат почты",
+                        message: "Почта должна быть вида *@smail.ru",
                     });
                 }
             }
@@ -38,7 +38,7 @@ export function validation(dataForm) {
             if (!data) {
                 errors.push({ field: "name", message: "Поле имя обязательно" });
             } else {
-                const regexForName = /^[a-zA-Zа-яА-Я]/gm;
+                const regexForName = /^[a-zA-Zа-яА-Я-]+$/gm;
                 if (!regexForName.test(data)) {
                     errors.push({
                         field: "name",
@@ -52,7 +52,7 @@ export function validation(dataForm) {
             if (!data) {
                 errors.push({ field: "surname", message: "Поле фамилия обязательно" });
             } else {
-                const regexForSurname = /^[a-zA-Zа-яА-Я]/gm;
+                const regexForSurname = /^[a-zA-Zа-яА-Я-]+$/gm;
                 if (!regexForSurname.test(data)) {
                     errors.push({
                         field: "surname",

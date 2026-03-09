@@ -1,6 +1,3 @@
-.mail-tile {
-}
-
 .mail-header {
     display: flex;
     align-items: center;
@@ -39,14 +36,8 @@ input[name="checkbox-all"] {
     border: none;
 }
 
-input[name="checkbox-all"]:hover {
-}
-
 input[name="checkbox-all"]:checked {
     background-image: url("/public/assets/svg/CheckboxDeselect.svg");
-}
-
-input[name="checkbox-all"]:checked:hover {
 }
 
 .left-container__select-all:hover {

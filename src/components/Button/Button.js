@@ -6,6 +6,11 @@ export class Button extends BaseComponent {
      * @param {string} props.name - Название кнопки
      * @param {string} props.title - Текст на кнопке
      * @param {function} [props.onClick] - Функция, которая будет вызвана при нажатии на кнопку
+     * @param {string} [props.type] - Тип кнопки
+     * @param {string} [props.svg] - SVG иконка для кнопки
+     * @param {number} [props.count] - Счетчик для отображения на кнопке
+     * @param {string} [props.help] - Подсказка для кнопки
+     * @returns {HTMLElement} Возвращает DOM-элемент кнопки
      */
     render(props) {
         const element = this.renderComponent("Button", {

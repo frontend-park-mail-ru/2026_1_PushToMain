@@ -2,6 +2,14 @@ import { BaseComponent } from "../../components/BaseComponent.js";
 import { Input } from "../../components/Input/Input.js";
 
 export class MailBox extends BaseComponent {
+    /**
+     * Рендерит компонент почтового ящика с заданными свойствами
+     * @param {Object} props - Объект свойств для компонента почтового ящика
+     * @param {string} props.theme - Тема оформления почтового ящика
+     * @param {string} props.title - Заголовок почтового ящика
+     * @param {string|Date} props.date - Дата, связанная с почтовым ящиком
+     * @returns {HTMLElement} Возвращает DOM-элемент компонента почтового ящика
+     */
     render(props) {
         const widget = this.renderComponent("MailBox", {
             theme: props.theme,
@@ -9,22 +17,20 @@ export class MailBox extends BaseComponent {
             date: props.date,
         });
 
-        const SelectCheckBox = new Input().render({
+        const selectCheckBox = new Input().render({
             type: "checkbox",
             name: "select-checkbox",
-            input: (event) => {
-                console.log("Haha");
-            },
+            input: () => {},
         });
 
-        const FavoritesCheckBox = new Input().render({
+        const favoritesCheckBox = new Input().render({
             type: "checkbox",
             name: "favorites-checkbox",
         });
 
-        const CheckBoxContainer = widget.querySelector(".checkbox-container");
-        CheckBoxContainer.appendChild(SelectCheckBox);
-        CheckBoxContainer.appendChild(FavoritesCheckBox);
+        const checkBoxContainer = widget.querySelector(".checkbox-container");
+        checkBoxContainer.appendChild(selectCheckBox);
+        checkBoxContainer.appendChild(favoritesCheckBox);
 
         return widget;
     }

@@ -7,8 +7,9 @@ import { Input } from "../../components/Input/Input.js";
 export class LoginPage extends BaseComponent {
     /**
      * Рендерит страницу авторизации с заданными свойствами.
+     * @returns {HTMLElement} Возвращает DOM-элемент страницы авторизации
      */
-    render(props) {
+    render() {
         const page = this.renderComponent("LoginPage", {
             title: "Авторизация",
         });
@@ -18,7 +19,7 @@ export class LoginPage extends BaseComponent {
             placeholder: "Введите почту",
             input_title: "Почта",
             name: "email",
-            input: (event) => {},
+            input: () => {},
         });
 
         const inputPassword = new Input().render({
@@ -26,17 +27,17 @@ export class LoginPage extends BaseComponent {
             placeholder: "Введите пароль",
             input_title: "Пароль",
             name: "password",
-            input: (event) => {},
+            input: () => {},
         });
 
         const eyePassword = new Input().render({
             type: "checkbox",
             name: "eye-password",
-            input: (event) => {
-                const CheckBoxEye = document.querySelector('input[name="eye-password"]');
+            input: () => {
+                const checkBoxEye = document.querySelector('input[name="eye-password"]');
                 const visPassword = inputPassword.querySelector("input");
 
-                if (CheckBoxEye.checked) {
+                if (checkBoxEye.checked) {
                     visPassword.type = "text";
                 } else {
                     visPassword.type = "password";
@@ -44,9 +45,9 @@ export class LoginPage extends BaseComponent {
             },
         });
 
-        const InputContainer = page.querySelector(".auth-form__inputs");
-        InputContainer.appendChild(inputLogin);
-        InputContainer.appendChild(inputPassword);
+        const inputContainer = page.querySelector(".auth-form__inputs");
+        inputContainer.appendChild(inputLogin);
+        inputContainer.appendChild(inputPassword);
 
         const inputForm = inputPassword.querySelector(".input-form");
         inputForm.appendChild(eyePassword);

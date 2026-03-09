@@ -6,25 +6,29 @@ import { Button } from "../../components/Button/Button.js";
 import { MailHeader } from "../../widgets/MailHeader/MailHeader.js";
 
 export class MainPage extends BaseComponent {
-    render(props) {
+    /**
+     * Рендерит страницу главную страницу с заданными свойствами.
+     * @returns {HTMLElement} Возвращает DOM-элемент главной страницы
+     */
+    render() {
         const page = this.renderComponent("MainPage", {
             title: "Главная",
         });
 
         const sidebar = new Sidebar().render({});
-        const SigebarContainer = page.querySelector(".sidebar");
-        SigebarContainer.appendChild(sidebar);
+        const sigebarContainer = page.querySelector(".sidebar");
+        sigebarContainer.appendChild(sidebar);
 
         const search = new Input().render({
             type: "text",
             placeholder: "Поиск в почте",
             name: "search",
             svg: "/public/assets/svg/Search.svg",
-            input: (event) => {},
+            input: () => {},
         });
 
-        const SearchContainer = page.querySelector(".search-bar");
-        SearchContainer.appendChild(search);
+        const searchContainer = page.querySelector(".search-bar");
+        searchContainer.appendChild(search);
 
         const setting = new Button().render({
             svg: "/public/assets/svg/Settings.svg",
@@ -43,13 +47,13 @@ export class MainPage extends BaseComponent {
             },
         });
 
-        const TopRightMenu = page.querySelector(".top-right-menu");
-        TopRightMenu.appendChild(setting);
-        TopRightMenu.appendChild(avatar);
+        const topRightMenu = page.querySelector(".top-right-menu");
+        topRightMenu.appendChild(setting);
+        topRightMenu.appendChild(avatar);
 
         const mailHeader = new MailHeader().render({});
-        const MailBoxContainer = page.querySelector(".mail-box-container");
-        MailBoxContainer.appendChild(mailHeader);
+        const mailBoxContainer = page.querySelector(".mail-box-container");
+        mailBoxContainer.appendChild(mailHeader);
 
         const mailbox1 = new MailBox().render({
             theme: "МГТУ им Н.Э Баумана",
@@ -69,10 +73,10 @@ export class MainPage extends BaseComponent {
             date: "15:00",
         });
 
-        const MailTile = page.querySelector(".mail-box-container");
-        MailTile.appendChild(mailbox1);
-        MailTile.appendChild(mailbox2);
-        MailTile.appendChild(mailbox3);
+        const mailTile = page.querySelector(".mail-box-container");
+        mailTile.appendChild(mailbox1);
+        mailTile.appendChild(mailbox2);
+        mailTile.appendChild(mailbox3);
 
         return page;
     }
