@@ -1,6 +1,7 @@
 @import '/src/pages/LoginPage/LoginPage.css';
 @import '/src/pages/RegPage/RegPage.css';
 @import '/src/pages/MainPage/MainPage.css';
+@import '/src/styles/theme.css';
 
 
 * {
@@ -33,8 +34,10 @@ body {
     --secondary-text: #656565;
     --error-text: #FF0000;
     --tertiary-text: #000000;
+    --muted-text: #999999;
 
     /* Background */
+    --background-gradient: linear-gradient(#eeeeee, #CBE2FF, #77B4FF, #4398FF);
     --color-main-background: #E6F4FF;
     --color-sidebar-background: #FFFFFF;
 

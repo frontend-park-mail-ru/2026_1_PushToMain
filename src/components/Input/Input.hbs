@@ -1,1 +1,10 @@
-<input type="{{type}}" placeholder="{{placeholder}}" name="{{name}}" maxlength="100" value="{{input_value}}">
+<div class="input-container" , data-input-name="{{name}}">
+    <span class="input__title">{{input_title}}</span>
+    <div class="input-form">
+        {{#if svg}}
+            <img src="{{svg}}" alt="" width="20" height="20" />
+        {{/if}}
+        <input type="{{type}}" placeholder="{{placeholder}}" name="{{name}}" maxlength="100" value="{{input_value}}" title="{{help}}" />
+    </div>
+    <div class="auth-input__error" name="{{name}}"></div>
+</div>

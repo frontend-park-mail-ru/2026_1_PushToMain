@@ -1,5 +1,8 @@
 import { URL } from "./config.js"
 
+/**
+ * Отправляет POST-запрос на эндпоинт /login с данными.
+ */
 export async function postDataLogin(data = {}) {
 
     const response = await fetch(`${URL}/login`, {
@@ -8,7 +11,6 @@ export async function postDataLogin(data = {}) {
             "Content-Type": "application/json",
         },
         body: JSON.stringify(data)
-
     })
 
     if (response.ok) {
@@ -21,6 +23,9 @@ export async function postDataLogin(data = {}) {
 
 }
 
+/**
+ * Отправляет POST-запрос на эндпоинт /register с данными.
+ */
 export async function postDataReg(data = {}) {
     console.log(data);
 

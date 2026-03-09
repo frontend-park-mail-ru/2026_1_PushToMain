@@ -1,15 +1,15 @@
-@import '/src/components/Input/Input.css';
-@import '/src/components/Button/Button.css';
-
-
-#root {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background: linear-gradient(#FFFFFF, #CBE2FF, #77B4FF, #4398FF);
-}
+@import "/src/components/Input/Input.css";
+@import "/src/components/Button/Button.css";
 
 .auth-page {
+    display: flex;
+    height: 100vh;
+    align-items: center;
+    justify-content: center;
+    background: var(--background-gradient);
+}
+
+.auth-container {
     display: flex;
     align-items: center;
     justify-content: center;
@@ -24,10 +24,9 @@
     display: flex;
     flex-direction: column;
     gap: 28px;
-
 }
 
-.logo-title {
+.logo__title {
     display: flex;
     justify-content: center;
     font-size: 48px;
@@ -38,24 +37,26 @@
     display: flex;
     flex-direction: column;
     gap: 5px;
+    width: 500px;
 }
 
 .auth-form__title {
     display: flex;
     justify-content: center;
     font-size: 36px;
-
 }
 
 .auth-form__inputs {
     display: flex;
     flex-direction: column;
-    gap: 20px;
+    gap: 10px;
+    padding-bottom: 20px;
 }
 
-.auth-input {
+.input-container {
     display: flex;
     flex-direction: column;
+    gap: 5px;
 }
 
 .auth-form__actions {
@@ -63,7 +64,69 @@
     flex-direction: column;
 }
 
-.auth-input__title {
+.input-form {
+    position: relative;
+    display: flex;
+    align-items: center;
+    border: solid 2px var(--tertiary-text);
+    border-radius: 20px;
+}
+
+[data-input-name="eye-password"] {
+    gap: 0;
+}
+
+[data-input-name="eye-password"] .input-form {
+    border: none;
+    width: 30px;
+    height: 30px;
+    margin-right: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.input-form input[name="eye-password"] {
+    appearance: none;
+    position: relative;
+    background-color: transparent;
+    width: 30px;
+    height: 30px;
+    color: var(--button-active-background);
+    margin: 0;
+    background-image: url("/public/assets/svg/EyeOff.svg");
+    background-repeat: no-repeat;
+    background-position: center;
+}
+
+input[name="eye-password"]:hover {
+    transition: 400ms;
+    background-color: var(--color-main-background);
+}
+
+input[name="eye-password"]:checked {
+    background-image: url("/public/assets/svg/Eye.svg");
+}
+
+[data-input-name="eye-password"] .auth-input__error,
+[data-input-name="eye-password"] .auth-form__title {
+    display: none;
+}
+
+.input-form button:hover {
+    transition: 400ms;
+    background-color: var(--color-main-background);
+}
+
+.input-form button:checked {
+    background-image: url("/public/assets/svg/Eye.svg");
+}
+
+.input-form input {
+    width: 100%;
+}
+
+.input__title {
     font-size: 24px;
     padding-left: 10px;
 }
@@ -74,13 +137,12 @@
     gap: 16px;
 }
 
-.auth-input__error {
-    height: 50px;
+.auth-form__inputs .auth-input__error {
+    height: 20px;
     font-size: 20px;
     padding-left: 10px;
     color: var(--error-text);
 }
-
 
 [name="button-reg-for-login"] {
     background-color: var(--color-sidebar-background);
@@ -90,4 +152,36 @@
 
 [name="button-reg-for-login"]:hover {
     background-color: var(--color-main-background);
+}
+
+.input-form.error {
+    border-color: var(--error-text);
+}
+
+.input-form.error input {
+    color: var(--error-text);
+}
+
+.input-form.error input[name="eye-password"] {
+    background-image: url("/public/assets/svg/EyeOffRed.svg");
+}
+
+.input-form.error input[name="eye-password"]:checked {
+    background-image: url("/public/assets/svg/EyeRed.svg");
+}
+
+.input-form.success {
+    border-color: var(--button-active-background);
+}
+
+.input-form.success input {
+    color: var(--button-active-background);
+}
+
+.input-form.success input[name="eye-password"] {
+    background-image: url("/public/assets/svg/EyeOffBlue.svg");
+}
+
+.input-form.success input[name="eye-password"]:checked {
+    background-image: url("/public/assets/svg/EyeBlue.svg");
 }

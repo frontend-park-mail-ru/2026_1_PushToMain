@@ -2,66 +2,103 @@ import { BaseComponent } from "../../components/BaseComponent.js";
 import { Button } from "../../components/Button/Button.js";
 import { postDataLogin } from "../../api/ApiAuth.js";
 import { validation } from "../../utils/validation.js";
+import { Input } from "../../components/Input/Input.js";
 
 export class LoginPage extends BaseComponent {
-    render(props) {
-
-        const inputs = [
-            {
-                type: 'email',
-                placeholder: 'Введите почту',
-                input_title: 'Почта',
-                name: 'email'
-            },
-            {
-                type: 'password',
-                placeholder: 'Введите пароль',
-                input_title: 'Пароль',
-                name: 'password'
-            }
-        ];
-
-        const page = this.renderComponent('LoginPage', {
-            title: 'Вход',
-            inputs: inputs
+    /**
+     * Рендерит страницу авторизации с заданными свойствами.
+     * @returns {HTMLElement} Возвращает DOM-элемент страницы авторизации
+     */
+    render() {
+        const page = this.renderComponent("LoginPage", {
+            title: "Авторизация",
         });
 
-        const button_login = new Button().render({
-            name: 'button-login-for-login',
-            title: 'Войти',
+        const inputLogin = new Input().render({
+            type: "email",
+            placeholder: "Введите почту",
+            input_title: "Почта",
+            name: "email",
+            input: () => {},
+        });
+
+        const inputPassword = new Input().render({
+            type: "password",
+            placeholder: "Введите пароль",
+            input_title: "Пароль",
+            name: "password",
+            input: () => {},
+        });
+
+        const eyePassword = new Input().render({
+            type: "checkbox",
+            name: "eye-password",
+            input: () => {
+                const checkBoxEye = document.querySelector('input[name="eye-password"]');
+                const visPassword = inputPassword.querySelector("input");
+
+                if (checkBoxEye.checked) {
+                    visPassword.type = "text";
+                } else {
+                    visPassword.type = "password";
+                }
+            },
+        });
+
+        const inputContainer = page.querySelector(".auth-form__inputs");
+        inputContainer.appendChild(inputLogin);
+        inputContainer.appendChild(inputPassword);
+
+        const inputForm = inputPassword.querySelector(".input-form");
+        inputForm.appendChild(eyePassword);
+
+        const buttonLogin = new Button().render({
+            name: "button-login-for-login",
+            title: "Войти",
             onClick: async (event) => {
-                event.preventDefault()
-                const form = event.currentTarget.form
+                event.preventDefault();
+                const form = event.currentTarget.form;
                 const formData = new FormData(form);
                 const data = Object.fromEntries(formData.entries());
 
-                const error_container = page.querySelector('.auth-input__error')
+                const errorContainer = page.querySelectorAll(".auth-input__error");
+                errorContainer.forEach((container) => {
+                    container.innerText = "";
+                });
 
+                const valid = validation(data);
 
-                if (validation(data).isValid) {
+                new Input().setStatusInput(valid, page);
+
+                if (valid.isValid) {
                     const response = await postDataLogin(data);
-                    error_container.innerText = response.error;
+                    if (response.error) {
+                        errorContainer.innerText = response.error;
+                    } else {
+                        window.app.handleRoute("/");
+                    }
                 } else {
-                    error_container.innerText = 'Есть пустые поля';
+                    valid.errors.forEach((err) => {
+                        const fieldErrorContainer = page.querySelector(`.auth-input__error[name="${err.field}"]`);
+                        fieldErrorContainer.innerText = err.message;
+                    });
                 }
-            }
+            },
         });
 
-        const button_reg = new Button().render({
-            name: 'button-reg-for-login',
-            title: 'Зарегистрироваться',
+        const buttonReg = new Button().render({
+            name: "button-reg-for-login",
+            title: "Зарегистрироваться",
             onClick: (event) => {
                 event.preventDefault();
-                window.app.handleRoute('/register');
-            }
-
+                window.app.handleRoute("/register");
+            },
         });
 
-        const actionsContainer = page.querySelector('.auth-form__actions');
-        actionsContainer.appendChild(button_login);
-        actionsContainer.appendChild(button_reg);
+        const actionsContainer = page.querySelector(".auth-form__actions");
+        actionsContainer.appendChild(buttonLogin);
+        actionsContainer.appendChild(buttonReg);
 
         return page;
     }
-
 }

@@ -1,1 +1,11 @@
-<button name="{{name}}">{{title}}</button>
+<button type="{{type}}" name="{{name}}" title="{{help}}">
+    {{#if svg}}
+        <svg width="40px" height="40px">
+            <use href="{{svg}}"></use>
+        </svg>
+    {{/if}}
+    {{title}}
+    {{#if count}}
+        <p class="count">{{count}}</p>
+    {{/if}}
+</button>
