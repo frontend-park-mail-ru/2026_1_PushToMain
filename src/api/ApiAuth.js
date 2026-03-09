@@ -5,16 +5,17 @@ import { URL } from "./config.js";
  */
 export async function postDataLogin(data = {}) {
     try {
-        const response = await fetch(`http://localhost:8080/signin`, {
+        const response = await fetch(`http://localhost:8080/api/v1/signin`, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
             },
             body: JSON.stringify(data),
+            credentials: "include",
         });
 
         const responseData = await response.json();
-
+        console.log(responseData);
         if (response.ok) {
             return {
                 isValid: true,
@@ -75,13 +76,14 @@ export async function postDataLogin(data = {}) {
  */
 export async function postDataReg(data = {}) {
     try {
-        const response = await fetch(`http://localhost:8080/signup`, {
+        const response = await fetch(`http://localhost:8080/api/v1/signup`, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
             },
 
             body: JSON.stringify(data),
+            credentials: "include",
         });
 
         const responseData = await response.json();
@@ -139,4 +141,18 @@ export async function postDataReg(data = {}) {
             ],
         };
     }
+}
+
+export async function logOut() {
+    try {
+        const response = await fetch(`http://localhost:8080/api/v1/logout`, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            credentials: "include",
+        });
+        if (response.ok) {
+        }
+    } catch (error) {}
 }

@@ -108,4 +108,5 @@ input[name="favorites-checkbox"]:checked:hover {
     overflow: hidden;
     white-space: nowrap;
     text-overflow: ellipsis;
+    margin-left: auto;
 }

@@ -4,6 +4,8 @@ import { Input } from "../../components/Input/Input.js";
 import { MailBox } from "../../widgets/MailBox/MailBox.js";
 import { Button } from "../../components/Button/Button.js";
 import { MailHeader } from "../../widgets/MailHeader/MailHeader.js";
+import { getEmail } from "../../api/ApiEmail.js";
+import { logOut } from "../../api/ApiAuth.js";
 
 export class MainPage extends BaseComponent {
     /**
@@ -35,7 +37,7 @@ export class MainPage extends BaseComponent {
             help: "Настройки",
             onClick: (event) => {
                 event.preventDefault();
-                this.logOut();
+                this.logout();
             },
         });
 
@@ -56,33 +58,23 @@ export class MainPage extends BaseComponent {
         const mailBoxContainer = page.querySelector(".mail-box-container");
         mailBoxContainer.appendChild(mailHeader);
 
-        const mailbox1 = new MailBox().render({
-            theme: "МГТУ им Н.Э Баумана",
-            title: "FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF",
-            date: "15:00",
-        });
-
-        const mailbox2 = new MailBox().render({
-            theme: "МГТУ им Н.Э Баумана",
-            title: "FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF",
-            date: "15:00",
-        });
-
-        const mailbox3 = new MailBox().render({
-            theme: "МГТУ им Н.Э Баумана",
-            title: "FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF",
-            date: "15:00",
-        });
-
         const mailTile = page.querySelector(".mail-box-container");
-        mailTile.appendChild(mailbox1);
-        mailTile.appendChild(mailbox2);
-        mailTile.appendChild(mailbox3);
+
+        getEmail().then((emails) => {
+            emails.forEach((element) => {
+                const mailTile = new MailBox().render({
+                    theme: element.header,
+                    title: element.body,
+                    date: "15:00",
+                });
+                mailBoxContainer.appendChild(mailTile);
+            });
+        });
 
         return page;
     }
-    logOut() {
-        document.cookie = "token=; path=/; expires=Thu, 01 Jan 1970 00:00:00 UTC; SameSite=Strict";
+    logout() {
+        logOut();
         window.app.handleRoute("/login");
     }
 }
