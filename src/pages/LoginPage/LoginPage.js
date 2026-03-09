@@ -79,6 +79,7 @@ export class LoginPage extends BaseComponent {
                             fieldErrorContainer.innerText = err.message;
                         });
                     } else {
+                        document.cookie = `token=${response.token}; path=/; samesite=Strict; max-age=60*60*24`;
                         window.app.handleRoute("/");
                     }
                 } else {
