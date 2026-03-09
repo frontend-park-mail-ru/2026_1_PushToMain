@@ -61,6 +61,10 @@ export class MainPage extends BaseComponent {
         const mailTile = page.querySelector(".mail-box-container");
 
         getEmail().then((emails) => {
+            if (emails === undefined) {
+                window.app.handleRoute("/login");
+                return;
+            }
             emails.forEach((element) => {
                 const mailTile = new MailBox().render({
                     theme: element.header,

@@ -154,5 +154,7 @@ export async function logOut() {
         });
         if (response.ok) {
         }
-    } catch (error) {}
+    } catch (error) {
+        console.log("Сервер не отвечает", error);
+    }
 }

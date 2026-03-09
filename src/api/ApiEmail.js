@@ -12,5 +12,7 @@ export async function getEmail() {
             const emails = await response.json();
             return emails;
         }
-    } catch (error) {}
+    } catch (error) {
+        console.log("Сервер не отвечает", error);
+    }
 }
