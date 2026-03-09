@@ -154,8 +154,16 @@ export class RegPage extends BaseComponent {
                     new Input().setStatusInput(valid, page);
 
                     if (valid.isValid) {
-                        const response = await postDataReg(this.fullData);
-                        errorContainer.innerText = response.error;
+                        const response = await postDataReg(data);
+                        if (!response.isValid) {
+                            new Input().setStatusInput(response, page);
+                            response.errors.forEach((err) => {
+                                const fieldErrorContainer = page.querySelector(`.auth-input__error[name="${err.field}"]`);
+                                fieldErrorContainer.innerText = err.message;
+                            });
+                        } else {
+                            window.app.handleRoute("/");
+                        }
                     } else {
                         valid.errors.forEach((err) => {
                             const fieldErrorContainer = page.querySelector(`.auth-input__error[name="${err.field}"]`);
