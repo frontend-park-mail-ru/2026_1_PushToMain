@@ -16,8 +16,8 @@ export class MainPage extends BaseComponent {
         });
 
         const sidebar = new Sidebar().render({});
-        const sigebarContainer = page.querySelector(".sidebar");
-        sigebarContainer.appendChild(sidebar);
+        const sidebarContainer = page.querySelector(".sidebar");
+        sidebarContainer.appendChild(sidebar);
 
         const search = new Input().render({
             type: "text",
