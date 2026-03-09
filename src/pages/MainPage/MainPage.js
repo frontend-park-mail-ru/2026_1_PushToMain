@@ -33,8 +33,9 @@ export class MainPage extends BaseComponent {
         const setting = new Button().render({
             svg: "/public/assets/svg/Settings.svg",
             help: "Настройки",
-            onclick: (event) => {
+            onClick: (event) => {
                 event.preventDefault();
+                this.logOut();
             },
         });
 
@@ -42,7 +43,7 @@ export class MainPage extends BaseComponent {
             svg: "/public/assets/svg/Avatar.svg",
             name: "avatar",
             help: "Аккаунт",
-            onclick: (event) => {
+            onClick: (event) => {
                 event.preventDefault();
             },
         });
@@ -79,5 +80,9 @@ export class MainPage extends BaseComponent {
         mailTile.appendChild(mailbox3);
 
         return page;
+    }
+    logOut() {
+        document.cookie = "token=; path=/; expires=Thu, 01 Jan 1970 00:00:00 UTC; SameSite=Strict";
+        window.app.handleRoute("/login");
     }
 }

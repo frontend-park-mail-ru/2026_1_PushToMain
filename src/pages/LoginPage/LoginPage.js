@@ -79,7 +79,9 @@ export class LoginPage extends BaseComponent {
                             fieldErrorContainer.innerText = err.message;
                         });
                     } else {
-                        document.cookie = `token=${response.token}; path=/; samesite=Strict; max-age=60*60*24`;
+                        let date = new Date(Date.now() + 86400e3);
+                        date = date.toUTCString();
+                        document.cookie = `token=${response.token}; path=/; samesite=Strict; expires=${date}`;
                         window.app.handleRoute("/");
                     }
                 } else {
