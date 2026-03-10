@@ -16,10 +16,23 @@ export class LoginPage extends BaseComponent {
 
         const inputLogin = new Input().render({
             type: "email",
-            placeholder: "Введите почту",
+            placeholder: "ivan.petrov@smail.ru",
             input_title: "Почта",
             name: "email",
-            input: () => {},
+            input: (event) => {
+                const re = /^[a-zA-Z0-9]+(\.[a-zA-Z0-9]+)*@smail.ru/
+
+                const errorContainer = page.querySelector('.auth-input__error[name="email"]');
+                const inputForm = page.querySelector('.input-form[name="email"]');
+                if (event.target.value !== "" && !re.test(event.target.value)) {
+                    errorContainer.innerText = "Почта должна быть вида *@smail.ru";
+                    inputForm.classList.add('error');
+                }
+                else {
+                    errorContainer.innerText = "";
+                    inputForm.classList.remove('error');
+                }
+            },
         });
 
         const inputPassword = new Input().render({
@@ -27,7 +40,18 @@ export class LoginPage extends BaseComponent {
             placeholder: "Введите пароль",
             input_title: "Пароль",
             name: "password",
-            input: () => {},
+            input: (event) => {
+                const errorContainer = page.querySelector('.auth-input__error[name="password"]');
+                const inputForm = page.querySelector('.input-form[name="password"]');
+                if (event.target.value !== "" && event.target.value.length < 8) {
+                    errorContainer.innerText = "Пароль должен быть не менее 8 символов";
+                    inputForm.classList.add('error');
+                }
+                else {
+                    errorContainer.innerText = "";
+                    inputForm.classList.remove('error');
+                }
+            },
         });
 
         const eyePassword = new Input().render({
