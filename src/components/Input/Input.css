@@ -1,0 +1,12 @@
+input {
+    border-radius: 20px;
+    height: 60px;
+    font-size: 22px;
+    padding-left: 8px;
+    max-width: 500px;
+}
+
+input::placeholder {
+    font-size: 22px;
+    padding-left: 3px;
+}
