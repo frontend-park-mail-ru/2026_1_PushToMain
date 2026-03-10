@@ -1,5 +1,3 @@
-import { URL } from "./config.js";
-
 /**
  * Отправляет POST-запрос на эндпоинт /login с данными.
  */
@@ -54,7 +52,7 @@ export async function postDataLogin(data = {}) {
                 };
             }
         }
-    } catch (error) {
+    } catch {
         return {
             isValid: false,
             errors: [
@@ -126,7 +124,7 @@ export async function postDataReg(data = {}) {
                 };
             }
         }
-    } catch (error) {
+    } catch {
         return {
             isValid: false,
             errors: [
@@ -142,7 +140,9 @@ export async function postDataReg(data = {}) {
         };
     }
 }
-
+/**
+ * Отправляет POST-запрос на эндпоинт /logout с данными.
+ */
 export async function logOut() {
     try {
         const response = await fetch(`http://localhost:8080/api/v1/logout`, {
@@ -153,6 +153,7 @@ export async function logOut() {
             credentials: "include",
         });
         if (response.ok) {
+            return response;
         }
     } catch (error) {
         console.log("Сервер не отвечает", error);

@@ -58,8 +58,6 @@ export class MainPage extends BaseComponent {
         const mailBoxContainer = page.querySelector(".mail-box-container");
         mailBoxContainer.appendChild(mailHeader);
 
-        const mailTile = page.querySelector(".mail-box-container");
-
         getEmail().then((emails) => {
             if (emails === undefined) {
                 window.app.handleRoute("/login");
@@ -77,6 +75,9 @@ export class MainPage extends BaseComponent {
 
         return page;
     }
+    /**
+     * Выполняет выход пользователя из системы
+     */
     logout() {
         logOut();
         window.app.handleRoute("/login");
