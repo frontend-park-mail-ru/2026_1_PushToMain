@@ -72,8 +72,12 @@ export class LoginPage extends BaseComponent {
 
                 if (valid.isValid) {
                     const response = await postDataLogin(data);
-                    if (response.error) {
-                        errorContainer.innerText = response.error;
+                    if (!response.isValid) {
+                        new Input().setStatusInput(response, page);
+                        response.errors.forEach((err) => {
+                            const fieldErrorContainer = page.querySelector(`.auth-input__error[name="${err.field}"]`);
+                            fieldErrorContainer.innerText = err.message;
+                        });
                     } else {
                         window.app.handleRoute("/");
                     }

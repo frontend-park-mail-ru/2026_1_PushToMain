@@ -42,7 +42,6 @@ export class Input extends BaseComponent {
         page.querySelectorAll(".input-form").forEach((inputForm) => {
             inputForm.classList.remove("error", "success");
         });
-
         valid.errors.forEach((err) => {
             const inputForm = page.querySelector(`input[name="${err.field}"]`)?.closest(".input-form");
             if (inputForm) {

@@ -26,11 +26,26 @@
     gap: 28px;
 }
 
+.logo-container {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+}
+
+.logo-container svg {
+    margin-bottom: 16px;
+}
+
 .logo__title {
     display: flex;
     justify-content: center;
-    font-size: 48px;
+    align-items: end;
+    font-size: 52px;
     color: var(--accent-2);
+    margin-top: auto;
+    font-family: "Shantell Sans";
 }
 
 .auth-form {
@@ -68,7 +83,7 @@
     position: relative;
     display: flex;
     align-items: center;
-    border: solid 2px var(--tertiary-text);
+    border: solid 2px var(--input-stroke);
     border-radius: 20px;
 }
 

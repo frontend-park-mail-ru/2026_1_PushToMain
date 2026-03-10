@@ -4,6 +4,8 @@ import { Input } from "../../components/Input/Input.js";
 import { MailBox } from "../../widgets/MailBox/MailBox.js";
 import { Button } from "../../components/Button/Button.js";
 import { MailHeader } from "../../widgets/MailHeader/MailHeader.js";
+import { getEmail } from "../../api/ApiEmail.js";
+import { logOut } from "../../api/ApiAuth.js";
 
 export class MainPage extends BaseComponent {
     /**
@@ -33,8 +35,9 @@ export class MainPage extends BaseComponent {
         const setting = new Button().render({
             svg: "/public/assets/svg/Settings.svg",
             help: "Настройки",
-            onclick: (event) => {
+            onClick: (event) => {
                 event.preventDefault();
+                this.logout();
             },
         });
 
@@ -42,7 +45,7 @@ export class MainPage extends BaseComponent {
             svg: "/public/assets/svg/Avatar.svg",
             name: "avatar",
             help: "Аккаунт",
-            onclick: (event) => {
+            onClick: (event) => {
                 event.preventDefault();
             },
         });
@@ -55,29 +58,28 @@ export class MainPage extends BaseComponent {
         const mailBoxContainer = page.querySelector(".mail-box-container");
         mailBoxContainer.appendChild(mailHeader);
 
-        const mailbox1 = new MailBox().render({
-            theme: "МГТУ им Н.Э Баумана",
-            title: "FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF",
-            date: "15:00",
+        getEmail().then((emails) => {
+            if (emails === undefined) {
+                window.app.handleRoute("/login");
+                return;
+            }
+            emails.forEach((element) => {
+                const mailTile = new MailBox().render({
+                    theme: element.header,
+                    title: element.body,
+                    date: "15:00",
+                });
+                mailBoxContainer.appendChild(mailTile);
+            });
         });
-
-        const mailbox2 = new MailBox().render({
-            theme: "МГТУ им Н.Э Баумана",
-            title: "FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF",
-            date: "15:00",
-        });
-
-        const mailbox3 = new MailBox().render({
-            theme: "МГТУ им Н.Э Баумана",
-            title: "FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF",
-            date: "15:00",
-        });
-
-        const mailTile = page.querySelector(".mail-box-container");
-        mailTile.appendChild(mailbox1);
-        mailTile.appendChild(mailbox2);
-        mailTile.appendChild(mailbox3);
 
         return page;
+    }
+    /**
+     * Выполняет выход пользователя из системы
+     */
+    logout() {
+        logOut();
+        window.app.handleRoute("/login");
     }
 }

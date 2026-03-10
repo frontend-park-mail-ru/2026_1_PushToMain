@@ -1,8 +1,19 @@
-@import '/src/pages/LoginPage/LoginPage.css';
-@import '/src/pages/RegPage/RegPage.css';
-@import '/src/pages/MainPage/MainPage.css';
-@import '/src/styles/theme.css';
+@import "/src/pages/LoginPage/LoginPage.css";
+@import "/src/pages/RegPage/RegPage.css";
+@import "/src/pages/MainPage/MainPage.css";
+@import "/src/styles/theme.css";
 
+@font-face {
+    font-family: "Ubuntu Sans";
+    src: url("/public/assets/font/Ubuntu_Sans/UbuntuSans-VariableFont_wdth,wght.ttf") format("truetype");
+    font-style: normal;
+}
+
+@font-face {
+    font-family: "Shantell Sans";
+    src: url("/public/assets/font/Shantell_Sans/ShantellSans-VariableFont_BNCE\,INFM\,SPAC\,wght.ttf") format("truetype");
+    font-style: normal;
+}
 
 * {
     margin: 0;
@@ -13,7 +24,6 @@
 
 html {
     height: 100vh;
-
 }
 
 body {
@@ -26,27 +36,29 @@ body {
 
 :root {
     /* Pallete */
-    --accent: #0077FF;
-    --accent-2: #0055FF;
+    --accent: #0077ff;
+    --accent-2: #0055ff;
 
     /* Text color */
-    --primary-text: #FFFFFF;
+    --primary-text: #ffffff;
     --secondary-text: #656565;
-    --error-text: #FF0000;
+    --error-text: #ff0000;
     --tertiary-text: #000000;
     --muted-text: #999999;
 
     /* Background */
-    --background-gradient: linear-gradient(#eeeeee, #CBE2FF, #77B4FF, #4398FF);
-    --color-main-background: #E6F4FF;
-    --color-sidebar-background: #FFFFFF;
+    --background-gradient: linear-gradient(#eeeeee, #cbe2ff, #77b4ff, #4398ff);
+    --color-main-background: #e6f4ff;
+    --color-sidebar-background: #ffffff;
 
-    --button-background: #0055FF;
-    --button-hover-background: #499BFF;
-    --button-active-background: #005CC6;
+    --button-background: #0055ff;
+    --button-hover-background: #499bff;
+    --button-active-background: #005cc6;
 
-    --input-error-background: #FFD9D9;
-    --input-background: #E4E4E4;
-    --input-success-background: #E7F1FF;
+    --input-error-background: #ffd9d9;
+    --input-background: #e4e4e4;
+    --input-success-background: #e7f1ff;
 
+    --input-stroke: #757575;
+    --mail-stroke: rgba(202, 202, 202, 0.4);
 }
