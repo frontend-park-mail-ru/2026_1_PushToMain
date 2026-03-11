@@ -1,9 +1,10 @@
+import { URL, PORT } from "./config.js";
 /**
  * Отправляет POST-запрос на эндпоинт /login с данными.
  */
 export async function postDataLogin(data = {}) {
     try {
-        const response = await fetch(`http://localhost:8080/api/v1/signin`, {
+        const response = await fetch(`http://${URL}:${PORT}/api/v1/signin`, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
@@ -74,7 +75,7 @@ export async function postDataLogin(data = {}) {
  */
 export async function postDataReg(data = {}) {
     try {
-        const response = await fetch(`http://localhost:8080/api/v1/signup`, {
+        const response = await fetch(`http://${URL}:${PORT}/api/v1/signup`, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
@@ -145,7 +146,7 @@ export async function postDataReg(data = {}) {
  */
 export async function logOut() {
     try {
-        const response = await fetch(`http://localhost:8080/api/v1/logout`, {
+        const response = await fetch(`http://${URL}:${PORT}/api/v1/logout`, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
