@@ -63,34 +63,28 @@ export class Sidebar extends BaseComponent {
             },
         });
 
-        const buttonProject = new Button().render({
-            name: "button-project",
-            title: "VK проект",
-            svg: "/public/assets/svg/Folder.svg",
-            onClick: (event) => {
-                event.preventDefault();
-            },
-        });
-
         const mainButtonContainer = sidebar.querySelector(".main-button-container");
         mainButtonContainer.appendChild(buttonInbox);
         mainButtonContainer.appendChild(buttonDrafs);
         mainButtonContainer.appendChild(buttonSends);
         mainButtonContainer.appendChild(buttonFavorites);
-        mainButtonContainer.appendChild(buttonProject);
 
         const buttonDropDown = new Button().render({
             name: "button-drop-down",
-            title: "Скрыть",
+            title: "Ещё",
             svg: "/public/assets/svg/DropdownArrow.svg",
             onClick: (event) => {
                 event.preventDefault();
 
                 const button = event.currentTarget;
+                const buttonText = button.querySelector(".button__text");
                 button.classList.toggle("active");
 
-                const arrow = button.querySelector("svg");
-                arrow.classList.toggle("rotated");
+                if (button.classList.contains("active")) {
+                    buttonText.innerText = "Скрыть";
+                } else {
+                    buttonText.innerText = "Ещё";
+                }
 
                 const buttonArchive = new Button().render({
                     name: "button-archive",
