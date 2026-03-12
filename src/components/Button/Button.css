@@ -4,10 +4,12 @@ button {
     color: var(--primary-text);
     border-radius: 20px;
     font-size: 24px;
+    cursor: pointer;
 }
 
 button:hover {
     background-color: var(--button-hover-background);
+    transition: 100ms;
 }
 
 button:active {

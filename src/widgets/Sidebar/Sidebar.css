@@ -1,7 +1,7 @@
 .sidebar-widget {
     display: flex;
     flex-direction: column;
-    gap: 14px;
+    gap: 11px;
 
     background-color: var(--color-sidebar-background);
     border-radius: 0px 20px 20px 0px;

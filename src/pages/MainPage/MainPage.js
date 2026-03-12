@@ -5,7 +5,6 @@ import { MailBox } from "../../widgets/MailBox/MailBox.js";
 import { Button } from "../../components/Button/Button.js";
 import { MailHeader } from "../../widgets/MailHeader/MailHeader.js";
 import { getEmail } from "../../api/ApiEmail.js";
-import { logOut } from "../../api/ApiAuth.js";
 
 export class MainPage extends BaseComponent {
     /**
@@ -79,7 +78,6 @@ export class MainPage extends BaseComponent {
      * Выполняет выход пользователя из системы
      */
     logout() {
-        logOut();
         window.app.handleRoute("/login");
     }
 }
