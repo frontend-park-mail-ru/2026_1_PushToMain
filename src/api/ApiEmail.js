@@ -1,9 +1,10 @@
+import { URL } from "./config.js";
 /**
  * Отправляет GET-запрос на эндпоинт /emails.
  */
 export async function getEmail() {
     try {
-        const response = await fetch(`http://localhost:8080/api/v1/emails`, {
+        const response = await fetch(`${URL}/emails`, {
             method: "GET",
             headers: {
                 "Content-Type": "application/json",

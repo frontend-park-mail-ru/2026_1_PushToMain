@@ -45,7 +45,7 @@
     font-size: 52px;
     color: var(--accent-2);
     margin-top: auto;
-    font-family: "Shantell Sans";
+    font-family: "Shantell Sans", sans-serif;
 }
 
 .auth-form {
