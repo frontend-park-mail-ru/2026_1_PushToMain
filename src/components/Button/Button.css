@@ -9,6 +9,7 @@ button {
 
 button:hover {
     background-color: var(--button-hover-background);
+    transition: 100ms;
 }
 
 button:active {
