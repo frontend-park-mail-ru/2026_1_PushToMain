@@ -1,19 +1,22 @@
 name: linter
 on:
-    pull_request:
-        branches: [dev]
+  pull_request:
+    branches: [dev]
 jobs:
   lint:
     name: lint
     runs-on: ubuntu-latest
     steps:
-    - name: checkout
+      - name: checkout
         uses: actions/checkout@v4
-    - name: Используем Node.js 22
+      
+      - name: Используем Node.js 22
         uses: actions/setup-node@v4
         with:
           node-version: 22.x
-    - name: install ci
+      
+      - name: install ci
         run: npm ci
-    - name: run-lint
+      
+      - name: run-lint
         run: npm run lint
