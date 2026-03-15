@@ -1,13 +1,25 @@
-export const Death13 = {
-    createElement,
-    render,
-};
+export class Component {
+    constructor(props) {
+        this.props = props;
+    }
+
+    render() {}
+}
+
+Component.prototype.isDeath13Component = true;
 
 export function createDOM(fiber) {
     if (typeof fiber.type === "function") {
-        const renderedElement = fiber.type(fiber.props);
-        return createDOM(renderedElement);
+        if (fiber.type.prototype && fiber.type.prototype.isDeath13Component) {
+            const instance = new fiber.type(fiber.props);
+            const renderedElement = instance.render();
+            return createDOM(renderedElement);
+        } else {
+            const renderedElement = fiber.type(fiber.props);
+            return createDOM(renderedElement);
+        }
     }
+
     const dom = fiber.type === "TEXT_ELEMENT" ? document.createTextNode("") : document.createElement(fiber.type);
 
     const isProperty = (key) => key !== "children";
@@ -17,10 +29,11 @@ export function createDOM(fiber) {
             dom[name] = fiber.props[name];
         });
 
-    fiber.props.children.forEach((child) => {
-        render(child, dom);
-    });
-
+    if (fiber.props.children) {
+        fiber.props.children.forEach((child) => {
+            render(child, dom);
+        });
+    }
     return dom;
 }
 
@@ -46,7 +59,15 @@ export function createTextElement(text) {
     };
 }
 
-export function render(element, container) {
-    const dom = createDOM(element);
-    container.appendChild(dom);
+export function render(props, router) {
+    const dom = createDOM(props);
+    router.appendChild(dom);
 }
+
+export const Death13 = {
+    createElement,
+    render,
+    Component,
+};
+
+export default Death13

@@ -1,4 +1,4 @@
-import HtmlBundlerPlugin from "html-bundler-webpack-plugin";
+import HtmlWebpackPlugin from "html-webpack-plugin"
 import path, { dirname } from "path";
 import MiniCssExtractPlugin from "mini-css-extract-plugin";
 import CssMinimizerPlugin from "css-minimizer-webpack-plugin";
@@ -9,17 +9,20 @@ const __dirname = dirname("./");
 export default {
     mode: "development",
 
+    entry: {
+        main: "./src/App.tsx",
+    },
+
     plugins: [
-        new HtmlBundlerPlugin({
-            entry: {
-                index: "./src/react/test.html",
-            },
+        new HtmlWebpackPlugin({
+            template: "./public/index.html",
+            filename: "index.html",
         }),
         new MiniCssExtractPlugin(),
     ],
 
     optimization: {
-        minimize: true,
+        minimize: false,
         minimizer: [
             new CssMinimizerPlugin(),
             new ImageMinimizerPlugin({
@@ -46,21 +49,43 @@ export default {
             },
             {
                 test: /\.css$/,
-                loader: "css-loader",
+                use: ["style-loader", "css-loader"],
             },
             {
                 test: /\.(ts|tsx)$/,
-                use: ["babel-loader", "ts-loader"],
+                use: [
+                    {
+                        loader: "babel-loader",
+                        options: {
+                            presets: [
+                                "@babel/preset-env",
+                                "@babel/preset-typescript",
+                                [
+                                    "@babel/preset-react",
+                                    {
+                                        pragma: "Death13.createElement",
+                                        pragmaFrag: "Death13.Fragment",
+                                    },
+                                ],
+                            ],
+                        },
+                    },
+                ],
             },
         ],
     },
 
     resolve: {
         extensions: [".tsx", ".jsx", ".ts", ".js"],
+        alias: {
+            "@react": path.resolve(__dirname, "src/react"),
+        },
     },
 
     devServer: {
         port: 3000,
         open: true,
+        hot: true,
+        historyApiFallback: true,
     },
 };
