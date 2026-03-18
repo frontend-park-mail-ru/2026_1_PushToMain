@@ -3,7 +3,7 @@
  * @param {Object} dataForm - Объект с полями формы
  * @returns {{isValid: boolean, errors: Array<{field: string, message: string}>}}
  */
-export function validation(dataForm) {
+export function validation(dataForm : object) {
     const errors = [];
 
     for (const [type, data] of Object.entries(dataForm)) {

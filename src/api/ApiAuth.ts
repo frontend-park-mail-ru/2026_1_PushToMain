@@ -1,4 +1,4 @@
-import { URL } from "./config.js";
+import { URL } from "./config";
 /**
  * Отправляет POST-запрос на эндпоинт /login с данными.
  */

@@ -1,4 +1,4 @@
-import { URL } from "./config.js";
+import { URL } from "./config";
 /**
  * Отправляет GET-запрос на эндпоинт /emails.
  */

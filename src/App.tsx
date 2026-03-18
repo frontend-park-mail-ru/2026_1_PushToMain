@@ -1,12 +1,16 @@
 import Death13 from "@react/stands";
 import LoginPage from "./pages/LoginPage/LoginPage";
+import RegPage from "./pages/RegPage/RegPage"
 import "../public/index.css"
+import MainPage from "./pages/MainPage/MainPage";
 
 class App {
     private routes: Record<string, any>;
     constructor() {
         this.routes = {
             "/login": <LoginPage/>,
+            "/register": <RegPage/>,
+            "/": <MainPage/>
         };
         this.handleRoute(location.pathname);
     }
@@ -24,4 +28,10 @@ class App {
     }
 }
 
-export const app = new App();
+declare global {
+    interface Window {
+        app: App;
+    }
+}
+
+window.app = new App();
