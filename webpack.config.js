@@ -1,4 +1,4 @@
-import HtmlWebpackPlugin from "html-webpack-plugin"
+import HtmlWebpackPlugin from "html-webpack-plugin";
 import path, { dirname } from "path";
 import MiniCssExtractPlugin from "mini-css-extract-plugin";
 import CssMinimizerPlugin from "css-minimizer-webpack-plugin";
@@ -45,7 +45,23 @@ export default {
         rules: [
             {
                 test: /\.s[ac]ss$/i,
-                use: ["style-loader", "css-loader", "sass-loader"],
+                use: [
+                    "style-loader",
+                    {
+                        loader: "css-loader",
+                        options: {
+                            url: {
+                                filter: (url) => {
+                                    if (url.startsWith("/assets/")) {
+                                        return false;
+                                    }
+                                    return true;
+                                },
+                            },
+                        },
+                    },
+                    "sass-loader",
+                ],
             },
             {
                 test: /\.css$/,
@@ -71,6 +87,10 @@ export default {
                         },
                     },
                 ],
+            },
+            {
+                test: /\.svg$/,
+                use: ["file-loader"],
             },
         ],
     },

@@ -3,34 +3,97 @@ import Button from "../../components/Button/Button";
 import Input from "../../components/Input/Input";
 import { validation } from "../../utils/validation";
 import { postDataLogin } from "../../api/ApiAuth";
-import "./LoginPage.css";
+import "./LoginPage.scss";
 
 class LoginPage extends Death13.Component {
     state: any = {
+        errors: {},
+        isLoading: false,
         email: "",
         password: "",
-        errors: {},
+    };
+
+    validateField = (field: string, value: string) => {
+        const data: any = {
+            email: field === "email" ? value : this.state.email,
+            password: field === "password" ? value : this.state.password,
+        };
+
+        const result = validation(data);
+
+        if (!result.isValid) {
+            const fieldError = result.errors.find((err: any) => err.field === field);
+            if (fieldError) {
+                return fieldError.message;
+            }
+        }
+        return undefined;
+    };
+
+    handleInputChange = (field: string, value: string) => {
+        const error = this.validateField(field, value);
+
+        this.setState({
+            [field]: value,
+            errors: {
+                ...this.state.errors,
+                [field]: error,
+            },
+        });
+    };
+
+    validateAllFields = () => {
+        const data = {
+            email: this.state.email,
+            password: this.state.password,
+        };
+
+        const result = validation(data);
+        const newErrors: any = {};
+
+        if (!result.isValid) {
+            result.errors.forEach((err: any) => {
+                if (err.field && !newErrors[err.field]) {
+                    newErrors[err.field] = err.message;
+                }
+            });
+        }
+
+        this.setState({ errors: newErrors });
+        return result.isValid;
     };
 
     async handleSubmit(event: Event) {
-        const form = (event.currentTarget as HTMLFormElement)?.form;
-        const formData = new FormData(form);
-        const data = Object.fromEntries(formData.entries());
+        event.preventDefault();
 
-        const valid = validation(data);
+        const isValid = this.validateAllFields();
 
-        if (valid.isValid) {
-            const response = await postDataLogin(data);
-            if (!response) return;
-            if (!response.isValid) {
-            } else {
-                window.app.handleRoute("/");
-            }
+        if (!isValid) {
+            return;
+        }
+
+        this.setState({ isLoading: true });
+
+        const response = await postDataLogin({
+            email: this.state.email,
+            password: this.state.password,
+        });
+
+        if (response && response.isValid) {
+            window.app.handleRoute("/");
+        } else if (response && !response.isValid) {
+            const serverErrors: any = {};
+            response.errors?.forEach((err: any) => {
+                if (err.field && !serverErrors[err.field]) {
+                    serverErrors[err.field] = err.message;
+                }
+            });
+            this.setState({ errors: serverErrors, isLoading: false });
         }
     }
 
     render() {
-        const { errors } = this.state;
+        const { errors, email, password } = this.state;
         return (
             <div className="auth-page">
                 <div className="auth-container">
@@ -48,7 +111,10 @@ class LoginPage extends Death13.Component {
                                     input_title="Почта"
                                     name="email"
                                     error={errors.email}
-                                    onInput={() => {}}
+                                    value={email}
+                                    onInput={(e: any) => {
+                                        this.handleInputChange("email", e.target.value);
+                                    }}
                                 />
                                 <Input
                                     type="password"
@@ -56,7 +122,10 @@ class LoginPage extends Death13.Component {
                                     input_title="Пароль"
                                     name="password"
                                     error={errors.password}
-                                    onInput={() => {}}
+                                    value={password}
+                                    onInput={(e: any) => {
+                                        this.handleInputChange("password", e.target.value);
+                                    }}
                                 />
                             </div>
                             <div className="auth-form__actions">
@@ -65,7 +134,7 @@ class LoginPage extends Death13.Component {
                                     name="button-login-for-login"
                                     onClick={async (event: Event) => {
                                         event.preventDefault();
-                                        this.handleSubmit(event);
+                                        await this.handleSubmit(event);
                                     }}
                                 />
                                 <Button

@@ -1,5 +1,6 @@
-import Button from "../../components/Button/Button";
 import Death13 from "@react/stands";
+import Button from "../../components/Button/Button";
+import "./Sidebar.css";
 
 const Sidebar = () => {
     const [isVisible, setIsVisible] = Death13.useState<boolean>(false);
@@ -61,7 +62,7 @@ const Sidebar = () => {
                     svg="../../assets/svg/DropdownArrow.svg"
                     onClick={(event: any) => {
                         event.preventDefault();
-                        setIsVisible((prev: boolean) => !prev);
+                        setIsVisible(!isVisible);
                     }}
                 />
                 {isVisible && (
@@ -92,7 +93,7 @@ const Sidebar = () => {
                         />
                         <Button
                             name="button-all-letter"
-                            title="Все пиьсма"
+                            title="Все письма"
                             svg="../../assets/svg/AllMail.svg"
                             onClick={(event: any) => {
                                 event.preventDefault();

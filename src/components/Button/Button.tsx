@@ -1,11 +1,11 @@
 import Death13 from "@react/stands";
-import "./Button.css";
+import "./Button.scss";
 
 class Button extends Death13.Component {
     render() {
         return (
             <button
-                type="button"
+                type={this.props.type || "button"}
                 name={this.props.name}
                 title={this.props.help || ""}
                 onclick={(event: any) => {

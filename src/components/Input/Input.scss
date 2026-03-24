@@ -1,0 +1,112 @@
+.input-container {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+
+    &[data-input-name="eye-password"] {
+        gap: 0;
+
+        .input-form {
+            border: none;
+            width: 30px;
+            height: 30px;
+            margin-right: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .auth-input__error,
+        .auth-form__title {
+            display: none;
+        }
+    }
+}
+
+.input__title {
+    font-size: 24px;
+    padding-left: 10px;
+}
+
+.input-form {
+    position: relative;
+    display: flex;
+    align-items: center;
+    border: solid 2px var(--input-stroke);
+    border-radius: 20px;
+
+    input {
+        width: 100%;
+        border-radius: 20px;
+        height: 60px;
+        font-size: 22px;
+        padding: 0 15px;
+        max-width: 500px;
+        border: none;
+        background: transparent;
+        outline: none;
+
+        &::placeholder {
+            font-size: 22px;
+            padding-left: 3px;
+        }
+
+        &[type="checkbox"] {
+            cursor: pointer;
+        }
+    }
+
+    img {
+        margin-left: 15px;
+        width: 24px;
+        height: 24px;
+        cursor: pointer;
+    }
+
+    .password-toggle {
+        position: absolute;
+        right: 15px;
+        cursor: pointer;
+        width: 24px;
+        height: 24px;
+        background-color: #757575;
+        mask-size: contain;
+        mask-repeat: no-repeat;
+        mask-position: center;
+        transition: background-color 0.2s ease;
+        
+        mask-image: url("/assets/svg/Eye.svg");
+        
+        img {
+            display: none;
+        }
+    }
+    
+    .password-toggle.off {
+        mask-image: url("/assets/svg/EyeOff.svg");
+    }
+
+    &.error {
+        border-color: var(--error-text);
+
+        input {
+            color: var(--error-text);
+        }
+
+        .password-toggle {
+            background-color: var(--error-text);
+        }
+    }
+
+    &.success {
+        border-color: var(--button-active-background);
+
+        input {
+            color: var(--button-active-background);
+        }
+
+        .password-toggle {
+            background-color: var(--button-active-background);
+        }
+    }
+}

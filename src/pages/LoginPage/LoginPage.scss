@@ -1,0 +1,93 @@
+// LoginPage.scss
+@use "../../components/Input/Input.scss";
+@use "../../components/Button/Button.scss";
+
+.auth-page {
+    display: flex;
+    height: 100vh;
+    align-items: center;
+    justify-content: center;
+    background: var(--background-gradient);
+}
+
+.auth-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: var(--color-sidebar-background);
+    border-radius: 20px;
+    width: auto;
+    height: auto;
+    padding: 40px 30px;
+}
+
+.auth-page__form-container {
+    display: flex;
+    flex-direction: column;
+    gap: 28px;
+}
+
+.logo-container {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+
+    svg {
+        margin-bottom: 16px;
+    }
+}
+
+.logo__title {
+    display: flex;
+    justify-content: center;
+    align-items: end;
+    font-size: 52px;
+    color: var(--accent-2);
+    margin-top: auto;
+    font-family: "Shantell Sans", sans-serif;
+}
+
+.auth-form {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    width: 500px;
+}
+
+.auth-form__title {
+    display: flex;
+    justify-content: center;
+    font-size: 36px;
+}
+
+.auth-form__inputs {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    padding-bottom: 20px;
+
+    .auth-input__error {
+        height: 20px;
+        font-size: 20px;
+        padding-left: 10px;
+        color: var(--error-text);
+    }
+}
+
+.auth-form__actions {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+[name="button-reg-for-login"] {
+    background-color: var(--color-sidebar-background);
+    border: solid 3px var(--accent);
+    color: var(--accent);
+
+    &:hover {
+        background-color: var(--color-main-background);
+    }
+}

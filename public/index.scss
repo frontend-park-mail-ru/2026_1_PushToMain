@@ -1,7 +1,4 @@
-@import "/src/pages/LoginPage/LoginPage.css";
-@import "/src/pages/RegPage/RegPage.css";
-@import "/src/pages/MainPage/MainPage.css";
-@import "/src/styles/theme.css";
+@use "/src/pages/LoginPage/LoginPage.scss";
 
 @font-face {
     font-family: "Ubuntu Sans";
@@ -22,14 +19,8 @@
     font-family: "Ubuntu Sans", sans-serif;
 }
 
-html {
-    height: 100vh;
-}
-
-body {
-    height: 100vh;
-}
-
+html,
+body,
 #root {
     height: 100vh;
 }
