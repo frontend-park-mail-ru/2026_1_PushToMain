@@ -48,7 +48,7 @@ class MainPage extends Death13.Component {
     };
 
     render() {
-        const { emails, isLoading } = this.state;
+        const { emails} = this.state;
 
         return (
             <div className="main-page">

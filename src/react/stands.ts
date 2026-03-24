@@ -3,7 +3,6 @@ let wipRoot: Fiber | null = null;
 let currentRoot: Fiber | null = null;
 let deletions: Fiber[] = [];
 let wipFiber: Fiber | null = null;
-let hookIndex: number = 0;
 
 interface Hook {
     state: any;
@@ -11,7 +10,7 @@ interface Hook {
 }
 
 interface Fiber {
-    type: string | Function;
+    type: string | ((props: any) => any);
     props: any;
     parent: Fiber | null;
     dom: Node | null;
@@ -207,9 +206,8 @@ function updateFunctionComponent(fiber: Fiber) {
     wipFiber = fiber;
     wipFiber.hookIndex = 0;
     wipFiber.hooks = [];
-    hookIndex = 0;
 
-    const children = [(fiber.type as Function)(fiber.props)];
+    const children = [(fiber.type as (props: any) => any)(fiber.props)];
     reconcileChildren(fiber, children);
 }
 
