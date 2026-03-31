@@ -5,12 +5,16 @@ import Button from "../../components/Button/Button";
 import MailHeader from "../../widgets/MailHeader/MailHeader";
 import MailBox from "../../widgets/MailBox/MailBox";
 import { getEmail } from "../../api/ApiEmail";
-import "./MainPage.css";
+import "./MainPage.scss";
+import ProfileModal from "../../widgets/ProfileModal/ProfileModal";
+import Profile from "../../widgets/Profile/Profile";
 
 class MainPage extends Death13.Component {
     state: any = {
         emails: [],
         isLoading: true,
+        isModalOpen: false,
+        isProfileMode: false,
     };
 
     async componentDidMount() {
@@ -32,14 +36,20 @@ class MainPage extends Death13.Component {
         window.app.handleRoute("/login");
     };
 
-    handleSettings = (event: Event) => {
-        event.preventDefault();
-        // Открыть настройки
-    };
-
     handleAvatar = (event: Event) => {
         event.preventDefault();
-        // Открыть аккаунт
+        this.setState({ isModalOpen: true });
+    };
+
+    handleCloseModal = () => {
+        this.setState({ isModalOpen: false });
+    };
+    handleProfileClick = () => {
+        this.setState({ isModalOpen: false, isProfileMode: true });
+    };
+
+    handleBackToMail = () => {
+        this.setState({ isProfileMode: false });
     };
 
     handleSearch = (value: string) => {
@@ -48,12 +58,11 @@ class MainPage extends Death13.Component {
     };
 
     render() {
-        const { emails} = this.state;
-
+        const { emails, isModalOpen, isProfileMode } = this.state;
         return (
             <div className="main-page">
                 <aside className="sidebar">
-                    <Sidebar />
+                    <Sidebar isProfile={isProfileMode} backToMail={this.handleBackToMail} />
                 </aside>
                 <div className="right-part">
                     <div className="top-bar">
@@ -69,16 +78,22 @@ class MainPage extends Death13.Component {
                             />
                         </div>
                         <div className="top-right-menu">
-                            <Button svg="../../assets/svg/Settings.svg" name="settings" help="Настройки" onClick={this.handleSettings} />
                             <Button svg="../../assets/svg/Avatar.svg" name="avatar" help="Аккаунт" onClick={this.handleAvatar} />
                         </div>
                     </div>
                     <div className="mail-box-container">
-                        <MailHeader />
-                        {emails.map((email: any, index: number) => (
-                            <MailBox key={index} theme={email.header} title={email.body} date="15:00" />
-                        ))}
+                        {!isProfileMode && (
+                            <div>
+                                <MailHeader />
+                                {emails.map((email: any, index: number) => (
+                                    <MailBox key={index} theme={email.header} title={email.body} date="15:00" />
+                                ))}
+                            </div>
+                        )}{" "}
+                        {isProfileMode && <Profile />}
                     </div>
+
+                    <ProfileModal isOpen={isModalOpen} onClose={this.handleCloseModal} onProfileClick={this.handleProfileClick} />
                 </div>
             </div>
         );

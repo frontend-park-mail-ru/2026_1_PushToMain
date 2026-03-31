@@ -1,5 +1,5 @@
 import Death13 from "@react/stands";
-import "./MailBox.css";
+import "./MailBox.scss";
 
 class MailBox extends Death13.Component {
     state: any = {
@@ -16,7 +16,7 @@ class MailBox extends Death13.Component {
     };
 
     render() {
-        const { theme, title, date } = this.props;
+        const { theme, title, date} = this.props;
         const { isSelected, isFavorite } = this.state;
 
         return (

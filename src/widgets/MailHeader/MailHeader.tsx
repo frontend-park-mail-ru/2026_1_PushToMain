@@ -1,6 +1,7 @@
 import Death13 from "@react/stands";
 import Button from "../../components/Button/Button";
 import Input from "../../components/Input/Input";
+import "./MailHeader.scss";
 
 class MailHeader extends Death13.Component {
     render() {

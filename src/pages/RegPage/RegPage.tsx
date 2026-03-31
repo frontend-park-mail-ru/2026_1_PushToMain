@@ -3,7 +3,7 @@ import Button from "../../components/Button/Button";
 import Input from "../../components/Input/Input";
 import { validation } from "../../utils/validation";
 import { postDataReg } from "../../api/ApiAuth";
-import "./RegPage.css";
+import "./RegPage.scss";
 
 class RegPage extends Death13.Component {
     state: any = {
@@ -153,6 +153,7 @@ class RegPage extends Death13.Component {
                             <img src="../../assets/svg/Logo.svg" />
                             <h1 className="logo__title">SMail</h1>
                         </div>
+                        <h1 className="auth-form__subtitle">Твоя главная студенческая почта</h1>
                         <h1 className="auth-form__title">Регистрация</h1>
                         <form action="" className="auth-form">
                             <div className="auth-form__inputs">

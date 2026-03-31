@@ -102,6 +102,7 @@ class LoginPage extends Death13.Component {
                             <img src="../../assets/svg/Logo.svg" />
                             <h1 className="logo__title">SMail</h1>
                         </div>
+                        <h1 className="auth-form__subtitle">Твоя главная студенческая почта</h1>
                         <h1 className="auth-form__title">Авторизация</h1>
                         <form action="" className="auth-form">
                             <div className="auth-form__inputs">

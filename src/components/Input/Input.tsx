@@ -39,11 +39,10 @@ class Input extends Death13.Component {
                         />
                     )}
                 </div>
-                {hasError && (
-                    <div className="auth-input__error" name={this.props.name}>
-                        {this.props.error}
-                    </div>
-                )}
+
+                <div className="auth-input__error" name={this.props.name}>
+                    {this.props.error}
+                </div>
             </div>
         );
     }

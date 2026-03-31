@@ -1,4 +1,5 @@
 @use "/src/pages/LoginPage/LoginPage.scss";
+@use "/src/styles/theme.scss";
 
 @font-face {
     font-family: "Ubuntu Sans";
@@ -50,6 +51,6 @@ body,
     --input-background: #e4e4e4;
     --input-success-background: #e7f1ff;
 
-    --input-stroke: #757575;
+    --input-stroke: #c6c6c6;
     --mail-stroke: rgba(202, 202, 202, 0.4);
 }

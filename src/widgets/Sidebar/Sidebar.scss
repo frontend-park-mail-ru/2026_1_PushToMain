@@ -1,0 +1,136 @@
+.sidebar-widget {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+
+    background-color: var(--color-sidebar-background);
+    border-radius: 0px 20px 20px 0px;
+    padding: 40px 30px;
+    margin: 20px 0;
+
+    height: calc(100vh - 40px);
+    overflow-y: auto;
+
+    position: sticky;
+    box-sizing: border-box;
+
+    width: 100%;
+
+    .sidebar-content {
+        display: flex;
+        flex-direction: column;
+        align-items: start;
+        gap: 15px;
+        width: 100%;
+    }
+
+    .main-button,
+    .main-button-container,
+    .extra-button-container {
+        display: flex;
+        flex-direction: column;
+        align-items: start;
+        gap: 7px;
+        width: 100%;
+    }
+
+    .sidebar-profile {
+        display: flex;
+        align-items: center;
+        flex-direction: column;
+        gap: 8px;
+        width: 100%;
+        height: 146px;
+
+        img {
+            width: 80px;
+            height: 80px;
+        }
+    }
+
+    .main-button {
+        button {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            align-items: center;
+            padding: 0 20px;
+            width: 100%;
+            height: 40px;
+            font-size: 16px;
+
+            img {
+                width: 24px;
+                height: 24px;
+            }
+        }
+    }
+
+    .main-button-container,
+    .extra-button-container {
+        button {
+            display: flex;
+            align-items: center;
+            gap: 7px;
+            width: 100%;
+            height: 40px;
+            background-color: var(--color-sidebar-background);
+            font-size: 16px;
+
+            &:hover {
+                background-color: var(--color-main-background);
+            }
+        }
+    }
+
+    .main-button-container {
+        button {
+            color: var(--tertiary-text);
+        }
+    }
+
+    .extra-button-container {
+        padding-top: 15px;
+        button {
+            color: var(--tertiary-text) !important;
+            padding: 0 20px 0 50px !important;
+            gap: 15px;
+        }
+    }
+
+    button {
+        img {
+            width: 32px;
+            height: 32px;
+        }
+    }
+
+    .count {
+        margin-left: auto;
+        font-size: 18px;
+    }
+
+    .drop-down {
+        button {
+            display: flex;
+            align-items: center;
+            width: 100%;
+            height: 40px;
+            padding: 0 20px;
+            background-color: var(--color-sidebar-background);
+            color: var(--secondary-text);
+            font-size: 16px;
+            gap: 10px;
+
+            img {
+                transition: transform 0.3s;
+            }
+
+            &.active {
+                img {
+                    transform: rotateZ(180deg);
+                }
+            }
+        }
+    }
+}

@@ -24,8 +24,8 @@
 }
 
 .input__title {
-    font-size: 24px;
-    padding-left: 10px;
+    font-size: 16px;
+    padding-left: 17px;
 }
 
 .input-form {
@@ -38,16 +38,16 @@
     input {
         width: 100%;
         border-radius: 20px;
-        height: 60px;
-        font-size: 22px;
-        padding: 0 15px;
+        height: 48px;
+        font-size: 14px;
+        padding: 0 12px;
         max-width: 500px;
         border: none;
         background: transparent;
         outline: none;
 
         &::placeholder {
-            font-size: 22px;
+            font-size: 14px;
             padding-left: 3px;
         }
 
@@ -58,8 +58,8 @@
 
     img {
         margin-left: 15px;
-        width: 24px;
-        height: 24px;
+        width: 20px;
+        height: 20px;
         cursor: pointer;
     }
 
@@ -67,9 +67,9 @@
         position: absolute;
         right: 15px;
         cursor: pointer;
-        width: 24px;
-        height: 24px;
-        background-color: #757575;
+        width: 20px;
+        height: 20px;
+        background-color: var(--input-stroke);
         mask-size: contain;
         mask-repeat: no-repeat;
         mask-position: center;
