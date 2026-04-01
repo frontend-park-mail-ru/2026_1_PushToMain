@@ -1,0 +1,14 @@
+{
+    "compilerOptions": {
+        "strict": true,
+        "target": "ES6",
+        "moduleResolution": "node",
+        "reactNamespace": "Death13",
+        "jsx": "react",
+        "paths": {
+            "@react/*": ["./src/react/*"]
+        }
+    },
+    "include": ["src/**/*"],
+    "exclude": ["node_modules"]
+}

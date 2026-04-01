@@ -1,0 +1,63 @@
+.profile {
+    padding: 20px;
+    .profile-container {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    .profile-content {
+        display: flex;
+        gap: 40px;
+        padding: 20px 20px;
+
+        .profile-avatar {
+            display: flex;
+            flex-direction: column;
+
+            button {
+                height: 40px;
+                border-radius: 14px;
+                font-size: 20px;
+            }
+        }
+
+        .profile-form {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            width: 400px;
+            
+            .input-form {
+                border: 2px solid var(--input-stroke);
+            }
+            
+            .auth-input__error {
+                height: 20px;
+            }
+
+            .profile-actions {
+                display: flex;
+                gap: 10px;
+            }
+
+            button {
+                height: 40px;
+                border-radius: 20px;
+                font-size: 16px;
+                display: flex;
+                align-items: center;
+
+                &[name="back-to-mail"] {
+                    background-color: var(--color-sidebar-background);
+                    border: solid 3px var(--accent);
+                    color: var(--accent);
+
+                    &:hover {
+                        background-color: var(--color-main-background);
+                    }
+                }
+            }
+        }
+    }
+}

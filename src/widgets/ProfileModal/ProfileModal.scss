@@ -1,0 +1,73 @@
+.modal-overlay {
+    position: fixed;
+    z-index: 1000;
+    background-color: var(--color-sidebar-background);
+    display: flex;
+    justify-content: center;
+    border-radius: 20px;
+    width: 340px;
+    flex-direction: column;
+    gap: 16px;
+    padding: 30px 20px;
+    top: 90px;
+    right: 20px;
+}
+
+.overlay__email,
+.overlay__title {
+    display: flex;
+    justify-content: center;
+    font-size: 16px;
+}
+
+.overlay__close {
+    position: fixed;
+    right: 36px;
+    top: 120px;
+    button {
+        width: 40px;
+        height: 40px;
+        padding: 0;
+        background-color: var(--color-sidebar-background);
+    }
+}
+
+.overlay__avatar {
+    display: flex;
+    justify-content: center;
+    img {
+        width: 80px;
+        height: 80px;
+    }
+}
+
+.overlay-actions {
+    display: flex;
+    flex-direction: column;
+    button {
+        background-color: var(--color-sidebar-background);
+        color: var(--trytary-text);
+
+        display: flex;
+        gap: 10px;
+        align-items: center;
+
+        &[name="profile"] {
+            border: 2px solid var(--input-stroke);
+            border-radius: 20px 20px 0 0;
+        }
+
+        &[name="settings"] {
+            border-bottom: 2px solid var(--input-stroke);
+            border-left: 2px solid var(--input-stroke);
+            border-right: 2px solid var(--input-stroke);
+            border-radius: 0 0 20px 20px;
+        }
+    }
+}
+
+.button-exit {
+    button {
+        width: 100%;
+    }
+}

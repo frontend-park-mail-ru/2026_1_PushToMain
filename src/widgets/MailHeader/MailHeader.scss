@@ -1,0 +1,80 @@
+.mail-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 40px;
+    padding: 4px 20px;
+
+    &__left-container,
+    &__right-container {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+
+    &__left-container {
+        .left-container__select-all {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 10px;
+            overflow: hidden;
+            width: 60px;
+
+            &:hover {
+                background-color: var(--color-main-background);
+                transition: 400ms;
+            }
+
+            button {
+                img {
+                    width: 24px;
+                    height: 24px;
+                }
+            }
+        }
+    }
+
+    button {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background-color: transparent;
+        width: 40px;
+        height: 40px;
+        padding: 21px 6px;
+
+        &:hover {
+            background-color: var(--color-main-background);
+            transition: 400ms;
+        }
+
+        &:active {
+            background-color: var(--button-background);
+            transition: 400ms;
+        }
+
+        img {
+            width: 24px;
+            height: 24px;
+        }
+    }
+
+    input[name="checkbox-all"] {
+        appearance: none;
+        position: relative;
+        background-color: transparent;
+        width: 24px;
+        height: 24px;
+        color: var(--button-active-background);
+        margin: 0;
+        background-image: url("/assets/svg/CheckboxOffAll.svg");
+        background-size: contain;
+        background-position: center;
+        border: none;
+
+        &:checked {
+            background-image: url("/assets/svg/CheckboxDeselect.svg");
+        }
+    }
+}
