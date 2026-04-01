@@ -1,113 +1,105 @@
-@use "/src/widgets/MailHeader/MailHeader.scss";
-
-.mail-list {
-    width: 100%;
-}
-
 .mail {
     display: flex;
     flex-direction: row;
     align-items: center;
-    border: solid, 2px, var(--mail-stroke);
+    border: solid 2px var(--mail-stroke);
     border-radius: 20px;
     padding: 10px 20px;
     gap: 15px;
     max-height: 60px;
     font-size: 20px;
-}
-
-.mail:hover {
-    background-color: var(--color-main-background);
-    transition: 100ms;
-}
-
-.checkbox-container {
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    gap: 10px;
-}
-
-.checkbox-container input {
-    height: 20px;
-    width: 20px;
-    border: none;
-}
-
-.checkbox-container .input-form img {
-    display: none;
-}
-
-input[name="select-checkbox"] {
-    appearance: none;
-    position: relative;
-    background-color: transparent;
-    width: 24px;
-    height: 24px;
-    color: var(--button-active-background);
-    margin: 0;
-    background-image: url("/public/assets/svg/CheckboxOff.svg");
-    background-size: contain;
-    background-position: center;
-}
-
-input[name="select-checkbox"]:checked {
-    background-image: url("/public/assets/svg/CheckboxOn.svg");
-}
-
-input[name="favorites-checkbox"] {
-    appearance: none;
-    position: relative;
-    background-color: transparent;
-    width: 24px;
-    height: 24px;
-    color: var(--button-active-background);
-    margin: 0;
-    background-image: url("/public/assets/svg/StarOff.svg");
-    background-size: contain;
-    background-position: center;
-}
-
-input[name="favorites-checkbox"]:hover {
-    background-image: url("/public/assets/svg/StarOff.svg");
-}
-
-input[name="favorites-checkbox"]:checked {
-    background-image: url("/public/assets/svg/StarOn.svg");
-}
-
-input[name="favorites-checkbox"]:checked:hover {
-    background-image: url("/public/assets/svg/StarOn.svg");
-}
-
-.mail-content {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 20px;
-    min-width: 0;
-}
-
-.mail-theme {
-    width: 220px;
-    overflow: hidden;
-    white-space: nowrap;
-    text-overflow: ellipsis;
-    font-weight: 500;
-}
-
-.mail-title {
+    margin-top: 5px;
+    cursor: pointer;
     width: 100%;
-    overflow: hidden;
-    white-space: nowrap;
-    text-overflow: ellipsis;
+    box-sizing: border-box;
+
+    &:hover {
+        background-color: var(--color-main-background);
+        transition: 100ms;
+    }
+
+    .checkbox-container {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        gap: 10px;
+        flex-shrink: 0;
+
+        input {
+            cursor: pointer;
+        }
+    }
+
+    input[name="select-checkbox"] {
+        appearance: none;
+        -webkit-appearance: none;
+        width: 24px;
+        height: 24px;
+        margin: 0;
+        background-image: url("/assets/svg/CheckboxOff.svg");
+        background-size: contain;
+        background-position: center;
+        background-repeat: no-repeat;
+        cursor: pointer;
+
+        &:checked {
+            background-image: url("/assets/svg/CheckboxOn.svg");
+        }
+    }
+
+    input[name="favorites-checkbox"] {
+        appearance: none;
+        -webkit-appearance: none;
+        width: 24px;
+        height: 24px;
+        margin: 0;
+        background-image: url("/assets/svg/StarOff.svg");
+        background-size: contain;
+        background-position: center;
+        background-repeat: no-repeat;
+        cursor: pointer;
+
+        &:checked {
+            background-image: url("/assets/svg/StarOn.svg");
+        }
+    }
+
+    .mail-content {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 20px;
+        min-width: 0;
+        flex: 1;
+
+        .mail-theme {
+            width: 220px;
+            overflow: hidden;
+            white-space: nowrap;
+            text-overflow: ellipsis;
+            font-weight: 500;
+            flex-shrink: 0;
+        }
+
+        .mail-title {
+            flex: 1;
+            overflow: hidden;
+            white-space: nowrap;
+            text-overflow: ellipsis;
+        }
+
+        .mail-date {
+            width: 120px;
+            text-align: right;
+            overflow: hidden;
+            white-space: nowrap;
+            text-overflow: ellipsis;
+            flex-shrink: 0;
+        }
+    }
 }
 
-.mail-date {
-    width: 120px;
-    text-align: right;
-    overflow: hidden;
-    white-space: nowrap;
-    text-overflow: ellipsis;
-    margin-left: auto;
+.mail.selected {
+    background-color: var(--color-main-background);
+    border-color: var(--accent);
 }

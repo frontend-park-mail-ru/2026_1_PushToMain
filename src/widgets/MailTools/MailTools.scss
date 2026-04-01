@@ -1,0 +1,47 @@
+.tools-container {
+    display: flex;
+    flex-direction: row;
+
+    .tools-left,
+    .tools-right {
+        display: flex;
+        flex-direction: row;
+        gap: 15px;
+    }
+
+    button {
+        display: flex;
+        align-items: center;
+        background-color: transparent;
+        color: var(--tretiry-text);
+        height: 30px;
+        font-size: 16px;
+        gap: 10px;
+        padding: 21px 6px;
+
+        &:hover {
+            background-color: var(--color-main-background);
+        }
+
+        img {
+            width: 32px;
+            height: 32px;
+        }
+    }
+
+    .tools-left {
+        padding-right: 15px;
+        border-right: 1px solid var(--muted-text);
+        button {
+            width: auto;
+        }
+    }
+
+    .tools-right {
+        padding-left: 15px;
+        button {
+            width: auto;
+        }
+    }
+}
+

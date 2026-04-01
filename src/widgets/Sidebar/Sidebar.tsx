@@ -9,15 +9,15 @@ class Sidebar extends Death13.Component {
 
     render() {
         const { isVisible } = this.state;
-        const { isProfile = false, backToMail } = this.props;
+        const { isProfile = 0, backToMail, changeProfile, changePassword, newMail } = this.props;
 
         return (
             <div className="sidebar-widget">
-                <div className="logo-container">
+                <div className="logo-container" onClick={() => backToMail()}>
                     <img src="../../assets/svg/Logo.svg" />
                     <h1 className="logo__title">SMail</h1>
                 </div>
-                {!isProfile && (
+                {isProfile !== 1 && (
                     <div className="sidebar-content">
                         <div className="main-button">
                             <Button
@@ -26,6 +26,7 @@ class Sidebar extends Death13.Component {
                                 svg="../../assets/svg/Compose.svg"
                                 onClick={(event: any) => {
                                     event.preventDefault();
+                                    newMail();
                                 }}
                             />
                         </div>
@@ -36,6 +37,7 @@ class Sidebar extends Death13.Component {
                                 svg="../../assets/svg/Inbox.svg"
                                 onClick={(event: any) => {
                                     event.preventDefault();
+                                    backToMail();
                                 }}
                             />
                             <Button
@@ -107,6 +109,7 @@ class Sidebar extends Death13.Component {
                                         svg="../../assets/svg/AllMail.svg"
                                         onClick={(event: any) => {
                                             event.preventDefault();
+                                            backToMail();
                                         }}
                                     />
                                 </div>
@@ -114,7 +117,7 @@ class Sidebar extends Death13.Component {
                         </div>
                     </div>
                 )}{" "}
-                {isProfile && (
+                {isProfile === 1 && (
                     <div className="sidebar-content">
                         <div className="sidebar-profile">
                             <img src="../../assets/svg/Avatar.svg" alt="avatar" />
@@ -138,6 +141,7 @@ class Sidebar extends Death13.Component {
                                 title="Личные данные"
                                 onClick={(event: any) => {
                                     event.preventDefault();
+                                    changeProfile();
                                 }}
                             />
                             <Button
@@ -145,6 +149,7 @@ class Sidebar extends Death13.Component {
                                 title="Безопасность"
                                 onClick={(event: any) => {
                                     event.preventDefault();
+                                    changePassword();
                                 }}
                             />
                         </div>

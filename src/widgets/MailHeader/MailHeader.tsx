@@ -4,12 +4,21 @@ import Input from "../../components/Input/Input";
 import "./MailHeader.scss";
 
 class MailHeader extends Death13.Component {
+    state: any = {
+        isSelectedAll: false,
+    };
+    handleSelectAll = (e: any) => {
+        const isChecked = e.target.checked;
+        this.props.onSelectAll(isChecked);
+    };
+
     render() {
+        const { isSelectedAll } = this.state;
         return (
             <div className="mail-header">
                 <div className="mail-header__left-container">
                     <div className="left-container__select-all">
-                        <Input type="checkbox" name="checkbox-all" help="Выбрать" />
+                        <Input type="checkbox" name="checkbox-all" help="Выбрать" checked={isSelectedAll} onInput={this.handleSelectAll} />
                         <Button
                             svg="../../assets/svg/ArrowDown.svg"
                             name="arrow-down"

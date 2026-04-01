@@ -16,7 +16,6 @@ class Input extends Death13.Component {
         const isValid = hasValue && !hasError;
         const isPassword = this.props.type === "password";
         const inputType = isPassword && this.state.showPassword ? "text" : this.props.type;
-
         return (
             <div className="input-container" data-input-name={this.props.name}>
                 <span className="input__title">{this.props.input_title}</span>
@@ -29,6 +28,7 @@ class Input extends Death13.Component {
                         onInput={(event: any) => {
                             this.props.onInput(event);
                         }}
+                        readonly={this.props.readonly || false}
                         maxLength="100"
                         value={this.props.value || ""}
                     />

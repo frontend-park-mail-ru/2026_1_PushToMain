@@ -188,7 +188,6 @@ class RegPage extends Death13.Component {
                                 {step === 2 && (
                                     <div className="auth-form__inputs">
                                         <Input
-                                            key="email-input"
                                             type="email"
                                             placeholder="Введите email"
                                             input_title="Email"
@@ -200,7 +199,6 @@ class RegPage extends Death13.Component {
                                             }}
                                         />
                                         <Input
-                                            key="password-input"
                                             type="password"
                                             placeholder="Введите пароль"
                                             input_title="Пароль"
@@ -217,14 +215,8 @@ class RegPage extends Death13.Component {
                             <div className="auth-form__actions">
                                 {step === 1 && (
                                     <div className="auth-form__actions">
+                                        <Button title="Продолжить" name="button-reg-for-reg" onClick={this.handleNextStep} />
                                         <Button
-                                            key="next-button"
-                                            title="Продолжить"
-                                            name="button-reg-for-reg"
-                                            onClick={this.handleNextStep}
-                                        />
-                                        <Button
-                                            key="login-button"
                                             title="Войти"
                                             name="button-login-for-reg"
                                             onClick={(event: Event) => {
@@ -236,13 +228,8 @@ class RegPage extends Death13.Component {
                                 )}
                                 {step === 2 && (
                                     <div className="auth-form__actions">
-                                        <Button
-                                            key="register-button"
-                                            title="Зарегистрироваться"
-                                            name="button-reg-for-reg"
-                                            onClick={this.handleRegister}
-                                        />
-                                        <Button key="back-button" title="Назад" name="button-login-for-reg" onClick={this.handleBackStep} />
+                                        <Button title="Зарегистрироваться" name="button-reg-for-reg" onClick={this.handleRegister} />
+                                        <Button title="Назад" name="button-login-for-reg" onClick={this.handleBackStep} />
                                     </div>
                                 )}
                             </div>

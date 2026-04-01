@@ -4,72 +4,77 @@
     justify-content: space-between;
     height: 40px;
     padding: 4px 20px;
-}
 
-.mail-header__left-container,
-.mail-header__right-container {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-}
+    &__left-container,
+    &__right-container {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
 
-.left-container__select-all {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    border-radius: 10px;
-    overflow: hidden;
-    width: 45px;
-}
+    &__left-container {
+        .left-container__select-all {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 10px;
+            overflow: hidden;
+            width: 60px;
 
-input[name="checkbox-all"] {
-    appearance: none;
-    position: relative;
-    background-color: transparent;
-    width: 24px;
-    height: 24px;
-    color: var(--button-active-background);
-    margin: 0;
-    background-image: url("/public/assets/svg/CheckboxOffAll.svg");
-    background-size: contain;
-    background-position: center;
-    border: none;
-}
+            &:hover {
+                background-color: var(--color-main-background);
+                transition: 400ms;
+            }
 
-input[name="checkbox-all"]:checked {
-    background-image: url("/public/assets/svg/CheckboxDeselect.svg");
-}
+            button {
+                img {
+                    width: 24px;
+                    height: 24px;
+                }
+            }
+        }
+    }
 
-.left-container__select-all:hover {
-    background-color: var(--color-main-background);
-    transition: 400ms;
-}
+    button {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background-color: transparent;
+        width: 40px;
+        height: 40px;
+        padding: 21px 6px;
 
-.left-container__select-all button svg:not(.mail-header button) {
-    width: 14px;
-    height: 14px;
-}
+        &:hover {
+            background-color: var(--color-main-background);
+            transition: 400ms;
+        }
 
-.mail-header button {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background-color: transparent;
-    width: 40px;
-    height: 40px;
-}
+        &:active {
+            background-color: var(--button-background);
+            transition: 400ms;
+        }
 
-.mail-header button:hover {
-    background-color: var(--color-main-background);
-    transition: 400ms;
-}
+        img {
+            width: 24px;
+            height: 24px;
+        }
+    }
 
-.mail-header button svg {
-    width: 24px;
-    height: 24px;
-}
+    input[name="checkbox-all"] {
+        appearance: none;
+        position: relative;
+        background-color: transparent;
+        width: 24px;
+        height: 24px;
+        color: var(--button-active-background);
+        margin: 0;
+        background-image: url("/assets/svg/CheckboxOffAll.svg");
+        background-size: contain;
+        background-position: center;
+        border: none;
 
-.mail-header button:active {
-    background-color: var(--button-background);
-    transition: 400ms;
+        &:checked {
+            background-image: url("/assets/svg/CheckboxDeselect.svg");
+        }
+    }
 }
