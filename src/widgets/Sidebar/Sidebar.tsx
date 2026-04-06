@@ -124,11 +124,10 @@ class Sidebar extends Death13.Component {
                             <span>Иван Иванов</span>
                             <p>ivan.petrov@smail.ru</p>
                         </div>
-                        <div className="main-button">
+                        <div className="main-button-profile">
                             <Button
                                 title="Почтовый ящик"
                                 name="button-new-letter"
-                                svg="../../assets/svg/ArrowLeft.svg"
                                 onClick={(event: any) => {
                                     event.preventDefault();
                                     backToMail();

@@ -1,30 +1,16 @@
-.select-container {
+.select-date {
     display: flex;
-    flex-direction: row;
-    align-items: center;
+    flex-direction: column;
+    gap: 5px;
 
-    select {
-        outline: none;
-        width: 109px;
-        height: 48px;
-        background-color: transparent;
-        &[name="day"] {
-            border: 2px solid var(--input-stroke);
-            border-right: none;
-            border-radius: 20px 0 0 20px;
-        }
-        &[name="month"] {
-            border: 2px solid var(--input-stroke);
-            width: 181px;
-        }
-        &[name="year"] {
-            border: 2px solid var(--input-stroke);
-            border-left: none;  
-            border-radius: 0 20px 20px 0;
-        }
+    span {
+        padding-left: 17px;
+    }
 
-        option {
-            border-radius: 20px;
-        }
+    .select-container {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        gap: 0;
     }
 }

@@ -25,7 +25,7 @@
 
 .input__title {
     font-size: 16px;
-    padding-left: 17px;
+    padding-left: 15px;
 }
 
 .input-form {
@@ -74,14 +74,14 @@
         mask-repeat: no-repeat;
         mask-position: center;
         transition: background-color 0.2s ease;
-        
+
         mask-image: url("/assets/svg/Eye.svg");
-        
+
         img {
             display: none;
         }
     }
-    
+
     .password-toggle.off {
         mask-image: url("/assets/svg/EyeOff.svg");
     }

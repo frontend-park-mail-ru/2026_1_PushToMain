@@ -78,7 +78,7 @@ class MainPage extends Death13.Component {
         this.setState({ isStateMode: 3, selectedEmail: email });
     };
 
-    handleSelectAll = () => {};
+    handleSelectAll() {}
 
     handleSearch = (value: string) => {
         console.log("Search:", value);
@@ -86,7 +86,6 @@ class MainPage extends Death13.Component {
 
     render() {
         const { emails, isModalOpen, isStateMode, profileState, selectedEmail, isSelectAll } = this.state;
-        console.log(emails);
         return (
             <div className="main-page">
                 <aside className="sidebar">
@@ -132,7 +131,7 @@ class MainPage extends Death13.Component {
                                 </div>
                             </div>
                         )}{" "}
-                        {isStateMode === 1 && <Profile profileState={profileState} />}
+                        {isStateMode === 1 && <Profile profileState={profileState} backToMail={this.handleBackToMail} />}
                         {isStateMode === 2 && <SendMail />}
                         {isStateMode === 3 && <ReadMail email={selectedEmail} />}
                     </div>

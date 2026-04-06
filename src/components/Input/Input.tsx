@@ -29,7 +29,7 @@ class Input extends Death13.Component {
                             this.props.onInput(event);
                         }}
                         readonly={this.props.readonly || false}
-                        maxLength="100"
+                        maxLength={this.props.maxLength || 100}
                         value={this.props.value || ""}
                     />
                     {isPassword && (

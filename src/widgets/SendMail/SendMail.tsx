@@ -11,8 +11,8 @@ class SendMail extends Death13.Component {
             <div className="send-mail">
                 <form action="" className="send-form">
                     <div className="send-inputs">
-                        <InputEmail input_title="Кому:" />
-                        <Input type="text" placeholder="Введите тему" input_title="Тема:" name="theme" onInput={() => {}} />
+                        <InputEmail input_title="Кому:" placeholder="Введите почту"/>
+                        <Input type="text" placeholder="Введите тему" input_title="Тема:" name="theme" maxLength="255" onInput={() => {}} />
                     </div>
                     <Textarea readonly={false} />
                 </form>

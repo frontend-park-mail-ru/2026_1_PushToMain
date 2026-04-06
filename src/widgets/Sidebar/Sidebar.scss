@@ -29,6 +29,7 @@
     }
 
     .main-button,
+    .main-button-profile,
     .main-button-container,
     .extra-button-container {
         display: flex;
@@ -52,21 +53,32 @@
         }
     }
 
-    .main-button {
+    .main-button,
+    .main-button-profile {
         button {
             display: flex;
             gap: 15px;
-            justify-content: center;
             align-items: center;
-            padding: 0 20px;
             width: 100%;
             height: 40px;
             font-size: 16px;
             border-radius: 14px;
+            color: var(--primary-text);
+        }
+    }
 
-            img {
-                width: 24px;
-                height: 24px;
+    .main-button-profile {
+        button {
+            &::before {
+                content: "";
+                display: inline-block;
+                width: 20px;
+                height: 20px;
+                background-color: var(--primary-text);
+                mask-image: url("/assets/svg/ArrowLeft.svg");
+                mask-size: contain;
+                mask-repeat: no-repeat;
+                mask-position: center;
             }
         }
     }
