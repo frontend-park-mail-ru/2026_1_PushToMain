@@ -46,13 +46,13 @@ const __dirname = path.dirname(__filename);
     const manifestPath = path.join(__dirname, "../public/assets-manifest.json");
     fs.writeFileSync(manifestPath, JSON.stringify(manifest, null, 2));
 
-    console.log(`✅ Generated assets manifest with ${assetUrls.length} files`);
+    console.log(`Generated assets manifest with ${assetUrls.length} files`);
     console.log(`   - SVG: ${manifest.assets.svg.length}`);
     console.log(`   - Images: ${manifest.assets.images.length}`);
     console.log(`   - Other: ${manifest.assets.other.length}`);
-    console.log(`📁 Manifest saved to: ${manifestPath}`);
+    console.log(`Manifest saved to: ${manifestPath}`);
   } catch (error) {
-    console.error("❌ Error generating manifest:", error);
+    console.error("Error generating manifest:", error);
     process.exit(1);
   }
 })();
