@@ -5,35 +5,50 @@ import "../public/index.scss";
 import MainPage from "./pages/MainPage/MainPage";
 
 class App {
-    private routes: Record<string, any>;
+  private routes: Record<string, any>;
 
-    constructor() {
-        this.routes = {
-            "/login": <LoginPage />,
-            "/register": <RegPage />,
-            "/": <MainPage />,
-        };
-        this.handleRoute(location.pathname);
+  constructor() {
+    this.routes = {
+      "/login": <LoginPage />,
+      "/register": <RegPage />,
+      "/": <MainPage />,
+    };
+    this.handleRoute(location.pathname);
+
+    this.registerServiceWorker();
+  }
+
+  handleRoute(path: string) {
+    const route = this.routes[path] || this.routes["/"];
+
+    const root = document.getElementById("root");
+    if (!root) return;
+
+    root.innerHTML = "";
+
+    Death13.render(route, root);
+
+    history.pushState({}, "", path);
+  }
+
+  private registerServiceWorker() {
+    if ("serviceWorker" in navigator) {
+      navigator.serviceWorker
+        .register("/sw.js")
+        .then((registration) => {
+          console.log("ServiceWorker registered:", registration);
+        })
+        .catch((error) => {
+          console.log("ServiceWorker registration failed:", error);
+        });
     }
-
-    handleRoute(path: string) {
-        const route = this.routes[path] || this.routes["/"];
-
-        const root = document.getElementById("root");
-        if (!root) return;
-
-        root.innerHTML = "";
-
-        Death13.render(route, root);
-
-        history.pushState({}, "", path);
-    }
+  }
 }
 
 declare global {
-    interface Window {
-        app: App;
-    }
+  interface Window {
+    app: App;
+  }
 }
 
 window.app = new App();
