@@ -49,6 +49,7 @@ const __dirname = path.dirname(__filename);
     console.log(`Generated assets manifest with ${assetUrls.length} files`);
     console.log(`   - SVG: ${manifest.assets.svg.length}`);
     console.log(`   - Images: ${manifest.assets.images.length}`);
+    console.log(`   - Fonts: ${manifest.assets.fonts.length}`);
     console.log(`   - Other: ${manifest.assets.other.length}`);
     console.log(`Manifest saved to: ${manifestPath}`);
   } catch (error) {
