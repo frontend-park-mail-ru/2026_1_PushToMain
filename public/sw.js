@@ -2,7 +2,7 @@ const CACHE_NAME = "v1";
 
 const addResourcesToCache = async (resources) => {
   const cache = await caches.open(CACHE_NAME);
-  
+
   const manifestResponse = await fetch("/assets-manifest.json");
   const manifest = await manifestResponse.json();
 
@@ -31,7 +31,7 @@ self.addEventListener("install", (event) => {
     (async () => {
       try {
         await addResourcesToCache();
-        console.log("✅ All assets cached successfully");
+        console.log("All assets cached successfully");
       } catch (error) {
         console.error("Failed to cache from manifest:", error);
         await cache.addAll([
