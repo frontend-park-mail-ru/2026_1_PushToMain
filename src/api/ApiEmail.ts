@@ -4,7 +4,6 @@ import { URL } from "./config";
  */
 export async function getEmail() {
     try {
-        const requestId = crypto.randomUUID();
         const response = await fetch(`${URL}/emails?limit=30&offset=0`, {
             method: "GET",
             headers: {
@@ -33,6 +32,10 @@ export async function sendEmail(data = {}) {
             credentials: "include",
             body: JSON.stringify(data),
         });
+
+        if (response) {
+            return null;
+        }
     } catch (error) {
         console.log("Сервер не отвечает", error);
     }

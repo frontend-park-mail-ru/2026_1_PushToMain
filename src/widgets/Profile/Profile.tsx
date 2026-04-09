@@ -5,7 +5,6 @@ import Input from "../../components/Input/Input";
 import SelectDate from "../../components/SelectDate/SelectDate";
 import UploadAvatar from "../../components/UploadAvatar/UploadAvatar";
 import { validation } from "../../utils/validation";
-import { DivIcon } from "leaflet";
 
 class Profile extends Death13.Component {
     state: any = {

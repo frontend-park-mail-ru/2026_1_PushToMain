@@ -37,10 +37,13 @@ class SendMail extends Death13.Component {
             body: body.trim(),
             receivers: receivers,
         });
+        if (response) {
+            return;
+        }
     }
 
     render() {
-        const { header, body, receivers } = this.state;
+        const { body } = this.state;
 
         return (
             <div className="send-mail">
