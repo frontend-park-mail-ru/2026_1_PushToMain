@@ -23,11 +23,13 @@ class Input extends Death13.Component {
                     {this.props.svg && <img src={this.props.svg} alt="" />}
                     <input
                         type={inputType}
+                        id={this.props.id}
                         name={this.props.name}
                         placeholder={this.props.placeholder}
                         onInput={(event: any) => {
                             this.props.onInput(event);
                         }}
+                        checked={this.props.checked}
                         readonly={this.props.readonly || false}
                         maxLength={this.props.maxLength || 100}
                         value={this.props.value || ""}

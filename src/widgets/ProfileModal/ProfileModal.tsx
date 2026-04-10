@@ -1,6 +1,7 @@
 import Death13 from "@react/stands";
 import "./ProfileModal.scss";
 import Button from "../../components/Button/Button";
+import { logOut } from "../../api/ApiAuth";
 
 class ProfileModal extends Death13.Component {
     handleClose = () => {
@@ -45,7 +46,10 @@ class ProfileModal extends Death13.Component {
                         title="Выйти"
                         onClick={(event: any) => {
                             event.preventDefault();
-                            window.app.handleRoute("/login");
+                            logOut();
+                            setTimeout(() => {
+                                window.app.handleRoute("/login");
+                            }, 1); // LOL
                         }}
                     />
                 </div>

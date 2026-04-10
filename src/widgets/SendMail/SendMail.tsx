@@ -30,8 +30,6 @@ class SendMail extends Death13.Component {
 
         e.preventDefault();
 
-        console.log("1", header, "2", body, "3", receivers);
-
         const response = await sendEmail({
             header: header.trim(),
             body: body.trim(),

@@ -8,6 +8,7 @@ class InputEmail extends Death13.Component {
         this.handleKeyDown = this.handleKeyDown.bind(this);
         this.addEmail = this.addEmail.bind(this);
         this.removeEmail = this.removeEmail.bind(this);
+        this.handleOnBlur = this.handleOnBlur.bind(this);
     }
 
     state: any = {
@@ -17,7 +18,7 @@ class InputEmail extends Death13.Component {
     };
 
     validateEmail(email: string) {
-        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        const emailRegex = /^[a-zA-Z0-9._-]+@smail.ru/gm;
         return emailRegex.test(email);
     }
 
@@ -25,6 +26,12 @@ class InputEmail extends Death13.Component {
         const trimmedEmail = email.trim();
 
         if (!trimmedEmail) return;
+
+        const valid = this.validateEmail(trimmedEmail);
+
+        if (!valid) {
+            return;
+        }
 
         if (this.state.emails.includes(trimmedEmail)) {
             this.setState({ error: "Такой email уже добавлен" });
@@ -67,14 +74,28 @@ class InputEmail extends Death13.Component {
         }
     }
 
+    handleOnBlur() {
+        this.addEmail(this.state.currentInput);
+    }
+
+    handleUpdateEmail(event: any) {
+        event.preventDefault();
+
+    }
+
     render() {
-        const { emails, currentInput} = this.state;
+        const { emails, currentInput } = this.state;
         return (
             <div className="input-container">
                 <span className="input__title">{this.props.input_title}</span>
                 <div className="input-form">
                     {emails.map((email: string, index: number) => (
-                        <span key={index} className="email-tag">
+                        <span
+                            key={index}
+                            className="email-tag"
+                            onClick={(event: any) => {
+                                this.handleUpdateEmail(event);
+                            }}>
                             <span>{email}</span>
                             <button type="button" className="remove-email" onClick={() => this.removeEmail(index)}>
                                 ×
@@ -85,6 +106,7 @@ class InputEmail extends Death13.Component {
                         type="text"
                         value={currentInput}
                         onInput={this.handleInput}
+                        onblur={this.handleOnBlur}
                         onKeyDown={this.handleKeyDown}
                         placeholder={this.props.placeholder}
                         className="email-input"

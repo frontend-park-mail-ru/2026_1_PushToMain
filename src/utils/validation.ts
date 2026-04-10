@@ -3,7 +3,7 @@
  * @param {Object} dataForm - Объект с полями формы
  * @returns {{isValid: boolean, errors: Array<{field: string, message: string}>}}
  */
-export function validation(dataForm : object) {
+export function validation(dataForm: object) {
     const errors = [];
 
     for (const [type, data] of Object.entries(dataForm)) {
@@ -28,6 +28,32 @@ export function validation(dataForm : object) {
                 if (data.length < 8) {
                     errors.push({
                         field: "password",
+                        message: "Пароль должен быть не менее 8 символов",
+                    });
+                }
+            }
+        }
+
+        if (type == "oldPassword") {
+            if (!data) {
+                errors.push({ field: "oldPassword", message: "Поле пароля обязательно" });
+            } else {
+                if (data.length < 8) {
+                    errors.push({
+                        field: "oldPassword",
+                        message: "Пароль должен быть не менее 8 символов",
+                    });
+                }
+            }
+        }
+
+        if (type == "newPassword") {
+            if (!data) {
+                errors.push({ field: "newPassword", message: "Поле пароля обязательно" });
+            } else {
+                if (data.length < 8) {
+                    errors.push({
+                        field: "newPassword",
                         message: "Пароль должен быть не менее 8 символов",
                     });
                 }

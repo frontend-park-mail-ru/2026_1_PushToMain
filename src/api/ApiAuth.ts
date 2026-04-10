@@ -160,3 +160,41 @@ export async function logOut() {
         console.log("Сервер не отвечает", error);
     }
 }
+
+export async function getProfile() {
+    try {
+        const response = await fetch(`${URL}/me`, {
+            method: "GET",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            credentials: "include",
+        });
+
+        if (response.ok) {
+            const data = await response.json();
+            return data;
+        }
+    } catch (error) {
+        console.log("Сервер не отвечает", error);
+        return { name: "Ewew", surname: "popa", gender: "male", date: "22-04-2025" };
+    }
+}
+
+export async function changePassword(data = {}) {
+    try {
+        const response = await fetch(`${URL}/changePassword`, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            credentials: "include",
+            body: JSON.stringify(data),
+        });
+        if (response.ok) {
+            return response;
+        }
+    } catch (error) {
+        console.log("Сервер не отвечает", error);
+    }
+}

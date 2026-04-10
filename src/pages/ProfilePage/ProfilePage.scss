@@ -1,0 +1,212 @@
+.profile-page {
+    display: grid;
+    grid-template-columns: 290px 1fr;
+    height: 100vh;
+    overflow: hidden;
+    background: var(--background-gradient);
+
+    .sidebar {
+        width: 285px;
+    }
+
+    .right-part {
+        display: flex;
+        flex-direction: column;
+        height: calc(100vh - 40px);
+        margin: 20px 20px 20px 20px;
+        overflow: hidden;
+    }
+
+    .profile-content-area {
+        background-color: var(--color-sidebar-background);
+        border-radius: 20px;
+        padding: 20px;
+        margin: 0;
+        height: 100%;
+        overflow-y: auto;
+
+        &::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        &::-webkit-scrollbar-track {
+            background: transparent;
+            border-radius: 3px;
+        }
+
+        &::-webkit-scrollbar-thumb {
+            background: var(--mail-stroke);
+            border-radius: 3px;
+        }
+
+        h1 {
+            margin-bottom: 20px;
+            color: var(--tretiry-text);
+            font-size: 28px;
+            padding: 10px;
+        }
+
+        .profile-container,
+        .profile-security {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .profile-content {
+            display: flex;
+            gap: 40px;
+            padding: 20px;
+
+            .profile-avatar {
+                display: flex;
+                flex-direction: column;
+                gap: 10px;
+            }
+
+            .profile-form {
+                display: flex;
+                flex-direction: column;
+                gap: 12px;
+                width: 400px;
+
+                .input-form {
+                    border: 2px solid var(--input-stroke);
+
+                    &.error {
+                        border-color: var(--error-text);
+
+                        input {
+                            color: var(--error-text);
+                        }
+
+                        .password-toggle {
+                            background-color: var(--error-text);
+                        }
+                    }
+
+                    &.success {
+                        border-color: var(--button-active-background);
+
+                        input {
+                            color: var(--button-active-background);
+                        }
+
+                        .password-toggle {
+                            background-color: var(--button-active-background);
+                        }
+                    }
+                }
+
+                .auth-input__error {
+                    height: 20px;
+                    padding-left: 15px;
+                    color: var(--error-text);
+                }
+
+                .profile__checkbox {
+                    display: flex;
+                    flex-direction: column;
+                    gap: 10px;
+                    padding: 0 17px;
+                    margin-bottom: 30px;
+
+                    span {
+                        color: var(--tretiry-text);
+                        font-size: 16px;
+                    }
+
+                    .checkbox-actions {
+                        display: flex;
+                        gap: 20px;
+
+                        .checkbox-form {
+                            display: flex;
+                            flex-direction: row;
+                            gap: 10px;
+                            align-items: center;
+
+                            label {
+                                color: var(--tretiry-text);
+                                cursor: pointer;
+                            }
+
+                            .input-container {
+                                padding: 0;
+                                gap: 0;
+
+                                [name="radio-gender"] {
+                                    padding: 0;
+                                    -webkit-appearance: none;
+                                    -moz-appearance: none;
+                                    appearance: none;
+                                    border-radius: 50%;
+                                    width: 18px;
+                                    height: 18px;
+                                    border: 2px solid var(--accent-2);
+                                    cursor: pointer;
+                                    transition: all 0.2s ease;
+
+                                    &:checked {
+                                        border: 6px solid var(--accent-2);
+                                    }
+
+                                    &:hover {
+                                        border-color: var(--accent);
+                                    }
+                                }
+                            }
+                        }
+                    }
+
+                    .input-container {
+                        .input-form {
+                            border: none;
+                        }
+                        .auth-input__error {
+                            display: none;
+                        }
+                    }
+                }
+
+                .profile-actions {
+                    display: flex;
+                    gap: 15px;
+                    padding: 0;
+
+                    button {
+                        height: 44px;
+                        border-radius: 20px;
+                        font-size: 16px;
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
+                        padding: 0 24px;
+                        min-width: 135px;
+
+                        &[name="change-profile"],
+                        &[name="change-password"] {
+                            background-color: var(--accent-2);
+                            color: var(--primary-text);
+                            border: none;
+
+                            &:hover {
+                                background-color: var(--button-hover-background);
+                            }
+                        }
+
+                        &[name="back-to-mail"] {
+                            background-color: var(--color-sidebar-background);
+                            border: solid 3px var(--accent-2);
+                            color: var(--accent-2);
+
+                            &:hover {
+                                background-color: var(--color-main-background);
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

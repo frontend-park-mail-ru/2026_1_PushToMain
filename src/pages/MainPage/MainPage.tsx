@@ -7,7 +7,6 @@ import MailBox from "../../widgets/MailBox/MailBox";
 import { getEmail } from "../../api/ApiEmail";
 import "./MainPage.scss";
 import ProfileModal from "../../widgets/ProfileModal/ProfileModal";
-import Profile from "../../widgets/Profile/Profile";
 import SendMail from "../../widgets/SendMail/SendMail";
 import ReadMail from "../../widgets/ReadMail/ReadMail";
 
@@ -17,24 +16,27 @@ class MainPage extends Death13.Component {
         isLoading: true,
         isModalOpen: false,
         isStateMode: 0,
-        profileState: 0,
         selectedEmail: null,
         isSelectAll: false,
+        isEmail: false,
     };
 
     constructor(props: any) {
         super(props);
         this.loadEmails();
+        document.addEventListener("click", this.handleCloseModal);
     }
 
     async loadEmails() {
         try {
-            const emails = await getEmail();
-            if (emails === undefined) {
+            const data = await getEmail();
+            const emails = data.emails;
+
+            if (data === undefined) {
                 window.app.handleRoute("/login");
                 return;
             }
-            this.setState({ emails, isLoading: false });
+            this.setState({ emails: emails, isLoading: false });
         } catch (error) {
             console.error("Failed to load emails:", error);
             window.app.handleRoute("/login");
@@ -47,6 +49,7 @@ class MainPage extends Death13.Component {
     };
 
     handleAvatar = (event: Event) => {
+        event.stopPropagation();
         event.preventDefault();
         this.setState({ isModalOpen: true });
     };
@@ -54,20 +57,10 @@ class MainPage extends Death13.Component {
     handleCloseModal = () => {
         this.setState({ isModalOpen: false });
     };
+
     handleProfileClick = () => {
-        this.setState({ isModalOpen: false, isStateMode: 1 });
-    };
-
-    handleBackToMail = () => {
-        this.setState({ isStateMode: 0 });
-    };
-
-    handleChangeProfile = () => {
-        this.setState({ profileState: 0 });
-    };
-
-    handleChangePassword = () => {
-        this.setState({ profileState: 1 });
+        this.setState({ isModalOpen: false });
+        window.app.handleRoute("/profile");
     };
 
     handleNewMail = () => {
@@ -85,15 +78,13 @@ class MainPage extends Death13.Component {
     };
 
     render() {
-        const { emails, isModalOpen, isStateMode, profileState, selectedEmail, isSelectAll } = this.state;
+        const { emails, isModalOpen, isStateMode, selectedEmail, isSelectAll } = this.state;
         return (
             <div className="main-page">
                 <aside className="sidebar">
                     <Sidebar
-                        isProfile={isStateMode}
-                        backToMail={this.handleBackToMail}
-                        changeProfile={this.handleChangeProfile}
-                        changePassword={this.handleChangePassword}
+                        isProfile={0}
+                        backToMail={() => {}}
                         newMail={this.handleNewMail}
                     />
                 </aside>
@@ -111,32 +102,49 @@ class MainPage extends Death13.Component {
                             />
                         </div>
                         <div className="top-right-menu">
-                            <Button svg="../../assets/svg/Avatar.svg" name="avatar" help="Аккаунт" onClick={this.handleAvatar} />
+                            <Button 
+                                svg="../../assets/svg/Avatar.svg" 
+                                name="avatar" 
+                                help="Аккаунт" 
+                                onClick={this.handleAvatar} 
+                            />
                         </div>
                     </div>
                     <div className="mail-box-container">
                         {isStateMode === 0 && (
                             <div className="container-form">
                                 <MailHeader onSelectAll={this.handleSelectAll} isSelectAll={isSelectAll} />
-                                <div className="mail-box-container-form">
-                                    {emails.map((email: any, index: number) => (
-                                        <MailBox
-                                            key={index}
-                                            theme={email.header}
-                                            title={email.body}
-                                            date="15:00"
-                                            onClick={() => this.handleReadMail(email)}
-                                        />
-                                    ))}
-                                </div>
+                                {emails.length === 0 && (
+                                    <div className="mail-box-container-form__placeholder">
+                                        <div className="mail-box-container-form__placeholder__icon"></div>
+                                        <span>Ваш почтовый ящик пуст :(</span>
+                                        <span>Напишите ваше первое письмо, нажав на кнопку слева</span>
+                                    </div>
+                                )}
+                                {emails.length !== 0 && (
+                                    <div className="mail-box-container-form">
+                                        {emails.map((email: any, index: number) => (
+                                            <MailBox
+                                                key={index}
+                                                theme={email.header}
+                                                title={email.body}
+                                                date="15:00"
+                                                onClick={() => this.handleReadMail(email)}
+                                            />
+                                        ))}
+                                    </div>
+                                )}
                             </div>
-                        )}{" "}
-                        {isStateMode === 1 && <Profile profileState={profileState} backToMail={this.handleBackToMail} />}
+                        )}
                         {isStateMode === 2 && <SendMail />}
                         {isStateMode === 3 && <ReadMail email={selectedEmail} />}
                     </div>
 
-                    <ProfileModal isOpen={isModalOpen} onClose={this.handleCloseModal} onProfileClick={this.handleProfileClick} />
+                    <ProfileModal 
+                        isOpen={isModalOpen} 
+                        onClose={this.handleCloseModal} 
+                        onProfileClick={this.handleProfileClick} 
+                    />
                 </div>
             </div>
         );

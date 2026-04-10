@@ -14,8 +14,7 @@ export async function getEmail() {
 
         if (response.ok) {
             const data = await response.json();
-            console.log(data);
-            return data.emails || [];
+            return data;
         }
     } catch (error) {
         console.log("Сервер не отвечает", error);

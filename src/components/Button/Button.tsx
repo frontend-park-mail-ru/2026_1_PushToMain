@@ -8,7 +8,7 @@ class Button extends Death13.Component {
                 type={this.props.type || "button"}
                 name={this.props.name}
                 title={this.props.help || ""}
-                onclick={(event: any) => {
+                onClick={(event: any) => {
                     this.props.onClick(event);
                 }}>
                 {this.props.svg && <img src={this.props.svg} alt="" />}
