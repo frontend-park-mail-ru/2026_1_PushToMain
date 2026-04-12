@@ -35,12 +35,21 @@ class App {
   private registerServiceWorker() {
     if ("serviceWorker" in navigator) {
       navigator.serviceWorker
-        .register("/sw.js")
-        .then((registration) => {
-          console.log("ServiceWorker registered:", registration);
+        .getRegistrations()
+        .then((registrations) => {
+          for (let registration of registrations) {
+            registration.unregister();
+          }
         })
-        .catch((error) => {
-          console.log("ServiceWorker registration failed:", error);
+        .then(() => {
+          navigator.serviceWorker
+            .register("/sw.js")
+            .then((registration) => {
+              console.log("ServiceWorker registered:", registration);
+            })
+            .catch((error) => {
+              console.log("ServiceWorker registration failed:", error);
+            });
         });
     }
   }
