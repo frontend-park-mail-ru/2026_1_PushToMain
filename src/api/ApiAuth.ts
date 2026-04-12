@@ -1,4 +1,4 @@
-import { URL } from "./config";
+import { URL, URLMINIO } from "./config";
 /**
  * Отправляет POST-запрос на эндпоинт /login с данными.
  */
@@ -163,7 +163,7 @@ export async function logOut() {
 
 export async function getProfile() {
     try {
-        const response = await fetch(`${URL}/me`, {
+        const response = await fetch(`${URL}/profile/me`, {
             method: "GET",
             headers: {
                 "Content-Type": "application/json",
@@ -175,18 +175,22 @@ export async function getProfile() {
             const data = await response.json();
             return data;
         }
+        return { name: "", surname: "", email: "" };
     } catch (error) {
         console.log("Сервер не отвечает", error);
-        return { name: "Ewew", surname: "popa", gender: "male", date: "22-04-2025" };
+        return null;
     }
 }
 
 export async function changePassword(data = {}) {
+    console.log(data);
     try {
-        const response = await fetch(`${URL}/changePassword`, {
-            method: "POST",
+        const csrfToken = await getCSRFToken();
+        const response = await fetch(`${URL}/password`, {
+            method: "PUT",
             headers: {
                 "Content-Type": "application/json",
+                "X-CSRF-Token": csrfToken,
             },
             credentials: "include",
             body: JSON.stringify(data),
@@ -196,5 +200,49 @@ export async function changePassword(data = {}) {
         }
     } catch (error) {
         console.log("Сервер не отвечает", error);
+    }
+}
+
+export async function getCSRFToken() {
+    try {
+        const response = await fetch(`${URL}/csrf`, {
+            method: "GET",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            credentials: "include",
+        });
+
+        if (response.ok) {
+            const data = await response.json();
+            return data.csrf_token || null;
+        }
+    } catch (error) {
+        console.log("Сервер не отвечает", error);
+        return null;
+    }
+}
+
+export async function uploadAvatar(file: File) {
+    const csrfToken = await getCSRFToken();
+    try {
+        const formData = new FormData();
+        formData.append("avatar", file);
+
+        const response = await fetch(`${URL}/profile/avatar`, {
+            method: "POST",
+            headers: {
+                "X-CSRF-Token": csrfToken,
+            },
+            credentials: "include",
+            body: formData,
+        });
+        if (response.ok) {
+            const data = await response.json();
+            return `${URLMINIO}/${data.image_path}`;
+        }
+    } catch (error) {
+        console.log("Сервер не отвечает", error);
+        return null;
     }
 }

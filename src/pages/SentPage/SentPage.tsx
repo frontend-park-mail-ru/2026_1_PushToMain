@@ -4,14 +4,14 @@ import Input from "../../components/Input/Input";
 import Button from "../../components/Button/Button";
 import MailHeader from "../../widgets/MailHeader/MailHeader";
 import MailBox from "../../widgets/MailBox/MailBox";
-import { getProfile } from "../../api/ApiAuth";
-import { getEmailAll, getEmailSend, readEmail } from "../../api/ApiEmail";
-import "./MainPage.scss";
+import { getEmailSend, getEmailByID, readEmail } from "../../api/ApiEmail";
+import "./SentPage.scss";
 import ProfileModal from "../../widgets/ProfileModal/ProfileModal";
 import ReadMail from "../../widgets/ReadMail/ReadMail";
 import { AppStorage } from "../../App";
+import { getProfile } from "../../api/ApiAuth";
 
-class MainPage extends Death13.Component {
+class SentPage extends Death13.Component {
     state: any = {
         emails: [],
         isLoading: true,
@@ -20,6 +20,7 @@ class MainPage extends Death13.Component {
         selectedEmail: null,
         isSelectAll: false,
         offset: 0,
+        total: 0,
     };
 
     constructor(props: any) {
@@ -36,17 +37,23 @@ class MainPage extends Death13.Component {
 
     loadEmails = async (offset: number) => {
         try {
-            const data = await getEmailAll(offset);
+            const data = await getEmailSend(offset);
             const emails = data.emails;
+
+            console.log("Sent emails:", data);
 
             if (data === undefined) {
                 window.app.handleRoute("/login");
-                return null;
+                return;
             }
-            this.setState({ emails: emails, isLoading: false, total: data.total, offset: offset });
-            AppStorage.setUnReadCount(data.unread_count);
+            this.setState({
+                emails: emails,
+                isLoading: false,
+                total: data.total,
+                offset: offset,
+            });
         } catch (error) {
-            console.error("Failed to load emails:", error);
+            console.error("Failed to load sent emails:", error);
             window.app.handleRoute("/login");
         }
     };
@@ -55,15 +62,11 @@ class MainPage extends Death13.Component {
         this.loadEmails(this.state.offset);
     };
 
-    handleLogout = (event: Event) => {
-        event.preventDefault();
-        window.app.handleRoute("/login");
-    };
-
     formatTime = (dateString: string) => {
         const date = new Date(dateString);
         const currentTime = new Date();
-        if (Math.abs(currentTime.getDate() - date.getDate()) > 1) {
+
+        if (Math.abs(currentTime.getFullYear() - date.getFullYear()) >= 1) {
             return date.toLocaleDateString("ru-RU", {
                 day: "2-digit",
                 month: "2-digit",
@@ -112,17 +115,20 @@ class MainPage extends Death13.Component {
     async handleReadMail(email: any) {
         this.setState({ isStateMode: 3, selectedEmail: email });
         await readEmail(email.id);
+        await getEmailByID(email.id);
     }
 
-    handleSelectAll() {}
-
-    handleGetSendEmail = async () => {
-        const data = await getEmailSend(this.state.offset);
-        console.log(data);
+    handleSelectAll = (isChecked: boolean) => {
+        this.setState({ isSelectAll: isChecked });
     };
 
     handleBackToMail = () => {
+        window.app.handleRoute("/");
+    };
+
+    handleBackToSent = () => {
         this.setState({ isStateMode: 0 });
+        this.loadEmails(this.state.offset);
     };
 
     handleSearch = (value: string) => {
@@ -131,16 +137,16 @@ class MainPage extends Death13.Component {
 
     render() {
         const { emails, isModalOpen, isStateMode, selectedEmail, isSelectAll, total } = this.state;
+
         return (
             <div className="main-page">
                 <aside className="sidebar">
                     <Sidebar
                         isProfile={0}
-                        isPress={0}
+                        isPress={1}
                         newMail={this.handleNewMail}
                         backToMail={this.handleBackToMail}
                         updateMail={this.handleUpdateEmail}
-                        handleGetSendEmail={this.handleGetSendEmail}
                     />
                 </aside>
                 <div className="right-part">
@@ -178,7 +184,7 @@ class MainPage extends Death13.Component {
                                 {emails.length === 0 && (
                                     <div className="mail-box-container-form__placeholder">
                                         <div className="mail-box-container-form__placeholder__icon"></div>
-                                        <span>Ваш почтовый ящик пуст :(</span>
+                                        <span>Нет отправленных писем</span>
                                         <span>Напишите ваше первое письмо, нажав на кнопку слева</span>
                                     </div>
                                 )}
@@ -186,12 +192,13 @@ class MainPage extends Death13.Component {
                                     <div className="mail-box-container-form">
                                         {emails.map((email: any, index: number) => (
                                             <MailBox
-                                                key={index}
+                                                key={email.id || index}
                                                 id={email.id}
                                                 theme={email.header}
+                                                emails={email.receivers_emails}
                                                 title={email.body}
                                                 date={this.formatTime(email.created_at)}
-                                                isRead={email.is_read}
+                                                isRead={true}
                                                 onClick={() => this.handleReadMail(email)}
                                             />
                                         ))}
@@ -200,7 +207,7 @@ class MainPage extends Death13.Component {
                             </div>
                         )}
                         {isStateMode === 3 && (
-                            <ReadMail email={selectedEmail} backToMail={this.handleBackToMail} reloadMail={this.handleUpdateEmail} />
+                            <ReadMail email={selectedEmail} backToMail={this.handleBackToSent} reloadMail={this.handleUpdateEmail} />
                         )}
                     </div>
 
@@ -211,4 +218,4 @@ class MainPage extends Death13.Component {
     }
 }
 
-export default MainPage;
+export default SentPage;

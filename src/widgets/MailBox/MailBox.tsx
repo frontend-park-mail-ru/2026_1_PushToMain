@@ -1,7 +1,11 @@
 import Death13 from "@react/stands";
 import "./MailBox.scss";
+import { deleteEmailByID } from "../../api/ApiEmail";
 
 class MailBox extends Death13.Component {
+    constructor(props: any) {
+        super(props);
+    }
     state: any = {
         isSelected: false,
         isFavorite: false,
@@ -17,11 +21,11 @@ class MailBox extends Death13.Component {
     };
 
     render() {
-        const { theme, title, date, onClick, isSelected = false } = this.props;
+        const { theme, title, date, onClick, isSelected = false, isRead } = this.props;
         const { isFavorite } = this.state;
 
         return (
-            <div className={`mail ${isSelected ? "selected" : ""}`} onClick={() => onClick()}>
+            <div className={`mail ${isSelected ? "selected" : ""}`} isRead={isRead} onClick={() => onClick()}>
                 <div className="checkbox-container">
                     <input
                         type="checkbox"

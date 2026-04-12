@@ -12,6 +12,14 @@
     cursor: pointer;
     width: 100%;
     box-sizing: border-box;
+    margin-left: 5px;
+
+    &[isRead="true"] {
+        background-color: var(--input-success-background);
+        color: var(--secondary-text);
+        border: none;
+        text-decoration: none;
+    }
 
     &:hover {
         background-color: var(--color-main-background);

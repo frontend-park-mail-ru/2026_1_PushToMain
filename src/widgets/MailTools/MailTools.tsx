@@ -1,10 +1,16 @@
 import Death13 from "@react/stands";
 import Button from "../../components/Button/Button";
-import "./MailTools.scss"
+import "./MailTools.scss";
 
 class MailTools extends Death13.Component {
+    
+    handleDeleteClick = async (event: any) => {
+        event.preventDefault();
+        const { deleteEmail } = this.props;
+        await deleteEmail();
+    };
+
     render() {
-        
         return (
             <div className="tools-container">
                 <div className="tools-left">
@@ -24,14 +30,7 @@ class MailTools extends Death13.Component {
                             event.preventDefault();
                         }}
                     />{" "}
-                    <Button
-                        svg="../../assets/svg/Trash.svg"
-                        name="trash"
-                        help="Корзина"
-                        onClick={(event: any) => {
-                            event.preventDefault();
-                        }}
-                    />{" "}
+                    <Button svg="../../assets/svg/Trash.svg" name="trash" help="Корзина" onClick={this.handleDeleteClick} />{" "}
                 </div>
                 <div className="tools-right">
                     <Button

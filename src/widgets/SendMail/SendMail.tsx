@@ -38,6 +38,8 @@ class SendMail extends Death13.Component {
         if (response) {
             return;
         }
+
+        this.props.backToMail();
     }
 
     render() {

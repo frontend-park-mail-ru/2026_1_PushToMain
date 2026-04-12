@@ -7,41 +7,42 @@ import SelectDate from "../../components/SelectDate/SelectDate";
 import UploadAvatar from "../../components/UploadAvatar/UploadAvatar";
 import { validation } from "../../utils/validation";
 import { changePassword, getProfile } from "../../api/ApiAuth";
+import { AppStorage } from "../../App";
+import { URLMINIO } from "../../api/config";
 
 class ProfilePage extends Death13.Component {
     constructor(props: any) {
         super(props);
-        this.profileData();
+        this.loadProfile();
     }
 
     state: any = {
         errors: {},
-        name: "",
-        surname: "",
-        email: "",
+        name: AppStorage.name,
+        surname: AppStorage.surname,
+        email: AppStorage.email,
+        image_path: AppStorage.image_path,
         oldPassword: "",
         newPassword: "",
         gender: "male",
         profileState: 0,
     };
 
-    async profileData() {
-        try {
-            const data = await getProfile();
-            this.setState({
-                name: data.name,
-                surname: data.surname,
-                email: data.email,
-            });
-        } catch (error) {
-            console.error("Ошибка обновления профиля", error);
-        }
-    }
+    loadProfile = async () => {
+        const data = await getProfile();
+        AppStorage.setProfileData(data);
+        this.setState({
+            name: data.name || "",
+            surname: data.surname || "",
+            email: data.email || "",
+            image_path: `${URLMINIO}/${data.image_path}` || "",
+        });
+    };
 
     validateField = (field: string, value: string) => {
         const data: any = {
             email: field === "email" ? value : this.state.email,
-            newPassword: field === "password" ? value : this.state.newPassword,
+            newPassword: field === "newPassword" ? value : this.state.newPassword,
             oldPassword: field === "oldPassword" ? value : this.state.oldPassword,
             name: field === "name" ? value : this.state.name,
             surname: field === "surname" ? value : this.state.surname,
@@ -76,6 +77,7 @@ class ProfilePage extends Death13.Component {
 
     handleInputChange = (field: string, value: string) => {
         const error = this.validateField(field, value);
+        console.log(field, value);
 
         this.setState({
             [field]: value,
@@ -103,7 +105,7 @@ class ProfilePage extends Death13.Component {
     };
 
     render() {
-        const { errors, oldPassword, newPassword, name, surname, gender, profileState } = this.state;
+        const { errors, oldPassword, newPassword, name, surname, gender, profileState, image_path } = this.state;
 
         return (
             <div className="profile-page">
@@ -124,7 +126,7 @@ class ProfilePage extends Death13.Component {
                                 <h1>Личные данные</h1>
                                 <div className="profile-content">
                                     <div className="profile-avatar">
-                                        <UploadAvatar />
+                                        <UploadAvatar image={image_path} />
                                     </div>
                                     <form action="" className="profile-form">
                                         <Input

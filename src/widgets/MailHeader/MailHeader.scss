@@ -19,11 +19,23 @@
             justify-content: center;
             border-radius: 10px;
             overflow: hidden;
-            width: 60px;
+            padding: 0 4px;
 
             &:hover {
                 background-color: var(--color-main-background);
                 transition: 400ms;
+            }
+
+            [name="arrow-down"] {
+                content: "";
+                display: inline-block;
+                width: 16px;
+                height: 16px;
+                background-color: var(--tertiary-text);
+                mask-image: url("/assets/svg/ArrowDown.svg");
+                mask-size: contain;
+                mask-repeat: no-repeat;
+                mask-position: center;
             }
 
             button {
@@ -42,7 +54,7 @@
         background-color: transparent;
         width: 40px;
         height: 40px;
-        padding: 21px 6px;
+        padding: 0 10px;
 
         &:hover {
             background-color: var(--color-main-background);
@@ -50,13 +62,50 @@
         }
 
         &:active {
-            background-color: var(--button-background);
+            background-color: #7ca5ff89;
             transition: 400ms;
         }
 
         img {
             width: 24px;
             height: 24px;
+        }
+
+        &[name="right"] {
+            content: "";
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            background-color: var(--tertiary-text);
+            mask-image: url("/assets/svg/ArrowRight.svg");
+            mask-size: contain;
+            mask-repeat: no-repeat;
+            mask-position: center;
+        }
+        &[name="left"] {
+            content: "";
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            background-color: var(--tertiary-text);
+            mask-image: url("/assets/svg/ArrowLeft.svg");
+            mask-size: contain;
+            mask-repeat: no-repeat;
+            mask-position: center;
+        }
+
+        &:disabled {
+            &::before {
+                content: "";
+                display: inline-block;
+                width: 20px;
+                height: 20px;
+                background-color: var(--secondary-text);
+                mask-image: url("/assets/svg/ArrowLeft.svg");
+                mask-size: contain;
+                mask-repeat: no-repeat;
+                mask-position: center;
+            }
         }
     }
 

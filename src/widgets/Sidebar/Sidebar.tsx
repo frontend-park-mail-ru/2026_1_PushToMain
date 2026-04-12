@@ -1,6 +1,7 @@
 import Death13 from "@react/stands";
 import Button from "../../components/Button/Button";
 import "./Sidebar.scss";
+import { AppStorage } from "../../App";
 
 class Sidebar extends Death13.Component {
     state: any = {
@@ -9,11 +10,19 @@ class Sidebar extends Death13.Component {
 
     render() {
         const { isVisible } = this.state;
-        const { isProfile = 0, backToMail, changeProfile, changePassword, newMail } = this.props;
+        const { isProfile = 0, backToMail, changeProfile, changePassword, newMail, updateMail } = this.props;
 
         return (
             <div className="sidebar-widget">
-                <div className="logo-container" onClick={() => backToMail()}>
+                <div
+                    className="logo-container"
+                    onClick={(event: any) => {
+                        event.preventDefault();
+                        if (this.props.updateMail) {
+                            updateMail();
+                        }
+                        backToMail();
+                    }}>
                     <img src="../../assets/svg/Logo.svg" />
                     <h1 className="logo__title">SMail</h1>
                 </div>
@@ -34,9 +43,14 @@ class Sidebar extends Death13.Component {
                             <Button
                                 name="button-inbox"
                                 title="Входящие"
+                                isSelect={this.props.isPress === 0}
                                 svg="../../assets/svg/Inbox.svg"
+                                count={AppStorage.unReadCount}
                                 onClick={(event: any) => {
                                     event.preventDefault();
+                                    if (this.props.updateMail) {
+                                        updateMail();
+                                    }
                                     backToMail();
                                 }}
                             />
@@ -51,9 +65,11 @@ class Sidebar extends Death13.Component {
                             <Button
                                 name="button-sends"
                                 title="Отправленные"
+                                isSelect={this.props.isPress === 1}
                                 svg="../../assets/svg/Sent.svg"
                                 onClick={(event: any) => {
                                     event.preventDefault();
+                                    window.app.handleRoute("/sent");
                                 }}
                             />
                             <Button
@@ -120,9 +136,11 @@ class Sidebar extends Death13.Component {
                 {isProfile === 1 && (
                     <div className="sidebar-content">
                         <div className="sidebar-profile">
-                            <img src="../../assets/svg/Avatar.svg" alt="avatar" />
-                            <span>Иван Иванов</span>
-                            <p>ivan.petrov@smail.ru</p>
+                            <img src={AppStorage.image_path || `../../assets/svg/Avatar.svg`}></img>
+                            <span>
+                                {AppStorage.name} {AppStorage.surname}
+                            </span>
+                            <p>{AppStorage.email}</p>
                         </div>
                         <div className="main-button-profile">
                             <Button

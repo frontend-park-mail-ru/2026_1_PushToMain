@@ -4,6 +4,28 @@ import RegPage from "./pages/RegPage/RegPage";
 import "../public/index.scss";
 import MainPage from "./pages/MainPage/MainPage";
 import ProfilePage from "./pages/ProfilePage/ProfilePage";
+import SentPage from "./pages/SentPage/SentPage";
+import SendEmailPage from "./pages/SendEmailPage/SendEmailPage";
+import { URLMINIO } from "./api/config";
+
+export const AppStorage = {
+    unReadCount: 0,
+    name: "",
+    surname: "",
+    email: "",
+    image_path: "",
+
+    setProfileData(data: { name: string; surname: string; email: string; image_path: string }) {
+        this.name = data.name || "";
+        this.surname = data.surname || "";
+        this.email = data.email || "";
+        this.image_path = `${URLMINIO}/${data.image_path}` || "";
+    },
+
+    setUnReadCount(count: number) {
+        this.unReadCount = count;
+    },
+};
 
 class App {
     private routes: Record<string, any>;
@@ -13,21 +35,25 @@ class App {
             "/login": LoginPage,
             "/register": RegPage,
             "/profile": ProfilePage,
+            "/send": SendEmailPage,
+            "/sent": SentPage,
             "/": MainPage,
         };
-        
+
         window.addEventListener("popstate", () => {
             this.renderRoute(location.pathname);
         });
 
         this.renderRoute(location.pathname);
+
     }
+
 
     handleRoute(path: string) {
         if (location.pathname === path) {
             return;
         }
-        
+
         history.pushState({}, "", path);
         this.renderRoute(path);
     }
@@ -38,7 +64,7 @@ class App {
         if (!root) return;
 
         const element = Death13.createElement(Component, {}, []);
-        
+
         Death13.render(element, root);
     }
 }
@@ -46,7 +72,9 @@ class App {
 declare global {
     interface Window {
         app: App;
+        AppStorage: typeof AppStorage;
     }
 }
 
+window.AppStorage = AppStorage;
 window.app = new App();

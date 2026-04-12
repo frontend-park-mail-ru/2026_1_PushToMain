@@ -1,5 +1,6 @@
 import Death13 from "@react/stands";
 import "./InputEmail.scss";
+import { AppStorage } from "../../App";
 
 class InputEmail extends Death13.Component {
     constructor(props: any) {
@@ -12,7 +13,7 @@ class InputEmail extends Death13.Component {
     }
 
     state: any = {
-        emails: [],
+        emails: this.props.isReading ? this.props.emails || [AppStorage.email] : [], //LMAO Нет РУЧКИ :(
         currentInput: "",
         error: "",
     };
@@ -80,7 +81,6 @@ class InputEmail extends Death13.Component {
 
     handleUpdateEmail(event: any) {
         event.preventDefault();
-
     }
 
     render() {
@@ -97,9 +97,11 @@ class InputEmail extends Death13.Component {
                                 this.handleUpdateEmail(event);
                             }}>
                             <span>{email}</span>
-                            <button type="button" className="remove-email" onClick={() => this.removeEmail(index)}>
-                                ×
-                            </button>
+                            {!this.props.isReading && (
+                                <button type="button" className="remove-email" onClick={() => this.removeEmail(index)}>
+                                    ×
+                                </button>
+                            )}
                         </span>
                     ))}
                     <input
