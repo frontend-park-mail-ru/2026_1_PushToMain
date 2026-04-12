@@ -47,30 +47,17 @@ self.addEventListener("install", (event) => {
 });
 
 self.addEventListener("fetch", (event) => {
-  event.respondWith(
-    (async () => {
+  if (event.request.method !== "GET") return;
+
+  event.respondWith(async () => {
+    if (navigator.onLine) {
+      const networkResponse = await fetch(event.request);
+      putInCache(event.request, networkResponse.clone());
+      return networkResponse;
+    } else {
       const cache = await caches.open(CACHE_NAME);
       const cachedResponse = await cache.match(event.request);
-
-      if (cachedResponse) {
-        return cachedResponse;
-      }
-
-      try {
-        const networkResponse = await fetch(event.request);
-
-        if (event.request.url.match(/\.(svg|png|jpg|jpeg|gif|webp|css|js)$/)) {
-          cache.put(event.request, networkResponse.clone());
-        }
-
-        return networkResponse;
-      } catch (error) {
-        console.error("Fetch failed:", error);
-        if (event.request.url.match(/\.(svg|png|jpg)$/)) {
-          return new Response("Image not available offline", { status: 404 });
-        }
-        throw error;
-      }
-    })(),
-  );
+      return cachedResponse || new Response("Offline", { status: 404 });
+    }
+  });
 });

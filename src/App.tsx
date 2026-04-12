@@ -3,6 +3,7 @@ import LoginPage from "./pages/LoginPage/LoginPage";
 import RegPage from "./pages/RegPage/RegPage";
 import "../public/index.scss";
 import MainPage from "./pages/MainPage/MainPage";
+import "./utils/OfflineManager";
 
 class App {
   private routes: Record<string, any>;
@@ -13,8 +14,8 @@ class App {
       "/register": <RegPage />,
       "/": <MainPage />,
     };
-    this.handleRoute(location.pathname);
 
+    this.handleRoute(location.pathname);
     this.registerServiceWorker();
   }
 
