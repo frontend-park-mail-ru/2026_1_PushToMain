@@ -3,11 +3,26 @@ import Button from "../../components/Button/Button";
 import "./MailTools.scss";
 
 class MailTools extends Death13.Component {
-    
     handleDeleteClick = async (event: any) => {
         event.preventDefault();
         const { deleteEmail } = this.props;
         await deleteEmail();
+    };
+
+    handleReplyClick = (event: any) => {
+        event.preventDefault();
+        const { onReply } = this.props;
+        if (onReply) {
+            onReply();
+        }
+    };
+
+    handleForwardClick = (event: any) => {
+        event.preventDefault();
+        const { onForward } = this.props;
+        if (onForward) {
+            onForward();
+        }
     };
 
     render() {
@@ -38,18 +53,14 @@ class MailTools extends Death13.Component {
                         name="answer"
                         help="Ответить"
                         title="Ответить"
-                        onClick={(event: any) => {
-                            event.preventDefault();
-                        }}
+                        onClick={this.handleReplyClick}
                     />{" "}
                     <Button
                         svg="../../assets/svg/Reply.svg"
                         name="reply"
                         title="Переслать"
                         help="Переслать"
-                        onClick={(event: any) => {
-                            event.preventDefault();
-                        }}
+                        onClick={this.handleForwardClick}
                     />{" "}
                 </div>
             </div>

@@ -20,13 +20,13 @@ class MainPage extends Death13.Component {
         selectedEmail: null,
         isSelectAll: false,
         offset: 0,
+        selectedEmails: [],
     };
 
     constructor(props: any) {
         super(props);
         this.loadEmails(this.state.offset);
         this.loadProfile();
-        document.addEventListener("click", this.handleCloseModal);
     }
 
     loadProfile = async () => {
@@ -55,7 +55,7 @@ class MainPage extends Death13.Component {
         this.loadEmails(this.state.offset);
     };
 
-    handleLogout = (event: Event) => {
+    handleLogout = async (event: Event) => {
         event.preventDefault();
         window.app.handleRoute("/login");
     };
@@ -114,7 +114,30 @@ class MainPage extends Death13.Component {
         await readEmail(email.id);
     }
 
-    handleSelectAll() {}
+    handleSelectAll = (isChecked: boolean) => {
+        const { emails } = this.state;
+        const selectedEmails = isChecked ? emails.map((email: any) => email.id) : [];
+        this.setState({
+            isSelectAll: isChecked,
+            selectedEmails: selectedEmails,
+        });
+    };
+
+    handleSelectEmail = (emailId: string, isSelected: boolean) => {
+        const { selectedEmails, emails } = this.state;
+        let newSelectedEmails;
+
+        if (isSelected) {
+            newSelectedEmails = [...selectedEmails, emailId];
+        } else {
+            newSelectedEmails = selectedEmails.filter((id: string) => id !== emailId);
+        }
+
+        this.setState({
+            selectedEmails: newSelectedEmails,
+            isSelectAll: newSelectedEmails.length === emails.length,
+        });
+    };
 
     handleGetSendEmail = async () => {
         const data = await getEmailSend(this.state.offset);
@@ -130,9 +153,9 @@ class MainPage extends Death13.Component {
     };
 
     render() {
-        const { emails, isModalOpen, isStateMode, selectedEmail, isSelectAll, total } = this.state;
+        const { emails, isModalOpen, isStateMode, selectedEmail, isSelectAll, total, selectedEmails } = this.state;
         return (
-            <div className="main-page">
+            <div className="main-page" onClick={() => this.handleCloseModal()}>
                 <aside className="sidebar">
                     <Sidebar
                         isProfile={0}
@@ -191,6 +214,8 @@ class MainPage extends Death13.Component {
                                                 theme={email.header}
                                                 title={email.body}
                                                 date={this.formatTime(email.created_at)}
+                                                isSelected={selectedEmails.includes(email.id)}
+                                                onSelect={(id: string, selected: boolean) => this.handleSelectEmail(id, selected)}
                                                 isRead={email.is_read}
                                                 onClick={() => this.handleReadMail(email)}
                                             />

@@ -14,6 +14,8 @@ export const AppStorage = {
     surname: "",
     email: "",
     image_path: "",
+    replyData: null as any,
+    forwardData: null as any,
 
     setProfileData(data: { name: string; surname: string; email: string; image_path: string }) {
         this.name = data.name || "";
@@ -25,6 +27,33 @@ export const AppStorage = {
     setUnReadCount(count: number) {
         this.unReadCount = count;
     },
+
+    setReplyData(data: any) {
+        this.replyData = data;
+        this.forwardData = null; // Очищаем forward при установке reply
+    },
+
+    getReplyData() {
+        return this.replyData;
+    },
+
+    setForwardData(data: any) {
+        this.forwardData = data;
+        this.replyData = null; // Очищаем reply при установке forward
+    },
+
+    getForwardData() {
+        return this.forwardData;
+    },
+
+    clearMailActionData() {
+        this.replyData = null;
+        this.forwardData = null;
+    },
+
+    getMailActionData() {
+        return this.replyData || this.forwardData;
+    }
 };
 
 class App {

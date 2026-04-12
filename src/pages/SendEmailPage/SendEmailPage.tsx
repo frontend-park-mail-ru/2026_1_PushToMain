@@ -12,17 +12,29 @@ class SendEmailPage extends Death13.Component {
     state: any = {
         isModalOpen: false,
         unReadCount: 0,
+        replyData: null,
+        forwardData: null,
     };
 
     constructor(props: any) {
         super(props);
         this.loadProfile();
-        document.addEventListener("click", this.handleCloseModal);
+        this.loadMailActionData();
     }
 
     loadProfile = async () => {
         const data = await getProfile();
         AppStorage.setProfileData(data);
+    };
+
+    loadMailActionData = () => {
+        const replyData = AppStorage.getReplyData();
+        const forwardData = AppStorage.getForwardData();
+
+        this.setState({
+            replyData,
+            forwardData,
+        });
     };
 
     handleAvatar = (event: Event) => {
@@ -41,18 +53,22 @@ class SendEmailPage extends Death13.Component {
     };
 
     handleBackToMail = () => {
+        AppStorage.clearMailActionData();
         window.app.handleRoute("/");
     };
 
     handleNewMail = () => {
-        // Уже на странице отправки
+        AppStorage.clearMailActionData();
+        this.setState({ replyData: null, forwardData: null });
     };
 
     render() {
-        const { isModalOpen, unReadCount } = this.state;
+        const { isModalOpen, unReadCount, replyData, forwardData } = this.state;
+
+        const mailActionData = replyData || forwardData;
 
         return (
-            <div className="send-email-page">
+            <div className="send-email-page" onClick={() => this.handleCloseModal()}>
                 <aside className="sidebar">
                     <Sidebar isProfile={0} unReadCount={unReadCount} newMail={this.handleNewMail} backToMail={this.handleBackToMail} />
                 </aside>
@@ -77,7 +93,7 @@ class SendEmailPage extends Death13.Component {
                         </div>
                     </div>
                     <div className="mail-box-container">
-                        <SendMail backToMail={this.handleBackToMail} />
+                        <SendMail backToMail={this.handleBackToMail} actionData={mailActionData} />
                     </div>
 
                     <ProfileModal isOpen={isModalOpen} onClose={this.handleCloseModal} onProfileClick={this.handleProfileClick} />

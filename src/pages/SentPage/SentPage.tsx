@@ -27,7 +27,6 @@ class SentPage extends Death13.Component {
         super(props);
         this.loadEmails(this.state.offset);
         this.loadProfile();
-        document.addEventListener("click", this.handleCloseModal);
     }
 
     loadProfile = async () => {
@@ -139,7 +138,7 @@ class SentPage extends Death13.Component {
         const { emails, isModalOpen, isStateMode, selectedEmail, isSelectAll, total } = this.state;
 
         return (
-            <div className="main-page">
+            <div className="main-page" onClick={() => this.handleCloseModal()}>
                 <aside className="sidebar">
                     <Sidebar
                         isProfile={0}

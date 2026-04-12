@@ -96,14 +96,6 @@ class Sidebar extends Death13.Component {
                             {isVisible && (
                                 <div className="extra-button-container">
                                     <Button
-                                        name="button-archive"
-                                        title="Архив"
-                                        svg="../../assets/svg/Archive.svg"
-                                        onClick={(event: any) => {
-                                            event.preventDefault();
-                                        }}
-                                    />
-                                    <Button
                                         name="button-spam"
                                         title="Спам"
                                         svg="../../assets/svg/Spam.svg"
