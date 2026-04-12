@@ -25,8 +25,9 @@ export default {
         { from: "public/sw.js", to: "sw.js" },
         { from: "public/assets-manifest.json", to: "assets-manifest.json" },
         {
-          from: "public/assets/**/*",
-          to: "assets/[path][name][ext]",
+          from: "**/*",
+          to: "assets/",
+          context: "public/assets/",
           noErrorOnMissing: true,
         },
       ],
