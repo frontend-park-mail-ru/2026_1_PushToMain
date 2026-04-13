@@ -72,6 +72,7 @@ export const AppStorage = {
     } catch (e) {
       console.warn("Failed to save profile to localStorage", e);
     }
+    console.log("Updated profile data, notifying subscribers...");
     this._notify();
   },
 
