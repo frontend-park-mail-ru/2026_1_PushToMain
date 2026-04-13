@@ -44,31 +44,23 @@ export const AppStorage = {
     },
 
     _notify() {
-        console.log("Updated profile data, notifying subscribers...");
         this._subscribers.forEach((cb) => cb());
     },
 
-    setProfileData(data: { name: string; surname: string; email: string; image_path: string }) {
+    setProfileData(data: { name: string; surname: string; email: string; image_path: string } | null) {
+        // Защита от null/undefined
+        if (!data) {
+            console.warn("setProfileData called with null/undefined data");
+            return;
+        }
+
         this.name = data.name || "";
         this.surname = data.surname || "";
         this.email = data.email || "";
         this.image_path = data.image_path || "";
         this._lastUpdate = Date.now();
-        try {
-            localStorage.setItem(
-                "userProfile",
-                JSON.stringify({
-                    name: this.name,
-                    surname: this.surname,
-                    email: this.email,
-                    image_path: this.image_path,
-                    _lastUpdate: this._lastUpdate,
-                }),
-            );
-        } catch (e) {
-            console.warn("Failed to save profile to localStorage", e);
-        }
-
+        
+        this._saveToStorage();
         this._notify();
     },
 
@@ -84,12 +76,15 @@ export const AppStorage = {
                     _lastUpdate: this._lastUpdate,
                 }),
             );
-        } catch {}
+        } catch {
+            // Игнорируем ошибку сохранения
+        }
     },
 
     setImagePath(path: string) {
         this.image_path = path;
         this._lastUpdate = Date.now();
+        this._saveToStorage();
         this._notify();
     },
 
@@ -124,7 +119,7 @@ export const AppStorage = {
         if (this.image_path) {
             return `${URLMINIO}/${this.image_path}?t=${this._lastUpdate || Date.now()}`;
         }
-        return "../../assets/svg/Avatar.svg";
+        return "/assets/svg/Avatar.svg"; // Исправлен путь
     },
 
     getMailActionData() {
@@ -164,12 +159,14 @@ class App {
     renderRoute(path: string) {
         const Component = this.routes[path] || this.routes["/"];
         const root = document.getElementById("root");
-        if (!root) return;
+        
+        if (!root) {
+            console.error("Root element not found");
+            return;
+        }
 
         root.innerHTML = "";
-
         const element = Death13.createElement(Component, {}, []);
-
         Death13.render(element, root);
     }
 }
