@@ -12,6 +12,19 @@
     cursor: pointer;
     width: 100%;
     box-sizing: border-box;
+    margin-left: 5px;
+
+    &.read {
+        background-color: var(--input-success-background);
+        color: var(--secondary-text);
+        border: none;
+        text-decoration: none;
+    }
+
+    &.mail.selected {
+        background-color: #9cc8fe;
+        color: var(--tretiry-text)
+    }
 
     &:hover {
         background-color: var(--color-main-background);

@@ -5,14 +5,17 @@ class Button extends Death13.Component {
     render() {
         return (
             <button
+                disabled={this.props.block}
+                data-is-select={this.props.isSelect}
                 type={this.props.type || "button"}
                 name={this.props.name}
                 title={this.props.help || ""}
-                onclick={(event: any) => {
+                onClick={(event: any) => {
                     this.props.onClick(event);
                 }}>
                 {this.props.svg && <img src={this.props.svg} alt="" />}
                 {this.props.title || ""}
+                {this.props.count !== 0 && <span className="button-count">{this.props.count}</span>}
             </button>
         );
     }

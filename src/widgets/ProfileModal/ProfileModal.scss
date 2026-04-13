@@ -22,11 +22,11 @@
 
 .overlay__close {
     position: fixed;
-    right: 36px;
-    top: 120px;
+    right: 46px;
+    top: 118px;
     button {
-        width: 40px;
-        height: 40px;
+        width: 24px;
+        height: 24px;
         padding: 0;
         background-color: var(--color-sidebar-background);
     }
@@ -38,6 +38,8 @@
     img {
         width: 80px;
         height: 80px;
+        border-radius: 50%;
+        object-fit: cover;
     }
 }
 
@@ -55,6 +57,10 @@
         &[name="profile"] {
             border: 2px solid var(--input-stroke);
             border-radius: 20px 20px 0 0;
+
+            &:hover {
+                background-color: rgba(207, 207, 207, 0.302);
+            }
         }
 
         &[name="settings"] {
@@ -62,6 +68,10 @@
             border-left: 2px solid var(--input-stroke);
             border-right: 2px solid var(--input-stroke);
             border-radius: 0 0 20px 20px;
+
+            &:hover {
+                background-color: rgba(207, 207, 207, 0.302);
+            }
         }
     }
 }
@@ -69,5 +79,6 @@
 .button-exit {
     button {
         width: 100%;
+        background-color: #78b5ff;
     }
 }

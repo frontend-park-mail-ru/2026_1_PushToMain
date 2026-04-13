@@ -3,6 +3,7 @@ import path, { dirname } from "path";
 import MiniCssExtractPlugin from "mini-css-extract-plugin";
 import CssMinimizerPlugin from "css-minimizer-webpack-plugin";
 import ImageMinimizerPlugin from "image-minimizer-webpack-plugin";
+import CopyWebpackPlugin from "copy-webpack-plugin";
 
 const __dirname = dirname("./");
 
@@ -17,8 +18,19 @@ export default {
         new HtmlWebpackPlugin({
             template: "./public/index.html",
             filename: "index.html",
+            favicon: "./public/assets/svg/favicon.svg",
         }),
         new MiniCssExtractPlugin(),
+
+        new CopyWebpackPlugin({
+            patterns: [
+                {
+                    from: "public/assets/svg",
+                    to: "assets/svg",
+                    noErrorOnMissing: true,
+                },
+            ],
+        }),
     ],
 
     optimization: {
