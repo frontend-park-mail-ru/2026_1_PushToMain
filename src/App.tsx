@@ -28,28 +28,21 @@ class App {
     root.innerHTML = "";
 
     Death13.render(route, root);
-
-    history.pushState({}, "", path);
+    
+    if (location.pathname !== path) {
+      history.pushState({}, "", path);
+    }
   }
 
   private registerServiceWorker() {
     if ("serviceWorker" in navigator) {
       navigator.serviceWorker
-        .getRegistrations()
-        .then((registrations) => {
-          for (const registration of registrations) {
-            registration.unregister();
-          }
+        .register("/sw.js")
+        .then((registration) => {
+          console.log("ServiceWorker registered:", registration);
         })
-        .then(() => {
-          navigator.serviceWorker
-            .register("/sw.js")
-            .then((registration) => {
-              console.log("ServiceWorker registered:", registration);
-            })
-            .catch((error) => {
-              console.log("ServiceWorker registration failed:", error);
-            });
+        .catch((error) => {
+          console.log("ServiceWorker registration failed:", error);
         });
     }
   }

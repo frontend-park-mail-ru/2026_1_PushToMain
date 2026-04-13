@@ -4,10 +4,11 @@ const addResourcesToCache = async (resources) => {
   const cache = await caches.open(CACHE_NAME);
 
   const manifestResponse = await fetch("/assets-manifest.json");
+  await cache.put("/assets-manifest.json", manifestResponse.clone());
+
   const manifest = await manifestResponse.json();
 
   console.log(`Caching ${manifest.files.length} files from manifest`);
-
   await cache.addAll(manifest.files);
 };
 
@@ -23,7 +24,18 @@ const enableNavigationPreload = async () => {
 };
 
 self.addEventListener("activate", (event) => {
-  event.waitUntil(enableNavigationPreload());
+  event.waitUntil(
+    (async () => {
+      const cacheKeys = await caches.keys();
+      await Promise.all(
+        cacheKeys
+          .filter((key) => key !== CACHE_NAME)
+          .map((key) => caches.delete(key)),
+      );
+
+      await self.clients.claim();
+    })(),
+  );
 });
 
 self.addEventListener("install", (event) => {
@@ -44,6 +56,7 @@ self.addEventListener("install", (event) => {
       }
     })(),
   );
+  self.skipWaiting();
 });
 
 self.addEventListener("fetch", (event) => {
@@ -57,11 +70,6 @@ self.addEventListener("fetch", (event) => {
     event.respondWith(
       (async () => {
         try {
-          const preloadResponse = await event.preloadResponse;
-          if (preloadResponse) {
-            return preloadResponse;
-          }
-
           const networkResponse = await fetch(event.request, {
             mode: "cors",
             credentials: "omit",
@@ -69,35 +77,9 @@ self.addEventListener("fetch", (event) => {
           return networkResponse;
         } catch (error) {
           const cachedResponse = await caches.match("/index.html");
-          if (cachedResponse) return cachedResponse;
-          return new Response("Offline – content not available", {
-            status: 503,
-            statusText: "Service Unavailable",
-          });
-        }
-      })(),
-    );
-  } else {
-    event.respondWith(
-      (async () => {
-        const cachedResponse = await caches.match(event.request);
-        if (cachedResponse) {
-          return cachedResponse;
-        }
-
-        try {
-          const networkResponse = await fetch(event.request, {
-            mode: "cors",
-            credentials: "omit",
-          });
-
-          if (networkResponse && networkResponse.status === 200) {
-            const cache = await caches.open(CACHE_NAME);
-            cache.put(event.request, networkResponse.clone());
+          if (cachedResponse) {
+            return cachedResponse;
           }
-          return networkResponse;
-        } catch (error) {
-          console.log("Network failed for:", url.pathname);
           return new Response("Offline – content not available", {
             status: 503,
             statusText: "Service Unavailable",
@@ -106,4 +88,32 @@ self.addEventListener("fetch", (event) => {
       })(),
     );
   }
+
+  event.respondWith(
+    (async () => {
+      const cachedResponse = await caches.match(event.request);
+      if (cachedResponse) {
+        return cachedResponse;
+      }
+
+      try {
+        const networkResponse = await fetch(event.request, {
+          mode: "cors",
+          credentials: "omit",
+        });
+
+        if (networkResponse && networkResponse.status === 200) {
+          const cache = await caches.open(CACHE_NAME);
+          cache.put(event.request, networkResponse.clone());
+        }
+        return networkResponse;
+      } catch (error) {
+        console.log("Network failed for:", url.pathname);
+        return new Response("Offline – content not available", {
+          status: 503,
+          statusText: "Service Unavailable",
+        });
+      }
+    })(),
+  );
 });
