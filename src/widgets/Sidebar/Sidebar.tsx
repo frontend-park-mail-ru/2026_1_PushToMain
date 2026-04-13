@@ -12,10 +12,8 @@ class Sidebar extends Death13.Component {
     avatarUrl: AppStorage.getAvatarUrl(),
   };
 
-  private unsubscribe: (() => void) | null = null;
-
-  componentDidMount() {
-    this.unsubscribe = AppStorage.subscribe(() => {
+  unsubscribe =
+    AppStorage.subscribe(() => {
       console.log("Profile data updated, updating sidebar...");
       this.setState({
         name: AppStorage.name,
@@ -23,14 +21,7 @@ class Sidebar extends Death13.Component {
         email: AppStorage.email,
         avatarUrl: AppStorage.getAvatarUrl(),
       });
-    });
-  }
-
-  componentWillUnmount() {
-    if (this.unsubscribe) {
-      this.unsubscribe();
-    }
-  }
+    }) || null;
 
   render() {
     const { isVisible, name, surname, email, avatarUrl } = this.state;
