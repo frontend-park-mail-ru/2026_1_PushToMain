@@ -110,7 +110,7 @@ class ProfilePage extends Death13.Component {
         name: this.state.name,
         surname: this.state.surname,
       });
-      if (response.ok) {
+      if (response) {
         const currentImagePath = AppStorage.image_path;
         AppStorage.setProfileData({
           name: this.state.name,
