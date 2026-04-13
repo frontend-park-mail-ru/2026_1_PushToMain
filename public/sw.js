@@ -1,119 +1,104 @@
-const CACHE_NAME = "v1";
+const CACHE_NAME = "app-v1";
+const APP_SHELL = [
+  "/",
+  "/index.html",
+  "8c1cbe877c7fb2a26df6.ttf",
+  "eab2686c0c146e017020.ttf",
+  "public/assets/svg/Logo.svg",
+  "public/assets/svg/favicon.svg",
+];
 
-const addResourcesToCache = async (resources) => {
-  const cache = await caches.open(CACHE_NAME);
-
-  const manifestResponse = await fetch("/assets-manifest.json");
-  await cache.put("/assets-manifest.json", manifestResponse.clone());
-
-  const manifest = await manifestResponse.json();
-
-  console.log(`Caching ${manifest.files.length} files from manifest`);
-  await cache.addAll(manifest.files);
-};
-
-const putInCache = async (request, response) => {
-  const cache = await caches.open(CACHE_NAME);
-  await cache.put(request, response);
-};
-
-const enableNavigationPreload = async () => {
-  if (self.registration.navigationPreload) {
-    await self.registration.navigationPreload.enable();
-  }
-};
+self.addEventListener("install", (event) => {
+  self.skipWaiting();
+  event.waitUntil(
+    caches.open(CACHE_NAME).then((cache) => {
+      return cache.addAll(APP_SHELL);
+    }),
+  );
+});
 
 self.addEventListener("activate", (event) => {
   event.waitUntil(
     (async () => {
-      const cacheKeys = await caches.keys();
+      const keys = await caches.keys();
       await Promise.all(
-        cacheKeys
-          .filter((key) => key !== CACHE_NAME)
-          .map((key) => caches.delete(key)),
+        keys.map((key) => {
+          if (key !== CACHE_NAME) {
+            return caches.delete(key);
+          }
+        }),
       );
-
       await self.clients.claim();
     })(),
   );
 });
 
-self.addEventListener("install", (event) => {
-  event.waitUntil(
-    (async () => {
-      try {
-        await addResourcesToCache();
-        console.log("All assets cached successfully");
-      } catch (error) {
-        console.error("Failed to cache from manifest:", error);
-        await cache.addAll([
-          "/",
-          "/index.html",
-          "/index.scss",
-          "/assets/svg/favicon.svg",
-          "/assets/svg/Logo.svg",
-        ]);
-      }
-    })(),
-  );
-  self.skipWaiting();
-});
-
 self.addEventListener("fetch", (event) => {
-  const url = new URL(event.request.url);
+  const req = event.request;
+  const url = new URL(req.url);
+
+  if (req.method !== "GET") return;
 
   if (url.pathname.startsWith("/api/")) return;
 
-  if (event.request.method !== "GET") return;
+  if (
+    url.pathname.includes("hot-update") ||
+    url.pathname.includes("webpack") ||
+    url.pathname.includes("sockjs") ||
+    url.port === "3000"
+  ) {
+    return;
+  }
 
-  if (event.request.mode === "navigate") {
+  if (req.mode === "navigate") {
     event.respondWith(
       (async () => {
+        const cache = await caches.open(CACHE_NAME);
+        const cached = await cache.match("/index.html");
+
         try {
-          const networkResponse = await fetch(event.request, {
-            mode: "cors",
-            credentials: "omit",
-          });
-          return networkResponse;
-        } catch (error) {
-          const cachedResponse = await caches.match("/index.html");
-          if (cachedResponse) {
-            return cachedResponse;
-          }
-          return new Response("Offline – content not available", {
-            status: 503,
-            statusText: "Service Unavailable",
-          });
+          const network = await fetch(req);
+          cache.put("/index.html", network.clone());
+          return network;
+        } catch {
+          return cached;
         }
       })(),
     );
+    return;
+  }
+
+  if (req.destination === "font" || req.destination === "image") {
+    event.respondWith(
+      (async () => {
+        const cache = await caches.open(CACHE_NAME);
+        const cached = await cache.match(req);
+
+        if (cached) return cached;
+
+        const network = await fetch(req);
+        cache.put(req, network.clone());
+        return network;
+      })(),
+    );
+    return;
   }
 
   event.respondWith(
     (async () => {
-      const cachedResponse = await caches.match(event.request);
-      if (cachedResponse) {
-        return cachedResponse;
-      }
+      const cache = await caches.open(CACHE_NAME);
+      const cached = await cache.match(req);
 
-      try {
-        const networkResponse = await fetch(event.request, {
-          mode: "cors",
-          credentials: "omit",
-        });
+      const networkPromise = fetch(req)
+        .then((res) => {
+          if (res && res.status === 200) {
+            cache.put(req, res.clone());
+          }
+          return res;
+        })
+        .catch(() => null);
 
-        if (networkResponse && networkResponse.status === 200) {
-          const cache = await caches.open(CACHE_NAME);
-          cache.put(event.request, networkResponse.clone());
-        }
-        return networkResponse;
-      } catch (error) {
-        console.log("Network failed for:", url.pathname);
-        return new Response("Offline – content not available", {
-          status: 503,
-          statusText: "Service Unavailable",
-        });
-      }
+      return cached || networkPromise;
     })(),
   );
 });

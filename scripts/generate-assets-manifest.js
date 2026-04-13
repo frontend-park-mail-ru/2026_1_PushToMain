@@ -24,14 +24,11 @@ const __dirname = path.dirname(__filename);
     const manifest = {
       version: "1.0.0",
       generatedAt: new Date().toISOString(),
-      totalFiles: assetUrls.length,
-      files: [...(hasIndexHtml ? ["/", "/index.html"] : []), ...assetUrls],
       assets: {
         svg: assetUrls.filter((url) => url.match(/\.svg$/i)),
         images: assetUrls.filter((url) =>
           url.match(/\.(png|jpg|jpeg|gif|webp)$/i),
         ),
-        fonts: assetUrls.filter((url) => url.match(/\.(woff|woff2|ttf|eot)$/i)),
         css: assetUrls.filter((url) => url.match(/\.css$/i)),
         js: assetUrls.filter((url) => url.match(/\.js$/i)),
         other: assetUrls.filter(
@@ -46,10 +43,9 @@ const __dirname = path.dirname(__filename);
     const manifestPath = path.join(__dirname, "../public/assets-manifest.json");
     fs.writeFileSync(manifestPath, JSON.stringify(manifest, null, 2));
 
-    console.log(`Generated assets manifest with ${assetUrls.length} files`);
+    console.log(`Generated assets manifest:`);
     console.log(`   - SVG: ${manifest.assets.svg.length}`);
     console.log(`   - Images: ${manifest.assets.images.length}`);
-    console.log(`   - Fonts: ${manifest.assets.fonts.length}`);
     console.log(`   - Other: ${manifest.assets.other.length}`);
     console.log(`Manifest saved to: ${manifestPath}`);
   } catch (error) {
