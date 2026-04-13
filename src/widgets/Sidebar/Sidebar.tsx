@@ -16,6 +16,7 @@ class Sidebar extends Death13.Component {
 
   componentDidMount() {
     this.unsubscribe = AppStorage.subscribe(() => {
+      console.log("Profile data updated, updating sidebar...");
       this.setState({
         name: AppStorage.name,
         surname: AppStorage.surname,

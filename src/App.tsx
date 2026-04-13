@@ -44,6 +44,7 @@ export const AppStorage = {
   },
 
   _notify() {
+    console.log("Updated profile data, notifying subscribers...");
     this._subscribers.forEach((cb) => cb());
   },
 
@@ -72,7 +73,7 @@ export const AppStorage = {
     } catch (e) {
       console.warn("Failed to save profile to localStorage", e);
     }
-    console.log("Updated profile data, notifying subscribers...");
+
     this._notify();
   },
 
