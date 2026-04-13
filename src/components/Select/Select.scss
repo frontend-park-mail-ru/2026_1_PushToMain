@@ -1,0 +1,84 @@
+.select {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    outline: none;
+    width: 109px;
+    height: 48px;
+    background-color: transparent;
+    padding: 0 15px;
+    cursor: pointer;
+    position: relative;
+    color: var(--tritary-text);
+
+    .select__value {
+        font-size: 16px;
+        color: var(--tertiary-text);
+    }
+
+    img {
+        width: 16px;
+        height: 16px;
+        transition: transform 0.3s;
+    }
+
+    .select__toggle {
+        &.open {
+            img {
+                transform: rotate(180deg);
+            }
+        }
+    }
+
+    &[name="day"] {
+        border: 2px solid var(--input-stroke);
+        border-right: none;
+        border-radius: 20px 0 0 20px;
+    }
+
+    &[name="month"] {
+        border: 2px solid var(--input-stroke);
+        width: 181px;
+    }
+
+    &[name="year"] {
+        border: 2px solid var(--input-stroke);
+        border-left: none;
+        border-radius: 0 20px 20px 0;
+    }
+
+    &__dropdown {
+        position: absolute;
+        top: 50px;
+        z-index: 10;
+        border-radius: 20px;
+        overflow-y: scroll;
+        height: 300px;
+        background-color: var(--color-sidebar-background);
+
+        .select__value {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 5px 20px;
+
+            &:hover {
+                background-color: var(--color-main-background);
+            }
+        }
+
+        &::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        &::-webkit-scrollbar-track {
+            background: transparent;
+            border-radius: 3px;
+        }
+
+        &::-webkit-scrollbar-thumb {
+            background: var(--mail-stroke);
+            border-radius: 3px;
+        }
+    }
+}

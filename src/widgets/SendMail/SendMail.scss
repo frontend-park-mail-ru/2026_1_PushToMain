@@ -1,0 +1,65 @@
+.send-mail {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+
+    .send-form {
+        display: flex;
+        flex-direction: column;
+        flex: 1;
+        height: 100%;
+        padding: 10px;
+
+        .input-container {
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            font-size: 16px;
+            width: 100%;
+            overflow: hidden;
+
+            &[data-input-name="theme"] {
+                border-top: 1px solid var(--secondary-text);
+                border-bottom: 1px solid var(--secondary-text);
+            }
+
+            .input-form {
+                flex: 1;
+                width: 100%;
+                min-width: 0;
+                overflow: visible;
+            }
+
+            input {
+                max-width: 100%;
+                color: var(--tretiry-text);
+                font-size: 16px;
+                overflow-x: auto !important;
+                white-space: nowrap;
+            }
+        }
+    }
+
+    .send-actions {
+        display: flex;
+        flex-direction: row;
+        gap: 10px;
+        margin-left: auto;
+        padding: 10px;
+
+        button {
+            height: 40px;
+
+            &[name="save-mail"] {
+                display: flex;
+                align-items: center;
+                background-color: var(--color-main-background);
+                color: var(--tretiry-text);
+
+                &:hover {
+                    background-color: var(--color-main-background);
+                }
+            }
+        }
+    }
+}

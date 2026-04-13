@@ -1,0 +1,129 @@
+.mail-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 40px;
+    padding: 4px 20px;
+
+    &__left-container,
+    &__right-container {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+
+    &__left-container {
+        .left-container__select-all {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 10px;
+            overflow: hidden;
+            padding: 0 4px;
+
+            &:hover {
+                background-color: var(--color-main-background);
+                transition: 400ms;
+            }
+
+            [name="arrow-down"] {
+                content: "";
+                display: inline-block;
+                width: 16px;
+                height: 16px;
+                background-color: var(--tertiary-text);
+                mask-image: url("/assets/svg/ArrowDown.svg");
+                mask-size: contain;
+                mask-repeat: no-repeat;
+                mask-position: center;
+            }
+
+            button {
+                img {
+                    width: 24px;
+                    height: 24px;
+                }
+            }
+        }
+    }
+
+    button {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background-color: transparent;
+        width: 40px;
+        height: 40px;
+        padding: 0 10px;
+
+        &:hover {
+            background-color: var(--color-main-background);
+            transition: 400ms;
+        }
+
+        &:active {
+            background-color: #7ca5ff89;
+            transition: 400ms;
+        }
+
+        img {
+            width: 24px;
+            height: 24px;
+        }
+
+        &[name="right"] {
+            content: "";
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            background-color: var(--tertiary-text);
+            mask-image: url("/assets/svg/ArrowRight.svg");
+            mask-size: contain;
+            mask-repeat: no-repeat;
+            mask-position: center;
+        }
+        &[name="left"] {
+            content: "";
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            background-color: var(--tertiary-text);
+            mask-image: url("/assets/svg/ArrowLeft.svg");
+            mask-size: contain;
+            mask-repeat: no-repeat;
+            mask-position: center;
+        }
+
+        &:disabled {
+            &::before {
+                content: "";
+                display: inline-block;
+                width: 20px;
+                height: 20px;
+                background-color: var(--secondary-text);
+                mask-image: url("/assets/svg/ArrowLeft.svg");
+                mask-size: contain;
+                mask-repeat: no-repeat;
+                mask-position: center;
+            }
+        }
+    }
+
+    input[name="checkbox-all"] {
+        appearance: none;
+        position: relative;
+        background-color: transparent;
+        width: 24px;
+        height: 24px;
+        color: var(--button-active-background);
+        margin: 0;
+        background-image: url("/assets/svg/CheckboxOffAll.svg");
+        background-size: contain;
+        background-position: center;
+        border: none;
+
+        &:checked {
+            background-image: url("/assets/svg/CheckboxDeselect.svg");
+        }
+    }
+}

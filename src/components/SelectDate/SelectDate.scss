@@ -1,0 +1,17 @@
+.select-date {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+
+    span {
+        padding-left: 17px;
+    }
+
+    .select-container {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        gap: 0;
+        padding-bottom: 20px;
+    }
+}
