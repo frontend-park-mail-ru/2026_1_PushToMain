@@ -9,181 +9,176 @@ import SendEmailPage from "./pages/SendEmailPage/SendEmailPage";
 import { URLMINIO } from "./api/config";
 
 export const AppStorage = {
-  _subscribers: [] as Array<() => void>,
-  _lastUpdate: 0,
-  unReadCount: 0,
-  name: "",
-  surname: "",
-  email: "",
-  image_path: "",
-  replyData: null as any,
-  forwardData: null as any,
+    _subscribers: [] as Array<() => void>,
+    _lastUpdate: 0,
+    unReadCount: 0,
+    name: "",
+    surname: "",
+    email: "",
+    image_path: "",
+    replyData: null as any,
+    forwardData: null as any,
 
-  init() {
-    try {
-      const saved = localStorage.getItem("userProfile");
-      if (saved) {
-        const data = JSON.parse(saved);
+    init() {
+        try {
+            const saved = localStorage.getItem("userProfile");
+            if (saved) {
+                const data = JSON.parse(saved);
+                this.name = data.name || "";
+                this.surname = data.surname || "";
+                this.email = data.email || "";
+                this.image_path = data.image_path || "";
+                this._lastUpdate = data._lastUpdate || Date.now();
+            }
+        } catch (e) {
+            console.warn("Failed to load profile from localStorage", e);
+        }
+        this._notify();
+    },
+
+    subscribe(callback: () => void) {
+        this._subscribers.push(callback);
+        return () => {
+            this._subscribers = this._subscribers.filter((cb) => cb !== callback);
+        };
+    },
+
+    _notify() {
+        console.log("Updated profile data, notifying subscribers...");
+        this._subscribers.forEach((cb) => cb());
+    },
+
+    setProfileData(data: { name: string; surname: string; email: string; image_path: string }) {
         this.name = data.name || "";
         this.surname = data.surname || "";
         this.email = data.email || "";
         this.image_path = data.image_path || "";
-        this._lastUpdate = data._lastUpdate || Date.now();
-      }
-    } catch (e) {
-      console.warn("Failed to load profile from localStorage", e);
-    }
-    this._notify();
-  },
+        this._lastUpdate = Date.now();
+        try {
+            localStorage.setItem(
+                "userProfile",
+                JSON.stringify({
+                    name: this.name,
+                    surname: this.surname,
+                    email: this.email,
+                    image_path: this.image_path,
+                    _lastUpdate: this._lastUpdate,
+                }),
+            );
+        } catch (e) {
+            console.warn("Failed to save profile to localStorage", e);
+        }
 
-  subscribe(callback: () => void) {
-    this._subscribers.push(callback);
-    return () => {
-      this._subscribers = this._subscribers.filter((cb) => cb !== callback);
-    };
-  },
+        this._notify();
+    },
 
-  _notify() {
-    console.log("Updated profile data, notifying subscribers...");
-    this._subscribers.forEach((cb) => cb());
-  },
+    _saveToStorage() {
+        try {
+            localStorage.setItem(
+                "userProfile",
+                JSON.stringify({
+                    name: this.name,
+                    surname: this.surname,
+                    email: this.email,
+                    image_path: this.image_path,
+                    _lastUpdate: this._lastUpdate,
+                }),
+            );
+        } catch {}
+    },
 
-  setProfileData(data: {
-    name: string;
-    surname: string;
-    email: string;
-    image_path: string;
-  }) {
-    this.name = data.name || "";
-    this.surname = data.surname || "";
-    this.email = data.email || "";
-    this.image_path = data.image_path || "";
-    this._lastUpdate = Date.now();
-    try {
-      localStorage.setItem(
-        "userProfile",
-        JSON.stringify({
-          name: this.name,
-          surname: this.surname,
-          email: this.email,
-          image_path: this.image_path,
-          _lastUpdate: this._lastUpdate,
-        }),
-      );
-    } catch (e) {
-      console.warn("Failed to save profile to localStorage", e);
-    }
+    setImagePath(path: string) {
+        this.image_path = path;
+        this._lastUpdate = Date.now();
+        this._notify();
+    },
 
-    this._notify();
-  },
+    setUnReadCount(count: number) {
+        this.unReadCount = count;
+    },
 
-  _saveToStorage() {
-    try {
-      localStorage.setItem(
-        "userProfile",
-        JSON.stringify({
-          name: this.name,
-          surname: this.surname,
-          email: this.email,
-          image_path: this.image_path,
-          _lastUpdate: this._lastUpdate,
-        }),
-      );
-    } catch (e) {}
-  },
+    setReplyData(data: any) {
+        this.replyData = data;
+        this.forwardData = null;
+    },
 
-  setImagePath(path: string) {
-    this.image_path = path;
-    this._lastUpdate = Date.now();
-    this._notify();
-  },
+    getReplyData() {
+        return this.replyData;
+    },
 
-  setUnReadCount(count: number) {
-    this.unReadCount = count;
-  },
+    setForwardData(data: any) {
+        this.forwardData = data;
+        this.replyData = null;
+    },
 
-  setReplyData(data: any) {
-    this.replyData = data;
-    this.forwardData = null;
-  },
+    getForwardData() {
+        return this.forwardData;
+    },
 
-  getReplyData() {
-    return this.replyData;
-  },
+    clearMailActionData() {
+        this.replyData = null;
+        this.forwardData = null;
+    },
 
-  setForwardData(data: any) {
-    this.forwardData = data;
-    this.replyData = null;
-  },
+    getAvatarUrl() {
+        if (this.image_path) {
+            return `${URLMINIO}/${this.image_path}?t=${this._lastUpdate || Date.now()}`;
+        }
+        return "../../assets/svg/Avatar.svg";
+    },
 
-  getForwardData() {
-    return this.forwardData;
-  },
-
-  clearMailActionData() {
-    this.replyData = null;
-    this.forwardData = null;
-  },
-
-  getAvatarUrl() {
-    if (this.image_path) {
-      return `${URLMINIO}/${this.image_path}?t=${this._lastUpdate || Date.now()}`;
-    }
-    return "../../assets/svg/Avatar.svg";
-  },
-
-  getMailActionData() {
-    return this.replyData || this.forwardData;
-  },
+    getMailActionData() {
+        return this.replyData || this.forwardData;
+    },
 };
 
 class App {
-  private routes: Record<string, any>;
+    private routes: Record<string, any>;
 
-  constructor() {
-    this.routes = {
-      "/login": LoginPage,
-      "/register": RegPage,
-      "/profile": ProfilePage,
-      "/send": SendEmailPage,
-      "/sent": SentPage,
-      "/": MainPage,
-    };
+    constructor() {
+        this.routes = {
+            "/login": LoginPage,
+            "/register": RegPage,
+            "/profile": ProfilePage,
+            "/send": SendEmailPage,
+            "/sent": SentPage,
+            "/": MainPage,
+        };
 
-    window.addEventListener("popstate", () => {
-      this.renderRoute(location.pathname);
-    });
+        window.addEventListener("popstate", () => {
+            this.renderRoute(location.pathname);
+        });
 
-    this.renderRoute(location.pathname);
-  }
-
-  handleRoute(path: string) {
-    if (location.pathname === path) {
-      return;
+        this.renderRoute(location.pathname);
     }
 
-    history.pushState({}, "", path);
-    this.renderRoute(path);
-  }
+    handleRoute(path: string) {
+        if (location.pathname === path) {
+            return;
+        }
 
-  renderRoute(path: string) {
-    const Component = this.routes[path] || this.routes["/"];
-    const root = document.getElementById("root");
-    if (!root) return;
+        history.pushState({}, "", path);
+        this.renderRoute(path);
+    }
 
-    root.innerHTML = "";
+    renderRoute(path: string) {
+        const Component = this.routes[path] || this.routes["/"];
+        const root = document.getElementById("root");
+        if (!root) return;
 
-    const element = Death13.createElement(Component, {}, []);
+        root.innerHTML = "";
 
-    Death13.render(element, root);
-  }
+        const element = Death13.createElement(Component, {}, []);
+
+        Death13.render(element, root);
+    }
 }
 
 declare global {
-  interface Window {
-    app: App;
-    AppStorage: typeof AppStorage;
-  }
+    interface Window {
+        app: App;
+        AppStorage: typeof AppStorage;
+    }
 }
 
 AppStorage.init();
