@@ -93,6 +93,13 @@ class ProfilePage extends Death13.Component {
       });
       if (response) {
         alert("Профиль успешно изменен");
+        AppStorage.setProfileData({
+          name: response.name,
+          surname: response.surname,
+          email: this.state.email,
+          image_path: this.state.image_path,
+        });
+        this.setState({ name: response.name, surname: response.surname });
       }
     } catch (error) {
       console.error("Ошибка изменения профиля:", error);
