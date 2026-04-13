@@ -13,7 +13,7 @@ import ProfileModal from "../../widgets/ProfileModal/ProfileModal";
 class ProfilePage extends Death13.Component {
   constructor(props: any) {
     super(props);
-    this.loadProfile();
+    //this.loadProfile();
   }
 
   state: any = {
@@ -32,13 +32,32 @@ class ProfilePage extends Death13.Component {
 
   loadProfile = async () => {
     const data = await getProfile();
-    AppStorage.setProfileData(data);
+    AppStorage.setProfileData({
+      name: data.name || "",
+      surname: data.surname || "",
+      email: data.email || "",
+      image_path: data.image_path || "",
+    });
     this.setState({
       name: data.name || "",
       surname: data.surname || "",
       email: data.email || "",
+      avatarUrl: AppStorage.getAvatarUrl(),
     });
   };
+
+  componentDidMount() {
+    if (!AppStorage.name && !AppStorage.email) {
+      this.loadProfile();
+    } else {
+      this.setState({
+        name: AppStorage.name,
+        surname: AppStorage.surname,
+        email: AppStorage.email,
+        avatarUrl: AppStorage.getAvatarUrl(),
+      });
+    }
+  }
 
   validateField = (field: string, value: string) => {
     const data: any = {
@@ -92,16 +111,16 @@ class ProfilePage extends Death13.Component {
         surname: this.state.surname,
       });
       if (response) {
+        const currentImagePath = AppStorage.image_path;
         AppStorage.setProfileData({
           name: response.name,
           surname: response.surname,
           email: this.state.email,
-          image_path: this.state.image_path,
+          image_path: currentImagePath,
         });
         this.setState({
           name: response.name,
           surname: response.surname,
-          email: this.state.email,
         });
         alert("Профиль успешно изменен");
       }
