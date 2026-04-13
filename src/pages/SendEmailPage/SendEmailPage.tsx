@@ -9,22 +9,29 @@ import { AppStorage } from "../../App";
 import { getProfile } from "../../api/ApiAuth";
 
 class SendEmailPage extends Death13.Component {
+    constructor(props: any) {
+        super(props);
+
+        this.loadMailActionData();
+        this.loadProfile();
+    }
+
     state: any = {
         isModalOpen: false,
         unReadCount: 0,
         replyData: null,
         forwardData: null,
+        avatarKey: 0,
     };
-
-    constructor(props: any) {
-        super(props);
-        this.loadProfile();
-        this.loadMailActionData();
-    }
 
     loadProfile = async () => {
         const data = await getProfile();
-        AppStorage.setProfileData(data);
+        console.log(data);
+        if (data === null) {
+            window.app.handleRoute("/login");
+        } else {
+            AppStorage.setProfileData(data);
+        }
     };
 
     loadMailActionData = () => {
@@ -84,12 +91,7 @@ class SendEmailPage extends Death13.Component {
                             />
                         </div>
                         <div className="top-right-menu">
-                            <Button
-                                svg={AppStorage.getAvatarUrl()}
-                                name="avatar"
-                                help="Аккаунт"
-                                onClick={this.handleAvatar}
-                            />
+                            <Button svg={AppStorage.getAvatarUrl()} name="avatar" help="Аккаунт" onClick={this.handleAvatar} />
                         </div>
                     </div>
                     <div className="mail-box-container">

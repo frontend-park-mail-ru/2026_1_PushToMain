@@ -12,20 +12,22 @@
     button {
         display: flex;
         align-items: center;
+        justify-content: center;
         background-color: transparent;
         color: var(--tretiry-text);
         height: 30px;
         font-size: 16px;
         gap: 10px;
-        padding: 21px 6px;
+        padding: 21px 0;
 
         &:hover {
             background-color: var(--color-main-background);
         }
 
         img {
-            width: 32px;
-            height: 32px;
+            margin-left: 8px;
+            width: 24px;
+            height: 24px;
         }
     }
 

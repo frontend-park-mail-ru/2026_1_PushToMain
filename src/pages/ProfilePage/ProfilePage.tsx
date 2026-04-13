@@ -12,7 +12,8 @@ import ProfileModal from "../../widgets/ProfileModal/ProfileModal";
 class ProfilePage extends Death13.Component {
     constructor(props: any) {
         super(props);
-        //this.loadProfile();
+
+        this.loadProfile();
     }
 
     state: any = {
@@ -31,32 +32,23 @@ class ProfilePage extends Death13.Component {
 
     loadProfile = async () => {
         const data = await getProfile();
-        AppStorage.setProfileData({
-            name: data.name || "",
-            surname: data.surname || "",
-            email: data.email || "",
-            image_path: data.image_path || "",
-        });
-        this.setState({
-            name: data.name || "",
-            surname: data.surname || "",
-            email: data.email || "",
-            avatarUrl: AppStorage.getAvatarUrl(),
-        });
-    };
-
-    componentDidMount() {
-        if (!AppStorage.name && !AppStorage.email) {
-            this.loadProfile();
+        if (data === null) {
+            window.app.handleRoute("/login");
         } else {
+            AppStorage.setProfileData({
+                name: data.name || "",
+                surname: data.surname || "",
+                email: data.email || "",
+                image_path: data.image_path || "",
+            });
             this.setState({
-                name: AppStorage.name,
-                surname: AppStorage.surname,
-                email: AppStorage.email,
+                name: data.name || "",
+                surname: data.surname || "",
+                email: data.email || "",
                 avatarUrl: AppStorage.getAvatarUrl(),
             });
         }
-    }
+    };
 
     validateField = (field: string, value: string) => {
         const data: any = {
@@ -94,7 +86,6 @@ class ProfilePage extends Death13.Component {
             });
 
             if (response) {
-                console.log("Пароль успешно изменен");
                 this.setState({ oldPassword: "", newPassword: "" });
             }
         } catch (error) {
@@ -121,7 +112,6 @@ class ProfilePage extends Death13.Component {
                     name: this.state.name,
                     surname: this.state.surname,
                 });
-                alert("Профиль успешно изменен");
             }
         } catch (error) {
             console.error("Ошибка изменения профиля:", error);

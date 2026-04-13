@@ -52,6 +52,11 @@
                 background: none;
                 height: 40px;
                 width: 400px;
+                font-size: 18px;
+
+                &::placeholder {
+                    font-size: 18px;
+                }
 
                 &:focus {
                     outline: none;
@@ -159,8 +164,8 @@
             &__icon {
                 content: "";
                 display: inline-block;
-                width: 200px;
-                height: 200px;
+                width: 100px;
+                height: 100px;
                 background-color: rgb(192, 192, 192);
                 mask-image: url("/assets/svg/Inbox.svg");
                 mask-size: contain;

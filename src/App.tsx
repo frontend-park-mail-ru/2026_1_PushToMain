@@ -48,7 +48,6 @@ export const AppStorage = {
     },
 
     setProfileData(data: { name: string; surname: string; email: string; image_path: string } | null) {
-        // Защита от null/undefined
         if (!data) {
             console.warn("setProfileData called with null/undefined data");
             return;
@@ -77,7 +76,6 @@ export const AppStorage = {
                 }),
             );
         } catch {
-            // Игнорируем ошибку сохранения
         }
     },
 
@@ -119,7 +117,7 @@ export const AppStorage = {
         if (this.image_path) {
             return `${URLMINIO}/${this.image_path}?t=${this._lastUpdate || Date.now()}`;
         }
-        return "/assets/svg/Avatar.svg"; // Исправлен путь
+        return "/assets/svg/Avatar.svg";
     },
 
     getMailActionData() {

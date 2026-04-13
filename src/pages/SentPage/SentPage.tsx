@@ -31,7 +31,12 @@ class SentPage extends Death13.Component {
 
     loadProfile = async () => {
         const data = await getProfile();
-        AppStorage.setProfileData(data);
+        console.log(data);
+        if (data === null) {
+            window.app.handleRoute("/login");
+        } else {
+            AppStorage.setProfileData(data);
+        }
     };
 
     loadEmails = async (offset: number) => {
@@ -162,12 +167,7 @@ class SentPage extends Death13.Component {
                             />
                         </div>
                         <div className="top-right-menu">
-                            <Button
-                                svg={AppStorage.image_path || `../../assets/svg/Avatar.svg`}
-                                name="avatar"
-                                help="Аккаунт"
-                                onClick={this.handleAvatar}
-                            />
+                            <Button svg={AppStorage.getAvatarUrl()} name="avatar" help="Аккаунт" onClick={this.handleAvatar} />
                         </div>
                     </div>
                     <div className="mail-box-container">

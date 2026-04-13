@@ -112,6 +112,12 @@
                 gap: 12px;
                 width: 400px;
 
+                .input-container {
+                    .input__title {
+                        padding-left: 12px;
+                    }
+                }
+
                 .input-form {
                     border: 2px solid var(--input-stroke);
 
@@ -220,9 +226,6 @@
                         height: 44px;
                         border-radius: 14px;
                         font-size: 16px;
-                        display: flex;
-                        align-items: center;
-                        justify-content: center;
                         padding: 0 24px;
                         min-width: 135px;
 

@@ -175,7 +175,7 @@ export async function getProfile() {
             const data = await response.json();
             return data;
         }
-        return { name: "", surname: "", email: "" };
+        return null;
     } catch (error) {
         console.log("Сервер не отвечает", error);
         return null;
@@ -247,23 +247,23 @@ export async function uploadAvatar(file: File) {
     }
 }
 
-export async function changeProfile(data: { name: string, surname: string }) {
-  const csrfToken = await getCSRFToken();
-  try {
-    const response = await fetch(`${URL}/profile/change`, {
-      method: "PUT",
-      headers: {
-        "X-CSRF-Token": csrfToken,
-      },
-      credentials: "include",
-      body: JSON.stringify(data)
-    })
-    if (response.ok) {
-      const data = await response.json();
-      return data;
+export async function changeProfile(data: { name: string; surname: string }) {
+    const csrfToken = await getCSRFToken();
+    try {
+        const response = await fetch(`${URL}/profile/change`, {
+            method: "PUT",
+            headers: {
+                "X-CSRF-Token": csrfToken,
+            },
+            credentials: "include",
+            body: JSON.stringify(data),
+        });
+        if (response.ok) {
+            const data = await response.json();
+            return data;
+        }
+    } catch (error) {
+        console.log("Сервер не отвечает", error);
+        return null;
     }
-  } catch (error) {
-    console.log("Сервер не отвечает", error);
-    return null;
-  }
 }
