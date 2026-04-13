@@ -18,11 +18,12 @@ export default {
     new HtmlWebpackPlugin({
       template: "./public/index.html",
       filename: "index.html",
+      favicon: "./public/assets/svg/favicon.svg", // Добавлен favicon
     }),
     new MiniCssExtractPlugin(),
     new CopyWebpackPlugin({
       patterns: [
-        { from: "public/sw.js", to: "sw.js" },
+        { from: "public/sw.js", to: "sw.js" }, // Service Worker
         {
           from: "**/*",
           to: "assets/",
@@ -33,34 +34,25 @@ export default {
     }),
   ],
 
-    plugins: [
-        new HtmlWebpackPlugin({
-            template: "./public/index.html",
-            filename: "index.html",
-            favicon: "./public/assets/svg/favicon.svg",
-        }),
-        new MiniCssExtractPlugin(),
-      
-        new ImageMinimizerPlugin({
-          minimizer: {
-            implementation: ImageMinimizerPlugin.imageminMinify,
-            options: {
-              plugins: ["imagemin-mozjpeg", "imagemin-pngquant", "imagemin-svgo"],
-            },
-          },
-        }),
-
-        new CopyWebpackPlugin({
-            patterns: [
-                {
-                    from: "public/assets/svg",
-                    to: "assets/svg",
-                    noErrorOnMissing: true,
-                },
+  optimization: {
+    minimize: false, // В development не минифицируем
+    minimizer: [
+      new CssMinimizerPlugin(),
+      new ImageMinimizerPlugin({
+        minimizer: {
+          implementation: ImageMinimizerPlugin.imageminMinify,
+          options: {
+            plugins: [
+              ["imagemin-mozjpeg", { quality: 80 }],
+              ["imagemin-pngquant", { quality: [0.6, 0.8] }],
+              ["imagemin-svgo", {}],
             ],
-        }),
+          },
+        },
+      }),
     ],
   },
+
   output: {
     path: path.resolve(__dirname, "./build"),
     publicPath: "/",
