@@ -23,7 +23,6 @@ export default {
     new CopyWebpackPlugin({
       patterns: [
         { from: "public/sw.js", to: "sw.js" },
-        { from: "public/assets-manifest.json", to: "assets-manifest.json" },
         {
           from: "**/*",
           to: "assets/",
