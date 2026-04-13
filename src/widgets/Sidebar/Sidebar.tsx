@@ -32,7 +32,7 @@ class Sidebar extends Death13.Component {
   }
 
   render() {
-    const { name, surname, email, avatarUrl, isVisible } = this.state;
+    const { isVisible, name, surname, email, avatarUrl } = this.state;
     const {
       isProfile = 0,
       backToMail,
