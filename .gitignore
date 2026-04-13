@@ -1,3 +1,5 @@
 node_modules/
 build
 /src/react/node_modules/
+.env
+assets-manifest.json
