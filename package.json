@@ -8,8 +8,6 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "lint": "eslint ./src",
     "lint:fix": "eslint --fix ./src",
-    "generate-manifest": "node scripts/generate-assets-manifest.js",
-    "prebuild": "npm run generate-manifest",
     "build": "npx webpack",
     "start": "webpack serve"
   },
