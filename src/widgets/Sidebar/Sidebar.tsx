@@ -128,7 +128,7 @@ class Sidebar extends Death13.Component {
                 {isProfile === 1 && (
                     <div className="sidebar-content">
                         <div className="sidebar-profile">
-                            <img src={AppStorage.image_path || `../../assets/svg/Avatar.svg`}></img>
+                            <img src={AppStorage.getAvatarUrl()}></img>
                             <span>
                                 {AppStorage.name} {AppStorage.surname}
                             </span>

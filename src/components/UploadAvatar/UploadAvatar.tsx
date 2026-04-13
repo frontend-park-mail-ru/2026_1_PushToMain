@@ -7,38 +7,39 @@ class UploadAvatar extends Death13.Component {
     constructor(props: any) {
         super(props);
         this.handleImageChange = this.handleImageChange.bind(this);
+        this.state = {
+            localPreview: null,
+        };
     }
-
-    state: any = {
-        avatarSrc: AppStorage.image_path || this.props.image || `../../assets/svg/Avatar.svg`,
-    };
 
     handleImageChange = async (e: any) => {
         const file = e.target.files?.[0];
-
         if (!file) return;
 
         const reader = new FileReader();
-
         reader.onload = (event: any) => {
-            this.setState({ avatarSrc: event.target.result });
+            this.setState({ localPreview: event.target.result });
         };
-
         reader.readAsDataURL(file);
 
         const imagePath = await uploadAvatar(file);
-        console.log(imagePath);
         if (imagePath) {
-            AppStorage.image_path = imagePath;
+            AppStorage.setImagePath(imagePath);
+            this.setState({ localPreview: null });
+
+            if (this.props.onAvatarUpdate) {
+                this.props.onAvatarUpdate();
+            }
         }
     };
 
     render() {
-        const { avatarSrc } = this.state;
+        const src = this.state.localPreview || this.props.image || AppStorage.getAvatarUrl() || "../../assets/svg/Avatar.svg";
+
         return (
             <div className="upload">
                 <div className="upload__preview">
-                    <img id="upload-image" src={this.props.image || avatarSrc} alt="avatar" />
+                    <img id="upload-image" src={src} alt="avatar" />
                 </div>
                 <input id="file-input" type="file" name="file" accept="image/*" hidden onChange={this.handleImageChange} />
                 <label for="file-input">Изменить фото</label>

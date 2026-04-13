@@ -9,6 +9,8 @@ import SendEmailPage from "./pages/SendEmailPage/SendEmailPage";
 import { URLMINIO } from "./api/config";
 
 export const AppStorage = {
+    _subscribers: [] as Array<() => void>,
+    _lastUpdate: 0,
     unReadCount: 0,
     name: "",
     surname: "",
@@ -17,11 +19,30 @@ export const AppStorage = {
     replyData: null as any,
     forwardData: null as any,
 
+    subscribe(callback: () => void) {
+        this._subscribers.push(callback);
+        return () => {
+            this._subscribers = this._subscribers.filter((cb) => cb !== callback);
+        };
+    },
+
+    _notify() {
+        this._subscribers.forEach((cb) => cb());
+    },
+
     setProfileData(data: { name: string; surname: string; email: string; image_path: string }) {
         this.name = data.name || "";
         this.surname = data.surname || "";
         this.email = data.email || "";
-        this.image_path = `${URLMINIO}/${data.image_path}` || "";
+        this.image_path = data.image_path || "";
+        this._lastUpdate = Date.now();
+        this._notify();
+    },
+
+    setImagePath(path: string) {
+        this.image_path = path;
+        this._lastUpdate = Date.now();
+        this._notify();
     },
 
     setUnReadCount(count: number) {
@@ -30,7 +51,7 @@ export const AppStorage = {
 
     setReplyData(data: any) {
         this.replyData = data;
-        this.forwardData = null; // Очищаем forward при установке reply
+        this.forwardData = null;
     },
 
     getReplyData() {
@@ -39,7 +60,7 @@ export const AppStorage = {
 
     setForwardData(data: any) {
         this.forwardData = data;
-        this.replyData = null; // Очищаем reply при установке forward
+        this.replyData = null;
     },
 
     getForwardData() {
@@ -51,9 +72,16 @@ export const AppStorage = {
         this.forwardData = null;
     },
 
+    getAvatarUrl() {
+        if (this.image_path) {
+            return `${URLMINIO}/${this.image_path}?t=${this._lastUpdate || Date.now()}`;
+        }
+        return "../../assets/svg/Avatar.svg";
+    },
+
     getMailActionData() {
         return this.replyData || this.forwardData;
-    }
+    },
 };
 
 class App {
@@ -74,9 +102,7 @@ class App {
         });
 
         this.renderRoute(location.pathname);
-
     }
-
 
     handleRoute(path: string) {
         if (location.pathname === path) {
@@ -91,6 +117,8 @@ class App {
         const Component = this.routes[path] || this.routes["/"];
         const root = document.getElementById("root");
         if (!root) return;
+
+        root.innerHTML = "";
 
         const element = Death13.createElement(Component, {}, []);
 

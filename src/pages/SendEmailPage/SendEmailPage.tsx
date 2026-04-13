@@ -85,7 +85,7 @@ class SendEmailPage extends Death13.Component {
                         </div>
                         <div className="top-right-menu">
                             <Button
-                                svg={AppStorage.image_path || `../../assets/svg/Avatar.svg`}
+                                svg={AppStorage.getAvatarUrl()}
                                 name="avatar"
                                 help="Аккаунт"
                                 onClick={this.handleAvatar}

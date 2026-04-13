@@ -1,4 +1,4 @@
-import { URL, URLMINIO } from "./config";
+import { URL } from "./config";
 /**
  * Отправляет POST-запрос на эндпоинт /login с данными.
  */
@@ -239,7 +239,7 @@ export async function uploadAvatar(file: File) {
         });
         if (response.ok) {
             const data = await response.json();
-            return `${URLMINIO}/${data.image_path}`;
+            return data.image_path;
         }
     } catch (error) {
         console.log("Сервер не отвечает", error);

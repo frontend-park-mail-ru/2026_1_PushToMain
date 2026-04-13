@@ -8,12 +8,13 @@ import UploadAvatar from "../../components/UploadAvatar/UploadAvatar";
 import { validation } from "../../utils/validation";
 import { changePassword, getProfile } from "../../api/ApiAuth";
 import { AppStorage } from "../../App";
-import { URLMINIO } from "../../api/config";
+import ProfileModal from "../../widgets/ProfileModal/ProfileModal";
 
 class ProfilePage extends Death13.Component {
     constructor(props: any) {
         super(props);
         this.loadProfile();
+
     }
 
     state: any = {
@@ -21,11 +22,13 @@ class ProfilePage extends Death13.Component {
         name: AppStorage.name,
         surname: AppStorage.surname,
         email: AppStorage.email,
-        image_path: AppStorage.image_path,
         oldPassword: "",
         newPassword: "",
         gender: "male",
         profileState: 0,
+        avatarKey: 0,
+        avatarUrl: AppStorage.getAvatarUrl(),
+        isModalOpen: false,
     };
 
     loadProfile = async () => {
@@ -35,7 +38,6 @@ class ProfilePage extends Death13.Component {
             name: data.name || "",
             surname: data.surname || "",
             email: data.email || "",
-            image_path: `${URLMINIO}/${data.image_path}` || "",
         });
     };
 
@@ -57,6 +59,13 @@ class ProfilePage extends Death13.Component {
             }
         }
         return undefined;
+    };
+
+    handleAvatarUpdate = () => {
+        this.setState({
+            avatarKey: this.state.avatarKey + 1,
+            avatarUrl: AppStorage.getAvatarUrl(),
+        });
     };
 
     async handleChangePassword(event: any) {
@@ -92,8 +101,28 @@ class ProfilePage extends Death13.Component {
         this.setState({ gender: value });
     };
 
+    handleLogout = async (event: Event) => {
+        event.preventDefault();
+        window.app.handleRoute("/login");
+    };
+
     handleBackToMail = () => {
+        this.setState({ isStateMode: 0 });
         window.app.handleRoute("/");
+    };
+
+    handleAvatar = (event: Event) => {
+        event.stopPropagation();
+        event.preventDefault();
+        this.setState({ isModalOpen: true });
+    };
+
+    handleCloseModal = () => {
+        this.setState({ isModalOpen: false });
+    };
+
+    handleProfileClick = () => {
+        window.app.handleRoute("/profile");
     };
 
     handleChangeProfile = () => {
@@ -105,7 +134,7 @@ class ProfilePage extends Death13.Component {
     };
 
     render() {
-        const { errors, oldPassword, newPassword, name, surname, gender, profileState, image_path } = this.state;
+        const { errors, oldPassword, newPassword, name, surname, gender, profileState, avatarKey, avatarUrl, isModalOpen } = this.state;
 
         return (
             <div className="profile-page">
@@ -120,13 +149,19 @@ class ProfilePage extends Death13.Component {
                 </aside>
 
                 <div className="right-part">
+                    <div className="top-bar">
+                        <div className="search-bar"></div>
+                        <div className="top-right-menu">
+                            <Button svg={AppStorage.getAvatarUrl()} name="avatar" help="Аккаунт" onClick={this.handleAvatar} />
+                        </div>
+                    </div>
                     <div className="profile-content-area">
                         {profileState === 0 && (
                             <div className="profile-container">
                                 <h1>Личные данные</h1>
                                 <div className="profile-content">
                                     <div className="profile-avatar">
-                                        <UploadAvatar image={image_path} />
+                                        <UploadAvatar image={avatarUrl} onAvatarUpdate={this.handleAvatarUpdate} key={avatarKey} />
                                     </div>
                                     <form action="" className="profile-form">
                                         <Input
@@ -249,6 +284,12 @@ class ProfilePage extends Death13.Component {
                             </div>
                         )}
                     </div>
+                    <ProfileModal
+                        isOpen={isModalOpen}
+                        onClose={this.handleCloseModal}
+                        onProfileClick={this.handleProfileClick}
+                        onLogout={this.handleLogout}
+                    />
                 </div>
             </div>
         );

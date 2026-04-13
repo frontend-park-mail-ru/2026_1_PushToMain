@@ -144,7 +144,7 @@ class MainPage extends Death13.Component {
         console.log(data);
     };
 
-    handleBackToMail = () => {
+    handleGoToMain = () => {
         this.setState({ isStateMode: 0 });
     };
 
@@ -161,7 +161,7 @@ class MainPage extends Death13.Component {
                         isProfile={0}
                         isPress={0}
                         newMail={this.handleNewMail}
-                        backToMail={this.handleBackToMail}
+                        backToMail={this.handleGoToMain}
                         updateMail={this.handleUpdateEmail}
                         handleGetSendEmail={this.handleGetSendEmail}
                     />
@@ -180,12 +180,7 @@ class MainPage extends Death13.Component {
                             />
                         </div>
                         <div className="top-right-menu">
-                            <Button
-                                svg={AppStorage.image_path || `../../assets/svg/Avatar.svg`}
-                                name="avatar"
-                                help="Аккаунт"
-                                onClick={this.handleAvatar}
-                            />
+                            <Button svg={AppStorage.getAvatarUrl()} name="avatar" help="Аккаунт" onClick={this.handleAvatar} />
                         </div>
                     </div>
                     <div className="mail-box-container">
@@ -225,7 +220,7 @@ class MainPage extends Death13.Component {
                             </div>
                         )}
                         {isStateMode === 3 && (
-                            <ReadMail email={selectedEmail} backToMail={this.handleBackToMail} reloadMail={this.handleUpdateEmail} />
+                            <ReadMail email={selectedEmail} backToMail={this.handleGoToMain} reloadMail={this.handleUpdateEmail} />
                         )}
                     </div>
 

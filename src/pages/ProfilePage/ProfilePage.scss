@@ -17,13 +17,55 @@
         overflow: hidden;
     }
 
+    .top-bar {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: space-between;
+        height: 55px;
+    }
+
+    .top-right-menu {
+        display: flex;
+        align-items: center;
+        gap: 20px;
+
+        button {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: transparent;
+            width: 60px;
+            height: 60px;
+
+            &:hover {
+                background-color: var(--color-main-background);
+                transition: 400ms;
+            }
+
+            &[name="avatar"] {
+                img {
+                    width: 55px;
+                    height: 55px;
+                    border-radius: 50%;
+                    object-fit: cover;
+                }
+            }
+        }
+    }
+
     .profile-content-area {
         background-color: var(--color-sidebar-background);
         border-radius: 20px;
-        padding: 20px;
-        margin: 0;
+        padding: 10px;
+        margin: 20px 0 0 0;
+        gap: 3px;
+
+        display: flex;
+        flex-direction: column;
         height: 100%;
-        overflow-y: auto;
+        min-height: 0;
+        overflow: hidden;
 
         &::-webkit-scrollbar {
             width: 6px;

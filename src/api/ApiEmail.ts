@@ -36,10 +36,11 @@ export async function sendEmail(data = {}) {
         });
 
         if (response) {
-            return null;
+            return true;
         }
     } catch (error) {
         console.log("Сервер не отвечает", error);
+        return false;
     }
 }
 

@@ -37,7 +37,7 @@ class ProfileModal extends Death13.Component {
                     </div>
                 </div>
                 <div className="overlay__avatar">
-                    <img src={AppStorage.image_path || `../../assets/svg/Avatar.svg`}></img>
+                    <img src={AppStorage.getAvatarUrl()}></img>
                 </div>
                 <div className="overlay__email">{AppStorage.email}</div>
                 <div className="overlay-actions">
