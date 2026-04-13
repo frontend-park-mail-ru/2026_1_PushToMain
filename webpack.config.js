@@ -33,18 +33,32 @@ export default {
     }),
   ],
 
-  optimization: {
-    minimize: false,
-    minimizer: [
-      new CssMinimizerPlugin(),
-      new ImageMinimizerPlugin({
-        minimizer: {
-          implementation: ImageMinimizerPlugin.imageminMinify,
-          options: {
-            plugins: ["imagemin-mozjpeg", "imagemin-pngquant", "imagemin-svgo"],
+    plugins: [
+        new HtmlWebpackPlugin({
+            template: "./public/index.html",
+            filename: "index.html",
+            favicon: "./public/assets/svg/favicon.svg",
+        }),
+        new MiniCssExtractPlugin(),
+      
+        new ImageMinimizerPlugin({
+          minimizer: {
+            implementation: ImageMinimizerPlugin.imageminMinify,
+            options: {
+              plugins: ["imagemin-mozjpeg", "imagemin-pngquant", "imagemin-svgo"],
+            },
           },
-        },
-      }),
+        }),
+
+        new CopyWebpackPlugin({
+            patterns: [
+                {
+                    from: "public/assets/svg",
+                    to: "assets/svg",
+                    noErrorOnMissing: true,
+                },
+            ],
+        }),
     ],
   },
   output: {

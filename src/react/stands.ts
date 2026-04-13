@@ -64,6 +64,18 @@ function useState<T>(initial: T): [T, (action: T | ((prev: T) => T)) => void] {
     return [hook.state, setState];
 }
 
+window.requestIdleCallback =
+    window.requestIdleCallback ||
+    function (cb) {
+        return setTimeout(() => {
+            const start = Date.now();
+            cb({
+                didTimeout: false,
+                timeRemaining: () => Math.max(0, 50 - (Date.now() - start)),
+            });
+        }, 1);
+    };
+
 function createDom(fiber: Fiber): Node {
     if (fiber.type === "root") {
         return fiber.dom as Node;
@@ -100,7 +112,7 @@ function updateDomProperties(dom: Node, prevProps: any, nextProps: any) {
 
     Object.keys(prevProps).forEach((name) => {
         if (name === "children") return;
-        
+
         let attrName = name;
         if (name === "className") attrName = "class";
 
@@ -118,7 +130,7 @@ function updateDomProperties(dom: Node, prevProps: any, nextProps: any) {
 
     Object.keys(nextProps).forEach((name) => {
         if (name === "children") return;
-        
+
         let attrName = name;
         if (name === "className") attrName = "class";
 

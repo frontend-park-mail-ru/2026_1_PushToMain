@@ -1,4 +1,4 @@
-.main-page {
+.send-email-page {
     display: grid;
     grid-template-columns: 290px 1fr;
     height: 100vh;
@@ -43,11 +43,11 @@
             flex-direction: row;
             align-items: center;
             border: none;
-            
+
             img {
                 margin: 0;
             }
-            
+
             input {
                 background: none;
                 height: 40px;
