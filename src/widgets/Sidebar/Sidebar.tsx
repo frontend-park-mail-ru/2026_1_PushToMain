@@ -32,7 +32,7 @@ class Sidebar extends Death13.Component {
   }
 
   render() {
-    const { isVisible } = this.state;
+    const { name, surname, email, avatarUrl, isVisible } = this.state;
     const {
       isProfile = 0,
       backToMail,
@@ -159,11 +159,11 @@ class Sidebar extends Death13.Component {
         {isProfile === 1 && (
           <div className="sidebar-content">
             <div className="sidebar-profile">
-              <img src={this.state.avatarUrl}></img>
+              <img src={avatarUrl}></img>
               <span>
-                {this.state.name} {this.state.surname}
+                {name} {surname}
               </span>
-              <p>{this.state.email}</p>
+              <p>{email}</p>
             </div>
             <div className="main-button-profile">
               <Button
