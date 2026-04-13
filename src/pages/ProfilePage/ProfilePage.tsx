@@ -72,12 +72,13 @@ class ProfilePage extends Death13.Component {
         event.preventDefault();
         try {
             const response = await changePassword({
-                oldPassword: this.state.oldPassword,
-                newPassword: this.state.newPassword,
+                old_password: this.state.oldPassword,
+                new_password: this.state.newPassword,
             });
 
             if (response) {
-                console.log("Пароль успешно изменен");
+              console.log("Пароль успешно изменен");
+              this.setState({ oldPassword: "", newPassword: "" });
             }
         } catch (error) {
             console.error("Ошибка изменения пароля", error);
