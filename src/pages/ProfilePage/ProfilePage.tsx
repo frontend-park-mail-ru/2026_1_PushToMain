@@ -8,6 +8,7 @@ import { validation } from "../../utils/validation";
 import { changePassword, getProfile, changeProfile } from "../../api/ApiAuth";
 import { AppStorage } from "../../App";
 import ProfileModal from "../../widgets/ProfileModal/ProfileModal";
+import ConfirmationModal from "../../widgets/ConfirmationModal/ConfirmationModal";
 
 class ProfilePage extends Death13.Component {
     constructor(props: any) {
@@ -28,6 +29,8 @@ class ProfilePage extends Death13.Component {
         avatarKey: 0,
         avatarUrl: AppStorage.getAvatarUrl(),
         isModalOpen: false,
+        isConfirm: false,
+        isStatus: false,
     };
 
     loadProfile = async () => {
@@ -46,6 +49,7 @@ class ProfilePage extends Death13.Component {
                 surname: data.surname || "",
                 email: data.email || "",
                 avatarUrl: AppStorage.getAvatarUrl(),
+                isStatus: false,
             });
         }
     };
@@ -74,6 +78,8 @@ class ProfilePage extends Death13.Component {
         this.setState({
             avatarKey: this.state.avatarKey + 1,
             avatarUrl: AppStorage.getAvatarUrl(),
+            isConfirm: true,
+            isStatus: true,
         });
     };
 
@@ -86,10 +92,10 @@ class ProfilePage extends Death13.Component {
             });
 
             if (response) {
-                this.setState({ oldPassword: "", newPassword: "" });
+                this.setState({ oldPassword: "", newPassword: "", isConfirm: true, isStatus: false });
             }
-        } catch (error) {
-            console.error("Ошибка изменения пароля", error);
+        } catch {
+            this.setState({ isConfirm: true });
         }
     }
 
@@ -111,16 +117,20 @@ class ProfilePage extends Death13.Component {
                 this.setState({
                     name: this.state.name,
                     surname: this.state.surname,
+                    isConfirm: true,
+                    isStatus: true,
                 });
+            } else {
+                this.setState({ isConfirm: true, isStatus: false });
             }
         } catch (error) {
             console.error("Ошибка изменения профиля:", error);
+            this.setState({ isConfirm: true, isStatus: false });
         }
     }
 
     handleInputChange = (field: string, value: string) => {
         const error = this.validateField(field, value);
-        console.log(field, value);
 
         this.setState({
             [field]: value,
@@ -168,10 +178,11 @@ class ProfilePage extends Death13.Component {
     };
 
     render() {
-        const { errors, oldPassword, newPassword, name, surname, profileState, avatarKey, avatarUrl, isModalOpen } = this.state;
+        const { errors, oldPassword, newPassword, name, surname, profileState, avatarKey, avatarUrl, isModalOpen, isConfirm, isStatus } =
+            this.state;
 
         return (
-            <div className="profile-page">
+            <div className="profile-page" onClick={() => this.handleCloseModal()}>
                 <aside className="sidebar">
                     <Sidebar
                         isProfile={1}
@@ -328,6 +339,7 @@ class ProfilePage extends Death13.Component {
                         onProfileClick={this.handleProfileClick}
                         onLogout={this.handleLogout}
                     />
+                    <ConfirmationModal isOpen={isConfirm} onClose={this.handleCloseModal} isStatus={isStatus} />
                 </div>
             </div>
         );
