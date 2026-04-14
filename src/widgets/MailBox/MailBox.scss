@@ -15,7 +15,7 @@
     margin-left: 5px;
 
     &.read {
-        background-color: var(--input-success-background);
+        background-color: var(--mail-read-background);
         color: var(--secondary-text);
         border: none;
         text-decoration: none;
@@ -23,7 +23,7 @@
 
     &.mail.selected {
         background-color: #9cc8fe;
-        color: var(--tretiry-text)
+        color: var(--tretiry-text);
     }
 
     &:hover {
