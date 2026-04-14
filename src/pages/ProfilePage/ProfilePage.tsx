@@ -92,7 +92,7 @@ class ProfilePage extends Death13.Component {
             });
 
             if (response) {
-                this.setState({ oldPassword: "", newPassword: "", isConfirm: true, isStatus: false });
+                this.setState({ oldPassword: "", newPassword: "", isConfirm: true, isStatus: true });
             }
         } catch {
             this.setState({ isConfirm: true });
@@ -162,7 +162,7 @@ class ProfilePage extends Death13.Component {
     };
 
     handleCloseModal = () => {
-        this.setState({ isModalOpen: false });
+        this.setState({ isModalOpen: false, isConfirm: false });
     };
 
     handleProfileClick = () => {
