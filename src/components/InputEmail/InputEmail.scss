@@ -7,6 +7,13 @@
         flex-direction: row;
         gap: 10px;
 
+        button {
+            padding: 0;
+            background-color: transparent;
+            color: var(--tritary-text);
+            height: 24px;
+        }
+
         .email-tag {
             display: flex;
             flex-direction: row;
@@ -17,10 +24,14 @@
             padding: 0 10px;
             height: 24px;
 
-            button {
-                padding: 0;
-                background-color: transparent;
-                color: var(--tritary-text);
+            &__error {
+                display: flex;
+                flex-direction: row;
+                align-items: center;
+                gap: 10px;
+                background-color: var(--input-error-background);
+                border-radius: 12px;
+                padding: 0 10px;
                 height: 24px;
             }
         }

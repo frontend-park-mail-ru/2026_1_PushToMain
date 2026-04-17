@@ -119,15 +119,12 @@ export const AppStorage = {
         }
         return "/assets/svg/Avatar.svg";
     },
-
-    getMailActionData() {
-        return this.replyData || this.forwardData;
-    },
 };
 
 class App {
     private routes: Record<string, any>;
     private dynamicRoutes: Array<{ pattern: RegExp; component: any; paramName: string }>;
+    private setPath!: (path: string) => void;
 
     constructor() {
         this.routes = {
@@ -143,10 +140,10 @@ class App {
         this.dynamicRoutes = [{ pattern: /^\/read\/(\d+)$/, component: ReadEmailPage, paramName: "id" }];
 
         window.addEventListener("popstate", () => {
-            this.renderRoute(location.pathname);
+            if (this.setPath) {
+                this.setPath(location.pathname);
+            }
         });
-
-        this.renderRoute(location.pathname);
     }
 
     handleRoute(path: string) {
@@ -155,16 +152,19 @@ class App {
         }
 
         history.pushState({}, "", path);
-        this.renderRoute(path);
+        this.setPath(path);
     }
 
-    renderRoute(path: string) {
+    getComponent(path: string) {
         let Component = this.routes[path];
+        const props: any = {};
+
         if (!Component) {
             for (const route of this.dynamicRoutes) {
                 const match = path.match(route.pattern);
                 if (match) {
                     Component = route.component;
+                    props[route.paramName] = match[1];
                     break;
                 }
             }
@@ -174,17 +174,18 @@ class App {
             Component = this.routes["/"];
         }
 
-        const root = document.getElementById("root");
-
-        if (!root) {
-            console.error("Root element not found");
-            return;
-        }
-
-        root.innerHTML = "";
-        const element = Death13.createElement(Component, {}, []);
-        Death13.render(element, root);
+        return { Component, props };
     }
+
+    Router = () => {
+        const [path, setPath] = Death13.useState(window.location.pathname);
+
+        this.setPath = setPath;
+
+        const { Component, props } = this.getComponent(path);
+
+        return Death13.createElement(Component, props);
+    };
 }
 
 declare global {
@@ -194,6 +195,14 @@ declare global {
     }
 }
 
+const root = document.getElementById("root");
+
+if (!root) {
+    throw new Error("Root element not found");
+}
+
 AppStorage.init();
 window.AppStorage = AppStorage;
 window.app = new App();
+
+Death13.render(Death13.createElement(window.app.Router, {}), root);

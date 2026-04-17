@@ -14,28 +14,44 @@ class InputEmail extends Death13.Component {
 
     state: any = {
         emails: this.props.emails || [AppStorage.email],
+        invalidEmails: [],
         currentInput: "",
         error: "",
     };
 
     validateEmail(email: string) {
-        const emailRegex = /^[a-zA-Z0-9._-]+@smail.ru/gm;
+        const emailRegex = /^[a-zA-Z0-9._-]+@smail\.ru$/;
         return emailRegex.test(email);
     }
 
     addEmail(email: string) {
         const trimmedEmail = email.trim();
 
-        if (!trimmedEmail) return;
+        if (!trimmedEmail) {
+            return;
+        }
 
-        const valid = this.validateEmail(trimmedEmail);
+        if (!this.validateEmail(trimmedEmail)) {
+            const newEmails = [...this.state.emails, trimmedEmail];
+            const invalidEmails = [...this.state.invalidEmails, trimmedEmail];
 
-        if (!valid) {
+            this.setState({
+                emails: newEmails,
+                invalidEmails: invalidEmails,
+                currentInput: "",
+                error: "Некорректный email адрес",
+            });
+
+            if (this.props.onChange) {
+                this.props.onChange(this.state.emails, this.state.invalidEmails);
+            }
             return;
         }
 
         if (this.state.emails.includes(trimmedEmail)) {
-            this.setState({ error: "Такой email уже добавлен" });
+            this.setState({
+                error: "Такой email уже добавлен",
+            });
             return;
         }
 
@@ -48,13 +64,16 @@ class InputEmail extends Death13.Component {
         });
 
         if (this.props.onChange) {
-            this.props.onChange(newEmails);
+            this.props.onChange(this.state.emails, this.state.invalidEmails);
         }
     }
 
     handleInput(e: any) {
         const value = e.target.value;
-        this.setState({ currentInput: value, error: "" });
+        this.setState({
+            currentInput: value,
+            error: "",
+        });
     }
 
     handleKeyDown(e: any) {
@@ -66,51 +85,55 @@ class InputEmail extends Death13.Component {
 
     removeEmail(index: number) {
         const newEmails = [...this.state.emails];
+        const removedEmail = newEmails[index];
         newEmails.splice(index, 1);
 
-        this.setState({ emails: newEmails });
+        const invalidEmails = this.state.invalidEmails.filter((email: string) => email !== removedEmail);
+
+        this.setState({
+            emails: newEmails,
+            invalidEmails: invalidEmails,
+            error: "",
+        });
 
         if (this.props.onChange) {
-            this.props.onChange(newEmails);
+            this.props.onChange(newEmails, this.state.invalidEmails);
         }
     }
 
     handleOnBlur() {
-        this.addEmail(this.state.currentInput);
-    }
-
-    handleUpdateEmail(event: any) {
-        event.preventDefault();
+        if (this.state.currentInput.trim()) {
+            this.addEmail(this.state.currentInput);
+        }
     }
 
     render() {
-        const { emails, currentInput } = this.state;
+        const { emails, currentInput, invalidEmails } = this.state;
+
         return (
             <div className="input-container">
                 <span className="input__title">{this.props.input_title}</span>
                 <div className="input-form">
-                    {emails.map((email: string, index: number) => (
-                        <span
-                            key={index}
-                            className="email-tag"
-                            onClick={(event: any) => {
-                                this.handleUpdateEmail(event);
-                            }}>
-                            <span>{email}</span>
-                            <button type="button" className="remove-email" onClick={() => this.removeEmail(index)}>
-                                ×
-                            </button>
-                        </span>
-                    ))}
+                    {emails.map((email: string, index: number) => {
+                        const isInvalid = invalidEmails.includes(email);
+                        return (
+                            <span key={index} className={isInvalid ? "email-tag__error" : "email-tag"}>
+                                <span>{email}</span>
+                                <button type="button" className="remove-email" onClick={() => this.removeEmail(index)}>
+                                    ×
+                                </button>
+                            </span>
+                        );
+                    })}
                     <input
                         type="text"
                         value={currentInput}
                         onInput={this.handleInput}
-                        onblur={this.handleOnBlur}
+                        onBlur={this.handleOnBlur}
                         onKeyDown={this.handleKeyDown}
                         placeholder={this.props.placeholder}
                         className="email-input"
-                    />{" "}
+                    />
                 </div>
             </div>
         );

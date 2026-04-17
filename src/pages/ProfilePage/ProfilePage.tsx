@@ -147,11 +147,12 @@ class ProfilePage extends Death13.Component {
 
     handleLogout = async (event: Event) => {
         event.preventDefault();
+        this.setState({ isModalOpen: false, isConfirm: false });
         window.app.handleRoute("/login");
     };
 
     handleBackToMail = () => {
-        this.setState({ isStateMode: 0 });
+        this.setState({ isModalOpen: false, isConfirm: false });
         window.app.handleRoute("/");
     };
 
@@ -166,6 +167,7 @@ class ProfilePage extends Death13.Component {
     };
 
     handleProfileClick = () => {
+        this.setState({ isModalOpen: false, isConfirm: false });
         window.app.handleRoute("/profile");
     };
 
@@ -272,7 +274,7 @@ class ProfilePage extends Death13.Component {
                                                 }}
                                             />
                                             <Button
-                                                title="Отменить"
+                                                title="Назад"
                                                 name="back-to-mail"
                                                 onClick={(event: any) => {
                                                     event.preventDefault();
@@ -321,7 +323,7 @@ class ProfilePage extends Death13.Component {
                                                 }}
                                             />
                                             <Button
-                                                title="Отменить"
+                                                title="Назад"
                                                 name="back-to-mail"
                                                 onClick={(event: any) => {
                                                     event.preventDefault();
