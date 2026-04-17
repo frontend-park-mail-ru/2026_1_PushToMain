@@ -13,7 +13,7 @@ class InputEmail extends Death13.Component {
     }
 
     state: any = {
-        emails: this.props.isReading ? this.props.emails || [AppStorage.email] : [], //LMAO Нет РУЧКИ :(
+        emails: this.props.emails || [AppStorage.email],
         currentInput: "",
         error: "",
     };
@@ -97,11 +97,9 @@ class InputEmail extends Death13.Component {
                                 this.handleUpdateEmail(event);
                             }}>
                             <span>{email}</span>
-                            {!this.props.isReading && (
-                                <button type="button" className="remove-email" onClick={() => this.removeEmail(index)}>
-                                    ×
-                                </button>
-                            )}
+                            <button type="button" className="remove-email" onClick={() => this.removeEmail(index)}>
+                                ×
+                            </button>
                         </span>
                     ))}
                     <input

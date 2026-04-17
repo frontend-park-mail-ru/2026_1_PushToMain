@@ -39,7 +39,9 @@ class ProfileModal extends Death13.Component {
                 <div className="overlay__avatar">
                     <img src={AppStorage.getAvatarUrl()}></img>
                 </div>
-                <div className="overlay__email">{AppStorage.email}</div>
+                <div className="overlay__email">
+                    <p>{AppStorage.email}</p>
+                </div>
                 <div className="overlay-actions">
                     <Button title="Профиль" name="profile" svg="../../assets/svg/User.svg" onClick={this.handleProfileClick} />
                     <Button

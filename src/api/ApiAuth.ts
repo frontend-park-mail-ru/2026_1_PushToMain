@@ -14,7 +14,6 @@ export async function postDataLogin(data = {}) {
         });
 
         const responseData = await response.json();
-        console.log(responseData);
         if (response.ok) {
             return {
                 isValid: true,
@@ -156,8 +155,7 @@ export async function logOut() {
         if (response.ok) {
             return response;
         }
-    } catch (error) {
-        console.log("Сервер не отвечает", error);
+    } catch {
     }
 }
 
@@ -176,14 +174,12 @@ export async function getProfile() {
             return data;
         }
         return null;
-    } catch (error) {
-        console.log("Сервер не отвечает", error);
+    } catch {
         return null;
     }
 }
 
 export async function changePassword(data = {}) {
-    console.log(data);
     try {
         const csrfToken = await getCSRFToken();
         const response = await fetch(`${URL}/password`, {
@@ -198,9 +194,7 @@ export async function changePassword(data = {}) {
         if (response.ok) {
             return response;
         }
-    } catch (error) {
-        console.log("Сервер не отвечает", error);
-    }
+    } catch {}
 }
 
 export async function getCSRFToken() {
@@ -217,8 +211,7 @@ export async function getCSRFToken() {
             const data = await response.json();
             return data.csrf_token || null;
         }
-    } catch (error) {
-        console.log("Сервер не отвечает", error);
+    } catch {
         return null;
     }
 }
@@ -241,8 +234,7 @@ export async function uploadAvatar(file: File) {
             const data = await response.json();
             return data.image_path;
         }
-    } catch (error) {
-        console.log("Сервер не отвечает", error);
+    } catch {
         return null;
     }
 }
@@ -262,8 +254,7 @@ export async function changeProfile(data: { name: string; surname: string }) {
             const data = await response.json();
             return data;
         }
-    } catch (error) {
-        console.log("Сервер не отвечает", error);
+    } catch {
         return null;
     }
 }

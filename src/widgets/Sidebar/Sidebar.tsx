@@ -162,6 +162,7 @@ class Sidebar extends Death13.Component {
                             <Button
                                 name="button-profile"
                                 title="Личные данные"
+                                isSelect={this.props.isPressProfile === 0}
                                 onClick={(event: any) => {
                                     event.preventDefault();
                                     changeProfile();
@@ -170,6 +171,7 @@ class Sidebar extends Death13.Component {
                             <Button
                                 name="button-security"
                                 title="Безопасность"
+                                isSelect={this.props.isPressProfile === 1}
                                 onClick={(event: any) => {
                                     event.preventDefault();
                                     changePassword();

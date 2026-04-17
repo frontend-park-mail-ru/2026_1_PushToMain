@@ -8,7 +8,6 @@ import { getProfile } from "../../api/ApiAuth";
 import { getEmailAll, getEmailSend, readEmail } from "../../api/ApiEmail";
 import "./MainPage.scss";
 import ProfileModal from "../../widgets/ProfileModal/ProfileModal";
-import ReadMail from "../../widgets/ReadMail/ReadMail";
 import { AppStorage } from "../../App";
 
 class MainPage extends Death13.Component {
@@ -112,6 +111,7 @@ class MainPage extends Death13.Component {
     async handleReadMail(email: any) {
         this.setState({ isStateMode: 3, selectedEmail: email });
         await readEmail(email.id);
+        window.app.handleRoute(`/read/${email.id}`);
     }
 
     handleSelectAll = (isChecked: boolean) => {
@@ -140,20 +140,18 @@ class MainPage extends Death13.Component {
     };
 
     handleGetSendEmail = async () => {
-        const data = await getEmailSend(this.state.offset);
-        console.log(data);
+        await getEmailSend(this.state.offset);
     };
 
     handleGoToMain = () => {
         this.setState({ isStateMode: 0 });
     };
 
-    handleSearch = (value: string) => {
-        console.log("Search:", value);
+    handleSearch = () => {
     };
 
     render() {
-        const { emails, isModalOpen, isStateMode, selectedEmail, isSelectAll, total, selectedEmails } = this.state;
+        const { emails, isModalOpen, isStateMode, isSelectAll, total, selectedEmails } = this.state;
         return (
             <div className="main-page" onClick={() => this.handleCloseModal()}>
                 <aside className="sidebar">
@@ -174,8 +172,8 @@ class MainPage extends Death13.Component {
                                 placeholder="Поиск в почте"
                                 name="search"
                                 svg="../../assets/svg/Search.svg"
-                                onInput={(e: any) => {
-                                    this.handleSearch(e.target.value);
+                                onInput={() => {
+                                    this.handleSearch();
                                 }}
                             />
                         </div>
@@ -218,9 +216,6 @@ class MainPage extends Death13.Component {
                                     </div>
                                 )}
                             </div>
-                        )}
-                        {isStateMode === 3 && (
-                            <ReadMail email={selectedEmail} backToMail={this.handleGoToMain} reloadMail={this.handleUpdateEmail} />
                         )}
                     </div>
 

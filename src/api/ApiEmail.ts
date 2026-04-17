@@ -17,8 +17,8 @@ export async function getEmailAll(offset: number) {
             const data = await response.json();
             return data;
         }
-    } catch (error) {
-        console.log("Сервер не отвечает", error);
+    } catch {
+        return null;
     }
 }
 
@@ -38,8 +38,7 @@ export async function sendEmail(data = {}) {
         if (response) {
             return true;
         }
-    } catch (error) {
-        console.log("Сервер не отвечает", error);
+    } catch {
         return false;
     }
 }
@@ -61,8 +60,7 @@ export async function readEmail(ID: number) {
         }
 
         return false;
-    } catch (error) {
-        console.log("Сервер не отвечает", error);
+    } catch {
         return false;
     }
 }
@@ -85,8 +83,7 @@ export async function getEmailByID(ID: number) {
         }
 
         return false;
-    } catch (error) {
-        console.log("Сервер не отвечает", error);
+    } catch {
         return false;
     }
 }
@@ -108,8 +105,7 @@ export async function deleteEmailByID(ID: number) {
             return true;
         }
         return false;
-    } catch (error) {
-        console.log("Сервер не отвечает", error);
+    } catch {
         return false;
     }
 }
@@ -131,8 +127,7 @@ export async function deleteMyEmailByID(ID: number) {
             return true;
         }
         return false;
-    } catch (error) {
-        console.log("Сервер не отвечает", error);
+    } catch {
         return false;
     }
 }
@@ -151,7 +146,7 @@ export async function getEmailSend(offset: number) {
             const data = await response.json();
             return data;
         }
-    } catch (error) {
-        console.log("Сервер не отвечает", error);
+    } catch {
+        return null;
     }
 }

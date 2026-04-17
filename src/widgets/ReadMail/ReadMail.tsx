@@ -1,11 +1,11 @@
 import Death13 from "@react/stands";
 import "./ReadMail.scss";
 import Input from "../../components/Input/Input";
-import InputEmail from "../../components/InputEmail/InputEmail";
 import Textarea from "../../components/Textarea/Textarea";
 import MailTools from "../MailTools/MailTools";
 import { deleteEmailByID } from "../../api/ApiEmail";
 import { AppStorage } from "../../App";
+import { URLMINIO } from "../../api/config";
 
 class ReadMail extends Death13.Component {
     handleDeleteEmail = async () => {
@@ -21,9 +21,9 @@ class ReadMail extends Death13.Component {
 
         AppStorage.setReplyData({
             type: "reply",
-            to: email.sender_email || "",
+            to: email.senderEmail || "",
             subject: `Re: ${email.header}`,
-            body: `\n\n--- Оригинальное сообщение ---\nОт кого: ${email.sender_email || ""}\nДата: ${email.created_at}\n\n${email.body}`,
+            body: `\n\n--- Оригинальное сообщение ---\nОт кого: ${email.senderEmail || ""}\nДата: ${email.createdAt ? new Date(email.createdAt).toLocaleString("ru-RU") : "Неизвестно"} \n\n${email.body}`,
             originalEmail: email,
         });
 
@@ -36,7 +36,7 @@ class ReadMail extends Death13.Component {
         window.AppStorage.setForwardData({
             type: "forward",
             subject: `Fwd: ${email.header || "Без темы"}`,
-            body: `\n\n--- Пересылаемое сообщение ---\nОт: \nДата: ${email.created_at ? new Date(email.created_at).toLocaleString("ru-RU") : "Неизвестно"}\nТема: ${email.header || "Без темы"}\nКому: \n\n${email.body || ""}`,
+            body: `\n\n--- Пересылаемое сообщение ---\nОт: \nДата: ${email.createdAt ? new Date(email.createdAt).toLocaleString("ru-RU") : "Неизвестно"}\nТема: ${email.header || "Без темы"}\nКому: ${email.senderEmail}\n\n${email.body || ""}`,
             originalEmail: email,
         });
 
@@ -49,7 +49,24 @@ class ReadMail extends Death13.Component {
             <div className="read-mail">
                 <form action="" className="read-form">
                     <div className="read-inputs">
-                        <InputEmail input_title="Кому:" emails={email.receivers_emails} isReading={true} />
+                        <div className="read-header">
+                            <div className="sender-avatar">
+                                <img src={email.senderImage !== "" ? `${URLMINIO}/${email.senderImage}` : "/assets/svg/Avatar.svg"} />
+                            </div>
+                            <div className="sender-data">
+                                <div className="sender__email">{email.senderEmail}</div>
+                                <div className="recivers__emails">
+                                    Кому:
+                                    <div className="input-form">
+                                        {["123@smail.ru", "123@smail.ru", "123@smail.ru"].map((email: string, index: number) => (
+                                            <span key={index} className="email-tag">
+                                                <span>{email}</span>
+                                            </span>
+                                        ))}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                         <Input
                             type="text"
                             placeholder="Введите тему"

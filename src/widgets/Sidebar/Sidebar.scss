@@ -54,9 +54,20 @@
             margin-bottom: 20px;
         }
 
+        span {
+            width: 200px;
+            overflow: hidden;
+            white-space: nowrap;
+            text-overflow: ellipsis;
+        }
+
         p {
             color: var(--secondary-text);
             font-size: 14px;
+            width: 200px;
+            overflow: hidden;
+            white-space: nowrap;
+            text-overflow: ellipsis;
         }
     }
 

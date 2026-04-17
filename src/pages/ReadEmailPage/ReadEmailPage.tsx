@@ -1,47 +1,44 @@
 import Death13 from "@react/stands";
-import Sidebar from "../../widgets/Sidebar/Sidebar";
-import Button from "../../components/Button/Button";
-import SendMail from "../../widgets/SendMail/SendMail";
-import "./SendEmailPage.scss";
-import ProfileModal from "../../widgets/ProfileModal/ProfileModal";
-import Input from "../../components/Input/Input";
+import "./ReadEmailPage";
 import { AppStorage } from "../../App";
-import { getProfile } from "../../api/ApiAuth";
+import Sidebar from "../../widgets/Sidebar/Sidebar";
+import Input from "../../components/Input/Input";
+import Button from "../../components/Button/Button";
+import ProfileModal from "../../widgets/ProfileModal/ProfileModal";
+import ReadMail from "../../widgets/ReadMail/ReadMail";
+import { getEmailByID } from "../../api/ApiEmail";
 
-class SendEmailPage extends Death13.Component {
+class ReadEmailPage extends Death13.Component {
     constructor(props: any) {
         super(props);
 
-        this.loadMailActionData();
-        this.loadProfile();
+        const strID = location.pathname.split("/").pop();
+        const id = strID ? parseInt(strID, 10) : 0;
+        this.loadEmail(id);
     }
-
     state: any = {
         isModalOpen: false,
         unReadCount: 0,
         replyData: null,
         forwardData: null,
         avatarKey: 0,
+        email: { header: "", body: "", createdAt: "", senderEmail: "", senderImage: "", senderName: "", senderSurname: "" },
     };
 
-    loadProfile = async () => {
-        const data = await getProfile();
-        if (data === null) {
-            window.app.handleRoute("/login");
-        } else {
-            AppStorage.setProfileData(data);
-        }
-    };
-
-    loadMailActionData = () => {
-        const replyData = AppStorage.getReplyData();
-        const forwardData = AppStorage.getForwardData();
-
+    async loadEmail(id: number) {
+        const data = await getEmailByID(id);
         this.setState({
-            replyData,
-            forwardData,
+            email: {
+                header: data.header,
+                body: data.body,
+                createdAt: data.created_at,
+                senderEmail: data.sender_email,
+                senderImage: data.sender_image_path,
+                senderName: data.sender_name,
+                senderSurname: data.sender_surname,
+            },
         });
-    };
+    }
 
     handleAvatar = (event: Event) => {
         event.stopPropagation();
@@ -58,20 +55,17 @@ class SendEmailPage extends Death13.Component {
         window.app.handleRoute("/profile");
     };
 
+    handleNewMail = () => {
+        window.app.handleRoute("/send");
+    };
+
     handleBackToMail = () => {
         AppStorage.clearMailActionData();
         window.app.handleRoute("/");
     };
 
-    handleNewMail = () => {
-        AppStorage.clearMailActionData();
-        this.setState({ replyData: null, forwardData: null });
-    };
-
     render() {
-        const { isModalOpen, unReadCount, replyData, forwardData } = this.state;
-
-        const mailActionData = replyData || forwardData;
+        const { isModalOpen, unReadCount } = this.state;
 
         return (
             <div className="send-email-page" onClick={() => this.handleCloseModal()}>
@@ -94,7 +88,7 @@ class SendEmailPage extends Death13.Component {
                         </div>
                     </div>
                     <div className="mail-box-container">
-                        <SendMail backToMail={this.handleBackToMail} actionData={mailActionData} />
+                        <ReadMail email={this.state.email} />{" "}
                     </div>
 
                     <ProfileModal isOpen={isModalOpen} onClose={this.handleCloseModal} onProfileClick={this.handleProfileClick} />
@@ -104,4 +98,4 @@ class SendEmailPage extends Death13.Component {
     }
 }
 
-export default SendEmailPage;
+export default ReadEmailPage;

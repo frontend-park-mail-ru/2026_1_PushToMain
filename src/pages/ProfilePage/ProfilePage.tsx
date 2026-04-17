@@ -186,6 +186,7 @@ class ProfilePage extends Death13.Component {
                 <aside className="sidebar">
                     <Sidebar
                         isProfile={1}
+                        isPressProfile={profileState}
                         backToMail={this.handleBackToMail}
                         changeProfile={this.handleChangeProfile}
                         changePassword={this.handleChangePasswordState}

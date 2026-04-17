@@ -7,6 +7,7 @@ import ProfilePage from "./pages/ProfilePage/ProfilePage";
 import SentPage from "./pages/SentPage/SentPage";
 import SendEmailPage from "./pages/SendEmailPage/SendEmailPage";
 import { URLMINIO } from "./api/config";
+import ReadEmailPage from "./pages/ReadEmailPage/ReadEmailPage";
 
 export const AppStorage = {
     _subscribers: [] as Array<() => void>,
@@ -58,7 +59,7 @@ export const AppStorage = {
         this.email = data.email || "";
         this.image_path = data.image_path || "";
         this._lastUpdate = Date.now();
-        
+
         this._saveToStorage();
         this._notify();
     },
@@ -75,8 +76,7 @@ export const AppStorage = {
                     _lastUpdate: this._lastUpdate,
                 }),
             );
-        } catch {
-        }
+        } catch {}
     },
 
     setImagePath(path: string) {
@@ -127,6 +127,7 @@ export const AppStorage = {
 
 class App {
     private routes: Record<string, any>;
+    private dynamicRoutes: Array<{ pattern: RegExp; component: any; paramName: string }>;
 
     constructor() {
         this.routes = {
@@ -135,8 +136,11 @@ class App {
             "/profile": ProfilePage,
             "/send": SendEmailPage,
             "/sent": SentPage,
+            "/read/": ReadEmailPage,
             "/": MainPage,
         };
+
+        this.dynamicRoutes = [{ pattern: /^\/read\/(\d+)$/, component: ReadEmailPage, paramName: "id" }];
 
         window.addEventListener("popstate", () => {
             this.renderRoute(location.pathname);
@@ -155,9 +159,23 @@ class App {
     }
 
     renderRoute(path: string) {
-        const Component = this.routes[path] || this.routes["/"];
+        let Component = this.routes[path];
+        if (!Component) {
+            for (const route of this.dynamicRoutes) {
+                const match = path.match(route.pattern);
+                if (match) {
+                    Component = route.component;
+                    break;
+                }
+            }
+        }
+
+        if (!Component) {
+            Component = this.routes["/"];
+        }
+
         const root = document.getElementById("root");
-        
+
         if (!root) {
             console.error("Root element not found");
             return;

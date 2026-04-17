@@ -31,7 +31,6 @@ class SentPage extends Death13.Component {
 
     loadProfile = async () => {
         const data = await getProfile();
-        console.log(data);
         if (data === null) {
             window.app.handleRoute("/login");
         } else {
@@ -43,8 +42,6 @@ class SentPage extends Death13.Component {
         try {
             const data = await getEmailSend(offset);
             const emails = data.emails;
-
-            console.log("Sent emails:", data);
 
             if (data === undefined) {
                 window.app.handleRoute("/login");
@@ -135,9 +132,7 @@ class SentPage extends Death13.Component {
         this.loadEmails(this.state.offset);
     };
 
-    handleSearch = (value: string) => {
-        console.log("Search:", value);
-    };
+    handleSearch = () => {};
 
     render() {
         const { emails, isModalOpen, isStateMode, selectedEmail, isSelectAll, total } = this.state;
@@ -161,8 +156,8 @@ class SentPage extends Death13.Component {
                                 placeholder="Поиск в почте"
                                 name="search"
                                 svg="../../assets/svg/Search.svg"
-                                onInput={(e: any) => {
-                                    this.handleSearch(e.target.value);
+                                onInput={() => {
+                                    this.handleSearch();
                                 }}
                             />
                         </div>
