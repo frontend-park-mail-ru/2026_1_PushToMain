@@ -125,6 +125,8 @@ class App {
     private routes: Record<string, any>;
     private dynamicRoutes: Array<{ pattern: RegExp; component: any; paramName: string }>;
     private setPath!: (path: string) => void;
+    public previousPath: string = "";
+    private currentPath: string = "";
 
     constructor() {
         this.routes = {
@@ -141,7 +143,9 @@ class App {
 
         window.addEventListener("popstate", () => {
             if (this.setPath) {
-                this.setPath(location.pathname);
+                this.previousPath = this.currentPath;
+                this.currentPath = window.location.pathname;
+                this.setPath(this.currentPath);
             }
         });
     }
@@ -152,7 +156,9 @@ class App {
         }
 
         history.pushState({}, "", path);
-        this.setPath(path);
+        this.previousPath = this.currentPath;
+        this.currentPath = window.location.pathname;
+        this.setPath(this.currentPath);
     }
 
     getComponent(path: string) {

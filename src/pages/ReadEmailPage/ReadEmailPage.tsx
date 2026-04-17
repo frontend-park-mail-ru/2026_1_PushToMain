@@ -11,7 +11,6 @@ import { getEmailByID } from "../../api/ApiEmail";
 class ReadEmailPage extends Death13.Component {
     constructor(props: any) {
         super(props);
-
         const strID = location.pathname.split("/").pop();
         const id = strID ? parseInt(strID, 10) : 0;
         this.loadEmail(id);
@@ -20,15 +19,22 @@ class ReadEmailPage extends Death13.Component {
         isModalOpen: false,
         unReadCount: 0,
         replyData: null,
+        isPress: 0,
         forwardData: null,
         avatarKey: 0,
-        email: { header: "", body: "", createdAt: "", senderEmail: "", senderImage: "", senderName: "", senderSurname: "" },
+        email: { id: "", header: "", body: "", createdAt: "", senderEmail: "", senderImage: "", senderName: "", senderSurname: "" },
     };
 
     async loadEmail(id: number) {
         const data = await getEmailByID(id);
+        if (window.app.previousPath === "/sent") {
+            this.setState({ isPress: 1 });
+        } else {
+            this.setState({ isPress: 0 });
+        }
         this.setState({
             email: {
+                id: data.id,
                 header: data.header,
                 body: data.body,
                 createdAt: data.created_at,
@@ -64,13 +70,25 @@ class ReadEmailPage extends Death13.Component {
         window.app.handleRoute("/");
     };
 
+    handleBackToSent = () => {
+        AppStorage.clearMailActionData();
+        window.app.handleRoute("/sent");
+    };
+
     render() {
-        const { isModalOpen, unReadCount } = this.state;
+        const { isModalOpen, unReadCount, isPress } = this.state;
 
         return (
             <div className="send-email-page" onClick={() => this.handleCloseModal()}>
                 <aside className="sidebar">
-                    <Sidebar isProfile={0} unReadCount={unReadCount} newMail={this.handleNewMail} backToMail={this.handleBackToMail} />
+                    <Sidebar
+                        isProfile={0}
+                        isPress={isPress}
+                        unReadCount={unReadCount}
+                        newMail={this.handleNewMail}
+                        backToMail={this.handleBackToMail}
+                        backToSent={this.handleBackToSent}
+                    />
                 </aside>
                 <div className="right-part">
                     <div className="top-bar">
@@ -88,7 +106,7 @@ class ReadEmailPage extends Death13.Component {
                         </div>
                     </div>
                     <div className="mail-box-container">
-                        <ReadMail email={this.state.email} />{" "}
+                        <ReadMail email={this.state.email} backToMail={this.handleBackToMail} />
                     </div>
 
                     <ProfileModal isOpen={isModalOpen} onClose={this.handleCloseModal} onProfileClick={this.handleProfileClick} />

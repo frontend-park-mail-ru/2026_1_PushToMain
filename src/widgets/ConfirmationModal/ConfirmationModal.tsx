@@ -1,6 +1,5 @@
 import Death13 from "@react/stands";
 import "./ConfirmationModal.scss";
-import Button from "../../components/Button/Button";
 
 class ConfirmationModal extends Death13.Component {
     private timer: any = null;
@@ -36,9 +35,6 @@ class ConfirmationModal extends Death13.Component {
 
         return (
             <div className={`confirmation-modal ${this.props.isStatus ? "access" : "error"}`}>
-                <div className="overlay__close">
-                    <Button svg="../../assets/svg/Close.svg" onClick={this.handleClose} />
-                </div>
                 <div className="__title">{this.props.isStatus ? "Успешно изменено!" : "Ошибка сервера!"}</div>
             </div>
         );

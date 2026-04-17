@@ -4,10 +4,9 @@ import Input from "../../components/Input/Input";
 import Button from "../../components/Button/Button";
 import MailHeader from "../../widgets/MailHeader/MailHeader";
 import MailBox from "../../widgets/MailBox/MailBox";
-import { getEmailSend, getEmailByID, readEmail } from "../../api/ApiEmail";
+import { getEmailSend, getEmailByID } from "../../api/ApiEmail";
 import "./SentPage.scss";
 import ProfileModal from "../../widgets/ProfileModal/ProfileModal";
-import ReadMail from "../../widgets/ReadMail/ReadMail";
 import { AppStorage } from "../../App";
 import { getProfile } from "../../api/ApiAuth";
 
@@ -17,7 +16,7 @@ class SentPage extends Death13.Component {
         isLoading: true,
         isModalOpen: false,
         isStateMode: 0,
-        selectedEmail: null,
+        email: { header: "", body: "", createdAt: "", senderEmail: "", senderImage: "", senderName: "", senderSurname: "" },
         isSelectAll: false,
         offset: 0,
         total: 0,
@@ -113,10 +112,9 @@ class SentPage extends Death13.Component {
         window.app.handleRoute("/send");
     };
 
-    async handleReadMail(email: any) {
-        this.setState({ isStateMode: 3, selectedEmail: email });
-        await readEmail(email.id);
-        await getEmailByID(email.id);
+    async handleReadMail(id: number) {
+        const email = await getEmailByID(id);
+        window.app.handleRoute(`/read/${email.id}`);
     }
 
     handleSelectAll = (isChecked: boolean) => {
@@ -135,7 +133,7 @@ class SentPage extends Death13.Component {
     handleSearch = () => {};
 
     render() {
-        const { emails, isModalOpen, isStateMode, selectedEmail, isSelectAll, total } = this.state;
+        const { emails, isModalOpen, isStateMode, isSelectAll, total} = this.state;
 
         return (
             <div className="main-page" onClick={() => this.handleCloseModal()}>
@@ -193,15 +191,12 @@ class SentPage extends Death13.Component {
                                                 title={email.body}
                                                 date={this.formatTime(email.created_at)}
                                                 isRead={true}
-                                                onClick={() => this.handleReadMail(email)}
+                                                onClick={() => this.handleReadMail(email.id)}
                                             />
                                         ))}
                                     </div>
                                 )}
                             </div>
-                        )}
-                        {isStateMode === 3 && (
-                            <ReadMail email={selectedEmail} backToMail={this.handleBackToSent} reloadMail={this.handleUpdateEmail} />
                         )}
                     </div>
 

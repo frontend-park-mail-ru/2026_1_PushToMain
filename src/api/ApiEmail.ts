@@ -65,6 +65,28 @@ export async function readEmail(ID: number) {
     }
 }
 
+export async function unReadEmail(ID: number) {
+    try {
+        const csrfToken = await getCSRFToken();
+        const response = await fetch(`${URL}/emails/${ID}/unread`, {
+            method: "PUT",
+            headers: {
+                "Content-Type": "application/json",
+                "X-CSRF-Token": csrfToken,
+            },
+            credentials: "include",
+        });
+
+        if (response.ok) {
+            return true;
+        }
+
+        return false;
+    } catch {
+        return false;
+    }
+}
+
 export async function getEmailByID(ID: number) {
     try {
         const csrfToken = await getCSRFToken();

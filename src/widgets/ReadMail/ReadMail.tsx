@@ -3,16 +3,18 @@ import "./ReadMail.scss";
 import Input from "../../components/Input/Input";
 import Textarea from "../../components/Textarea/Textarea";
 import MailTools from "../MailTools/MailTools";
-import { deleteEmailByID } from "../../api/ApiEmail";
+import { deleteEmailByID, deleteMyEmailByID } from "../../api/ApiEmail";
 import { AppStorage } from "../../App";
 import { URLMINIO } from "../../api/config";
 
 class ReadMail extends Death13.Component {
     handleDeleteEmail = async () => {
-        const { email, reloadMail, backToMail } = this.props;
-
-        await deleteEmailByID(email.id);
-        reloadMail();
+        const { email, backToMail } = this.props;
+        if (window.app.previousPath === "/sent") {
+            await deleteMyEmailByID(email.id);
+        } else {
+            await deleteEmailByID(email.id);
+        }
         backToMail();
     };
 
