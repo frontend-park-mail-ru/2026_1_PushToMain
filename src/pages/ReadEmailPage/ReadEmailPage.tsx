@@ -22,7 +22,17 @@ class ReadEmailPage extends Death13.Component {
         isPress: 0,
         forwardData: null,
         avatarKey: 0,
-        email: { id: "", header: "", body: "", createdAt: "", senderEmail: "", senderImage: "", senderName: "", senderSurname: "" },
+        email: {
+            id: "",
+            header: "",
+            body: "",
+            createdAt: "",
+            senderEmail: "",
+            senderImage: "",
+            senderName: "",
+            senderSurname: "",
+            receiverList: [],
+        },
     };
 
     async loadEmail(id: number) {
@@ -42,6 +52,7 @@ class ReadEmailPage extends Death13.Component {
                 senderImage: data.sender_image_path,
                 senderName: data.sender_name,
                 senderSurname: data.sender_surname,
+                receiverList: data.receiver_list,
             },
         });
     }

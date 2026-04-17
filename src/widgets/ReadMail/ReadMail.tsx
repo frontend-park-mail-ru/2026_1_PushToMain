@@ -38,7 +38,7 @@ class ReadMail extends Death13.Component {
         window.AppStorage.setForwardData({
             type: "forward",
             subject: `Fwd: ${email.header || "Без темы"}`,
-            body: `\n\n--- Пересылаемое сообщение ---\nОт: ${email.senderEmail}\nДата: ${email.createdAt ? new Date(email.createdAt).toLocaleString("ru-RU") : "Неизвестно"}\nТема: ${email.header || "Без темы"}\nКому: \n\n${email.body || ""}`,
+            body: `\n\n--- Пересылаемое сообщение ---\nОт: ${email.senderEmail}\nДата: ${email.createdAt ? new Date(email.createdAt).toLocaleString("ru-RU") : "Неизвестно"}\nТема: ${email.header || "Без темы"}\nКому: ${email.receiverList}\n\n${email.body || ""}`,
             originalEmail: email,
         });
 
@@ -60,7 +60,7 @@ class ReadMail extends Death13.Component {
                                 <div className="recivers__emails">
                                     Кому:
                                     <div className="input-form">
-                                        {["123@smail.ru", "123@smail.ru", "123@smail.ru"].map((email: string, index: number) => (
+                                        {email.receiverList.map((email: string, index: number) => (
                                             <span key={index} className="email-tag">
                                                 <span>{email}</span>
                                             </span>
