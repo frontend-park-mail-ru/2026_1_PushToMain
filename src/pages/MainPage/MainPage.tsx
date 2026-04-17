@@ -147,8 +147,7 @@ class MainPage extends Death13.Component {
         this.setState({ isStateMode: 0 });
     };
 
-    handleSearch = () => {
-    };
+    handleSearch = () => {};
 
     render() {
         const { emails, isModalOpen, isStateMode, isSelectAll, total, selectedEmails } = this.state;
@@ -210,6 +209,7 @@ class MainPage extends Death13.Component {
                                                 isSelected={selectedEmails.includes(email.id)}
                                                 onSelect={(id: string, selected: boolean) => this.handleSelectEmail(id, selected)}
                                                 isRead={email.is_read}
+                                                pageMain={true}
                                                 onClick={() => this.handleReadMail(email)}
                                             />
                                         ))}

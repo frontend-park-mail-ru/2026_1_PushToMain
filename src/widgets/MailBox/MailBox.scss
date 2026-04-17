@@ -77,6 +77,30 @@
         }
     }
 
+    input[name="read-checkbox"] {
+        padding: 0;
+        -webkit-appearance: none;
+        -moz-appearance: none;
+        appearance: none;
+        border-radius: 50%;
+        width: 9px;
+        height: 9px;
+        border: 5px solid var(--accent-2);
+        cursor: pointer;
+        transition: all 0.2s ease;
+
+        &:checked {
+            border: none;
+        }
+
+        &:hover {
+            border: 2px solid var(--accent-2);
+        }
+    }
+
+    .sent-checkbox{
+        margin-left: 10px;
+    }
     .mail-content {
         display: flex;
         align-items: center;

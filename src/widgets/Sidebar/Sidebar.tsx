@@ -10,20 +10,27 @@ class Sidebar extends Death13.Component {
         surname: AppStorage.surname,
         email: AppStorage.email,
         avatarUrl: AppStorage.getAvatarUrl(),
+        unReadCount: AppStorage.unReadCount,
     };
 
-    unsubscribe =
-        AppStorage.subscribe(() => {
+    private unsubscribe: (() => void) | null = null;
+
+    constructor(props: any) {
+        super(props);
+
+        this.unsubscribe = AppStorage.subscribe(() => {
             this.setState({
                 name: AppStorage.name,
                 surname: AppStorage.surname,
                 email: AppStorage.email,
                 avatarUrl: AppStorage.getAvatarUrl(),
+                unReadCount: AppStorage.unReadCount, 
             });
-        }) || null;
+        });
+    }
 
     render() {
-        const { isVisible, name, surname, email, avatarUrl } = this.state;
+        const { isVisible, name, surname, email, avatarUrl, unReadCount } = this.state;
         const { isProfile = 0, backToMail, changeProfile, changePassword, newMail, updateMail } = this.props;
 
         return (
@@ -59,7 +66,7 @@ class Sidebar extends Death13.Component {
                                 title="Входящие"
                                 isSelect={this.props.isPress === 0}
                                 svg="../../assets/svg/Inbox.svg"
-                                count={AppStorage.unReadCount}
+                                count={unReadCount}
                                 onClick={(event: any) => {
                                     event.preventDefault();
                                     if (this.props.updateMail) {

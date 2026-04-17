@@ -31,6 +31,11 @@ export const AppStorage = {
                 this.image_path = data.image_path || "";
                 this._lastUpdate = data._lastUpdate || Date.now();
             }
+
+            const savedCount = localStorage.getItem("unReadCount");
+            if (savedCount !== null) {
+                this.unReadCount = parseInt(savedCount, 10) || 0;
+            }
         } catch (e) {
             console.warn("Failed to load profile from localStorage", e);
         }
@@ -76,6 +81,7 @@ export const AppStorage = {
                     _lastUpdate: this._lastUpdate,
                 }),
             );
+            localStorage.setItem("unReadCount", this.unReadCount.toString());
         } catch {}
     },
 
@@ -88,6 +94,8 @@ export const AppStorage = {
 
     setUnReadCount(count: number) {
         this.unReadCount = count;
+        this._saveToStorage();
+        this._notify();
     },
 
     setReplyData(data: any) {

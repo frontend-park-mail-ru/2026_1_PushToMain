@@ -8,4 +8,4 @@ if (location.hostname === "localhost") {
 
 export const URL: string = url;
 
-export const URLMINIO = `${location.protocol}//${location.hostname}:9000/avatars`;
+export const URLMINIO = `${location.protocol}//${location.hostname}/avatars`;

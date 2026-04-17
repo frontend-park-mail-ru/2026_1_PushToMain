@@ -38,7 +38,7 @@ class ReadMail extends Death13.Component {
         window.AppStorage.setForwardData({
             type: "forward",
             subject: `Fwd: ${email.header || "Без темы"}`,
-            body: `\n\n--- Пересылаемое сообщение ---\nОт: \nДата: ${email.createdAt ? new Date(email.createdAt).toLocaleString("ru-RU") : "Неизвестно"}\nТема: ${email.header || "Без темы"}\nКому: ${email.senderEmail}\n\n${email.body || ""}`,
+            body: `\n\n--- Пересылаемое сообщение ---\nОт: ${email.senderEmail}\nДата: ${email.createdAt ? new Date(email.createdAt).toLocaleString("ru-RU") : "Неизвестно"}\nТема: ${email.header || "Без темы"}\nКому: \n\n${email.body || ""}`,
             originalEmail: email,
         });
 
