@@ -1,5 +1,5 @@
 import Death13 from "@react/stands";
-import "./ReadEmailPage";
+import "./ReadEmailPage.scss";
 import { AppStorage } from "../../App";
 import Sidebar from "../../widgets/Sidebar/Sidebar";
 import Input from "../../components/Input/Input";
@@ -40,7 +40,7 @@ class ReadEmailPage extends Death13.Component {
         if (!data) {
             window.app.handleRoute("/")
         }
-        
+
         if (window.app.previousPath === "/sent") {
             this.setState({ isPress: 1 });
         } else {
