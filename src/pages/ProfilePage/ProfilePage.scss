@@ -19,6 +19,7 @@
 
     .top-bar {
         display: flex;
+        margin-left: auto;
         flex-direction: row;
         align-items: center;
         justify-content: space-between;
@@ -238,7 +239,9 @@
                             border: none;
 
                             &:hover {
-                                background-color: var(--button-hover-background);
+                                background-color: var(
+                                    --button-hover-background
+                                );
                             }
                         }
 

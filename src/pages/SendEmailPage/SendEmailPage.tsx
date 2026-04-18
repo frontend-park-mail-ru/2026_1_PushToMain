@@ -9,77 +9,83 @@ import { AppStorage } from "../../App";
 import { getProfile } from "../../api/ApiAuth";
 
 class SendEmailPage extends Death13.Component {
-    constructor(props: any) {
-        super(props);
+  constructor(props: any) {
+    super(props);
 
-        this.loadMailActionData();
-        this.loadProfile();
+    this.loadMailActionData();
+    this.loadProfile();
+  }
+
+  state: any = {
+    isModalOpen: false,
+    unReadCount: 0,
+    replyData: null,
+    forwardData: null,
+    avatarKey: 0,
+  };
+
+  loadProfile = async () => {
+    const data = await getProfile();
+    if (data === null) {
+      window.app.handleRoute("/login");
+    } else {
+      AppStorage.setProfileData(data);
     }
+  };
 
-    state: any = {
-        isModalOpen: false,
-        unReadCount: 0,
-        replyData: null,
-        forwardData: null,
-        avatarKey: 0,
-    };
+  loadMailActionData = () => {
+    const replyData = AppStorage.getReplyData();
+    const forwardData = AppStorage.getForwardData();
 
-    loadProfile = async () => {
-        const data = await getProfile();
-        if (data === null) {
-            window.app.handleRoute("/login");
-        } else {
-            AppStorage.setProfileData(data);
-        }
-    };
+    this.setState({
+      replyData,
+      forwardData,
+    });
+  };
 
-    loadMailActionData = () => {
-        const replyData = AppStorage.getReplyData();
-        const forwardData = AppStorage.getForwardData();
+  handleAvatar = (event: Event) => {
+    event.stopPropagation();
+    event.preventDefault();
+    this.setState({ isModalOpen: true });
+  };
 
-        this.setState({
-            replyData,
-            forwardData,
-        });
-    };
+  handleCloseModal = () => {
+    this.setState({ isModalOpen: false });
+  };
 
-    handleAvatar = (event: Event) => {
-        event.stopPropagation();
-        event.preventDefault();
-        this.setState({ isModalOpen: true });
-    };
+  handleProfileClick = () => {
+    this.setState({ isModalOpen: false });
+    window.app.handleRoute("/profile");
+  };
 
-    handleCloseModal = () => {
-        this.setState({ isModalOpen: false });
-    };
+  handleBackToMail = () => {
+    AppStorage.clearMailActionData();
+    window.app.handleRoute("/");
+  };
 
-    handleProfileClick = () => {
-        this.setState({ isModalOpen: false });
-        window.app.handleRoute("/profile");
-    };
+  handleNewMail = () => {
+    AppStorage.clearMailActionData();
+    this.setState({ replyData: null, forwardData: null });
+  };
 
-    handleBackToMail = () => {
-        AppStorage.clearMailActionData();
-        window.app.handleRoute("/");
-    };
+  render() {
+    const { isModalOpen, unReadCount, replyData, forwardData } = this.state;
 
-    handleNewMail = () => {
-        AppStorage.clearMailActionData();
-        this.setState({ replyData: null, forwardData: null });
-    };
+    const mailActionData = replyData || forwardData;
 
-    render() {
-        const { isModalOpen, unReadCount, replyData, forwardData } = this.state;
-
-        const mailActionData = replyData || forwardData;
-
-        return (
-            <div className="send-email-page" onClick={() => this.handleCloseModal()}>
-                <aside className="sidebar">
-                    <Sidebar isProfile={0} unReadCount={unReadCount} newMail={this.handleNewMail} backToMail={this.handleBackToMail} />
-                </aside>
-                <div className="right-part">
-                    <div className="top-bar">
+    return (
+      <div className="send-email-page" onClick={() => this.handleCloseModal()}>
+        <aside className="sidebar">
+          <Sidebar
+            isProfile={0}
+            unReadCount={unReadCount}
+            newMail={this.handleNewMail}
+            backToMail={this.handleBackToMail}
+          />
+        </aside>
+        <div className="right-part">
+          <div className="top-bar">
+            {/*
                         <div className="search-bar">
                             <Input
                                 type="text"
@@ -88,20 +94,33 @@ class SendEmailPage extends Death13.Component {
                                 svg="../../assets/svg/Search.svg"
                                 onInput={() => {}}
                             />
-                        </div>
-                        <div className="top-right-menu">
-                            <Button svg={AppStorage.getAvatarUrl()} name="avatar" help="Аккаунт" onClick={this.handleAvatar} />
-                        </div>
-                    </div>
-                    <div className="mail-box-container">
-                        <SendMail backToMail={this.handleBackToMail} actionData={mailActionData} />
-                    </div>
-
-                    <ProfileModal isOpen={isModalOpen} onClose={this.handleCloseModal} onProfileClick={this.handleProfileClick} />
                 </div>
+                */}
+            <div className="top-right-menu">
+              <Button
+                svg={AppStorage.getAvatarUrl()}
+                name="avatar"
+                help="Аккаунт"
+                onClick={this.handleAvatar}
+              />
             </div>
-        );
-    }
+          </div>
+          <div className="mail-box-container">
+            <SendMail
+              backToMail={this.handleBackToMail}
+              actionData={mailActionData}
+            />
+          </div>
+
+          <ProfileModal
+            isOpen={isModalOpen}
+            onClose={this.handleCloseModal}
+            onProfileClick={this.handleProfileClick}
+          />
+        </div>
+      </div>
+    );
+  }
 }
 
 export default SendEmailPage;
