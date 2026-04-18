@@ -32,10 +32,12 @@
                 .sender__email {
                     font-weight: bold;
                     font-size: 18px;
+                    color: var(--tertiary-text);
                 }
                 .recivers__emails {
                     display: flex;
                     gap: 10px;
+                    color: var(--tertiary-text);
                     
                     .input-form {
                         display: flex;
@@ -76,7 +78,7 @@
 
             input {
                 max-width: 100%;
-                color: var(--tretiry-text);
+                color: var(--tertiary-text);
                 font-size: 16px;
             }
         }

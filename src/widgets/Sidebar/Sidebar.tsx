@@ -31,7 +31,7 @@ class Sidebar extends Death13.Component {
 
     render() {
         const { isVisible, name, surname, email, avatarUrl, unReadCount } = this.state;
-        const { isProfile = 0, backToMail, changeProfile, changePassword, newMail, updateMail } = this.props;
+        const { isProfile = 0, backToMail, changeProfile, changePassword, newMail, updateMail, handleSetting } = this.props;
 
         return (
             <div className="sidebar-widget">
@@ -53,7 +53,6 @@ class Sidebar extends Death13.Component {
                             <Button
                                 title="Новое письмо"
                                 name="button-new-letter"
-                                svg="../../assets/svg/Compose.svg"
                                 onClick={(event: any) => {
                                     event.preventDefault();
                                     newMail();
@@ -65,7 +64,6 @@ class Sidebar extends Death13.Component {
                                 name="button-inbox"
                                 title="Входящие"
                                 isSelect={this.props.isPress === 0}
-                                svg="../../assets/svg/Inbox.svg"
                                 count={unReadCount}
                                 onClick={(event: any) => {
                                     event.preventDefault();
@@ -79,7 +77,6 @@ class Sidebar extends Death13.Component {
                             <Button
                                 name="button-drafs"
                                 title="Черновики"
-                                svg="../../assets/svg/Draft.svg"
                                 onClick={(event: any) => {
                                     event.preventDefault();
                                 }}
@@ -88,7 +85,6 @@ class Sidebar extends Death13.Component {
                                 name="button-sends"
                                 title="Отправленные"
                                 isSelect={this.props.isPress === 1}
-                                svg="../../assets/svg/Sent.svg"
                                 onClick={(event: any) => {
                                     event.preventDefault();
                                     window.app.handleRoute("/sent");
@@ -98,7 +94,6 @@ class Sidebar extends Death13.Component {
                             <Button
                                 name="button-favorites"
                                 title="Избранные"
-                                svg="../../assets/svg/SidebarFavorites.svg"
                                 onClick={(event: any) => {
                                     event.preventDefault();
                                 }}
@@ -109,7 +104,6 @@ class Sidebar extends Death13.Component {
                             <Button
                                 name="button-drop-down"
                                 title={isVisible ? "Скрыть" : "Ещё"}
-                                svg="../../assets/svg/DropdownArrow.svg"
                                 onClick={(event: any) => {
                                     event.preventDefault();
                                     this.setState({ isVisible: !isVisible });
@@ -122,7 +116,6 @@ class Sidebar extends Death13.Component {
                                     <Button
                                         name="button-spam"
                                         title="Спам"
-                                        svg="../../assets/svg/Spam.svg"
                                         onClick={(event: any) => {
                                             event.preventDefault();
                                         }}
@@ -130,7 +123,6 @@ class Sidebar extends Death13.Component {
                                     <Button
                                         name="button-trash"
                                         title="Корзина"
-                                        svg="../../assets/svg/Trash.svg"
                                         onClick={(event: any) => {
                                             event.preventDefault();
                                         }}
@@ -138,7 +130,6 @@ class Sidebar extends Death13.Component {
                                     <Button
                                         name="button-all-letter"
                                         title="Все письма"
-                                        svg="../../assets/svg/AllMail.svg"
                                         onClick={(event: any) => {
                                             event.preventDefault();
                                             backToMail();
@@ -161,7 +152,7 @@ class Sidebar extends Death13.Component {
                         <div className="main-button-profile">
                             <Button
                                 title="Почтовый ящик"
-                                name="button-new-letter"
+                                name="button-back-letter"
                                 onClick={(event: any) => {
                                     event.preventDefault();
                                     backToMail();
@@ -185,6 +176,15 @@ class Sidebar extends Death13.Component {
                                 onClick={(event: any) => {
                                     event.preventDefault();
                                     changePassword();
+                                }}
+                            />
+                            <Button
+                                name="button-settings"
+                                title="Настройки"
+                                isSelect={this.props.isPressProfile === 2}
+                                onClick={(event: any) => {
+                                    event.preventDefault();
+                                    handleSetting();
                                 }}
                             />
                         </div>

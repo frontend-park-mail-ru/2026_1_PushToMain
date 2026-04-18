@@ -180,6 +180,10 @@ class ProfilePage extends Death13.Component {
         this.setState({ profileState: 1 });
     };
 
+    handleSetting = () => {
+        this.setState({ profileState: 2 });
+    };
+
     render() {
         const {
             errors,
@@ -205,6 +209,7 @@ class ProfilePage extends Death13.Component {
                         backToMail={this.handleBackToMail}
                         changeProfile={this.handleChangeProfile}
                         changePassword={this.handleChangePasswordState}
+                        handleSetting={this.handleSetting}
                         newMail={() => {}}
                     />
                 </aside>
@@ -341,6 +346,40 @@ class ProfilePage extends Death13.Component {
                                                     this.handleBackToMail();
                                                 }}
                                             />
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        )}
+                        {profileState === 2 && (
+                            <div className="profile-security">
+                                <h1>Настройки</h1>
+                                <div className="profile-content">
+                                    <form action="" className="profile-form">
+                                        <div className="profile__checkbox">
+                                            <span>Тема</span>
+                                            <div className="checkbox-actions">
+                                                <div className="checkbox-form">
+                                                    <Input
+                                                        id="dark"
+                                                        type="radio"
+                                                        name="radio-theme"
+                                                        checked={AppStorage.theme === "dark"}
+                                                        onInput={() => AppStorage.setTheme("dark")}
+                                                    />
+                                                    <label for="dark">Темная</label>
+                                                    <div className="checkbox-form">
+                                                        <Input
+                                                            id="light"
+                                                            type="radio"
+                                                            name="radio-theme"
+                                                            checked={AppStorage.theme === "light"}
+                                                            onInput={() => AppStorage.setTheme("light")}
+                                                        />
+                                                        <label for="light">Светлая</label>
+                                                    </div>
+                                                </div>
+                                            </div>
                                         </div>
                                     </form>
                                 </div>

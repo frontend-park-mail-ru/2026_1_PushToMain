@@ -10,7 +10,7 @@
         button {
             padding: 0;
             background-color: transparent;
-            color: var(--tritary-text);
+            color: var(--tertiary-text);
             height: 24px;
         }
 
@@ -23,6 +23,7 @@
             border-radius: 12px;
             padding: 0 10px;
             height: 24px;
+            color: var(--tertiary-text);
 
             &__error {
                 display: flex;
@@ -33,6 +34,7 @@
                 border-radius: 12px;
                 padding: 0 10px;
                 height: 24px;
+                color: var(--tertiary-text);
             }
         }
     }

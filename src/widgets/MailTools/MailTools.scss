@@ -14,7 +14,7 @@
         align-items: center;
         justify-content: center;
         background-color: transparent;
-        color: var(--tretiry-text);
+        color: var(--tertiary-text);
         height: 30px;
         font-size: 16px;
         gap: 10px;
@@ -37,6 +37,45 @@
         button {
             width: auto;
         }
+        [name="favorites"] {
+            &::before {
+                content: "";
+                display: inline-block;
+                width: 24px;
+                height: 24px;
+                background-color: var(--primary-text);
+                mask-image: url("/assets/svg/SidebarFavorites.svg");
+                mask-size: contain;
+                mask-repeat: no-repeat;
+                mask-position: center;
+            }
+        }
+        [name="spam"] {
+            &::before {
+                content: "";
+                display: inline-block;
+                width: 24px;
+                height: 24px;
+                background-color: var(--primary-text);
+                mask-image: url("/assets/svg/Spam.svg");
+                mask-size: contain;
+                mask-repeat: no-repeat;
+                mask-position: center;
+            }
+        }
+        [name="trash"] {
+            &::before {
+                content: "";
+                display: inline-block;
+                width: 24px;
+                height: 24px;
+                background-color: var(--primary-text);
+                mask-image: url("/assets/svg/Trash.svg");
+                mask-size: contain;
+                mask-repeat: no-repeat;
+                mask-position: center;
+            }
+        }
     }
 
     .tools-right {
@@ -44,6 +83,31 @@
         button {
             width: auto;
         }
+        [name="answer"] {
+            &::before {
+                content: "";
+                display: inline-block;
+                width: 24px;
+                height: 24px;
+                background-color: var(--primary-text);
+                mask-image: url("/assets/svg/Answer.svg");
+                mask-size: contain;
+                mask-repeat: no-repeat;
+                mask-position: center;
+            }
+        }
+        [name="reply"] {
+            &::before {
+                content: "";
+                display: inline-block;
+                width: 24px;
+                height: 24px;
+                background-color: var(--primary-text);
+                mask-image: url("/assets/svg/Reply.svg");
+                mask-size: contain;
+                mask-repeat: no-repeat;
+                mask-position: center;
+            }
+        }
     }
 }
-

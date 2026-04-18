@@ -19,6 +19,7 @@ export const AppStorage = {
     image_path: "",
     replyData: null as any,
     forwardData: null as any,
+    theme: "light" as "light" | "dark",
 
     init() {
         try {
@@ -36,6 +37,16 @@ export const AppStorage = {
             if (savedCount !== null) {
                 this.unReadCount = parseInt(savedCount, 10) || 0;
             }
+
+            const savedTheme = localStorage.getItem("theme") as "light" | "dark";
+            if (savedTheme && (savedTheme === "light" || savedTheme === "dark")) {
+                this.theme = savedTheme;
+            } else {
+                const prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
+                this.theme = prefersDark ? "dark" : "light";
+            }
+
+            document.documentElement.setAttribute("data-theme", this.theme);
         } catch (e) {
             console.warn("Failed to load profile from localStorage", e);
         }
@@ -82,6 +93,7 @@ export const AppStorage = {
                 }),
             );
             localStorage.setItem("unReadCount", this.unReadCount.toString());
+            localStorage.setItem("theme", this.theme);
         } catch {}
     },
 
@@ -96,6 +108,26 @@ export const AppStorage = {
         this.unReadCount = count;
         this._saveToStorage();
         this._notify();
+    },
+
+    toggleTheme() {
+        this.theme = this.theme === "light" ? "dark" : "light";
+        document.documentElement.setAttribute("data-theme", this.theme);
+        this._saveToStorage();
+        this._notify();
+    },
+
+    setTheme(theme: "light" | "dark") {
+        if (this.theme !== theme) {
+            this.theme = theme;
+            document.documentElement.setAttribute("data-theme", theme);
+            this._saveToStorage();
+            this._notify();
+        }
+    },
+
+    getTheme() {
+        return this.theme;
     },
 
     setReplyData(data: any) {
@@ -154,6 +186,12 @@ class App {
                 this.previousPath = this.currentPath;
                 this.currentPath = window.location.pathname;
                 this.setPath(this.currentPath);
+            }
+        });
+
+        window.matchMedia("(prefers-color-scheme: dark)").addEventListener("change", (e) => {
+            if (!localStorage.getItem("theme")) {
+                AppStorage.setTheme(e.matches ? "dark" : "light");
             }
         });
     }

@@ -95,6 +95,7 @@
             display: flex;
             flex-direction: column;
             gap: 10px;
+            color: var(--tertiary-text)
         }
 
         .profile-content {
@@ -205,6 +206,27 @@
                                         border-color: var(--accent);
                                     }
                                 }
+
+                                [name="radio-theme"] {
+                                    padding: 0;
+                                    -webkit-appearance: none;
+                                    -moz-appearance: none;
+                                    appearance: none;
+                                    border-radius: 50%;
+                                    width: 18px;
+                                    height: 18px;
+                                    border: 2px solid var(--accent-2);
+                                    cursor: pointer;
+                                    transition: all 0.2s ease;
+
+                                    &:checked {
+                                        border: 6px solid var(--accent-2);
+                                    }
+
+                                    &:hover {
+                                        border-color: var(--accent);
+                                    }
+                                }
                             }
                         }
                     }
@@ -238,9 +260,7 @@
                             border: none;
 
                             &:hover {
-                                background-color: var(
-                                    --button-hover-background
-                                );
+                                background-color: var(--button-hover-background);
                             }
                         }
 

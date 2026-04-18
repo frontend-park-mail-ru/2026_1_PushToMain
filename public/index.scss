@@ -2,15 +2,13 @@
 
 @font-face {
     font-family: "Ubuntu Sans";
-    src: url("/public/assets/font/Ubuntu_Sans/UbuntuSans-VariableFont_wdth,wght.ttf")
-        format("truetype");
+    src: url("/public/assets/font/Ubuntu_Sans/UbuntuSans-VariableFont_wdth,wght.ttf") format("truetype");
     font-style: normal;
 }
 
 @font-face {
     font-family: "Shantell Sans";
-    src: url("/public/assets/font/Shantell_Sans/ShantellSans-VariableFont_BNCE\,INFM\,SPAC\,wght.ttf")
-        format("truetype");
+    src: url("/public/assets/font/Shantell_Sans/ShantellSans-VariableFont_BNCE\,INFM\,SPAC\,wght.ttf") format("truetype");
     font-style: normal;
 }
 
@@ -55,4 +53,33 @@ body,
     --input-stroke: #c6c6c6;
     --mail-stroke: rgba(202, 202, 202, 0.4);
     --mail-read-background: rgba(231, 241, 255, 0.4);
+
+    &[data-theme="dark"] {
+        --accent: #3399ff;
+        --accent-2: #1a75ff;
+
+        /* Text color */
+        --primary-text: #e1e1e1;
+        --secondary-text: rgba(160, 160, 160, 0.7);
+        --error-text: #ff4444;
+        --tertiary-text: #ffffff;
+        --muted-text: #888888;
+
+        /* Background */
+        --background-gradient: linear-gradient(#1a1a2e, #16213e, #0f3460, #1a1a2e);
+        --color-main-background: #1e1e2f;
+        --color-sidebar-background: #252538;
+
+        --button-background: #1a75ff;
+        --button-hover-background: #3399ff;
+        --button-active-background: #0055cc;
+
+        --input-error-background: #3d2020;
+        --input-background: #2a2a3d;
+        --input-success-background: #1a2a4a;
+
+        --input-stroke: #404060;
+        --mail-stroke: rgba(80, 80, 120, 0.4);
+        --mail-read-background: rgba(30, 40, 60, 0.5);
+    }
 }

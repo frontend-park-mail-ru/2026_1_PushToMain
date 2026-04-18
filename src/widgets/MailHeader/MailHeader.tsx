@@ -50,7 +50,6 @@ class MailHeader extends Death13.Component {
                         />
                     </div>
                     <Button
-                        svg="../../assets/svg/Refresh.svg"
                         name="refresh"
                         help="Обновить"
                         onClick={(event: any) => {
