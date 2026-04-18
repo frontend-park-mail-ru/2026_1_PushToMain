@@ -9,13 +9,14 @@ import { URLMINIO } from "../../api/config";
 
 class ReadMail extends Death13.Component {
     handleDeleteEmail = async () => {
-        const { email, backToMail } = this.props;
+        const { email, backToMail, backToSent } = this.props;
         if (window.app.previousPath === "/sent") {
             await deleteMyEmailByID(email.id);
+            backToSent();
         } else {
             await deleteEmailByID(email.id);
+            backToMail();
         }
-        backToMail();
     };
 
     handleReply = () => {

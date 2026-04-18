@@ -117,7 +117,7 @@ class ReadEmailPage extends Death13.Component {
                         </div>
                     </div>
                     <div className="mail-box-container">
-                        <ReadMail email={this.state.email} backToMail={this.handleBackToMail} />
+                        <ReadMail email={this.state.email} backToMail={this.handleBackToMail} backToSent={this.handleBackToSent} />
                     </div>
 
                     <ProfileModal isOpen={isModalOpen} onClose={this.handleCloseModal} onProfileClick={this.handleProfileClick} />
