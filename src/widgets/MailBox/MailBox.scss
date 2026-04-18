@@ -88,6 +88,7 @@
         border: 5px solid var(--accent-2);
         cursor: pointer;
         transition: all 0.2s ease;
+        margin-left: 20px;
 
         &:checked {
             border: none;

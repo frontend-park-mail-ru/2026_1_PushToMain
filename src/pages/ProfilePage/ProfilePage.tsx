@@ -9,6 +9,7 @@ import { changePassword, getProfile, changeProfile } from "../../api/ApiAuth";
 import { AppStorage } from "../../App";
 import ProfileModal from "../../widgets/ProfileModal/ProfileModal";
 import ConfirmationModal from "../../widgets/ConfirmationModal/ConfirmationModal";
+import SelectDate from "../../components/SelectDate/SelectDate";
 
 class ProfilePage extends Death13.Component {
     constructor(props: any) {
@@ -180,8 +181,20 @@ class ProfilePage extends Death13.Component {
     };
 
     render() {
-        const { errors, oldPassword, newPassword, name, surname, profileState, avatarKey, avatarUrl, isModalOpen, isConfirm, isStatus } =
-            this.state;
+        const {
+            errors,
+            oldPassword,
+            newPassword,
+            name,
+            surname,
+            profileState,
+            avatarKey,
+            avatarUrl,
+            isModalOpen,
+            isConfirm,
+            isStatus,
+            gender,
+        } = this.state;
 
         return (
             <div className="profile-page" onClick={() => this.handleCloseModal()}>
@@ -234,35 +247,33 @@ class ProfilePage extends Death13.Component {
                                                 this.handleInputChange("surname", e.target.value);
                                             }}
                                         />
-                                        {/*
+                                        <SelectDate />
                                         <div className="profile__checkbox">
-                                            
-                      <span>Пол</span>
-                      <div className="checkbox-actions">
-                        <div className="checkbox-form">
-                          <Input
-                            id="male"
-                            type="radio"
-                            name="radio-gender"
-                            checked={gender === "male"}
-                            onInput={() => this.handleGenderChange("male")}
-                          />
-                          <label for="male">Мужской</label>
-                        </div>
+                                            <span>Пол</span>
+                                            <div className="checkbox-actions">
+                                                <div className="checkbox-form">
+                                                    <Input
+                                                        id="male"
+                                                        type="radio"
+                                                        name="radio-gender"
+                                                        checked={gender === "male"}
+                                                        onInput={() => this.handleGenderChange("male")}
+                                                    />
+                                                    <label for="male">Мужской</label>
+                                                </div>
 
-                        <div className="checkbox-form">
-                          <Input
-                            id="female"
-                            type="radio"
-                            name="radio-gender"
-                            checked={gender === "female"}
-                            onInput={() => this.handleGenderChange("female")}
-                          />
-                          <label for="female">Женский</label>
-                        </div>
-                      </div>
+                                                <div className="checkbox-form">
+                                                    <Input
+                                                        id="female"
+                                                        type="radio"
+                                                        name="radio-gender"
+                                                        checked={gender === "female"}
+                                                        onInput={() => this.handleGenderChange("female")}
+                                                    />
+                                                    <label for="female">Женский</label>
+                                                </div>
+                                            </div>
                                         </div>
-                                          */}
 
                                         <div className="profile-actions">
                                             <Button
