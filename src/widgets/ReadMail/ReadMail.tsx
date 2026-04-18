@@ -61,7 +61,7 @@ class ReadMail extends Death13.Component {
                                 <div className="recivers__emails">
                                     Кому:
                                     <div className="input-form">
-                                        {email.receiverList.map((email: string, index: number) => (
+                                        {(email.receiverList || []).map((email: string, index: number) => (
                                             <span key={index} className="email-tag">
                                                 <span>{email}</span>
                                             </span>

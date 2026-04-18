@@ -15,7 +15,6 @@
 
 .overlay__title {
     display: flex;
-    justify-content: space-between;
     align-items: center;
     font-size: 16px;
     width: 100%;
@@ -24,6 +23,7 @@
     p {
         flex: 1;
         overflow: hidden;
+        text-align: center;
         white-space: nowrap;
         text-overflow: ellipsis;
         margin: 0;
@@ -45,8 +45,11 @@
 
 .overlay__close {
     button {
+        position: absolute;
         width: 20px;
         height: 20px;
+        top: 30px;
+        right: 30px;
         padding: 0;
         background: none;
         border: none;

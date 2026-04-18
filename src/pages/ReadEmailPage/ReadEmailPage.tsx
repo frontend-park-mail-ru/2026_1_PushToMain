@@ -37,6 +37,10 @@ class ReadEmailPage extends Death13.Component {
 
     async loadEmail(id: number) {
         const data = await getEmailByID(id);
+        if (!data) {
+            window.app.handleRoute("/")
+        }
+        
         if (window.app.previousPath === "/sent") {
             this.setState({ isPress: 1 });
         } else {
