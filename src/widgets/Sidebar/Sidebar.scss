@@ -58,7 +58,7 @@
                 display: inline-block;
                 width: 28px;
                 height: 28px;
-                background-color: var(--primary-text);
+                background-color: var(--tertiary-text);
                 mask-image: url("/assets/svg/Inbox.svg");
                 mask-size: contain;
                 mask-repeat: no-repeat;
@@ -72,7 +72,7 @@
                 display: inline-block;
                 width: 28px;
                 height: 28px;
-                background-color: var(--primary-text);
+                background-color: var(--tertiary-text);
                 mask-image: url("/assets/svg/Draft.svg");
                 mask-size: contain;
                 mask-repeat: no-repeat;
@@ -86,7 +86,7 @@
                 display: inline-block;
                 width: 28px;
                 height: 28px;
-                background-color: var(--primary-text);
+                background-color: var(--tertiary-text);
                 mask-image: url("/assets/svg/Sent.svg");
                 mask-size: contain;
                 mask-repeat: no-repeat;
@@ -100,7 +100,7 @@
                 display: inline-block;
                 width: 28px;
                 height: 28px;
-                background-color: var(--primary-text);
+                background-color: var(--tertiary-text);
                 mask-image: url("/assets/svg/SidebarFavorites.svg");
                 mask-size: contain;
                 mask-repeat: no-repeat;
@@ -114,7 +114,7 @@
                 display: inline-block;
                 width: 28px;
                 height: 28px;
-                background-color: var(--primary-text);
+                background-color: var(--tertiary-text);
                 mask-image: url("/assets/svg/Spam.svg");
                 mask-size: contain;
                 mask-repeat: no-repeat;
@@ -128,7 +128,7 @@
                 display: inline-block;
                 width: 28px;
                 height: 28px;
-                background-color: var(--primary-text);
+                background-color: var(--tertiary-text);
                 mask-image: url("/assets/svg/Trash.svg");
                 mask-size: contain;
                 mask-repeat: no-repeat;
@@ -142,7 +142,7 @@
                 display: inline-block;
                 width: 28px;
                 height: 28px;
-                background-color: var(--primary-text);
+                background-color: var(--tertiary-text);
                 mask-image: url("/assets/svg/AllMail.svg");
                 mask-size: contain;
                 mask-repeat: no-repeat;
@@ -271,11 +271,17 @@
                 display: inline-block;
                 width: 28px;
                 height: 28px;
-                background-color: var(--primary-text);
+                background-color: var(--muted-text);
                 mask-image: url("/assets/svg/DropdownArrow.svg");
                 mask-size: contain;
                 mask-repeat: no-repeat;
                 mask-position: center;
+
+                transition: transform 0.3s;
+            }
+            
+            &.active::before {
+                transform: rotate(180deg);
             }
         }
 
@@ -289,16 +295,6 @@
             color: var(--secondary-text);
             font-size: 16px;
             gap: 10px;
-
-            img {
-                transition: transform 0.3s;
-            }
-
-            &.active {
-                img {
-                    transform: rotateZ(180deg);
-                }
-            }
         }
     }
 }

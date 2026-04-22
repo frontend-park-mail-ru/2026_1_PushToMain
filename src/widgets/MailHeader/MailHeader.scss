@@ -20,7 +20,7 @@
                 display: inline-block;
                 width: 24px;
                 height: 24px;
-                background-color: var(--primary-text);
+                background-color: var(--tertiary-text);
                 mask-image: url("/assets/svg/Refresh.svg");
                 mask-size: contain;
                 mask-repeat: no-repeat;
@@ -127,18 +127,17 @@
     input[name="checkbox-all"] {
         appearance: none;
         position: relative;
-        background-color: transparent;
+        background-color: var(--tertiary-text);
         width: 24px;
         height: 24px;
-        color: var(--tertiary-text);
         margin: 0;
-        background-image: url("/assets/svg/CheckboxOffAll.svg");
-        background-size: contain;
-        background-position: center;
+        mask-image: url("/assets/svg/CheckboxOffAll.svg");
+        mask-size: contain;
+        mask-position: center;
         border: none;
 
         &:checked {
-            background-image: url("/assets/svg/CheckboxDeselect.svg");
+            mask-image: url("/assets/svg/CheckboxDeselect.svg");
         }
     }
 }

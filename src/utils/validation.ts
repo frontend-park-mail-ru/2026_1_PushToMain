@@ -18,6 +18,9 @@ export function validation(dataForm: object) {
                         message: "Почта должна быть вида *@smail.ru",
                     });
                 }
+                if (data.length > 75) {
+                    errors.push({ field: "email", message: "Почта должна быть не более 40 символов" });
+                }
             }
         }
 

@@ -16,8 +16,9 @@ class Input extends Death13.Component {
         const isValid = hasValue && !hasError;
         const isPassword = this.props.type === "password";
         const isCheckbox = this.props.type === "checkbox";
+        const isRadio = this.props.type === "radio";
         const inputType = isPassword && this.state.showPassword ? "text" : this.props.type;
-        
+
         return (
             <div className="input-container" data-input-name={this.props.name}>
                 <span className="input__title">{this.props.input_title}</span>
@@ -28,16 +29,12 @@ class Input extends Death13.Component {
                         id={this.props.id}
                         name={this.props.name}
                         placeholder={this.props.placeholder}
-                        onInput={!isCheckbox ? (event: any) => {
-                            this.props.onInput(event);
-                        } : undefined}
-                        onChange={isCheckbox ? (event: any) => {
-                            this.props.onInput(event);
-                        } : undefined}
-                        checked={isCheckbox ? this.props.checked : undefined}
+                        onInput={!isCheckbox && !isRadio ? this.props.onInput : undefined}
+                        onChange={isCheckbox || isRadio ? this.props.onChange || this.props.onInput : undefined}
+                        checked={isCheckbox || isRadio ? this.props.checked : undefined}
                         readOnly={this.props.readonly || false}
                         maxLength={this.props.maxLength || 100}
-                        value={!isCheckbox ? (this.props.value || "") : undefined}
+                        value={!isCheckbox && !isRadio ? this.props.value || "" : this.props.value}
                     />
                     {isPassword && (
                         <div

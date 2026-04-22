@@ -21,7 +21,7 @@ export async function postDataLogin(data = {}) {
                 errors: [],
             };
         } else {
-            if (response.status === 401) {
+            if (response.status === 401 || response.status === 404) {
                 return {
                     isValid: false,
                     errors: [
@@ -31,7 +31,7 @@ export async function postDataLogin(data = {}) {
                         },
                         {
                             field: "email",
-                            message: "",
+                            message: " ",
                         },
                     ],
                 };
@@ -46,7 +46,7 @@ export async function postDataLogin(data = {}) {
                         },
                         {
                             field: "email",
-                            message: "",
+                            message: " ",
                         },
                     ],
                 };
@@ -62,7 +62,7 @@ export async function postDataLogin(data = {}) {
                 },
                 {
                     field: "email",
-                    message: "",
+                    message: " ",
                 },
             ],
         };
@@ -103,7 +103,7 @@ export async function postDataReg(data = {}) {
                         },
                         {
                             field: "email",
-                            message: "",
+                            message: " ",
                         },
                     ],
                 };
@@ -118,7 +118,7 @@ export async function postDataReg(data = {}) {
                         },
                         {
                             field: "email",
-                            message: "",
+                            message: " ",
                         },
                     ],
                 };
@@ -134,7 +134,7 @@ export async function postDataReg(data = {}) {
                 },
                 {
                     field: "email",
-                    message: "",
+                    message: " ",
                 },
             ],
         };
