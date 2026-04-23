@@ -127,3 +127,9 @@
         }
     }
 }
+
+@media (max-width: 768px) {
+    .mail-header {
+        display: none;
+    }
+}
