@@ -4,6 +4,7 @@ import Input from "../../components/Input/Input";
 import { validation } from "../../utils/validation";
 import { postDataReg } from "../../api/ApiAuth";
 import "./RegPage.scss";
+import { AppStorage } from "../../App";
 
 class RegPage extends Death13.Component {
     state: any = {
@@ -40,7 +41,7 @@ class RegPage extends Death13.Component {
             password: field === "password" ? value : this.state.formData.password,
         };
 
-        const result = validation(data);
+        const result = validation(data, this.t);
 
         if (!result.isValid) {
             const fieldError = result.errors.find((err: any) => err.field === field);
@@ -57,7 +58,7 @@ class RegPage extends Death13.Component {
             surname: this.state.formData.surname,
         };
 
-        const result = validation(data);
+        const result = validation(data, this.t);
         const newErrors: any = {};
 
         if (!result.isValid) {
@@ -78,7 +79,7 @@ class RegPage extends Death13.Component {
             password: this.state.formData.password,
         };
 
-        const result = validation(data);
+        const result = validation(data, this.t);
         const newErrors: any = {};
 
         if (!result.isValid) {
@@ -142,6 +143,10 @@ class RegPage extends Death13.Component {
         }
     };
 
+    t(key: string): string {
+        return AppStorage.t(key);
+    }
+
     render() {
         const { step, formData, errors } = this.state;
 
@@ -153,8 +158,8 @@ class RegPage extends Death13.Component {
                             <img src="../../assets/svg/Logo.svg" />
                             <h1 className="logo__title">SMail</h1>
                         </div>
-                        <h1 className="auth-form__subtitle">Твоя главная студенческая почта</h1>
-                        <h1 className="auth-form__title">Регистрация</h1>
+                        <h1 className="auth-form__subtitle">{this.t("auth_subtitle")}</h1>
+                        <h1 className="auth-form__title">{this.t("auth_title2")}</h1>
                         <form action="" className="auth-form">
                             <div className="auth-form__inputs">
                                 {step === 1 && (
@@ -162,8 +167,8 @@ class RegPage extends Death13.Component {
                                         <Input
                                             key="name-input"
                                             type="text"
-                                            placeholder="Введите имя"
-                                            input_title="Имя"
+                                            placeholder={this.t("enter_name")}
+                                            input_title={this.t("name")}
                                             name="name"
                                             error={errors.name}
                                             value={formData.name}
@@ -174,8 +179,8 @@ class RegPage extends Death13.Component {
                                         <Input
                                             key="surname-input"
                                             type="text"
-                                            placeholder="Введите фамилию"
-                                            input_title="Фамилия"
+                                            placeholder={this.t("enter_surname")}
+                                            input_title={this.t("surname")}
                                             name="surname"
                                             error={errors.surname}
                                             value={formData.surname}
@@ -189,8 +194,8 @@ class RegPage extends Death13.Component {
                                     <div className="auth-form__inputs">
                                         <Input
                                             type="email"
-                                            placeholder="Введите email"
-                                            input_title="Email"
+                                            placeholder={this.t("enter_email")}
+                                            input_title={this.t("email")}
                                             name="email"
                                             error={errors.email}
                                             value={formData.email}
@@ -200,8 +205,8 @@ class RegPage extends Death13.Component {
                                         />
                                         <Input
                                             type="password"
-                                            placeholder="Введите пароль"
-                                            input_title="Пароль"
+                                            placeholder={this.t("enter_password")}
+                                            input_title={this.t("password")}
                                             name="password"
                                             error={errors.password}
                                             value={formData.password}
@@ -215,9 +220,9 @@ class RegPage extends Death13.Component {
                             <div className="auth-form__actions">
                                 {step === 1 && (
                                     <div className="auth-form__actions">
-                                        <Button title="Продолжить" name="button-reg-for-reg" onClick={this.handleNextStep} />
+                                        <Button title={this.t("continue")} name="button-reg-for-reg" onClick={this.handleNextStep} />
                                         <Button
-                                            title="Войти"
+                                            title={this.t("enter")}
                                             name="button-login-for-reg"
                                             onClick={(event: Event) => {
                                                 event.preventDefault();
@@ -228,8 +233,8 @@ class RegPage extends Death13.Component {
                                 )}
                                 {step === 2 && (
                                     <div className="auth-form__actions">
-                                        <Button title="Зарегистрироваться" name="button-reg-for-reg" onClick={this.handleRegister} />
-                                        <Button title="Назад" name="button-login-for-reg" onClick={this.handleBackStep} />
+                                        <Button title={this.t("register")} name="button-reg-for-reg" onClick={this.handleRegister} />
+                                        <Button title={this.t("back")} name="button-login-for-reg" onClick={this.handleBackStep} />
                                     </div>
                                 )}
                             </div>

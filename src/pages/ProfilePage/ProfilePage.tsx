@@ -12,8 +12,14 @@ import ConfirmationModal from "../../widgets/ConfirmationModal/ConfirmationModal
 import SelectDate from "../../components/SelectDate/SelectDate";
 
 class ProfilePage extends Death13.Component {
+    private unsubscribe: (() => void) | null = null;
+
     constructor(props: any) {
         super(props);
+
+        this.unsubscribe = AppStorage.subscribe(() => {
+            this.setState({ language: AppStorage.language });
+        });
 
         this.loadProfile();
     }
@@ -32,6 +38,7 @@ class ProfilePage extends Death13.Component {
         isModalOpen: false,
         isConfirm: false,
         isStatus: false,
+        language: AppStorage.language,
     };
 
     loadProfile = async () => {
@@ -64,7 +71,7 @@ class ProfilePage extends Death13.Component {
             surname: field === "surname" ? value : this.state.surname,
         };
 
-        const result = validation(data);
+        const result = validation(data, this.t);
 
         if (!result.isValid) {
             const fieldError = result.errors.find((err: any) => err.field === field);
@@ -184,6 +191,10 @@ class ProfilePage extends Death13.Component {
         this.setState({ profileState: 2 });
     };
 
+    t(key: string): string {
+        return AppStorage.t(key);
+    }
+
     render() {
         const {
             errors,
@@ -224,7 +235,7 @@ class ProfilePage extends Death13.Component {
                     <div className="profile-content-area">
                         {profileState === 0 && (
                             <div className="profile-container">
-                                <h1>Личные данные</h1>
+                                <h1>{this.t("personal_information")}</h1>
                                 <div className="profile-content">
                                     <div className="profile-avatar">
                                         <UploadAvatar image={avatarUrl} onAvatarUpdate={this.handleAvatarUpdate} key={avatarKey} />
@@ -305,7 +316,7 @@ class ProfilePage extends Death13.Component {
 
                         {profileState === 1 && (
                             <div className="profile-security">
-                                <h1>Безопасность</h1>
+                                <h1>{this.t("security")}</h1>
                                 <div className="profile-content">
                                     <form action="" className="profile-form">
                                         <Input
@@ -353,11 +364,11 @@ class ProfilePage extends Death13.Component {
                         )}
                         {profileState === 2 && (
                             <div className="profile-security">
-                                <h1>Настройки</h1>
+                                <h1>{this.t("settings")}</h1>
                                 <div className="profile-content">
                                     <form action="" className="profile-form">
                                         <div className="profile__checkbox">
-                                            <span>Тема</span>
+                                            <span>{this.t("theme")}</span>
                                             <div className="checkbox-actions">
                                                 <div className="checkbox-form">
                                                     <Input
@@ -367,17 +378,42 @@ class ProfilePage extends Death13.Component {
                                                         checked={AppStorage.theme === "dark"}
                                                         onInput={() => AppStorage.setTheme("dark")}
                                                     />
-                                                    <label for="dark">Темная</label>
-                                                    <div className="checkbox-form">
-                                                        <Input
-                                                            id="light"
-                                                            type="radio"
-                                                            name="radio-theme"
-                                                            checked={AppStorage.theme === "light"}
-                                                            onInput={() => AppStorage.setTheme("light")}
-                                                        />
-                                                        <label for="light">Светлая</label>
-                                                    </div>
+                                                    <label for="dark">{this.t("dark_theme")}</label>
+                                                </div>
+                                                <div className="checkbox-form">
+                                                    <Input
+                                                        id="light"
+                                                        type="radio"
+                                                        name="radio-theme"
+                                                        checked={AppStorage.theme === "light"}
+                                                        onInput={() => AppStorage.setTheme("light")}
+                                                    />
+                                                    <label for="light">{this.t("light_theme")}</label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div className="profile__checkbox">
+                                            <span>{this.t("interface_language")}</span>
+                                            <div className="checkbox-actions">
+                                                <div className="checkbox-form">
+                                                    <Input
+                                                        id="ru"
+                                                        type="radio"
+                                                        name="radio-language"
+                                                        checked={AppStorage.language === "ru"}
+                                                        onInput={() => AppStorage.setLanguage("ru")}
+                                                    />
+                                                    <label for="ru">{this.t("russian")}</label>
+                                                </div>
+                                                <div className="checkbox-form">
+                                                    <Input
+                                                        id="en"
+                                                        type="radio"
+                                                        name="radio-language"
+                                                        checked={AppStorage.language === "en"}
+                                                        onInput={() => AppStorage.setLanguage("en")}
+                                                    />
+                                                    <label for="en">{this.t("english")}</label>
                                                 </div>
                                             </div>
                                         </div>

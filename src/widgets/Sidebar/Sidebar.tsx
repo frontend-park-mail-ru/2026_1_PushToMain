@@ -10,6 +10,7 @@ class Sidebar extends Death13.Component {
         surname: AppStorage.surname,
         email: AppStorage.email,
         avatarUrl: AppStorage.getAvatarUrl(),
+        language: AppStorage.language,
         unReadCount: AppStorage.unReadCount,
     };
 
@@ -25,8 +26,13 @@ class Sidebar extends Death13.Component {
                 email: AppStorage.email,
                 avatarUrl: AppStorage.getAvatarUrl(),
                 unReadCount: AppStorage.unReadCount,
+                language: AppStorage.language,
             });
         });
+    }
+
+    t(key: string): string {
+        return AppStorage.t(key);
     }
 
     render() {
@@ -51,7 +57,7 @@ class Sidebar extends Death13.Component {
                     <div className="sidebar-content">
                         <div className="main-button">
                             <Button
-                                title="Новое письмо"
+                                title={this.t("new_letter")}
                                 name="button-new-letter"
                                 onClick={(event: any) => {
                                     event.preventDefault();
@@ -62,7 +68,7 @@ class Sidebar extends Death13.Component {
                         <div className="main-button-container">
                             <Button
                                 name="button-inbox"
-                                title="Входящие"
+                                title={this.t("inbox")}
                                 isSelect={this.props.isPress === 0}
                                 count={unReadCount}
                                 onClick={(event: any) => {
@@ -76,14 +82,14 @@ class Sidebar extends Death13.Component {
 
                             <Button
                                 name="button-drafs"
-                                title="Черновики"
+                                title={this.t("drafts")}
                                 onClick={(event: any) => {
                                     event.preventDefault();
                                 }}
                             />
                             <Button
                                 name="button-sends"
-                                title="Отправленные"
+                                title={this.t("sent")}
                                 isSelect={this.props.isPress === 1}
                                 onClick={(event: any) => {
                                     event.preventDefault();
@@ -93,7 +99,7 @@ class Sidebar extends Death13.Component {
 
                             <Button
                                 name="button-favorites"
-                                title="Избранные"
+                                title={this.t("starred")}
                                 onClick={(event: any) => {
                                     event.preventDefault();
                                 }}
@@ -103,7 +109,7 @@ class Sidebar extends Death13.Component {
                         <div className="drop-down">
                             <Button
                                 name="button-drop-down"
-                                title={isVisible ? "Скрыть" : "Ещё"}
+                                title={isVisible ? this.t("hide") : this.t("yet")}
                                 onClick={(event: any) => {
                                     event.preventDefault();
                                     this.setState({ isVisible: !isVisible });
@@ -115,21 +121,21 @@ class Sidebar extends Death13.Component {
                                 <div className="extra-button-container">
                                     <Button
                                         name="button-spam"
-                                        title="Спам"
+                                        title={this.t("spam")}
                                         onClick={(event: any) => {
                                             event.preventDefault();
                                         }}
                                     />
                                     <Button
                                         name="button-trash"
-                                        title="Корзина"
+                                        title={this.t("trash")}
                                         onClick={(event: any) => {
                                             event.preventDefault();
                                         }}
                                     />
                                     <Button
                                         name="button-all-letter"
-                                        title="Все письма"
+                                        title={this.t("all_letter")}
                                         onClick={(event: any) => {
                                             event.preventDefault();
                                             backToMail();
@@ -151,7 +157,7 @@ class Sidebar extends Death13.Component {
                         </div>
                         <div className="main-button-profile">
                             <Button
-                                title="Почтовый ящик"
+                                title={this.t("mailbox")}
                                 name="button-back-letter"
                                 onClick={(event: any) => {
                                     event.preventDefault();
@@ -162,7 +168,7 @@ class Sidebar extends Death13.Component {
                         <div className="main-button-container">
                             <Button
                                 name="button-profile"
-                                title="Личные данные"
+                                title={this.t("personal_information")}
                                 isSelect={this.props.isPressProfile === 0}
                                 onClick={(event: any) => {
                                     event.preventDefault();
@@ -171,7 +177,7 @@ class Sidebar extends Death13.Component {
                             />
                             <Button
                                 name="button-security"
-                                title="Безопасность"
+                                title={this.t("security")}
                                 isSelect={this.props.isPressProfile === 1}
                                 onClick={(event: any) => {
                                     event.preventDefault();
@@ -180,7 +186,7 @@ class Sidebar extends Death13.Component {
                             />
                             <Button
                                 name="button-settings"
-                                title="Настройки"
+                                title={this.t("settings")}
                                 isSelect={this.props.isPressProfile === 2}
                                 onClick={(event: any) => {
                                     event.preventDefault();
