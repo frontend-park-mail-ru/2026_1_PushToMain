@@ -23,6 +23,10 @@
         align-items: center;
         justify-content: space-between;
         height: 55px;
+
+        .hamburger-btn {
+            display: none;
+        }
     }
 
     .search-bar {
@@ -184,22 +188,6 @@
         display: block;
     }
 
-    .sidebar {
-        position: fixed;
-        left: 0;
-        top: 0;
-        transform: translateX(-100%);
-        transition: transform 0.3s ease-in-out;
-        z-index: 1000;
-        margin: 0;
-        border-radius: 0;
-        width: 285px;
-
-        &.open {
-            transform: translateX(0);
-        }
-    }
-
     body .main-page .right-part {
         display: flex;
         flex-direction: column;
@@ -224,6 +212,7 @@
     .main-page .top-bar .search-bar {
         height: 60px;
         width: 100%;
+        margin-left: 10px;
         .input-form input {
             width: 100%;
             min-width: 0;
@@ -233,5 +222,60 @@
 
     .main-page .top-bar .top-right-menu {
         display: none;
+    }
+
+    .main-page .top-bar .hamburger-btn {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 60px;
+        height: 60px;
+        background-color: #ffffff;
+        border: none;
+        border-radius: 20px;
+        cursor: pointer;
+        flex-shrink: 0;
+
+        img {
+            width: 24px;
+            height: 24px;
+        }
+
+        &:active {
+            background-color: #f0f0f0;
+        }
+    }
+
+    body .sidebar {
+        position: fixed;
+        left: 0;
+        top: 0;
+        transform: translateX(-100%);
+        transition: transform 0.3s ease-in-out;
+        z-index: 1000;
+        margin: 0;
+
+        &.open {
+            transform: translateX(0);
+        }
+    }
+
+    .sidebar-overlay {
+        visibility: hidden;
+        opacity: 0;
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: rgba(0, 0, 0, 0.5);
+        z-index: 999;
+        transition: opacity 0.3s ease-in-out;
+
+        &.open {
+            visibility: visible;
+            opacity: 1;
+            transition: opacity 0.3s ease-in-out;
+        }
     }
 }
