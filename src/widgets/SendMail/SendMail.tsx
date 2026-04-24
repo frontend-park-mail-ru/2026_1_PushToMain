@@ -4,7 +4,7 @@ import InputEmail from "../../components/InputEmail/InputEmail";
 import Input from "../../components/Input/Input";
 import Textarea from "../../components/Textarea/Textarea";
 import Button from "../../components/Button/Button";
-import { sendEmail } from "../../api/ApiEmail";
+import { sendEmail, uploadFile } from "../../api/ApiEmail";
 
 class SendMail extends Death13.Component {
     state: any = {
@@ -13,6 +13,7 @@ class SendMail extends Death13.Component {
         receivers: [],
         invalidReceivers: [],
         buttonBlock: true,
+        files: [],
     };
 
     constructor(props: any) {
@@ -71,13 +72,17 @@ class SendMail extends Death13.Component {
 
         this.setState({ buttonBlock: true });
 
-        const response = await sendEmail({
+        const responseSend = await sendEmail({
             header: header.trim(),
             body: body.trim(),
             receivers: receivers,
         });
 
-        if (response) {
+        const file = this.state.files;
+
+        const responseFile = await uploadFile(file, responseSend.emailId);
+
+        if (responseSend && responseFile) {
             window.AppStorage.clearMailActionData();
             this.props.backToMail();
         }
@@ -90,6 +95,35 @@ class SendMail extends Death13.Component {
 
     handleSaveDraft = (event: any) => {
         event.preventDefault();
+    };
+
+    handleFileChange = (e: any) => {
+        const files: File[] = Array.from(e.target.files || []);
+
+        if (files.length === 0) return;
+
+        const newFiles = files.map((file: File) => ({
+            file: file,
+            id: Date.now(),
+            name: file.name,
+            size: file.size,
+            type: file.type,
+        }));
+
+        this.setState({
+            files: [...this.state.files, ...newFiles],
+        });
+
+        files.forEach((file: File) => {
+            const reader = new FileReader();
+            reader.readAsDataURL(file);
+        });
+    };
+
+    removeFile = (fileId: number) => {
+        this.setState({
+            files: this.state.files.filter((file: any) => file.id !== fileId),
+        });
     };
 
     render() {
@@ -117,17 +151,31 @@ class SendMail extends Death13.Component {
                         />
                     </div>
                     <Textarea readonly={false} value={body} onInput={this.handleBodyChange} />{" "}
+                    <div className="files-list">
+                        {this.state.files.map((fileItem: any) => (
+                            <div key={fileItem.id} className="file-item">
+                                <span>{fileItem.name}</span>
+                                <button onClick={() => this.removeFile(fileItem.id)}>✕</button>
+                            </div>
+                        ))}
+                    </div>
                 </form>
-                <div className="send-actions">
-                    <Button title="Сохранить" name="save-mail" onClick={this.handleSaveDraft} />{" "}
-                    <Button
-                        title="Отправить"
-                        name="send-mail"
-                        block={buttonBlock}
-                        onClick={(event: any) => {
-                            this.handleSubmit(event);
-                        }}
-                    />
+                <div className="send-down">
+                    <div className="send-tools">
+                        <input type="file" name="file" id="input-file" hidden multiple onChange={this.handleFileChange} />
+                        <label for="input-file" name="button-file"></label>
+                    </div>
+                    <div className="send-actions">
+                        <Button title="Сохранить" name="save-mail" onClick={this.handleSaveDraft} />{" "}
+                        <Button
+                            title="Отправить"
+                            name="send-mail"
+                            block={buttonBlock}
+                            onClick={(event: any) => {
+                                this.handleSubmit(event);
+                            }}
+                        />
+                    </div>
                 </div>
             </div>
         );

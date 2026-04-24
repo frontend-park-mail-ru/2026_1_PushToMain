@@ -5,7 +5,7 @@ import Button from "../../components/Button/Button";
 import MailHeader from "../../widgets/MailHeader/MailHeader";
 import MailBox from "../../widgets/MailBox/MailBox";
 import { getProfile } from "../../api/ApiAuth";
-import { getEmailAll, getEmailSend, readEmail } from "../../api/ApiEmail";
+import { getEmailAll, getEmailSend, readEmail, seacrhEmail } from "../../api/ApiEmail";
 import "./MainPage.scss";
 import ProfileModal from "../../widgets/ProfileModal/ProfileModal";
 import { AppStorage } from "../../App";
@@ -152,7 +152,9 @@ class MainPage extends Death13.Component {
         this.setState({ isStateMode: 0 });
     };
 
-    handleSearch = () => {};
+    handleSearch = async (data: string) => {
+        await seacrhEmail(data);
+    };
 
     render() {
         const { emails, isModalOpen, isStateMode, isSelectAll, total, selectedEmails } = this.state;
@@ -176,8 +178,8 @@ class MainPage extends Death13.Component {
                                 placeholder="Поиск в почте"
                                 name="search"
                                 svg="../../assets/svg/Search.svg"
-                                onInput={() => {
-                                    this.handleSearch();
+                                onInput={(e: any) => {
+                                    this.handleSearch(e.target.value);
                                 }}
                             />
                         </div>

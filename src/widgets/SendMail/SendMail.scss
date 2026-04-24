@@ -38,26 +38,75 @@
                 white-space: nowrap;
             }
         }
+
+        .files-list{
+            .file-item{
+                color: var(--tertiary-text);
+                width: 300px;
+                border: 2px solid var(--tertiary-text);
+                padding: 10px 20px;
+                border-radius: 20px;
+
+                button {
+                    background-color: transparent;
+                    width: 24px;
+                    height: 24px;
+                    padding: 0;
+                    margin-left: auto;
+                }
+            }
+        }
     }
 
-    .send-actions {
+    .send-down {
         display: flex;
         flex-direction: row;
-        gap: 10px;
-        margin-left: auto;
-        padding: 10px;
+        align-items: center;
 
-        button {
-            height: 40px;
+        .send-tools {
+            width: 24px;
+            height: 24px;
+            label {
+                display: inline-block;
+                width: 24px;
+                height: 24px;
+                cursor: pointer;
+            }
+            [name="button-file"] {
 
-            &[name="save-mail"] {
-                display: flex;
-                align-items: center;
-                background-color: var(--color-main-background);
-                color: var(--tretiry-text);
+                &::before {
+                    content: "";
+                    display: inline-block;
+                    width: 24px;
+                    height: 24px;
+                    background-color: var(--tertiary-text);
+                    mask-image: url("/assets/svg/Attachment.svg");
+                    mask-size: contain;
+                    mask-repeat: no-repeat;
+                    mask-position: center;
+                }
+            }
+        }
 
-                &:hover {
-                    background-color: var(--color-main-background);
+        .send-actions {
+            display: flex;
+            flex-direction: row;
+            gap: 10px;
+            margin-left: auto;
+            padding: 10px;
+
+            button {
+                height: 40px;
+
+                &[name="save-mail"] {
+                    display: flex;
+                    align-items: center;
+                    background-color: var(--button-background-second);
+                    color: var(--tertiary-text);
+
+                    &:hover {
+                        background-color: var(--color-main-background);
+                    }
                 }
             }
         }

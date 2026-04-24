@@ -45,12 +45,13 @@ body,
     --button-background: #0055ff;
     --button-hover-background: #499bff;
     --button-active-background: #005cc6;
+    --button-background-second: #dbeaff;
 
     --input-error-background: #fbecec;
     --input-background: #e4e4e4;
     --input-success-background: #e7f1ff;
-
     --input-stroke: #c6c6c6;
+
     --mail-stroke: rgba(202, 202, 202, 0.4);
     --mail-read-background: rgba(231, 241, 255, 0.4);
 
@@ -73,12 +74,13 @@ body,
         --button-background: #1a75ff;
         --button-hover-background: #3399ff;
         --button-active-background: #0055cc;
+        --button-background-second: #1a2a4a;
 
         --input-error-background: #3d2020;
         --input-background: #2a2a3d;
         --input-success-background: #1a2a4a;
-
         --input-stroke: #404060;
+        
         --mail-stroke: rgba(80, 80, 120, 0.4);
         --mail-read-background: rgba(30, 40, 60, 0.5);
     }

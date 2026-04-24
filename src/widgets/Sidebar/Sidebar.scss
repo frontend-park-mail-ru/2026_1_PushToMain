@@ -279,7 +279,7 @@
 
                 transition: transform 0.3s;
             }
-            
+
             &.active::before {
                 transform: rotate(180deg);
             }
@@ -295,6 +295,7 @@
             color: var(--secondary-text);
             font-size: 16px;
             gap: 10px;
+            margin-left: 8px;
         }
     }
 }

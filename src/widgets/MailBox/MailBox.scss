@@ -13,6 +13,7 @@
     width: 100%;
     box-sizing: border-box;
     margin-left: 5px;
+    color: var(--tertiary-text);
 
     &.read {
         background-color: var(--mail-read-background);
@@ -23,7 +24,7 @@
 
     &.mail.selected {
         background-color: #9cc8fe;
-        color: var(--tretiry-text);
+        color: var(--tertiary-text);
     }
 
     &:hover {
@@ -49,14 +50,15 @@
         width: 24px;
         height: 24px;
         margin: 0;
-        background-image: url("/assets/svg/CheckboxOff.svg");
-        background-size: contain;
-        background-position: center;
-        background-repeat: no-repeat;
+        background-color: var(--accent-2);
+        mask-image: url("/assets/svg/CheckboxOff.svg");
+        mask-size: contain;
+        mask-position: center;
+        mask-repeat: no-repeat;
         cursor: pointer;
 
         &:checked {
-            background-image: url("/assets/svg/CheckboxOn.svg");
+            mask-image: url("/assets/svg/CheckboxOn.svg");
         }
     }
 
@@ -66,14 +68,16 @@
         width: 24px;
         height: 24px;
         margin: 0;
-        background-image: url("/assets/svg/StarOff.svg");
-        background-size: contain;
-        background-position: center;
-        background-repeat: no-repeat;
+        background-color: var(--tertiary-text);
+        mask-image: url("/assets/svg/StarOff.svg");
+        mask-size: contain;
+        mask-position: center;
+        mask-repeat: no-repeat;
         cursor: pointer;
 
         &:checked {
-            background-image: url("/assets/svg/StarOn.svg");
+            background-color: var(--accent-2);
+            mask-image: url("/assets/svg/StarOn.svg");
         }
     }
 
@@ -99,7 +103,7 @@
         }
     }
 
-    .sent-checkbox{
+    .sent-checkbox {
         margin-left: 10px;
     }
     .mail-content {
