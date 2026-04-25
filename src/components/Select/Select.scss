@@ -3,7 +3,7 @@
     align-items: center;
     justify-content: space-between;
     outline: none;
-    width: 109px;
+    width: auto;
     height: 48px;
     background-color: transparent;
     padding: 0 15px;
@@ -13,6 +13,7 @@
 
     .select__value {
         font-size: 16px;
+        padding: 0 10px;
         color: var(--tertiary-text);
     }
 
@@ -49,11 +50,12 @@
 
     &__dropdown {
         position: absolute;
+        width: auto;
         top: 50px;
         z-index: 10;
         border-radius: 20px;
         overflow-y: scroll;
-        height: 300px;
+        height: auto;
         background-color: var(--color-sidebar-background);
 
         .select__value {
