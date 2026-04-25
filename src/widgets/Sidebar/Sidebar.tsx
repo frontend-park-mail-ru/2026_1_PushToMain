@@ -141,6 +141,18 @@ class Sidebar extends Death13.Component {
                                             backToMail();
                                         }}
                                     />
+                                    {AppStorage.folders &&
+                                        AppStorage.folders.map((folder: any) => (
+                                            <div key={folder.id} className="folder-item">
+                                                <Button
+                                                    name="button-folder"
+                                                    title={folder.name}
+                                                    onClick={(event: any) => {
+                                                        event.preventDefault();
+                                                    }}
+                                                />
+                                            </div>
+                                        ))}
                                 </div>
                             )}
                         </div>

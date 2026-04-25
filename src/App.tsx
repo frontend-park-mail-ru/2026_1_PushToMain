@@ -17,7 +17,13 @@ export const AppStorage = {
     surname: "",
     email: "",
     image_path: "",
-    folders: {},
+    folders: [] as Array<{
+        id: number;
+        name: string;
+        emails: any[];
+        createdAt: string;
+        order: number;
+    }>,
     openSettingsOnProfile: false,
     replyData: null as any,
     forwardData: null as any,
@@ -93,7 +99,7 @@ export const AppStorage = {
             year: "Год",
             saved_successfully: "Успешно сохранено!",
             server_error: "Ошибка сервера!",
-            add_a_folder: "Добавить папку",
+            add_a_folder: "Добавить папку...",
 
             //Sidebar
             new_letter: "Новое письмо",
@@ -181,7 +187,7 @@ export const AppStorage = {
             year: "Year",
             saved_successfully: "Saved successfully!",
             server_error: "Server error!",
-            add_a_folder: "Add a folder",
+            add_a_folder: "Add a folder...",
 
             //Sidebar
             new_letter: "Compose",
@@ -212,12 +218,22 @@ export const AppStorage = {
                 this.email = data.email || "";
                 this.image_path = data.image_path || "";
                 this._lastUpdate = data._lastUpdate || Date.now();
-                this.folders = data.folders || {};
             }
 
             const savedCount = localStorage.getItem("unReadCount");
             if (savedCount !== null) {
                 this.unReadCount = parseInt(savedCount, 10) || 0;
+            }
+
+            const savedFolders = localStorage.getItem("folders");
+            if (savedFolders) {
+                try {
+                    this.folders = JSON.parse(savedFolders);
+                } catch {
+                    this.folders = [];
+                }
+            } else {
+                this.folders = [];
             }
 
             const savedTheme = localStorage.getItem("theme") as "light" | "dark";
@@ -266,7 +282,6 @@ export const AppStorage = {
             surname: string;
             email: string;
             image_path: string;
-            folders: object;
         } | null,
     ) {
         if (!data) {
@@ -279,7 +294,6 @@ export const AppStorage = {
         this.email = data.email || "";
         this.image_path = data.image_path || "";
         this._lastUpdate = Date.now();
-        this.folders = data.folders || "";
 
         this._saveToStorage();
         this._notify();
@@ -297,6 +311,7 @@ export const AppStorage = {
                     _lastUpdate: this._lastUpdate,
                 }),
             );
+            localStorage.setItem("folders", JSON.stringify(this.folders));
             localStorage.setItem("language", this.language);
             localStorage.setItem("unReadCount", this.unReadCount.toString());
             localStorage.setItem("theme", this.theme);
@@ -310,9 +325,9 @@ export const AppStorage = {
         this._notify();
     },
 
-    setFolderName(folders: object) {
+    setFolders(folders: any[]) {
         this.folders = folders;
-        this._saveToStorage();
+        localStorage.setItem("folders", JSON.stringify(folders));
         this._notify();
     },
 

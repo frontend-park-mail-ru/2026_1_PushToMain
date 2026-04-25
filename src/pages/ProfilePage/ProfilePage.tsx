@@ -56,7 +56,6 @@ class ProfilePage extends Death13.Component {
                 surname: data.surname || "",
                 email: data.email || "",
                 image_path: data.image_path || "",
-                folders: data.folders || {},
             });
             this.setState({
                 name: data.name || "",
@@ -127,7 +126,6 @@ class ProfilePage extends Death13.Component {
                     surname: this.state.surname,
                     email: this.state.email,
                     image_path: currentImagePath,
-                    folders: this.state.folders,
                 });
                 this.setState({
                     name: this.state.name,

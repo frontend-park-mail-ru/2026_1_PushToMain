@@ -12,7 +12,7 @@ class ProfileModal extends Death13.Component {
     handleExit = async () => {
         await logOut();
 
-        AppStorage.setProfileData({ name: "", surname: "", email: "", image_path: "", folders: {} });
+        AppStorage.setProfileData({ name: "", surname: "", email: "", image_path: "" });
         AppStorage.setUnReadCount(0);
 
         window.app.handleRoute("/login");
