@@ -140,6 +140,10 @@ class SentPage extends Death13.Component {
 
     handleSearch = () => {};
 
+    t(key: string): string {
+        return AppStorage.t(key);
+    }
+
     render() {
         const { emails, isModalOpen, isStateMode, isSelectAll, total } = this.state;
 
@@ -159,7 +163,7 @@ class SentPage extends Death13.Component {
                         <div className="search-bar">
                             <Input
                                 type="text"
-                                placeholder="Поиск в почте"
+                                placeholder={this.t("search")}
                                 name="search"
                                 svg="../../assets/svg/Search.svg"
                                 onInput={() => {

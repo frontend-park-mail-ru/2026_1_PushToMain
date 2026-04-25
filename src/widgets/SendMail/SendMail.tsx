@@ -5,6 +5,7 @@ import Input from "../../components/Input/Input";
 import Textarea from "../../components/Textarea/Textarea";
 import Button from "../../components/Button/Button";
 import { sendEmail, uploadFile } from "../../api/ApiEmail";
+import { AppStorage } from "../../App";
 
 class SendMail extends Death13.Component {
     state: any = {
@@ -126,6 +127,10 @@ class SendMail extends Death13.Component {
         });
     };
 
+    t(key: string): string {
+        return AppStorage.t(key);
+    }
+
     render() {
         const { body, header, receivers, buttonBlock } = this.state;
 
@@ -135,15 +140,15 @@ class SendMail extends Death13.Component {
                 <form action="" className="send-form">
                     <div className="send-inputs">
                         <InputEmail
-                            input_title="Кому:"
-                            placeholder="Введите почту"
+                            input_title={this.t("to")}
+                            placeholder={this.t("enter_email")}
                             emails={receivers}
                             onChange={this.handleReceiversChange.bind(this)}
                         />
                         <Input
                             type="text"
-                            placeholder="Введите тему"
-                            input_title="Тема:"
+                            placeholder={this.t("enter_subject")}
+                            input_title={this.t("subject")}
                             name="theme"
                             maxLength="255"
                             value={header}
@@ -166,9 +171,9 @@ class SendMail extends Death13.Component {
                         <label for="input-file" name="button-file"></label>
                     </div>
                     <div className="send-actions">
-                        <Button title="Сохранить" name="save-mail" onClick={this.handleSaveDraft} />{" "}
+                        <Button title={this.t("save")} name="save-mail" onClick={this.handleSaveDraft} />{" "}
                         <Button
-                            title="Отправить"
+                            title={this.t("send")}
                             name="send-mail"
                             block={buttonBlock}
                             onClick={(event: any) => {

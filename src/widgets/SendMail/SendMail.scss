@@ -36,6 +36,10 @@
                 font-size: 16px;
                 overflow-x: auto !important;
                 white-space: nowrap;
+
+                &::placeholder {
+                    font-size: 16px;
+                }
             }
         }
 

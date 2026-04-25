@@ -68,6 +68,10 @@ class SendEmailPage extends Death13.Component {
         this.setState({ replyData: null, forwardData: null });
     };
 
+    t(key: string): string {
+        return AppStorage.t(key);
+    }
+
     render() {
         const { isModalOpen, unReadCount, replyData, forwardData } = this.state;
 
@@ -81,13 +85,7 @@ class SendEmailPage extends Death13.Component {
                 <div className="right-part">
                     <div className="top-bar">
                         <div className="search-bar">
-                            <Input
-                                type="text"
-                                placeholder="Поиск в почте"
-                                name="search"
-                                svg="../../assets/svg/Search.svg"
-                                onInput={() => {}}
-                            />
+                            <Input type="text" placeholder={this.t("search")} name="search" svg="../../assets/svg/Search.svg" onInput={() => {}} />
                         </div>
 
                         <div className="top-right-menu">

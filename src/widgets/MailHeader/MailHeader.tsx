@@ -2,6 +2,7 @@ import Death13 from "@react/stands";
 import Button from "../../components/Button/Button";
 import Input from "../../components/Input/Input";
 import "./MailHeader.scss";
+import { AppStorage } from "../../App";
 
 class MailHeader extends Death13.Component {
     handleSelectAll = (e: any) => {
@@ -24,6 +25,10 @@ class MailHeader extends Death13.Component {
             this.props.loadEmail(newOffset);
         }
     };
+
+    t(key: string): string {
+        return AppStorage.t(key);
+    }
 
     render() {
         const { isSelectAll, offset = 0, total = 0 } = this.props;
@@ -60,7 +65,7 @@ class MailHeader extends Death13.Component {
                 </div>
                 <div className="mail-header__right-container">
                     <div className="count-email">
-                        {startItem} - {endItem} из {total}
+                        {startItem} - {endItem} {this.t("of")} {total}
                     </div>
                     <Button name="left" help="Пред." block={offset === 0} onClick={this.handlePrevPage} />
                     <Button name="right" help="След." block={offset + 50 >= total} onClick={this.handleNextPage} />

@@ -33,6 +33,10 @@ class UploadAvatar extends Death13.Component {
         }
     };
 
+    t(key: string): string {
+        return AppStorage.t(key);
+    }
+
     render() {
         const src = this.state.localPreview || this.props.image || AppStorage.getAvatarUrl() || "../../assets/svg/Avatar.svg";
 
@@ -42,7 +46,7 @@ class UploadAvatar extends Death13.Component {
                     <img id="upload-image" src={src} alt="avatar" />
                 </div>
                 <input id="file-input" type="file" name="file" accept="image/*" hidden onChange={this.handleImageChange} />
-                <label for="file-input">Изменить фото</label>
+                <label for="file-input">{this.t("change_avatar")}</label>
             </div>
         );
     }

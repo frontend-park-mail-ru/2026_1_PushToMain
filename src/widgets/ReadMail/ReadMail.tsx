@@ -46,6 +46,10 @@ class ReadMail extends Death13.Component {
         window.app.handleRoute("/send");
     };
 
+    t(key: string): string {
+        return AppStorage.t(key);
+    }
+
     render() {
         const { email } = this.props;
         return (
@@ -59,7 +63,7 @@ class ReadMail extends Death13.Component {
                             <div className="sender-data">
                                 <div className="sender__email">{email.senderEmail}</div>
                                 <div className="recivers__emails">
-                                    Кому:
+                                    {this.t("to")}
                                     <div className="input-form">
                                         {(email.receiverList || []).map((email: string, index: number) => (
                                             <span key={index} className="email-tag">
@@ -73,7 +77,7 @@ class ReadMail extends Death13.Component {
                         <Input
                             type="text"
                             placeholder="Введите тему"
-                            input_title="Тема:"
+                            input_title={this.t("subject")}
                             name="theme"
                             readonly={true}
                             value={email.header}

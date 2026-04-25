@@ -41,7 +41,23 @@ export const AppStorage = {
             enter_name: "Введите имя",
             enter_surname: "Введите фамилию",
             continue: "Продолжить",
+
+            //MainPage
             back: "Назад",
+            profile: "Профиль",
+            exit: "Выйти",
+            hello: "Здравствуйте",
+            search: "Поиск",
+            of: "из",
+
+            //ReadPage
+            //SendPage
+            reply: "Ответить",
+            send: "Отправить",
+            answer: "Отвевить",
+            subject: "Тема:",
+            enter_subject: "Введите тему",
+            to: "Кому:",
 
             //Error
             email_required: "Поле почты обязательно",
@@ -61,6 +77,15 @@ export const AppStorage = {
             interface_language: "Язык интерфейса",
             english: "Английский",
             russian: "Русский",
+            oldpassword: "Старый пароль",
+            newpassword: "Старый пароль",
+            gender: "Пол",
+            male: "Мужской",
+            female: "Женский",
+            date_of_birth: "Дата рождения",
+            day: "День",
+            month: "Месяц",
+            year: "Год",
 
             //Sidebar
             new_letter: "Новое письмо",
@@ -97,7 +122,23 @@ export const AppStorage = {
             enter_name: "Enter name",
             enter_surname: "Enter surname",
             continue: "Continue",
+
+            //MainPage
             back: "Back",
+            profile: "Profile",
+            exit: "Exit",
+            hello: "Hello",
+            search: "Search",
+            of: "of",
+
+            //ReadPage
+            //SendPage
+            reply: "Reply",
+            send: "Send",
+            answer: "Answer",
+            subject: "Subject:",
+            enter_subject: "Enter subject",
+            to: "To:",
 
             //Error
             email_required: "Email field is required",
@@ -117,6 +158,15 @@ export const AppStorage = {
             interface_language: "Interface language",
             english: "English",
             russian: "Russian",
+            oldpassword: "Old password",
+            newpassword: "New password",
+            gender: "Gender",
+            male: "Male",
+            female: "Female",
+            date_of_birth: "Date of birth",
+            day: "Day",
+            month: "Month",
+            year: "Year",
 
             //Sidebar
             new_letter: "Compose",

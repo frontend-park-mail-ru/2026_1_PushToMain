@@ -243,8 +243,8 @@ class ProfilePage extends Death13.Component {
                                     <form action="" className="profile-form">
                                         <Input
                                             type="text"
-                                            placeholder="Введите имя"
-                                            input_title="Имя"
+                                            placeholder={this.t("enter_name")}
+                                            input_title={this.t("name")}
                                             name="name"
                                             value={name}
                                             error={errors.name}
@@ -254,8 +254,8 @@ class ProfilePage extends Death13.Component {
                                         />
                                         <Input
                                             type="text"
-                                            placeholder="Введите фамилию"
-                                            input_title="Фамилия"
+                                            placeholder={this.t("enter_surname")}
+                                            input_title={this.t("surname")}
                                             name="surname"
                                             value={surname}
                                             error={errors.surname}
@@ -265,7 +265,7 @@ class ProfilePage extends Death13.Component {
                                         />
                                         <SelectDate />
                                         <div className="profile__checkbox">
-                                            <span>Пол</span>
+                                            <span>{this.t("gender")}</span>
                                             <div className="checkbox-actions">
                                                 <div className="checkbox-form">
                                                     <Input
@@ -275,7 +275,7 @@ class ProfilePage extends Death13.Component {
                                                         checked={gender === "male"}
                                                         onInput={() => this.handleGenderChange("male")}
                                                     />
-                                                    <label for="male">Мужской</label>
+                                                    <label for="male">{this.t("male")}</label>
                                                 </div>
 
                                                 <div className="checkbox-form">
@@ -286,14 +286,14 @@ class ProfilePage extends Death13.Component {
                                                         checked={gender === "female"}
                                                         onInput={() => this.handleGenderChange("female")}
                                                     />
-                                                    <label for="female">Женский</label>
+                                                    <label for="female">{this.t("female")}</label>
                                                 </div>
                                             </div>
                                         </div>
 
                                         <div className="profile-actions">
                                             <Button
-                                                title="Сохранить"
+                                                title={this.t("save")}
                                                 name="change-profile"
                                                 onClick={(event: any) => {
                                                     event.preventDefault();
@@ -301,7 +301,7 @@ class ProfilePage extends Death13.Component {
                                                 }}
                                             />
                                             <Button
-                                                title="Назад"
+                                                title={this.t("back")}
                                                 name="back-to-mail"
                                                 onClick={(event: any) => {
                                                     event.preventDefault();
@@ -321,8 +321,8 @@ class ProfilePage extends Death13.Component {
                                     <form action="" className="profile-form">
                                         <Input
                                             type="password"
-                                            placeholder="Введите пароль"
-                                            input_title="Старый пароль"
+                                            placeholder={this.t("enter_password")}
+                                            input_title={this.t("oldpassword")}
                                             name="oldPassword"
                                             error={errors.oldPassword}
                                             value={oldPassword}
@@ -332,8 +332,8 @@ class ProfilePage extends Death13.Component {
                                         />
                                         <Input
                                             type="password"
-                                            placeholder="Введите пароль"
-                                            input_title="Новый пароль"
+                                            placeholder={this.t("enter_password")}
+                                            input_title={this.t("newpassword")}
                                             name="newPassword"
                                             error={errors.newPassword}
                                             value={newPassword}
@@ -343,14 +343,14 @@ class ProfilePage extends Death13.Component {
                                         />
                                         <div className="profile-actions">
                                             <Button
-                                                title="Сохранить"
+                                                title={this.t("save")}
                                                 name="change-password"
                                                 onClick={(event: any) => {
                                                     this.handleChangePassword(event);
                                                 }}
                                             />
                                             <Button
-                                                title="Назад"
+                                                title={this.t("back")}
                                                 name="back-to-mail"
                                                 onClick={(event: any) => {
                                                     event.preventDefault();

@@ -24,6 +24,10 @@ class ProfileModal extends Death13.Component {
         this.props.onClose();
     };
 
+    t(key: string): string {
+        return AppStorage.t(key);
+    }
+
     render() {
         const { isOpen } = this.props;
         if (!isOpen) return null;
@@ -31,7 +35,7 @@ class ProfileModal extends Death13.Component {
         return (
             <div className="modal-overlay shadow" onClick={(e: any) => e.stopPropagation()}>
                 <div className="overlay__title">
-                    <p>Здравствуйте, {AppStorage.name}!</p>
+                    <p>{this.t("hello")}, {AppStorage.name}!</p>
                     <div className="overlay__close">
                         <Button svg="../../assets/svg/Close.svg" onClick={this.handleClose} />
                     </div>
@@ -43,9 +47,9 @@ class ProfileModal extends Death13.Component {
                     <p>{AppStorage.email}</p>
                 </div>
                 <div className="overlay-actions">
-                    <Button title="Профиль" name="profile" svg="../../assets/svg/User.svg" onClick={this.handleProfileClick} />
+                    <Button title={this.t("profile")} name="profile" svg="../../assets/svg/User.svg" onClick={this.handleProfileClick} />
                     <Button
-                        title="Настройки"
+                        title={this.t("settings")}
                         name="settings"
                         svg="../../assets/svg/Settings.svg"
                         onClick={(event: any) => {
@@ -55,7 +59,7 @@ class ProfileModal extends Death13.Component {
                 </div>
                 <div className="button-exit">
                     <Button
-                        title="Выйти"
+                        title={this.t("exit")}
                         onClick={(event: any) => {
                             event.preventDefault();
                             this.handleExit();

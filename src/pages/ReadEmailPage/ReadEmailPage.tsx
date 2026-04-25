@@ -90,6 +90,10 @@ class ReadEmailPage extends Death13.Component {
         window.app.handleRoute("/sent");
     };
 
+    t(key: string): string {
+        return AppStorage.t(key);
+    }
+
     render() {
         const { isModalOpen, unReadCount, isPress } = this.state;
 
@@ -110,7 +114,7 @@ class ReadEmailPage extends Death13.Component {
                         <div className="search-bar">
                             <Input
                                 type="text"
-                                placeholder="Поиск в почте"
+                                placeholder={this.t("search")}
                                 name="search"
                                 svg="../../assets/svg/Search.svg"
                                 onInput={() => {}}
