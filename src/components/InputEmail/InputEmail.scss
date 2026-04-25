@@ -7,21 +7,34 @@
         flex-direction: row;
         gap: 10px;
 
+        button {
+            padding: 0;
+            background-color: transparent;
+            color: var(--tertiary-text);
+            height: 24px;
+        }
+
         .email-tag {
             display: flex;
             flex-direction: row;
             align-items: center;
             gap: 10px;
-            background-color: var(--color-main-background);
+            background-color: var(--button-background-second);
             border-radius: 12px;
             padding: 0 10px;
             height: 24px;
+            color: var(--tertiary-text);
 
-            button {
-                padding: 0;
-                background-color: transparent;
-                color: var(--tritary-text);
+            &__error {
+                display: flex;
+                flex-direction: row;
+                align-items: center;
+                gap: 10px;
+                background-color: var(--input-error-background);
+                border-radius: 12px;
+                padding: 0 10px;
                 height: 24px;
+                color: var(--tertiary-text);
             }
         }
     }

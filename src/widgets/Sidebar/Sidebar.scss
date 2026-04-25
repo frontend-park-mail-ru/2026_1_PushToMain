@@ -37,6 +37,132 @@
         align-items: start;
         gap: 7px;
         width: 100%;
+
+        [name="button-new-letter"] {
+            &::before {
+                content: "";
+                display: inline-block;
+                width: 28px;
+                height: 28px;
+                background-color: var(--primary-text);
+                mask-image: url("/assets/svg/Compose.svg");
+                mask-size: contain;
+                mask-repeat: no-repeat;
+                mask-position: center;
+            }
+        }
+
+        [name="button-inbox"] {
+            &::before {
+                content: "";
+                display: inline-block;
+                width: 28px;
+                height: 28px;
+                background-color: var(--tertiary-text);
+                mask-image: url("/assets/svg/Inbox.svg");
+                mask-size: contain;
+                mask-repeat: no-repeat;
+                mask-position: center;
+            }
+        }
+
+        [name="button-drafs"] {
+            &::before {
+                content: "";
+                display: inline-block;
+                width: 28px;
+                height: 28px;
+                background-color: var(--tertiary-text);
+                mask-image: url("/assets/svg/Draft.svg");
+                mask-size: contain;
+                mask-repeat: no-repeat;
+                mask-position: center;
+            }
+        }
+
+        [name="button-sends"] {
+            &::before {
+                content: "";
+                display: inline-block;
+                width: 28px;
+                height: 28px;
+                background-color: var(--tertiary-text);
+                mask-image: url("/assets/svg/Sent.svg");
+                mask-size: contain;
+                mask-repeat: no-repeat;
+                mask-position: center;
+            }
+        }
+
+        [name="button-favorites"] {
+            &::before {
+                content: "";
+                display: inline-block;
+                width: 28px;
+                height: 28px;
+                background-color: var(--tertiary-text);
+                mask-image: url("/assets/svg/SidebarFavorites.svg");
+                mask-size: contain;
+                mask-repeat: no-repeat;
+                mask-position: center;
+            }
+        }
+
+        [name="button-spam"] {
+            &::before {
+                content: "";
+                display: inline-block;
+                width: 28px;
+                height: 28px;
+                background-color: var(--tertiary-text);
+                mask-image: url("/assets/svg/Spam.svg");
+                mask-size: contain;
+                mask-repeat: no-repeat;
+                mask-position: center;
+            }
+        }
+
+        [name="button-trash"] {
+            &::before {
+                content: "";
+                display: inline-block;
+                width: 28px;
+                height: 28px;
+                background-color: var(--tertiary-text);
+                mask-image: url("/assets/svg/Trash.svg");
+                mask-size: contain;
+                mask-repeat: no-repeat;
+                mask-position: center;
+            }
+        }
+
+        [name="button-all-letter"] {
+            &::before {
+                content: "";
+                display: inline-block;
+                width: 28px;
+                height: 28px;
+                background-color: var(--tertiary-text);
+                mask-image: url("/assets/svg/AllMail.svg");
+                mask-size: contain;
+                mask-repeat: no-repeat;
+                mask-position: center;
+            }
+        }
+
+        [name="button-folder"] {
+            &::before {
+                content: "";
+                display: inline-block;
+                width: 28px;
+                height: 28px;
+                background-color: var(--tertiary-text);
+                mask-image: url("/assets/svg/Folder.svg");
+                mask-size: contain;
+                mask-repeat: no-repeat;
+                mask-position: center;
+            }
+        }
     }
 
     .sidebar-profile {
@@ -54,9 +180,23 @@
             margin-bottom: 20px;
         }
 
+        span {
+            text-align: center;
+            width: 200px;
+            overflow: hidden;
+            white-space: nowrap;
+            text-overflow: ellipsis;
+            color: var(--tertiary-text);
+        }
+
         p {
+            text-align: center;
             color: var(--secondary-text);
             font-size: 14px;
+            width: 200px;
+            overflow: hidden;
+            white-space: nowrap;
+            text-overflow: ellipsis;
         }
     }
 
@@ -64,7 +204,7 @@
     .main-button-profile {
         button {
             display: flex;
-            gap: 15px;
+            gap: 6px;
             align-items: center;
             width: 100%;
             height: 40px;
@@ -115,6 +255,62 @@
         button {
             color: var(--tertiary-text);
         }
+
+        [name="button-profile"] {
+            &::before {
+                content: "";
+                display: inline-block;
+                width: 28px;
+                height: 28px;
+                background-color: var(--tertiary-text);
+                mask-image: url("/assets/svg/Avatar.svg");
+                mask-size: contain;
+                mask-repeat: no-repeat;
+                mask-position: center;
+            }
+        }
+
+        [name="button-security"] {
+            &::before {
+                content: "";
+                display: inline-block;
+                width: 28px;
+                height: 28px;
+                background-color: var(--tertiary-text);
+                mask-image: url("/assets/svg/Lock.svg");
+                mask-size: contain;
+                mask-repeat: no-repeat;
+                mask-position: center;
+            }
+        }
+
+        [name="button-settings"] {
+            &::before {
+                content: "";
+                display: inline-block;
+                width: 28px;
+                height: 28px;
+                background-color: var(--tertiary-text);
+                mask-image: url("/assets/svg/Settings.svg");
+                mask-size: contain;
+                mask-repeat: no-repeat;
+                mask-position: center;
+            }
+        }
+
+        [name="button-folder"] {
+            &::before {
+                content: "";
+                display: inline-block;
+                width: 28px;
+                height: 28px;
+                background-color: var(--tertiary-text);
+                mask-image: url("/assets/svg/Folder.svg");
+                mask-size: contain;
+                mask-repeat: no-repeat;
+                mask-position: center;
+            }
+        }
     }
 
     .extra-button-container {
@@ -139,6 +335,26 @@
     }
 
     .drop-down {
+        [name="button-drop-down"] {
+            &::before {
+                content: "";
+                display: inline-block;
+                width: 28px;
+                height: 28px;
+                background-color: var(--muted-text);
+                mask-image: url("/assets/svg/DropdownArrow.svg");
+                mask-size: contain;
+                mask-repeat: no-repeat;
+                mask-position: center;
+
+                transition: transform 0.3s;
+            }
+
+            &.active::before {
+                transform: rotate(180deg);
+            }
+        }
+
         button {
             display: flex;
             align-items: center;
@@ -149,16 +365,7 @@
             color: var(--secondary-text);
             font-size: 16px;
             gap: 10px;
-
-            img {
-                transition: transform 0.3s;
-            }
-
-            &.active {
-                img {
-                    transform: rotateZ(180deg);
-                }
-            }
+            margin-left: 8px;
         }
     }
 }

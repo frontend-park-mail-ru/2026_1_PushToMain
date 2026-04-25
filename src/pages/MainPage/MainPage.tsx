@@ -5,10 +5,9 @@ import Button from "../../components/Button/Button";
 import MailHeader from "../../widgets/MailHeader/MailHeader";
 import MailBox from "../../widgets/MailBox/MailBox";
 import { getProfile } from "../../api/ApiAuth";
-import { getEmailAll, getEmailSend, readEmail } from "../../api/ApiEmail";
+import { getEmailAll, getEmailSend, readEmail, seacrhEmail } from "../../api/ApiEmail";
 import "./MainPage.scss";
 import ProfileModal from "../../widgets/ProfileModal/ProfileModal";
-import ReadMail from "../../widgets/ReadMail/ReadMail";
 import { AppStorage } from "../../App";
 
 class MainPage extends Death13.Component {
@@ -21,11 +20,17 @@ class MainPage extends Death13.Component {
         isSelectAll: false,
         offset: 0,
         selectedEmails: [],
+        isSettings: false,
     };
 
     constructor(props: any) {
         super(props);
         this.loadEmails(this.state.offset);
+
+        setInterval(() => {
+            this.loadEmails(this.state.offset);
+        }, 10000);
+
         this.loadProfile();
     }
 
@@ -43,7 +48,12 @@ class MainPage extends Death13.Component {
                 window.app.handleRoute("/login");
                 return null;
             }
-            this.setState({ emails: emails, isLoading: false, total: data.total, offset: offset });
+            this.setState({
+                emails: emails,
+                isLoading: false,
+                total: data.total,
+                offset: offset,
+            });
             AppStorage.setUnReadCount(data.unread_count);
         } catch (error) {
             console.error("Failed to load emails:", error);
@@ -105,6 +115,12 @@ class MainPage extends Death13.Component {
         window.app.handleRoute("/profile");
     };
 
+    handleSettingsClick = () => {
+        this.setState({ isModalOpen: false });
+        AppStorage.setOpenSettingsOnProfile(true);
+        window.app.handleRoute("/profile");
+    };
+
     handleNewMail = () => {
         window.app.handleRoute("/send");
     };
@@ -112,6 +128,7 @@ class MainPage extends Death13.Component {
     async handleReadMail(email: any) {
         this.setState({ isStateMode: 3, selectedEmail: email });
         await readEmail(email.id);
+        window.app.handleRoute(`/read/${email.id}`);
     }
 
     handleSelectAll = (isChecked: boolean) => {
@@ -140,20 +157,23 @@ class MainPage extends Death13.Component {
     };
 
     handleGetSendEmail = async () => {
-        const data = await getEmailSend(this.state.offset);
-        console.log(data);
+        await getEmailSend(this.state.offset);
     };
 
     handleGoToMain = () => {
         this.setState({ isStateMode: 0 });
     };
 
-    handleSearch = (value: string) => {
-        console.log("Search:", value);
+    handleSearch = async (data: string) => {
+        await seacrhEmail(data);
     };
 
+    t(key: string): string {
+        return AppStorage.t(key);
+    }
+
     render() {
-        const { emails, isModalOpen, isStateMode, selectedEmail, isSelectAll, total, selectedEmails } = this.state;
+        const { emails, isModalOpen, isStateMode, isSelectAll, total, selectedEmails } = this.state;
         return (
             <div className="main-page" onClick={() => this.handleCloseModal()}>
                 <aside className="sidebar">
@@ -171,7 +191,7 @@ class MainPage extends Death13.Component {
                         <div className="search-bar">
                             <Input
                                 type="text"
-                                placeholder="Поиск в почте"
+                                placeholder={this.t("search")}
                                 name="search"
                                 svg="../../assets/svg/Search.svg"
                                 onInput={(e: any) => {
@@ -212,6 +232,7 @@ class MainPage extends Death13.Component {
                                                 isSelected={selectedEmails.includes(email.id)}
                                                 onSelect={(id: string, selected: boolean) => this.handleSelectEmail(id, selected)}
                                                 isRead={email.is_read}
+                                                pageMain={true}
                                                 onClick={() => this.handleReadMail(email)}
                                             />
                                         ))}
@@ -219,12 +240,14 @@ class MainPage extends Death13.Component {
                                 )}
                             </div>
                         )}
-                        {isStateMode === 3 && (
-                            <ReadMail email={selectedEmail} backToMail={this.handleGoToMain} reloadMail={this.handleUpdateEmail} />
-                        )}
                     </div>
 
-                    <ProfileModal isOpen={isModalOpen} onClose={this.handleCloseModal} onProfileClick={this.handleProfileClick} />
+                    <ProfileModal
+                        isOpen={isModalOpen}
+                        onClose={this.handleCloseModal}
+                        onProfileClick={this.handleProfileClick}
+                        onSettingsClick={this.handleSettingsClick}
+                    />
                 </div>
             </div>
         );

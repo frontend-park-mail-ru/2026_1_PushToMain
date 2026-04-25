@@ -1,0 +1,47 @@
+.folder-container {
+    width: 300px;
+    .folder-list {
+        .folder-item {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+            padding: 10px 20px;
+            font-size: 16px;
+
+            &::before {
+                content: "";
+                display: inline-block;
+                width: 28px;
+                height: 28px;
+                background-color: var(--tertiary-text);
+                mask-image: url("/assets/svg/Folder.svg");
+                mask-size: contain;
+                mask-repeat: no-repeat;
+                mask-position: center;
+            }
+        }
+    }
+    .folder-actions {
+        display: flex;
+        justify-content: center;
+        [name="add_a_folder"] {
+            background-color: transparent;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+
+            &::before {
+                content: "";
+                display: inline-block;
+                width: 28px;
+                height: 28px;
+                background-color: var(--tertiary-text);
+                mask-image: url("/assets/svg/AddNew.svg");
+                mask-size: contain;
+                mask-repeat: no-repeat;
+                mask-position: center;
+            }
+        }
+    }
+}

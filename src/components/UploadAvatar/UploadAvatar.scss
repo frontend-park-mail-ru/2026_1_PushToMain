@@ -25,9 +25,10 @@
         border-radius: 14px;
         font-size: 16px;
         background-color: var(--color-sidebar-background);
-        border: solid 3px var(--accent);
-        color: var(--accent);
+        border: solid 3px var(--accent-2);
+        color: var(--accent-2);
         width: 100%;
+        cursor: pointer;
 
         &:hover {
             background-color: var(--color-main-background);

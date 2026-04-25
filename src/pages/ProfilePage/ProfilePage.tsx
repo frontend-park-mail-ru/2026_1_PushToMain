@@ -8,55 +8,64 @@ import { validation } from "../../utils/validation";
 import { changePassword, getProfile, changeProfile } from "../../api/ApiAuth";
 import { AppStorage } from "../../App";
 import ProfileModal from "../../widgets/ProfileModal/ProfileModal";
+import ConfirmationModal from "../../widgets/ConfirmationModal/ConfirmationModal";
+import SelectDate from "../../components/SelectDate/SelectDate";
+import FolderChange from "../../widgets/FolderChange/FolderChange";
 
 class ProfilePage extends Death13.Component {
+    private unsubscribe: (() => void) | null = null;
+
     constructor(props: any) {
         super(props);
-        //this.loadProfile();
-    }
 
-    state: any = {
-        errors: {},
-        name: AppStorage.name,
-        surname: AppStorage.surname,
-        email: AppStorage.email,
-        oldPassword: "",
-        newPassword: "",
-        gender: "male",
-        profileState: 0,
-        avatarKey: 0,
-        avatarUrl: AppStorage.getAvatarUrl(),
-        isModalOpen: false,
-    };
+        this.unsubscribe = AppStorage.subscribe(() => {
+            this.setState({ language: AppStorage.language });
+        });
+
+        this.loadProfile();
+
+        const shouldOpenSettings = AppStorage.getOpenSettingsOnProfile();
+
+        this.state = {
+            errors: {},
+            touched: {},
+            name: AppStorage.name,
+            surname: AppStorage.surname,
+            email: AppStorage.email,
+            folders: AppStorage.folders,
+            oldPassword: "",
+            newPassword: "",
+            gender: "male",
+            profileState: shouldOpenSettings ? 2 : 0,
+            avatarKey: 0,
+            avatarUrl: AppStorage.getAvatarUrl(),
+            isModalOpen: false,
+            isConfirm: false,
+            isStatus: false,
+            language: AppStorage.language,
+        };
+    }
 
     loadProfile = async () => {
         const data = await getProfile();
-        AppStorage.setProfileData({
-            name: data.name || "",
-            surname: data.surname || "",
-            email: data.email || "",
-            image_path: data.image_path || "",
-        });
-        this.setState({
-            name: data.name || "",
-            surname: data.surname || "",
-            email: data.email || "",
-            avatarUrl: AppStorage.getAvatarUrl(),
-        });
-    };
-
-    componentDidMount() {
-        if (!AppStorage.name && !AppStorage.email) {
-            this.loadProfile();
+        if (data === null) {
+            window.app.handleRoute("/login");
         } else {
+            AppStorage.setProfileData({
+                name: data.name || "",
+                surname: data.surname || "",
+                email: data.email || "",
+                image_path: data.image_path || "",
+            });
             this.setState({
-                name: AppStorage.name,
-                surname: AppStorage.surname,
-                email: AppStorage.email,
+                name: data.name || "",
+                surname: data.surname || "",
+                email: data.email || "",
                 avatarUrl: AppStorage.getAvatarUrl(),
+                isStatus: false,
             });
         }
-    }
+    };
 
     validateField = (field: string, value: string) => {
         const data: any = {
@@ -67,7 +76,7 @@ class ProfilePage extends Death13.Component {
             surname: field === "surname" ? value : this.state.surname,
         };
 
-        const result = validation(data);
+        const result = validation(data, this.t);
 
         if (!result.isValid) {
             const fieldError = result.errors.find((err: any) => err.field === field);
@@ -82,6 +91,8 @@ class ProfilePage extends Death13.Component {
         this.setState({
             avatarKey: this.state.avatarKey + 1,
             avatarUrl: AppStorage.getAvatarUrl(),
+            isConfirm: true,
+            isStatus: true,
         });
     };
 
@@ -94,11 +105,10 @@ class ProfilePage extends Death13.Component {
             });
 
             if (response) {
-                console.log("Пароль успешно изменен");
-                this.setState({ oldPassword: "", newPassword: "" });
+                this.setState({ oldPassword: "", newPassword: "", isConfirm: true, isStatus: true });
             }
-        } catch (error) {
-            console.error("Ошибка изменения пароля", error);
+        } catch {
+            this.setState({ isConfirm: true });
         }
     }
 
@@ -120,25 +130,40 @@ class ProfilePage extends Death13.Component {
                 this.setState({
                     name: this.state.name,
                     surname: this.state.surname,
+                    isConfirm: true,
+                    isStatus: true,
                 });
-                alert("Профиль успешно изменен");
+            } else {
+                this.setState({ isConfirm: true, isStatus: false });
             }
         } catch (error) {
             console.error("Ошибка изменения профиля:", error);
+            this.setState({ isConfirm: true, isStatus: false });
         }
     }
 
     handleInputChange = (field: string, value: string) => {
         const error = this.validateField(field, value);
-        console.log(field, value);
 
         this.setState({
             [field]: value,
+            touched: {
+                ...this.state.touched,
+                [field]: true,
+            },
             errors: {
                 ...this.state.errors,
                 [field]: error,
             },
         });
+    };
+
+    shouldShowSuccess = (field: string): boolean => {
+        const value = this.state[field];
+        const error = this.state.errors[field];
+        const isTouched = this.state.touched[field];
+
+        return isTouched && value && !error;
     };
 
     handleGenderChange = (value: string) => {
@@ -147,11 +172,12 @@ class ProfilePage extends Death13.Component {
 
     handleLogout = async (event: Event) => {
         event.preventDefault();
+        this.setState({ isModalOpen: false, isConfirm: false });
         window.app.handleRoute("/login");
     };
 
     handleBackToMail = () => {
-        this.setState({ isStateMode: 0 });
+        this.setState({ isModalOpen: false, isConfirm: false });
         window.app.handleRoute("/");
     };
 
@@ -162,10 +188,11 @@ class ProfilePage extends Death13.Component {
     };
 
     handleCloseModal = () => {
-        this.setState({ isModalOpen: false });
+        this.setState({ isModalOpen: false, isConfirm: false });
     };
 
     handleProfileClick = () => {
+        this.setState({ isModalOpen: false, isConfirm: false });
         window.app.handleRoute("/profile");
     };
 
@@ -177,17 +204,45 @@ class ProfilePage extends Death13.Component {
         this.setState({ profileState: 1 });
     };
 
+    handleSetting = () => {
+        this.setState({ profileState: 2 });
+    };
+
+    handleFolder = () => {
+        this.setState({ profileState: 3 });
+    };
+
+    t(key: string): string {
+        return AppStorage.t(key);
+    }
+
     render() {
-        const { errors, oldPassword, newPassword, name, surname, profileState, avatarKey, avatarUrl, isModalOpen } = this.state;
+        const {
+            errors,
+            oldPassword,
+            newPassword,
+            name,
+            surname,
+            profileState,
+            avatarKey,
+            avatarUrl,
+            isModalOpen,
+            isConfirm,
+            isStatus,
+            gender,
+        } = this.state;
 
         return (
-            <div className="profile-page">
+            <div className="profile-page" onClick={() => this.handleCloseModal()}>
                 <aside className="sidebar">
                     <Sidebar
                         isProfile={1}
+                        isPressProfile={profileState}
                         backToMail={this.handleBackToMail}
                         changeProfile={this.handleChangeProfile}
                         changePassword={this.handleChangePasswordState}
+                        handleSetting={this.handleSetting}
+                        handleFolder={this.handleFolder}
                         newMail={() => {}}
                     />
                 </aside>
@@ -202,7 +257,7 @@ class ProfilePage extends Death13.Component {
                     <div className="profile-content-area">
                         {profileState === 0 && (
                             <div className="profile-container">
-                                <h1>Личные данные</h1>
+                                <h1>{this.t("personal_information")}</h1>
                                 <div className="profile-content">
                                     <div className="profile-avatar">
                                         <UploadAvatar image={avatarUrl} onAvatarUpdate={this.handleAvatarUpdate} key={avatarKey} />
@@ -210,10 +265,11 @@ class ProfilePage extends Death13.Component {
                                     <form action="" className="profile-form">
                                         <Input
                                             type="text"
-                                            placeholder="Введите имя"
-                                            input_title="Имя"
+                                            placeholder={this.t("enter_name")}
+                                            input_title={this.t("name")}
                                             name="name"
                                             value={name}
+                                            success={this.shouldShowSuccess("name")}
                                             error={errors.name}
                                             onInput={(e: any) => {
                                                 this.handleInputChange("name", e.target.value);
@@ -221,48 +277,47 @@ class ProfilePage extends Death13.Component {
                                         />
                                         <Input
                                             type="text"
-                                            placeholder="Введите фамилию"
-                                            input_title="Фамилия"
+                                            placeholder={this.t("enter_surname")}
+                                            input_title={this.t("surname")}
                                             name="surname"
                                             value={surname}
+                                            success={this.shouldShowSuccess("surname")}
                                             error={errors.surname}
                                             onInput={(e: any) => {
                                                 this.handleInputChange("surname", e.target.value);
                                             }}
                                         />
-                                        {/*
+                                        <SelectDate />
                                         <div className="profile__checkbox">
-                                            
-                      <span>Пол</span>
-                      <div className="checkbox-actions">
-                        <div className="checkbox-form">
-                          <Input
-                            id="male"
-                            type="radio"
-                            name="radio-gender"
-                            checked={gender === "male"}
-                            onInput={() => this.handleGenderChange("male")}
-                          />
-                          <label for="male">Мужской</label>
-                        </div>
+                                            <span>{this.t("gender")}</span>
+                                            <div className="checkbox-actions">
+                                                <div className="checkbox-form">
+                                                    <Input
+                                                        id="male"
+                                                        type="radio"
+                                                        name="radio-gender"
+                                                        checked={gender === "male"}
+                                                        onInput={() => this.handleGenderChange("male")}
+                                                    />
+                                                    <label for="male">{this.t("male")}</label>
+                                                </div>
 
-                        <div className="checkbox-form">
-                          <Input
-                            id="female"
-                            type="radio"
-                            name="radio-gender"
-                            checked={gender === "female"}
-                            onInput={() => this.handleGenderChange("female")}
-                          />
-                          <label for="female">Женский</label>
-                        </div>
-                      </div>
+                                                <div className="checkbox-form">
+                                                    <Input
+                                                        id="female"
+                                                        type="radio"
+                                                        name="radio-gender"
+                                                        checked={gender === "female"}
+                                                        onInput={() => this.handleGenderChange("female")}
+                                                    />
+                                                    <label for="female">{this.t("female")}</label>
+                                                </div>
+                                            </div>
                                         </div>
-                                          */}
 
                                         <div className="profile-actions">
                                             <Button
-                                                title="Сохранить"
+                                                title={this.t("save")}
                                                 name="change-profile"
                                                 onClick={(event: any) => {
                                                     event.preventDefault();
@@ -270,7 +325,7 @@ class ProfilePage extends Death13.Component {
                                                 }}
                                             />
                                             <Button
-                                                title="Отменить"
+                                                title={this.t("back")}
                                                 name="back-to-mail"
                                                 onClick={(event: any) => {
                                                     event.preventDefault();
@@ -285,13 +340,13 @@ class ProfilePage extends Death13.Component {
 
                         {profileState === 1 && (
                             <div className="profile-security">
-                                <h1>Безопасность</h1>
+                                <h1>{this.t("security")}</h1>
                                 <div className="profile-content">
                                     <form action="" className="profile-form">
                                         <Input
                                             type="password"
-                                            placeholder="Введите пароль"
-                                            input_title="Старый пароль"
+                                            placeholder={this.t("enter_password")}
+                                            input_title={this.t("oldpassword")}
                                             name="oldPassword"
                                             error={errors.oldPassword}
                                             value={oldPassword}
@@ -301,8 +356,8 @@ class ProfilePage extends Death13.Component {
                                         />
                                         <Input
                                             type="password"
-                                            placeholder="Введите пароль"
-                                            input_title="Новый пароль"
+                                            placeholder={this.t("enter_password")}
+                                            input_title={this.t("newpassword")}
                                             name="newPassword"
                                             error={errors.newPassword}
                                             value={newPassword}
@@ -312,14 +367,14 @@ class ProfilePage extends Death13.Component {
                                         />
                                         <div className="profile-actions">
                                             <Button
-                                                title="Сохранить"
+                                                title={this.t("save")}
                                                 name="change-password"
                                                 onClick={(event: any) => {
                                                     this.handleChangePassword(event);
                                                 }}
                                             />
                                             <Button
-                                                title="Отменить"
+                                                title={this.t("back")}
                                                 name="back-to-mail"
                                                 onClick={(event: any) => {
                                                     event.preventDefault();
@@ -331,6 +386,75 @@ class ProfilePage extends Death13.Component {
                                 </div>
                             </div>
                         )}
+                        {profileState === 2 && (
+                            <div className="profile-security">
+                                <h1>{this.t("settings")}</h1>
+                                <div className="profile-content">
+                                    <form action="" className="profile-form">
+                                        <div className="profile__checkbox">
+                                            <span>{this.t("theme")}</span>
+                                            <div className="checkbox-actions">
+                                                <div className="checkbox-form">
+                                                    <Input
+                                                        id="dark"
+                                                        type="radio"
+                                                        name="radio-theme"
+                                                        checked={AppStorage.theme === "dark"}
+                                                        onInput={() => AppStorage.setTheme("dark")}
+                                                    />
+                                                    <label for="dark">{this.t("dark_theme")}</label>
+                                                </div>
+                                                <div className="checkbox-form">
+                                                    <Input
+                                                        id="light"
+                                                        type="radio"
+                                                        name="radio-theme"
+                                                        checked={AppStorage.theme === "light"}
+                                                        onInput={() => AppStorage.setTheme("light")}
+                                                    />
+                                                    <label for="light">{this.t("light_theme")}</label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div className="profile__checkbox">
+                                            <span>{this.t("interface_language")}</span>
+                                            <div className="checkbox-actions">
+                                                <div className="checkbox-form">
+                                                    <Input
+                                                        id="ru"
+                                                        type="radio"
+                                                        name="radio-language"
+                                                        checked={AppStorage.language === "ru"}
+                                                        onInput={() => AppStorage.setLanguage("ru")}
+                                                    />
+                                                    <label for="ru">{this.t("russian")}</label>
+                                                </div>
+                                                <div className="checkbox-form">
+                                                    <Input
+                                                        id="en"
+                                                        type="radio"
+                                                        name="radio-language"
+                                                        checked={AppStorage.language === "en"}
+                                                        onInput={() => AppStorage.setLanguage("en")}
+                                                    />
+                                                    <label for="en">{this.t("english")}</label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        )}
+                        {profileState === 3 && (
+                            <div className="profile-security">
+                                <h1>{this.t("folder")}</h1>
+                                <div className="profile-content">
+                                    <form action="" className="profile-form">
+                                        <FolderChange />
+                                    </form>
+                                </div>
+                            </div>
+                        )}
                     </div>
                     <ProfileModal
                         isOpen={isModalOpen}
@@ -338,6 +462,7 @@ class ProfilePage extends Death13.Component {
                         onProfileClick={this.handleProfileClick}
                         onLogout={this.handleLogout}
                     />
+                    <ConfirmationModal isOpen={isConfirm} onClose={this.handleCloseModal} isStatus={isStatus} />
                 </div>
             </div>
         );

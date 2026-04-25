@@ -39,6 +39,7 @@ export default defineConfig([
         },
         rules: {
             "@typescript-eslint/no-explicit-any": "off",
+            "no-console": ["error", { allow: ["warn", "error"] }],
         },
     },
     {

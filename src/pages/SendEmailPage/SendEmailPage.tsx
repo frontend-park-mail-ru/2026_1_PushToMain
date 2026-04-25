@@ -9,22 +9,28 @@ import { AppStorage } from "../../App";
 import { getProfile } from "../../api/ApiAuth";
 
 class SendEmailPage extends Death13.Component {
+    constructor(props: any) {
+        super(props);
+
+        this.loadMailActionData();
+        this.loadProfile();
+    }
+
     state: any = {
         isModalOpen: false,
         unReadCount: 0,
         replyData: null,
         forwardData: null,
+        avatarKey: 0,
     };
-
-    constructor(props: any) {
-        super(props);
-        this.loadProfile();
-        this.loadMailActionData();
-    }
 
     loadProfile = async () => {
         const data = await getProfile();
-        AppStorage.setProfileData(data);
+        if (data === null) {
+            window.app.handleRoute("/login");
+        } else {
+            AppStorage.setProfileData(data);
+        }
     };
 
     loadMailActionData = () => {
@@ -62,6 +68,10 @@ class SendEmailPage extends Death13.Component {
         this.setState({ replyData: null, forwardData: null });
     };
 
+    t(key: string): string {
+        return AppStorage.t(key);
+    }
+
     render() {
         const { isModalOpen, unReadCount, replyData, forwardData } = this.state;
 
@@ -75,21 +85,11 @@ class SendEmailPage extends Death13.Component {
                 <div className="right-part">
                     <div className="top-bar">
                         <div className="search-bar">
-                            <Input
-                                type="text"
-                                placeholder="Поиск в почте"
-                                name="search"
-                                svg="../../assets/svg/Search.svg"
-                                onInput={() => {}}
-                            />
+                            <Input type="text" placeholder={this.t("search")} name="search" svg="../../assets/svg/Search.svg" onInput={() => {}} />
                         </div>
+
                         <div className="top-right-menu">
-                            <Button
-                                svg={AppStorage.getAvatarUrl()}
-                                name="avatar"
-                                help="Аккаунт"
-                                onClick={this.handleAvatar}
-                            />
+                            <Button svg={AppStorage.getAvatarUrl()} name="avatar" help="Аккаунт" onClick={this.handleAvatar} />
                         </div>
                     </div>
                     <div className="mail-box-container">

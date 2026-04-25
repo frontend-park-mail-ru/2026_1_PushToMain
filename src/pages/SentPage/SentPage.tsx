@@ -4,10 +4,9 @@ import Input from "../../components/Input/Input";
 import Button from "../../components/Button/Button";
 import MailHeader from "../../widgets/MailHeader/MailHeader";
 import MailBox from "../../widgets/MailBox/MailBox";
-import { getEmailSend, getEmailByID, readEmail } from "../../api/ApiEmail";
+import { getEmailSend, getEmailByID } from "../../api/ApiEmail";
 import "./SentPage.scss";
 import ProfileModal from "../../widgets/ProfileModal/ProfileModal";
-import ReadMail from "../../widgets/ReadMail/ReadMail";
 import { AppStorage } from "../../App";
 import { getProfile } from "../../api/ApiAuth";
 
@@ -17,7 +16,15 @@ class SentPage extends Death13.Component {
         isLoading: true,
         isModalOpen: false,
         isStateMode: 0,
-        selectedEmail: null,
+        email: {
+            header: "",
+            body: "",
+            createdAt: "",
+            senderEmail: "",
+            senderImage: "",
+            senderName: "",
+            senderSurname: "",
+        },
         isSelectAll: false,
         offset: 0,
         total: 0,
@@ -31,15 +38,17 @@ class SentPage extends Death13.Component {
 
     loadProfile = async () => {
         const data = await getProfile();
-        AppStorage.setProfileData(data);
+        if (data === null) {
+            window.app.handleRoute("/login");
+        } else {
+            AppStorage.setProfileData(data);
+        }
     };
 
     loadEmails = async (offset: number) => {
         try {
             const data = await getEmailSend(offset);
             const emails = data.emails;
-
-            console.log("Sent emails:", data);
 
             if (data === undefined) {
                 window.app.handleRoute("/login");
@@ -111,10 +120,9 @@ class SentPage extends Death13.Component {
         window.app.handleRoute("/send");
     };
 
-    async handleReadMail(email: any) {
-        this.setState({ isStateMode: 3, selectedEmail: email });
-        await readEmail(email.id);
-        await getEmailByID(email.id);
+    async handleReadMail(id: number) {
+        const email = await getEmailByID(id);
+        window.app.handleRoute(`/read/${email.id}`);
     }
 
     handleSelectAll = (isChecked: boolean) => {
@@ -130,12 +138,14 @@ class SentPage extends Death13.Component {
         this.loadEmails(this.state.offset);
     };
 
-    handleSearch = (value: string) => {
-        console.log("Search:", value);
-    };
+    handleSearch = () => {};
+
+    t(key: string): string {
+        return AppStorage.t(key);
+    }
 
     render() {
-        const { emails, isModalOpen, isStateMode, selectedEmail, isSelectAll, total } = this.state;
+        const { emails, isModalOpen, isStateMode, isSelectAll, total } = this.state;
 
         return (
             <div className="main-page" onClick={() => this.handleCloseModal()}>
@@ -153,21 +163,17 @@ class SentPage extends Death13.Component {
                         <div className="search-bar">
                             <Input
                                 type="text"
-                                placeholder="Поиск в почте"
+                                placeholder={this.t("search")}
                                 name="search"
                                 svg="../../assets/svg/Search.svg"
-                                onInput={(e: any) => {
-                                    this.handleSearch(e.target.value);
+                                onInput={() => {
+                                    this.handleSearch();
                                 }}
                             />
                         </div>
+
                         <div className="top-right-menu">
-                            <Button
-                                svg={AppStorage.image_path || `../../assets/svg/Avatar.svg`}
-                                name="avatar"
-                                help="Аккаунт"
-                                onClick={this.handleAvatar}
-                            />
+                            <Button svg={AppStorage.getAvatarUrl()} name="avatar" help="Аккаунт" onClick={this.handleAvatar} />
                         </div>
                     </div>
                     <div className="mail-box-container">
@@ -198,15 +204,12 @@ class SentPage extends Death13.Component {
                                                 title={email.body}
                                                 date={this.formatTime(email.created_at)}
                                                 isRead={true}
-                                                onClick={() => this.handleReadMail(email)}
+                                                onClick={() => this.handleReadMail(email.id)}
                                             />
                                         ))}
                                     </div>
                                 )}
                             </div>
-                        )}
-                        {isStateMode === 3 && (
-                            <ReadMail email={selectedEmail} backToMail={this.handleBackToSent} reloadMail={this.handleUpdateEmail} />
                         )}
                     </div>
 

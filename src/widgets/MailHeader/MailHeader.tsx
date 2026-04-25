@@ -2,6 +2,7 @@ import Death13 from "@react/stands";
 import Button from "../../components/Button/Button";
 import Input from "../../components/Input/Input";
 import "./MailHeader.scss";
+import { AppStorage } from "../../App";
 
 class MailHeader extends Death13.Component {
     handleSelectAll = (e: any) => {
@@ -25,6 +26,10 @@ class MailHeader extends Death13.Component {
         }
     };
 
+    t(key: string): string {
+        return AppStorage.t(key);
+    }
+
     render() {
         const { isSelectAll, offset = 0, total = 0 } = this.props;
         const startItem = total > 0 ? offset + 1 : 0;
@@ -32,36 +37,93 @@ class MailHeader extends Death13.Component {
 
         return (
             <div className="mail-header">
-                <div className="mail-header__left-container">
-                    <div className="left-container__select-all">
-                        <Input
-                            type="checkbox"
-                            name="checkbox-all"
-                            help="Выбрать все"
-                            checked={isSelectAll}
-                            onInput={this.handleSelectAll}
-                        />
+                {!isSelectAll && (
+                    <div className="mail-header__left-container">
+                        <div className="left-container__select-all">
+                            <Input
+                                type="checkbox"
+                                name="checkbox-all"
+                                help="Выбрать все"
+                                checked={isSelectAll}
+                                onInput={this.handleSelectAll}
+                            />
+                            <Button
+                                name="arrow-down"
+                                help="Выбрать"
+                                onClick={(event: any) => {
+                                    event.preventDefault();
+                                }}
+                            />
+                        </div>
                         <Button
-                            name="arrow-down"
-                            help="Выбрать"
+                            name="refresh"
+                            help={this.t("refresh")}
                             onClick={(event: any) => {
                                 event.preventDefault();
+                                this.props.reloadMail();
                             }}
                         />
                     </div>
-                    <Button
-                        svg="../../assets/svg/Refresh.svg"
-                        name="refresh"
-                        help="Обновить"
-                        onClick={(event: any) => {
-                            event.preventDefault();
-                            this.props.reloadMail();
-                        }}
-                    />
-                </div>
+                )}
+                {isSelectAll && (
+                    <div className="mail-header__left-container">
+                        <div className="left-container__select-all">
+                            <Input
+                                type="checkbox"
+                                name="checkbox-all"
+                                help="Выбрать все"
+                                checked={isSelectAll}
+                                onInput={this.handleSelectAll}
+                            />
+                            <Button
+                                name="arrow-down"
+                                help="Выбрать"
+                                onClick={(event: any) => {
+                                    event.preventDefault();
+                                }}
+                            />
+                        </div>
+                        <div className="select-all__tools-left">
+                            <Button
+                                name="favorites"
+                                help={this.t("starred")}
+                                onClick={(event: any) => {
+                                    event.preventDefault();
+                                    this.props.reloadMail();
+                                }}
+                            />{" "}
+                            <Button
+                                name="spam"
+                                help={this.t("spam")}
+                                onClick={(event: any) => {
+                                    event.preventDefault();
+                                    this.props.reloadMail();
+                                }}
+                            />{" "}
+                            <Button
+                                name="trash"
+                                help={this.t("trash")}
+                                onClick={(event: any) => {
+                                    event.preventDefault();
+                                    this.props.reloadMail();
+                                }}
+                            />
+                        </div>
+                        <div className="select-all__tools-right">
+                            <Button
+                                name="read-all-mail"
+                                help={this.t("mark_as_read")}
+                                onClick={(event: any) => {
+                                    event.preventDefault();
+                                    this.props.reloadMail();
+                                }}
+                            />
+                        </div>
+                    </div>
+                )}
                 <div className="mail-header__right-container">
                     <div className="count-email">
-                        {startItem} - {endItem} из {total}
+                        {startItem} - {endItem} {this.t("of")} {total}
                     </div>
                     <Button name="left" help="Пред." block={offset === 0} onClick={this.handlePrevPage} />
                     <Button name="right" help="След." block={offset + 50 >= total} onClick={this.handleNextPage} />
