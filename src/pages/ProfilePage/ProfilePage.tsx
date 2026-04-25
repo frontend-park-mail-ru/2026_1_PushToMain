@@ -8,11 +8,14 @@ import { validation } from "../../utils/validation";
 import { changePassword, getProfile, changeProfile } from "../../api/ApiAuth";
 import { AppStorage } from "../../App";
 import ProfileModal from "../../widgets/ProfileModal/ProfileModal";
+import ConfirmationModal from "../../widgets/ConfirmationModal/ConfirmationModal";
+import SelectDate from "../../components/SelectDate/SelectDate";
 
 class ProfilePage extends Death13.Component {
     constructor(props: any) {
         super(props);
-        //this.loadProfile();
+
+        this.loadProfile();
     }
 
     state: any = {
@@ -27,36 +30,30 @@ class ProfilePage extends Death13.Component {
         avatarKey: 0,
         avatarUrl: AppStorage.getAvatarUrl(),
         isModalOpen: false,
+        isConfirm: false,
+        isStatus: false,
     };
 
     loadProfile = async () => {
         const data = await getProfile();
-        AppStorage.setProfileData({
-            name: data.name || "",
-            surname: data.surname || "",
-            email: data.email || "",
-            image_path: data.image_path || "",
-        });
-        this.setState({
-            name: data.name || "",
-            surname: data.surname || "",
-            email: data.email || "",
-            avatarUrl: AppStorage.getAvatarUrl(),
-        });
-    };
-
-    componentDidMount() {
-        if (!AppStorage.name && !AppStorage.email) {
-            this.loadProfile();
+        if (data === null) {
+            window.app.handleRoute("/login");
         } else {
+            AppStorage.setProfileData({
+                name: data.name || "",
+                surname: data.surname || "",
+                email: data.email || "",
+                image_path: data.image_path || "",
+            });
             this.setState({
-                name: AppStorage.name,
-                surname: AppStorage.surname,
-                email: AppStorage.email,
+                name: data.name || "",
+                surname: data.surname || "",
+                email: data.email || "",
                 avatarUrl: AppStorage.getAvatarUrl(),
+                isStatus: false,
             });
         }
-    }
+    };
 
     validateField = (field: string, value: string) => {
         const data: any = {
@@ -82,6 +79,8 @@ class ProfilePage extends Death13.Component {
         this.setState({
             avatarKey: this.state.avatarKey + 1,
             avatarUrl: AppStorage.getAvatarUrl(),
+            isConfirm: true,
+            isStatus: true,
         });
     };
 
@@ -94,11 +93,10 @@ class ProfilePage extends Death13.Component {
             });
 
             if (response) {
-                console.log("Пароль успешно изменен");
-                this.setState({ oldPassword: "", newPassword: "" });
+                this.setState({ oldPassword: "", newPassword: "", isConfirm: true, isStatus: true });
             }
-        } catch (error) {
-            console.error("Ошибка изменения пароля", error);
+        } catch {
+            this.setState({ isConfirm: true });
         }
     }
 
@@ -120,17 +118,20 @@ class ProfilePage extends Death13.Component {
                 this.setState({
                     name: this.state.name,
                     surname: this.state.surname,
+                    isConfirm: true,
+                    isStatus: true,
                 });
-                alert("Профиль успешно изменен");
+            } else {
+                this.setState({ isConfirm: true, isStatus: false });
             }
         } catch (error) {
             console.error("Ошибка изменения профиля:", error);
+            this.setState({ isConfirm: true, isStatus: false });
         }
     }
 
     handleInputChange = (field: string, value: string) => {
         const error = this.validateField(field, value);
-        console.log(field, value);
 
         this.setState({
             [field]: value,
@@ -147,11 +148,12 @@ class ProfilePage extends Death13.Component {
 
     handleLogout = async (event: Event) => {
         event.preventDefault();
+        this.setState({ isModalOpen: false, isConfirm: false });
         window.app.handleRoute("/login");
     };
 
     handleBackToMail = () => {
-        this.setState({ isStateMode: 0 });
+        this.setState({ isModalOpen: false, isConfirm: false });
         window.app.handleRoute("/");
     };
 
@@ -162,10 +164,11 @@ class ProfilePage extends Death13.Component {
     };
 
     handleCloseModal = () => {
-        this.setState({ isModalOpen: false });
+        this.setState({ isModalOpen: false, isConfirm: false });
     };
 
     handleProfileClick = () => {
+        this.setState({ isModalOpen: false, isConfirm: false });
         window.app.handleRoute("/profile");
     };
 
@@ -177,17 +180,36 @@ class ProfilePage extends Death13.Component {
         this.setState({ profileState: 1 });
     };
 
+    handleSetting = () => {
+        this.setState({ profileState: 2 });
+    };
+
     render() {
-        const { errors, oldPassword, newPassword, name, surname, profileState, avatarKey, avatarUrl, isModalOpen } = this.state;
+        const {
+            errors,
+            oldPassword,
+            newPassword,
+            name,
+            surname,
+            profileState,
+            avatarKey,
+            avatarUrl,
+            isModalOpen,
+            isConfirm,
+            isStatus,
+            gender,
+        } = this.state;
 
         return (
-            <div className="profile-page">
+            <div className="profile-page" onClick={() => this.handleCloseModal()}>
                 <aside className="sidebar">
                     <Sidebar
                         isProfile={1}
+                        isPressProfile={profileState}
                         backToMail={this.handleBackToMail}
                         changeProfile={this.handleChangeProfile}
                         changePassword={this.handleChangePasswordState}
+                        handleSetting={this.handleSetting}
                         newMail={() => {}}
                     />
                 </aside>
@@ -230,35 +252,33 @@ class ProfilePage extends Death13.Component {
                                                 this.handleInputChange("surname", e.target.value);
                                             }}
                                         />
-                                        {/*
+                                        <SelectDate />
                                         <div className="profile__checkbox">
-                                            
-                      <span>Пол</span>
-                      <div className="checkbox-actions">
-                        <div className="checkbox-form">
-                          <Input
-                            id="male"
-                            type="radio"
-                            name="radio-gender"
-                            checked={gender === "male"}
-                            onInput={() => this.handleGenderChange("male")}
-                          />
-                          <label for="male">Мужской</label>
-                        </div>
+                                            <span>Пол</span>
+                                            <div className="checkbox-actions">
+                                                <div className="checkbox-form">
+                                                    <Input
+                                                        id="male"
+                                                        type="radio"
+                                                        name="radio-gender"
+                                                        checked={gender === "male"}
+                                                        onInput={() => this.handleGenderChange("male")}
+                                                    />
+                                                    <label for="male">Мужской</label>
+                                                </div>
 
-                        <div className="checkbox-form">
-                          <Input
-                            id="female"
-                            type="radio"
-                            name="radio-gender"
-                            checked={gender === "female"}
-                            onInput={() => this.handleGenderChange("female")}
-                          />
-                          <label for="female">Женский</label>
-                        </div>
-                      </div>
+                                                <div className="checkbox-form">
+                                                    <Input
+                                                        id="female"
+                                                        type="radio"
+                                                        name="radio-gender"
+                                                        checked={gender === "female"}
+                                                        onInput={() => this.handleGenderChange("female")}
+                                                    />
+                                                    <label for="female">Женский</label>
+                                                </div>
+                                            </div>
                                         </div>
-                                          */}
 
                                         <div className="profile-actions">
                                             <Button
@@ -270,7 +290,7 @@ class ProfilePage extends Death13.Component {
                                                 }}
                                             />
                                             <Button
-                                                title="Отменить"
+                                                title="Назад"
                                                 name="back-to-mail"
                                                 onClick={(event: any) => {
                                                     event.preventDefault();
@@ -319,13 +339,47 @@ class ProfilePage extends Death13.Component {
                                                 }}
                                             />
                                             <Button
-                                                title="Отменить"
+                                                title="Назад"
                                                 name="back-to-mail"
                                                 onClick={(event: any) => {
                                                     event.preventDefault();
                                                     this.handleBackToMail();
                                                 }}
                                             />
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        )}
+                        {profileState === 2 && (
+                            <div className="profile-security">
+                                <h1>Настройки</h1>
+                                <div className="profile-content">
+                                    <form action="" className="profile-form">
+                                        <div className="profile__checkbox">
+                                            <span>Тема</span>
+                                            <div className="checkbox-actions">
+                                                <div className="checkbox-form">
+                                                    <Input
+                                                        id="dark"
+                                                        type="radio"
+                                                        name="radio-theme"
+                                                        checked={AppStorage.theme === "dark"}
+                                                        onInput={() => AppStorage.setTheme("dark")}
+                                                    />
+                                                    <label for="dark">Темная</label>
+                                                    <div className="checkbox-form">
+                                                        <Input
+                                                            id="light"
+                                                            type="radio"
+                                                            name="radio-theme"
+                                                            checked={AppStorage.theme === "light"}
+                                                            onInput={() => AppStorage.setTheme("light")}
+                                                        />
+                                                        <label for="light">Светлая</label>
+                                                    </div>
+                                                </div>
+                                            </div>
                                         </div>
                                     </form>
                                 </div>
@@ -338,6 +392,7 @@ class ProfilePage extends Death13.Component {
                         onProfileClick={this.handleProfileClick}
                         onLogout={this.handleLogout}
                     />
+                    <ConfirmationModal isOpen={isConfirm} onClose={this.handleCloseModal} isStatus={isStatus} />
                 </div>
             </div>
         );

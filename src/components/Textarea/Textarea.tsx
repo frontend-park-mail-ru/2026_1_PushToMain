@@ -2,11 +2,11 @@ import Death13 from "@react/stands";
 import "./Textarea.scss";
 
 class Textarea extends Death13.Component {
-  handleChange = (e: any) => {
-    if (this.props.onChange) {
-      this.props.onChange(e);
-    }
-  };
+    handleInput = (e: any) => {
+        if (this.props.onInput) {
+            this.props.onInput(e);
+        }
+    };
 
   render() {
     return (
