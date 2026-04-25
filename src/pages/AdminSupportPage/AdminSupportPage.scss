@@ -1,0 +1,288 @@
+.admin-support-page {
+	display: flex;
+	height: 100vh;
+	overflow: hidden;
+	background: var(--background-gradient);
+
+	// Exactly the same as your profile's support container,
+	// but now a direct flex row
+	display: flex;
+	flex-direction: row;
+
+	// ---- LEFT TICKETS PANEL ----
+	.support-tickets-panel {
+		width: 300px;
+		min-width: 250px;
+		background-color: #f5f7fa;
+		border-right: 1px solid #ddd;
+		display: flex;
+		flex-direction: column;
+		overflow-y: auto;
+
+		.support-tickets-header {
+			padding: 16px;
+			border-bottom: 1px solid #ddd;
+			display: flex;
+			justify-content: space-between;
+			align-items: center;
+
+			h2 {
+				margin: 0;
+				font-size: 18px;
+				color: #333;
+			}
+		}
+
+		.admin-filter-row {
+			display: flex;
+			gap: 12px;
+			padding: 12px 16px;
+			border-bottom: 1px solid #ddd;
+			background: #f9fafb;
+			flex-wrap: wrap;
+
+			.filter-group {
+				display: flex;
+				flex-direction: column;
+				gap: 4px;
+				flex: 1;
+				min-width: 120px;
+
+				label {
+					font-size: 12px;
+					color: #666;
+					text-transform: uppercase;
+					font-weight: 600;
+				}
+
+				select {
+					padding: 6px 10px;
+					border-radius: 6px;
+					border: 1px solid #ccc;
+					font-size: 14px;
+					background: white;
+					cursor: pointer;
+				}
+			}
+		}
+
+		.tickets-list {
+			list-style: none;
+			padding: 10px;
+			margin: 0;
+			overflow-y: auto;
+			flex: 1;
+
+			.ticket-item {
+				padding: 12px 16px;
+				border-radius: 20px;
+				cursor: pointer;
+				transition: background-color 0.2s;
+
+				&:hover {
+					background-color: #ebf0f5;
+				}
+
+				&.active {
+					background-color: #dbe4ee;
+				}
+
+				.ticket-subject {
+					font-weight: 600;
+					font-size: 14px;
+					color: #333;
+					margin-bottom: 4px;
+				}
+
+				.ticket-meta {
+					display: flex;
+					gap: 8px;
+					align-items: center;
+					margin: 4px 0;
+
+					.ticket-status {
+						display: inline-block;
+						font-size: 12px;
+						text-transform: uppercase;
+						padding: 2px 6px;
+						border-radius: 3px;
+						font-weight: 600;
+
+						&[data-status="open"] {
+							background-color: #fff3e0;
+							color: #e65100;
+						}
+						&[data-status="pending"] {
+							background-color: #fff9c4;
+							color: #f57f17;
+						}
+						&[data-status="closed"] {
+							background-color: #e8f5e9;
+							color: #2e7d32;
+						}
+					}
+
+					.ticket-category {
+						font-size: 11px;
+						text-transform: uppercase;
+						padding: 1px 6px;
+						border-radius: 3px;
+						background: #eef2f7;
+						color: #4a5568;
+						font-weight: 500;
+
+						&[data-category="bug"] {
+							background: #fed7d7;
+							color: #9b2c2c;
+						}
+						&[data-category="feature"] {
+							background: #e9d8fd;
+							color: #553c9a;
+						}
+						&[data-category="problem"] {
+							background: #fefcbf;
+							color: #975a16;
+						}
+						&[data-category="general"] {
+							background: #e2e8f0;
+							color: #2d3748;
+						}
+					}
+				}
+
+				.ticket-preview {
+					font-size: 13px;
+					color: #666;
+					white-space: nowrap;
+					overflow: hidden;
+					text-overflow: ellipsis;
+				}
+			}
+		}
+	}
+
+	// ---- RIGHT CHAT PANEL ----
+	.support-chat-panel {
+		flex: 1;
+		display: flex;
+		flex-direction: column;
+		background-color: #fff;
+		overflow: hidden;
+		min-height: 0;
+
+		.admin-chat-bar {
+			padding: 8px 16px;
+			border-bottom: 1px solid #ddd;
+			background: #f9fafb;
+			display: flex;
+			align-items: center;
+
+			.status-control {
+				display: flex;
+				align-items: center;
+				gap: 8px;
+
+				label {
+					font-size: 13px;
+					color: #555;
+				}
+
+				select {
+					padding: 4px 8px;
+					border-radius: 4px;
+					border: 1px solid #ccc;
+					font-size: 13px;
+				}
+			}
+		}
+
+		.chat-empty {
+			flex: 1;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			color: #999;
+			font-size: 16px;
+		}
+
+		.chat-messages {
+			flex: 1 1 0%;
+			min-height: 0;
+			padding: 16px;
+			overflow-y: auto;
+			display: flex;
+			flex-direction: column;
+			gap: 12px;
+		}
+
+		.message {
+			display: flex;
+			max-width: 70%;
+
+			&.user {
+				align-self: flex-start;
+				justify-content: flex-start;
+			}
+
+			&.admin {
+				align-self: flex-end;
+				justify-content: flex-end;
+			}
+
+			.message-bubble {
+				padding: 10px 14px;
+				border-radius: 20px;
+				font-size: 14px;
+				line-height: 1.4;
+				position: relative;
+				word-break: break-word;
+
+				.message-text {
+					margin-bottom: 4px;
+				}
+
+				.message-time {
+					font-size: 11px;
+					color: #999;
+					margin-top: 4px;
+				}
+			}
+
+			&.user .message-bubble {
+				background-color: #e2e3e5;
+				color: #004085;
+				border-bottom-left-radius: 4px;
+			}
+
+			&.admin .message-bubble {
+				background-color: #cce5ff;
+				color: #383d41;
+				border-bottom-right-radius: 4px;
+			}
+		}
+
+		.chat-input-area {
+			flex-shrink: 0;
+			padding: 12px 16px;
+			display: grid;
+			grid-template-columns: 1fr auto;
+			gap: 20px;
+			align-items: center;
+			width: 100%;
+			box-sizing: border-box;
+
+			> div {
+				width: 100%;
+				min-width: 0;
+				box-sizing: border-box;
+			}
+
+			textarea {
+				width: 100%;
+				min-width: 0;
+				box-sizing: border-box;
+				font-size: 14px;
+			}
+		}
+	}
+}
