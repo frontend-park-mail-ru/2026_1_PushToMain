@@ -190,7 +190,7 @@
     .main-button-profile {
         button {
             display: flex;
-            gap: 15px;
+            gap: 6px;
             align-items: center;
             width: 100%;
             height: 40px;
@@ -240,6 +240,62 @@
     .main-button-container {
         button {
             color: var(--tertiary-text);
+        }
+
+        [name="button-profile"] {
+            &::before {
+                content: "";
+                display: inline-block;
+                width: 28px;
+                height: 28px;
+                background-color: var(--tertiary-text);
+                mask-image: url("/assets/svg/Avatar.svg");
+                mask-size: contain;
+                mask-repeat: no-repeat;
+                mask-position: center;
+            }
+        }
+
+        [name="button-security"] {
+            &::before {
+                content: "";
+                display: inline-block;
+                width: 28px;
+                height: 28px;
+                background-color: var(--tertiary-text);
+                mask-image: url("/assets/svg/Lock.svg");
+                mask-size: contain;
+                mask-repeat: no-repeat;
+                mask-position: center;
+            }
+        }
+
+        [name="button-settings"] {
+            &::before {
+                content: "";
+                display: inline-block;
+                width: 28px;
+                height: 28px;
+                background-color: var(--tertiary-text);
+                mask-image: url("/assets/svg/Settings.svg");
+                mask-size: contain;
+                mask-repeat: no-repeat;
+                mask-position: center;
+            }
+        }
+
+        [name="button-folder"] {
+            &::before {
+                content: "";
+                display: inline-block;
+                width: 28px;
+                height: 28px;
+                background-color: var(--tertiary-text);
+                mask-image: url("/assets/svg/Folder.svg");
+                mask-size: contain;
+                mask-repeat: no-repeat;
+                mask-position: center;
+            }
         }
     }
 

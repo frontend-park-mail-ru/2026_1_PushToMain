@@ -17,6 +17,8 @@ export const AppStorage = {
     surname: "",
     email: "",
     image_path: "",
+    folders: {},
+    openSettingsOnProfile: false,
     replyData: null as any,
     forwardData: null as any,
     theme: "light" as "light" | "dark",
@@ -49,6 +51,9 @@ export const AppStorage = {
             hello: "Здравствуйте",
             search: "Поиск",
             of: "из",
+            mark_as_read: "Сделать прочитанным",
+            mark_as_unread: "Сделать непрочитанным",
+            refresh: "Обновить",
 
             //ReadPage
             //SendPage
@@ -86,6 +91,9 @@ export const AppStorage = {
             day: "День",
             month: "Месяц",
             year: "Год",
+            saved_successfully: "Успешно сохранено!",
+            server_error: "Ошибка сервера!",
+            add_a_folder: "Добавить папку",
 
             //Sidebar
             new_letter: "Новое письмо",
@@ -102,6 +110,7 @@ export const AppStorage = {
             personal_information: "Личные данные",
             security: "Безопасность",
             settings: "Настройки",
+            folder: "Папки",
         },
         en: {
             //LoginPage
@@ -130,6 +139,9 @@ export const AppStorage = {
             hello: "Hello",
             search: "Search",
             of: "of",
+            mark_as_read: "Mark as read",
+            mark_as_unread: "Mark as unread",
+            refresh: "Refresh",
 
             //ReadPage
             //SendPage
@@ -167,6 +179,9 @@ export const AppStorage = {
             day: "Day",
             month: "Month",
             year: "Year",
+            saved_successfully: "Saved successfully!",
+            server_error: "Server error!",
+            add_a_folder: "Add a folder",
 
             //Sidebar
             new_letter: "Compose",
@@ -180,9 +195,10 @@ export const AppStorage = {
             hide: "Less",
             all_letter: "All emails",
             mailbox: "Mailbox",
-            personal_information: "Personal information",
+            personal_information: "Personal info",
             security: "Security",
             settings: "Settings",
+            folder: "Folder",
         },
     },
 
@@ -196,6 +212,7 @@ export const AppStorage = {
                 this.email = data.email || "";
                 this.image_path = data.image_path || "";
                 this._lastUpdate = data._lastUpdate || Date.now();
+                this.folders = data.folders || {};
             }
 
             const savedCount = localStorage.getItem("unReadCount");
@@ -243,7 +260,15 @@ export const AppStorage = {
         return translation || key;
     },
 
-    setProfileData(data: { name: string; surname: string; email: string; image_path: string } | null) {
+    setProfileData(
+        data: {
+            name: string;
+            surname: string;
+            email: string;
+            image_path: string;
+            folders: object;
+        } | null,
+    ) {
         if (!data) {
             console.warn("setProfileData called with null/undefined data");
             return;
@@ -254,6 +279,7 @@ export const AppStorage = {
         this.email = data.email || "";
         this.image_path = data.image_path || "";
         this._lastUpdate = Date.now();
+        this.folders = data.folders || "";
 
         this._saveToStorage();
         this._notify();
@@ -280,6 +306,12 @@ export const AppStorage = {
     setImagePath(path: string) {
         this.image_path = path;
         this._lastUpdate = Date.now();
+        this._saveToStorage();
+        this._notify();
+    },
+
+    setFolderName(folders: object) {
+        this.folders = folders;
         this._saveToStorage();
         this._notify();
     },
@@ -314,6 +346,17 @@ export const AppStorage = {
 
     getTheme() {
         return this.theme;
+    },
+
+    setOpenSettingsOnProfile(value: boolean) {
+        this.openSettingsOnProfile = value;
+        this._notify();
+    },
+
+    getOpenSettingsOnProfile() {
+        const value = this.openSettingsOnProfile;
+        this.openSettingsOnProfile = false;
+        return value;
     },
 
     setReplyData(data: any) {

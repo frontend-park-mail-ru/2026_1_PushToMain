@@ -10,6 +10,7 @@ import { AppStorage } from "../../App";
 import ProfileModal from "../../widgets/ProfileModal/ProfileModal";
 import ConfirmationModal from "../../widgets/ConfirmationModal/ConfirmationModal";
 import SelectDate from "../../components/SelectDate/SelectDate";
+import FolderChange from "../../widgets/FolderChange/FolderChange";
 
 class ProfilePage extends Death13.Component {
     private unsubscribe: (() => void) | null = null;
@@ -22,24 +23,28 @@ class ProfilePage extends Death13.Component {
         });
 
         this.loadProfile();
-    }
 
-    state: any = {
-        errors: {},
-        name: AppStorage.name,
-        surname: AppStorage.surname,
-        email: AppStorage.email,
-        oldPassword: "",
-        newPassword: "",
-        gender: "male",
-        profileState: 0,
-        avatarKey: 0,
-        avatarUrl: AppStorage.getAvatarUrl(),
-        isModalOpen: false,
-        isConfirm: false,
-        isStatus: false,
-        language: AppStorage.language,
-    };
+        const shouldOpenSettings = AppStorage.getOpenSettingsOnProfile();
+
+        this.state = {
+            errors: {},
+            touched: {},
+            name: AppStorage.name,
+            surname: AppStorage.surname,
+            email: AppStorage.email,
+            folders: AppStorage.folders,
+            oldPassword: "",
+            newPassword: "",
+            gender: "male",
+            profileState: shouldOpenSettings ? 2 : 0,
+            avatarKey: 0,
+            avatarUrl: AppStorage.getAvatarUrl(),
+            isModalOpen: false,
+            isConfirm: false,
+            isStatus: false,
+            language: AppStorage.language,
+        };
+    }
 
     loadProfile = async () => {
         const data = await getProfile();
@@ -51,6 +56,7 @@ class ProfilePage extends Death13.Component {
                 surname: data.surname || "",
                 email: data.email || "",
                 image_path: data.image_path || "",
+                folders: data.folders || {},
             });
             this.setState({
                 name: data.name || "",
@@ -121,6 +127,7 @@ class ProfilePage extends Death13.Component {
                     surname: this.state.surname,
                     email: this.state.email,
                     image_path: currentImagePath,
+                    folders: this.state.folders,
                 });
                 this.setState({
                     name: this.state.name,
@@ -142,11 +149,23 @@ class ProfilePage extends Death13.Component {
 
         this.setState({
             [field]: value,
+            touched: {
+                ...this.state.touched,
+                [field]: true,
+            },
             errors: {
                 ...this.state.errors,
                 [field]: error,
             },
         });
+    };
+
+    shouldShowSuccess = (field: string): boolean => {
+        const value = this.state[field];
+        const error = this.state.errors[field];
+        const isTouched = this.state.touched[field];
+
+        return isTouched && value && !error;
     };
 
     handleGenderChange = (value: string) => {
@@ -191,6 +210,10 @@ class ProfilePage extends Death13.Component {
         this.setState({ profileState: 2 });
     };
 
+    handleFolder = () => {
+        this.setState({ profileState: 3 });
+    };
+
     t(key: string): string {
         return AppStorage.t(key);
     }
@@ -221,6 +244,7 @@ class ProfilePage extends Death13.Component {
                         changeProfile={this.handleChangeProfile}
                         changePassword={this.handleChangePasswordState}
                         handleSetting={this.handleSetting}
+                        handleFolder={this.handleFolder}
                         newMail={() => {}}
                     />
                 </aside>
@@ -247,6 +271,7 @@ class ProfilePage extends Death13.Component {
                                             input_title={this.t("name")}
                                             name="name"
                                             value={name}
+                                            success={this.shouldShowSuccess("name")}
                                             error={errors.name}
                                             onInput={(e: any) => {
                                                 this.handleInputChange("name", e.target.value);
@@ -258,6 +283,7 @@ class ProfilePage extends Death13.Component {
                                             input_title={this.t("surname")}
                                             name="surname"
                                             value={surname}
+                                            success={this.shouldShowSuccess("surname")}
                                             error={errors.surname}
                                             onInput={(e: any) => {
                                                 this.handleInputChange("surname", e.target.value);
@@ -417,6 +443,16 @@ class ProfilePage extends Death13.Component {
                                                 </div>
                                             </div>
                                         </div>
+                                    </form>
+                                </div>
+                            </div>
+                        )}
+                        {profileState === 3 && (
+                            <div className="profile-security">
+                                <h1>{this.t("folder")}</h1>
+                                <div className="profile-content">
+                                    <form action="" className="profile-form">
+                                        <FolderChange />
                                     </form>
                                 </div>
                             </div>

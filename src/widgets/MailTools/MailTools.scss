@@ -33,7 +33,19 @@
 
     .tools-left {
         padding-right: 15px;
-        border-right: 1px solid var(--muted-text);
+        position: relative;
+
+        &::after {
+            content: "";
+            position: absolute;
+            right: 0;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 2px;
+            height: 40%;
+            background-color: var(--muted-text);
+        }
+
         button {
             width: auto;
         }

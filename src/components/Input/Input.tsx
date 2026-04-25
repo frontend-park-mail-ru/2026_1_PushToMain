@@ -12,8 +12,7 @@ class Input extends Death13.Component {
 
     render() {
         const hasError = this.props.error;
-        const hasValue = this.props.value;
-        const isValid = hasValue && !hasError;
+        const hasSuccess = this.props.success;
         const isPassword = this.props.type === "password";
         const isCheckbox = this.props.type === "checkbox";
         const isRadio = this.props.type === "radio";
@@ -22,7 +21,7 @@ class Input extends Death13.Component {
         return (
             <div className="input-container" data-input-name={this.props.name}>
                 <span className="input__title">{this.props.input_title}</span>
-                <div className={`input-form ${hasError ? "error" : ""} ${isValid ? "success" : ""}`}>
+                <div className={`input-form ${hasError ? "error" : ""} ${hasSuccess ? "success" : ""}`}>
                     {this.props.svg && <img src={this.props.svg} alt="" />}
                     <input
                         type={inputType}

@@ -12,7 +12,7 @@ class ProfileModal extends Death13.Component {
     handleExit = async () => {
         await logOut();
 
-        AppStorage.setProfileData({ name: "", surname: "", email: "", image_path: "" });
+        AppStorage.setProfileData({ name: "", surname: "", email: "", image_path: "", folders: {} });
         AppStorage.setUnReadCount(0);
 
         window.app.handleRoute("/login");
@@ -21,6 +21,12 @@ class ProfileModal extends Death13.Component {
     handleProfileClick = (event: any) => {
         event.preventDefault();
         this.props.onProfileClick();
+        this.props.onClose();
+    };
+
+    handleSettingsClick = (event: any) => {
+        event.preventDefault();
+        this.props.onSettingsClick();
         this.props.onClose();
     };
 
@@ -35,7 +41,9 @@ class ProfileModal extends Death13.Component {
         return (
             <div className="modal-overlay shadow" onClick={(e: any) => e.stopPropagation()}>
                 <div className="overlay__title">
-                    <p>{this.t("hello")}, {AppStorage.name}!</p>
+                    <p>
+                        {this.t("hello")}, {AppStorage.name}!
+                    </p>
                     <div className="overlay__close">
                         <Button svg="../../assets/svg/Close.svg" onClick={this.handleClose} />
                     </div>
@@ -52,9 +60,7 @@ class ProfileModal extends Death13.Component {
                         title={this.t("settings")}
                         name="settings"
                         svg="../../assets/svg/Settings.svg"
-                        onClick={(event: any) => {
-                            event.preventDefault();
-                        }}
+                        onClick={this.handleSettingsClick}
                     />
                 </div>
                 <div className="button-exit">

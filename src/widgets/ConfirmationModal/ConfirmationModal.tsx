@@ -1,4 +1,5 @@
 import Death13 from "@react/stands";
+import { AppStorage } from "../../App";
 import "./ConfirmationModal.scss";
 
 class ConfirmationModal extends Death13.Component {
@@ -15,6 +16,10 @@ class ConfirmationModal extends Death13.Component {
         }
         this.props.onClose();
     };
+
+    t(key: string): string {
+        return AppStorage.t(key);
+    }
 
     render() {
         const { isOpen } = this.props;
@@ -35,7 +40,7 @@ class ConfirmationModal extends Death13.Component {
 
         return (
             <div className={`confirmation-modal ${this.props.isStatus ? "access" : "error"}`}>
-                <div className="__title">{this.props.isStatus ? "Успешно изменено!" : "Ошибка сервера!"}</div>
+                <div className="__title">{this.props.isStatus ? this.t("saved_successfully") : this.t("server_error")}</div>
             </div>
         );
     }

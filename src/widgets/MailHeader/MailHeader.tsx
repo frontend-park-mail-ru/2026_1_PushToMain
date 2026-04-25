@@ -37,32 +37,90 @@ class MailHeader extends Death13.Component {
 
         return (
             <div className="mail-header">
-                <div className="mail-header__left-container">
-                    <div className="left-container__select-all">
-                        <Input
-                            type="checkbox"
-                            name="checkbox-all"
-                            help="Выбрать все"
-                            checked={isSelectAll}
-                            onInput={this.handleSelectAll}
-                        />
+                {!isSelectAll && (
+                    <div className="mail-header__left-container">
+                        <div className="left-container__select-all">
+                            <Input
+                                type="checkbox"
+                                name="checkbox-all"
+                                help="Выбрать все"
+                                checked={isSelectAll}
+                                onInput={this.handleSelectAll}
+                            />
+                            <Button
+                                name="arrow-down"
+                                help="Выбрать"
+                                onClick={(event: any) => {
+                                    event.preventDefault();
+                                }}
+                            />
+                        </div>
                         <Button
-                            name="arrow-down"
-                            help="Выбрать"
+                            name="refresh"
+                            help={this.t("refresh")}
                             onClick={(event: any) => {
                                 event.preventDefault();
+                                this.props.reloadMail();
                             }}
                         />
                     </div>
-                    <Button
-                        name="refresh"
-                        help="Обновить"
-                        onClick={(event: any) => {
-                            event.preventDefault();
-                            this.props.reloadMail();
-                        }}
-                    />
-                </div>
+                )}
+                {isSelectAll && (
+                    <div className="mail-header__left-container">
+                        <div className="left-container__select-all">
+                            <Input
+                                type="checkbox"
+                                name="checkbox-all"
+                                help="Выбрать все"
+                                checked={isSelectAll}
+                                onInput={this.handleSelectAll}
+                            />
+                            <Button
+                                name="arrow-down"
+                                help="Выбрать"
+                                onClick={(event: any) => {
+                                    event.preventDefault();
+                                }}
+                            />
+                        </div>
+                        <div className="select-all__tools-left">
+                            <Button
+                                name="favorites"
+                                help={this.t("starred")}
+                                onClick={(event: any) => {
+                                    event.preventDefault();
+                                    this.props.reloadMail();
+                                }}
+                            />{" "}
+                            <Button
+                                name="spam"
+                                help={this.t("spam")}
+                                onClick={(event: any) => {
+                                    event.preventDefault();
+                                    this.props.reloadMail();
+                                }}
+                            />{" "}
+                            <Button
+                                name="trash"
+                                help={this.t("trash")}
+                                onClick={(event: any) => {
+                                    event.preventDefault();
+                                    this.props.reloadMail();
+                                }}
+                            />
+                        </div>
+                        <div className="select-all__tools-right">
+                            <Button
+                                name="read-all-mail"
+                                help={this.t("mark_as_read")}
+                                onClick={(event: any) => {
+                                    event.preventDefault();
+                                    this.props.reloadMail();
+                                }}
+                            />
+                        </div>
+                    </div>
+                )}
                 <div className="mail-header__right-container">
                     <div className="count-email">
                         {startItem} - {endItem} {this.t("of")} {total}

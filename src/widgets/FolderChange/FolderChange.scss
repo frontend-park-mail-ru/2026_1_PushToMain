@@ -1,0 +1,23 @@
+.folder-container {
+    .folder-list {
+        .folder {
+        }
+    }
+    .folder-actions {
+        [name="add_a_folder"] {
+            background-color: transparent;
+
+            &::before {
+                content: "";
+                display: inline-block;
+                width: 28px;
+                height: 28px;
+                background-color: var(--tertiary-text);
+                mask-image: url("/assets/svg/AddNew.svg");
+                mask-size: contain;
+                mask-repeat: no-repeat;
+                mask-position: center;
+            }
+        }
+    }
+}

@@ -37,7 +37,7 @@ class Sidebar extends Death13.Component {
 
     render() {
         const { isVisible, name, surname, email, avatarUrl, unReadCount } = this.state;
-        const { isProfile = 0, backToMail, changeProfile, changePassword, newMail, updateMail, handleSetting } = this.props;
+        const { isProfile = 0, backToMail, changeProfile, changePassword, newMail, updateMail, handleSetting, handleFolder } = this.props;
 
         return (
             <div className="sidebar-widget">
@@ -191,6 +191,15 @@ class Sidebar extends Death13.Component {
                                 onClick={(event: any) => {
                                     event.preventDefault();
                                     handleSetting();
+                                }}
+                            />
+                            <Button
+                                name="button-folder"
+                                title={this.t("folder")}
+                                isSelect={this.props.isPressProfile === 3}
+                                onClick={(event: any) => {
+                                    event.preventDefault();
+                                    handleFolder();
                                 }}
                             />
                         </div>

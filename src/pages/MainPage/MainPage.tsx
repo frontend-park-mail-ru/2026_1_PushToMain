@@ -20,11 +20,17 @@ class MainPage extends Death13.Component {
         isSelectAll: false,
         offset: 0,
         selectedEmails: [],
+        isSettings: false,
     };
 
     constructor(props: any) {
         super(props);
         this.loadEmails(this.state.offset);
+
+        setInterval(() => {
+            this.loadEmails(this.state.offset);
+        }, 10000);
+
         this.loadProfile();
     }
 
@@ -106,6 +112,12 @@ class MainPage extends Death13.Component {
 
     handleProfileClick = () => {
         this.setState({ isModalOpen: false });
+        window.app.handleRoute("/profile");
+    };
+
+    handleSettingsClick = () => {
+        this.setState({ isModalOpen: false });
+        AppStorage.setOpenSettingsOnProfile(true);
         window.app.handleRoute("/profile");
     };
 
@@ -230,7 +242,12 @@ class MainPage extends Death13.Component {
                         )}
                     </div>
 
-                    <ProfileModal isOpen={isModalOpen} onClose={this.handleCloseModal} onProfileClick={this.handleProfileClick} />
+                    <ProfileModal
+                        isOpen={isModalOpen}
+                        onClose={this.handleCloseModal}
+                        onProfileClick={this.handleProfileClick}
+                        onSettingsClick={this.handleSettingsClick}
+                    />
                 </div>
             </div>
         );

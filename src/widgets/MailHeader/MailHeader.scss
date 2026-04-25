@@ -3,7 +3,7 @@
     align-items: center;
     justify-content: space-between;
     height: 40px;
-    padding: 4px 20px;
+    padding: 4px 18px;
 
     &__left-container,
     &__right-container {
@@ -25,6 +25,79 @@
                 mask-size: contain;
                 mask-repeat: no-repeat;
                 mask-position: center;
+            }
+        }
+
+        .select-all__tools-left {
+            display: flex;
+            padding-right: 15px;
+            position: relative;
+
+            &::after {
+                content: "";
+                position: absolute;
+                right: 0;
+                top: 50%;
+                transform: translateY(-50%);
+                width: 2px;
+                height: 40%;
+                background-color: var(--muted-text);
+            }
+
+            [name="favorites"] {
+                &::before {
+                    content: "";
+                    display: inline-block;
+                    width: 24px;
+                    height: 24px;
+                    background-color: var(--tertiary-text);
+                    mask-image: url("/assets/svg/SidebarFavorites.svg");
+                    mask-size: contain;
+                    mask-repeat: no-repeat;
+                    mask-position: center;
+                }
+            }
+            [name="spam"] {
+                &::before {
+                    content: "";
+                    display: inline-block;
+                    width: 24px;
+                    height: 24px;
+                    background-color: var(--tertiary-text);
+                    mask-image: url("/assets/svg/Spam.svg");
+                    mask-size: contain;
+                    mask-repeat: no-repeat;
+                    mask-position: center;
+                }
+            }
+            [name="trash"] {
+                &::before {
+                    content: "";
+                    display: inline-block;
+                    width: 24px;
+                    height: 24px;
+                    background-color: var(--tertiary-text);
+                    mask-image: url("/assets/svg/Trash.svg");
+                    mask-size: contain;
+                    mask-repeat: no-repeat;
+                    mask-position: center;
+                }
+            }
+        }
+
+        .select-all__tools-right {
+            [name="read-all-mail"] {
+                &::before {
+                    content: "";
+                    display: inline-block;
+                    width: 24px;
+                    height: 24px;
+                    background-color: var(--tertiary-text);
+                    mask-image: url("/assets/svg/ReadAllMail.svg");
+                    mask-size: contain;
+                    mask-repeat: no-repeat;
+                    mask-position: center;
+                }
             }
         }
 
@@ -133,8 +206,8 @@
         margin: 0;
         mask-image: url("/assets/svg/CheckboxOffAll.svg");
         mask-size: contain;
+        mask-repeat: no-repeat;
         mask-position: center;
-        border: none;
 
         &:checked {
             mask-image: url("/assets/svg/CheckboxDeselect.svg");
