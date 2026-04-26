@@ -1,118 +1,166 @@
 .mail {
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    border: solid 2px var(--mail-stroke);
-    border-radius: 20px;
-    padding: 10px 20px;
-    gap: 15px;
-    max-height: 60px;
-    font-size: 20px;
-    margin-top: 5px;
-    cursor: pointer;
-    width: 100%;
-    box-sizing: border-box;
-    margin-left: 5px;
+	display: flex;
+	flex-direction: row;
+	align-items: center;
+	border: solid 2px var(--mail-stroke);
+	border-radius: 20px;
+	padding: 10px 20px;
+	gap: 15px;
+	max-height: 90px;
+	font-size: 20px;
+	margin-top: 5px;
+	cursor: pointer;
+	width: 100%;
+	box-sizing: border-box;
+	margin-left: 5px;
 
-    &.read {
-        background-color: var(--input-success-background);
-        color: var(--secondary-text);
-        border: none;
-        text-decoration: none;
-    }
+	&.read {
+		background-color: var(--input-success-background);
+		color: var(--secondary-text);
+		opacity: 0.75;
+		border: none;
+		text-decoration: none;
+	}
 
-    &.mail.selected {
-        background-color: #9cc8fe;
-        color: var(--tretiry-text)
-    }
+	&.mail.selected {
+		background-color: #9cc8fe;
+		color: var(--tretiry-text);
+	}
 
-    &:hover {
-        background-color: var(--color-main-background);
-        transition: 100ms;
-    }
+	&:hover {
+		background-color: var(--color-main-background);
+		transition: 100ms;
+	}
 
-    .checkbox-container {
-        display: flex;
-        flex-direction: row;
-        align-items: center;
-        gap: 10px;
-        flex-shrink: 0;
+	.checkbox-container {
+		display: flex;
+		flex-direction: row;
+		align-items: center;
+		gap: 10px;
+		flex-shrink: 0;
 
-        input {
-            cursor: pointer;
-        }
-    }
+		input {
+			cursor: pointer;
+		}
+	}
 
-    input[name="select-checkbox"] {
-        appearance: none;
-        -webkit-appearance: none;
-        width: 24px;
-        height: 24px;
-        margin: 0;
-        background-image: url("/assets/svg/CheckboxOff.svg");
-        background-size: contain;
-        background-position: center;
-        background-repeat: no-repeat;
-        cursor: pointer;
+	input[name="select-checkbox"] {
+		appearance: none;
+		-webkit-appearance: none;
+		width: 24px;
+		height: 24px;
+		margin: 0;
+		background-image: url("/assets/svg/CheckboxOff.svg");
+		background-size: contain;
+		background-position: center;
+		background-repeat: no-repeat;
+		cursor: pointer;
 
-        &:checked {
-            background-image: url("/assets/svg/CheckboxOn.svg");
-        }
-    }
+		&:checked {
+			background-image: url("/assets/svg/CheckboxOn.svg");
+		}
+	}
 
-    input[name="favorites-checkbox"] {
-        appearance: none;
-        -webkit-appearance: none;
-        width: 24px;
-        height: 24px;
-        margin: 0;
-        background-image: url("/assets/svg/StarOff.svg");
-        background-size: contain;
-        background-position: center;
-        background-repeat: no-repeat;
-        cursor: pointer;
+	input[name="favorites-checkbox"] {
+		appearance: none;
+		-webkit-appearance: none;
+		width: 24px;
+		height: 24px;
+		margin: 0;
+		background-image: url("/assets/svg/StarOff.svg");
+		background-size: contain;
+		background-position: center;
+		background-repeat: no-repeat;
+		cursor: pointer;
 
-        &:checked {
-            background-image: url("/assets/svg/StarOn.svg");
-        }
-    }
+		&:checked {
+			background-image: url("/assets/svg/StarOn.svg");
+		}
+	}
 
-    .mail-content {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        gap: 20px;
-        min-width: 0;
-        flex: 1;
+	.mail-content {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		gap: 20px;
+		min-width: 0;
+		flex: 1;
 
-        .mail-theme {
-            width: 220px;
-            overflow: hidden;
-            white-space: nowrap;
-            text-overflow: ellipsis;
-            font-weight: 500;
-            flex-shrink: 0;
-        }
+		.unread-dot {
+			width: 8px;
+			height: 8px;
+			background-color: var(--accent);
+			border-radius: 50%;
+			vertical-align: middle;
+			margin-right: 5px;
+			display: inline-block;
 
-        .mail-title {
-            flex: 1;
-            overflow: hidden;
-            white-space: nowrap;
-            text-overflow: ellipsis;
-        }
+			&.mail-read {
+				display: none;
+			}
+		}
 
-        .mail-date {
-            width: 120px;
-            text-align: right;
-            overflow: hidden;
-            white-space: nowrap;
-            text-overflow: ellipsis;
-            flex-shrink: 0;
-        }
-    }
+		.mail-theme {
+			width: 220px;
+			overflow: hidden;
+			white-space: nowrap;
+			text-overflow: ellipsis;
+			font-weight: 500;
+			flex-shrink: 0;
+		}
+
+		.mail-title {
+			flex: 1;
+			overflow: hidden;
+			white-space: nowrap;
+			text-overflow: ellipsis;
+		}
+
+		.mail-date {
+			width: 120px;
+			text-align: right;
+			overflow: hidden;
+			white-space: nowrap;
+			text-overflow: ellipsis;
+			flex-shrink: 0;
+		}
+	}
 }
 
 .mail.selected {
-    background-color: var(--color-main-background);
-    border-color: var(--accent);
+	background-color: var(--color-main-background);
+	border-color: var(--accent);
+}
+
+@media (max-width: 768px) {
+	.mail {
+		border: none;
+		.checkbox-container {
+			display: none;
+		}
+
+		.mail-content {
+			flex-direction: column;
+			align-items: flex-start;
+			gap: 10px;
+
+			.mail-sender {
+				font-size: 15px;
+				font-weight: 700;
+			}
+
+			.mail-theme {
+				font-size: 12px;
+				font-weight: 500;
+			}
+
+			.mail-title {
+				font-size: 12px;
+			}
+
+			.mail-date {
+				display: none;
+			}
+		}
+	}
 }
