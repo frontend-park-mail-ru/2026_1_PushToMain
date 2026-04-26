@@ -55,13 +55,30 @@ class MailBox extends Death13.Component {
 					/>
 				</div>
 				<div className="mail-content">
-					<span className="mail-sender">
-						<div className={`unread-dot ${isRead ? "mail-read" : ""}`}></div>
-						{sender_name} {sender_surname}
-					</span>
-					<span className="mail-theme">{theme}</span>
-					<span className="mail-title">{title}</span>
-					<span className="mail-date">{date}</span>
+					<div className="mail-content__left-part">
+						<span className="mail-sender">
+							<div className={`unread-dot ${isRead ? "mail-read" : ""}`}></div>
+							{sender_name !== ""
+								? `${sender_name} ${sender_surname}`
+								: sender_email}
+						</span>
+						<div className="mail-text-content">
+							<span className="mail-theme">{theme}</span>
+							<span className="mail-title">{title}</span>
+							<span className="mail-date">{date}</span>
+						</div>
+					</div>
+					<div className="mail-content__right-part-mobile">
+						<span className="mail-date-mobile">{date}</span>
+						<input
+							className="favorites-checkbox-mobile"
+							type="checkbox"
+							name="favorites-checkbox"
+							checked={isFavorite}
+							onChange={this.handleFavorite}
+							onClick={(e: any) => e.stopPropagation()}
+						/>
+					</div>
 				</div>
 			</div>
 		);
