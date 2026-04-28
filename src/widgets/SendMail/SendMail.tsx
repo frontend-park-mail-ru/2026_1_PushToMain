@@ -11,6 +11,8 @@ class SendMail extends Death13.Component {
         header: "",
         body: "",
         receivers: [],
+        invalidReceivers: [],
+        buttonBlock: true,
     };
 
     constructor(props: any) {
@@ -38,34 +40,36 @@ class SendMail extends Death13.Component {
         }
     };
 
+    isFormValid = (header: string, body: string, receivers: string[], invalidReceivers: string[]): boolean => {
+        return header.trim().length > 0 && body.trim().length > 0 && receivers.length > 0 && (invalidReceivers || []).length === 0;
+    };
+
+    updateButtonState = () => {
+        const { header, body, receivers, invalidReceivers } = this.state;
+        const isValid = this.isFormValid(header, body, receivers, invalidReceivers);
+        this.setState({ buttonBlock: !isValid });
+    };
+
     handleHeaderChange = (e: any) => {
         this.setState({ header: e.target.value });
+        this.updateButtonState();
     };
 
     handleBodyChange = (e: any) => {
         this.setState({ body: e.target.value });
+        this.updateButtonState();
     };
 
-    handleReceiversChange = (emails: string[]) => {
-        this.setState({ receivers: emails });
+    handleReceiversChange = (emails: string[], invalidEmails: string[]) => {
+        this.setState({ receivers: emails, invalidReceivers: invalidEmails });
+        this.updateButtonState();
     };
 
     async handleSubmit(e: any) {
         const { header, body, receivers } = this.state;
-
         e.preventDefault();
 
-        if (!header.trim()) {
-            return;
-        }
-
-        if (!body.trim()) {
-            return;
-        }
-
-        if (!receivers || receivers.length === 0) {
-            return;
-        }
+        this.setState({ buttonBlock: true });
 
         const response = await sendEmail({
             header: header.trim(),
@@ -89,7 +93,7 @@ class SendMail extends Death13.Component {
     };
 
     render() {
-        const { body, header, receivers } = this.state;
+        const { body, header, receivers, buttonBlock } = this.state;
 
         return (
             <div className="send-mail">
@@ -112,13 +116,14 @@ class SendMail extends Death13.Component {
                             onInput={this.handleHeaderChange.bind(this)}
                         />
                     </div>
-                    <Textarea readonly={false} value={body} onChange={this.handleBodyChange.bind(this)} />
+                    <Textarea readonly={false} value={body} onInput={this.handleBodyChange} />{" "}
                 </form>
                 <div className="send-actions">
                     <Button title="Сохранить" name="save-mail" onClick={this.handleSaveDraft} />{" "}
                     <Button
                         title="Отправить"
                         name="send-mail"
+                        block={buttonBlock}
                         onClick={(event: any) => {
                             this.handleSubmit(event);
                         }}

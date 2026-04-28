@@ -15,7 +15,7 @@
     margin-left: 5px;
 
     &.read {
-        background-color: var(--input-success-background);
+        background-color: var(--mail-read-background);
         color: var(--secondary-text);
         border: none;
         text-decoration: none;
@@ -23,7 +23,7 @@
 
     &.mail.selected {
         background-color: #9cc8fe;
-        color: var(--tretiry-text)
+        color: var(--tretiry-text);
     }
 
     &:hover {
@@ -77,6 +77,31 @@
         }
     }
 
+    input[name="read-checkbox"] {
+        padding: 0;
+        -webkit-appearance: none;
+        -moz-appearance: none;
+        appearance: none;
+        border-radius: 50%;
+        width: 9px;
+        height: 9px;
+        border: 5px solid var(--accent-2);
+        cursor: pointer;
+        transition: all 0.2s ease;
+        margin-left: 20px;
+
+        &:checked {
+            border: none;
+        }
+
+        &:hover {
+            border: 2px solid var(--accent-2);
+        }
+    }
+
+    .sent-checkbox{
+        margin-left: 10px;
+    }
     .mail-content {
         display: flex;
         align-items: center;

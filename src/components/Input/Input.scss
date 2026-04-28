@@ -26,6 +26,7 @@
 .input__title {
     font-size: 16px;
     padding-left: 15px;
+    color: var(--tertiary-text)
 }
 
 .input-form {
@@ -45,6 +46,7 @@
         border: none;
         background: transparent;
         outline: none;
+        color: var(--tertiary-text);
 
         &::placeholder {
             font-size: 14px;

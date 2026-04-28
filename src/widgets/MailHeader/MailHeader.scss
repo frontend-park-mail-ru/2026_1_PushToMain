@@ -10,16 +10,31 @@
         display: flex;
         align-items: center;
         gap: 10px;
+        color: var(--tertiary-text);
     }
 
     &__left-container {
+        [name="refresh"] {
+            &::before {
+                content: "";
+                display: inline-block;
+                width: 24px;
+                height: 24px;
+                background-color: var(--primary-text);
+                mask-image: url("/assets/svg/Refresh.svg");
+                mask-size: contain;
+                mask-repeat: no-repeat;
+                mask-position: center;
+            }
+        }
+
         .left-container__select-all {
             display: flex;
             align-items: center;
             justify-content: center;
             border-radius: 10px;
             overflow: hidden;
-            padding: 0 4px;
+            padding: 0 7px;
 
             &:hover {
                 background-color: var(--color-main-background);
@@ -115,7 +130,7 @@
         background-color: transparent;
         width: 24px;
         height: 24px;
-        color: var(--button-active-background);
+        color: var(--tertiary-text);
         margin: 0;
         background-image: url("/assets/svg/CheckboxOffAll.svg");
         background-size: contain;

@@ -28,7 +28,7 @@
     .search-bar {
         display: flex;
         align-items: center;
-        background-color: #ffffff;
+        background-color: var(--color-sidebar-background);
         border-radius: 20px;
         padding: 0 20px;
         height: 48px;
@@ -95,8 +95,10 @@
 
             &[name="avatar"] {
                 img {
-                    width: 55px;
-                    height: 55px;
+                    min-width: 55px;
+                    min-height: 55px;
+                    max-width: 55px;
+                    max-height: 55px;
                     border-radius: 50%;
                     object-fit: cover;
                 }
@@ -107,7 +109,7 @@
     .mail-box-container {
         background-color: var(--color-sidebar-background);
         border-radius: 20px;
-        padding: 10px;
+        padding: 20px 30px;
         margin: 20px 0 0 0;
         gap: 3px;
 
