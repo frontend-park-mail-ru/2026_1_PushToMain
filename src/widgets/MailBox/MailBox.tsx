@@ -58,9 +58,7 @@ class MailBox extends Death13.Component {
 					<div className="mail-content__left-part">
 						<span className="mail-sender">
 							<div className={`unread-dot ${isRead ? "mail-read" : ""}`}></div>
-							{sender_name !== ""
-								? `${sender_name} ${sender_surname}`
-								: sender_email}
+							{sender_name ? `${sender_name} ${sender_surname}` : sender_email}
 						</span>
 						<div className="mail-text-content">
 							<span className="mail-theme">{theme}</span>

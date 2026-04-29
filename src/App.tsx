@@ -6,7 +6,6 @@ import MainPage from "./pages/MainPage/MainPage";
 import ProfilePage from "./pages/ProfilePage/ProfilePage";
 import SentPage from "./pages/SentPage/SentPage";
 import SendEmailPage from "./pages/SendEmailPage/SendEmailPage";
-import PlaygroundPage from "./pages/PlaygroundPage/PlaygroundPage";
 import { URLMINIO } from "./api/config";
 
 export const AppStorage = {

@@ -227,6 +227,9 @@ class SentPage extends Death13.Component {
 												key={email.id || index}
 												id={email.id}
 												theme={email.header}
+												sender_name={email.sender_name}
+												sender_surname={email.sender_surname}
+												sender_email={email.sender_email}
 												emails={email.receivers_emails}
 												title={email.body}
 												date={this.formatTime(email.created_at)}

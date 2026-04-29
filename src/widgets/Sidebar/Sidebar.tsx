@@ -2,6 +2,7 @@ import Death13 from "@react/stands";
 import Button from "../../components/Button/Button";
 import "./Sidebar.scss";
 import { AppStorage } from "../../App";
+import SidebarProfile from "../../components/SidebarProfile/SidebarProfile";
 
 class Sidebar extends Death13.Component {
   state: any = {
@@ -150,13 +151,12 @@ class Sidebar extends Death13.Component {
         )}{" "}
         {isProfile === 1 && (
           <div className="sidebar-content">
-            <div className="sidebar-profile">
-              <img src={avatarUrl}></img>
-              <span>
-                {name} {surname}
-              </span>
-              <p>{email}</p>
-            </div>
+            <SidebarProfile
+              name={name}
+              surname={surname}
+              email={email}
+              avatarUrl={avatarUrl}
+            />
             <div className="main-button-profile">
               <Button
                 title="Почтовый ящик"
@@ -187,6 +187,13 @@ class Sidebar extends Death13.Component {
             </div>
           </div>
         )}
+        <SidebarProfile
+          name={name}
+          surname={surname}
+          email={email}
+          avatarUrl={avatarUrl}
+          variant="mobile"
+        />
       </div>
     );
   }
