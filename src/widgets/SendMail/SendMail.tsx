@@ -4,7 +4,7 @@ import InputEmail from "../../components/InputEmail/InputEmail";
 import Input from "../../components/Input/Input";
 import Textarea from "../../components/Textarea/Textarea";
 import Button from "../../components/Button/Button";
-import { sendEmail, uploadFile } from "../../api/ApiEmail";
+import { sendEmail} from "../../api/ApiEmail";
 import { AppStorage } from "../../App";
 
 class SendMail extends Death13.Component {
@@ -79,14 +79,13 @@ class SendMail extends Death13.Component {
             receivers: receivers,
         });
 
-        const file = this.state.files;
+        /* const responseFile = await uploadFile(file, responseSend.emailId); */
 
-        const responseFile = await uploadFile(file, responseSend.emailId);
-
-        if (responseSend && responseFile) {
+        if (responseSend) {
             window.AppStorage.clearMailActionData();
             this.props.backToMail();
         }
+            
     }
 
     handleCancel = () => {

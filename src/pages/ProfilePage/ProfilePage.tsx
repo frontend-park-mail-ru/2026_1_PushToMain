@@ -32,10 +32,10 @@ class ProfilePage extends Death13.Component {
             name: AppStorage.name,
             surname: AppStorage.surname,
             email: AppStorage.email,
+            is_male: AppStorage.is_male,
             folders: AppStorage.folders,
             oldPassword: "",
             newPassword: "",
-            gender: "male",
             profileState: shouldOpenSettings ? 2 : 0,
             avatarKey: 0,
             avatarUrl: AppStorage.getAvatarUrl(),
@@ -43,6 +43,9 @@ class ProfilePage extends Death13.Component {
             isConfirm: false,
             isStatus: false,
             language: AppStorage.language,
+            birthDay: AppStorage.birthDay,
+            birthMonth: AppStorage.birthMonth,
+            birthYear: AppStorage.birthYear,
         };
     }
 
@@ -51,18 +54,36 @@ class ProfilePage extends Death13.Component {
         if (data === null) {
             window.app.handleRoute("/login");
         } else {
+            let birthDay = "";
+            let birthMonth = "";
+            let birthYear = "";
+            if (data.birthdate && typeof data.birthdate === "string") {
+                const parts = data.birthdate.split("T")[0].split("-");
+                birthYear = parts[0];
+                birthMonth = String(parseInt(parts[1]));
+                birthDay = String(parseInt(parts[2]));
+            }
+
             AppStorage.setProfileData({
+                is_male: data.is_male ?? true,
                 name: data.name || "",
                 surname: data.surname || "",
                 email: data.email || "",
                 image_path: data.image_path || "",
+                birthDay: birthDay,
+                birthMonth: birthMonth,
+                birthYear: birthYear,
             });
             this.setState({
                 name: data.name || "",
                 surname: data.surname || "",
                 email: data.email || "",
+                is_male: data.is_male ?? true,
                 avatarUrl: AppStorage.getAvatarUrl(),
                 isStatus: false,
+                birthDay: birthDay,
+                birthMonth: birthMonth,
+                birthYear: birthYear,
             });
         }
     };
@@ -113,25 +134,46 @@ class ProfilePage extends Death13.Component {
     }
 
     async handleChangeProfileData(event: any) {
+        const { birthDay, birthMonth, birthYear } = this.state;
+
+        const month = birthMonth.padStart(2, "0");
+        const day = birthDay.padStart(2, "0");
+        const birthDate = `${birthYear}-${month}-${day}T00:00:00Z`;
+
         event.preventDefault();
         try {
-            const response = await changeProfile({
+            const payload: any = {
                 name: this.state.name,
                 surname: this.state.surname,
-            });
+                is_male: this.state.is_male,
+                email: this.state.email,
+            };
+
+            if (birthDate) {
+                payload.birthdate = birthDate;
+            }
+            const response = await changeProfile(payload);
             if (response) {
                 const currentImagePath = AppStorage.image_path;
                 AppStorage.setProfileData({
                     name: this.state.name,
                     surname: this.state.surname,
                     email: this.state.email,
+                    is_male: this.state.is_male,
                     image_path: currentImagePath,
+                    birthDay: birthDay,
+                    birthMonth: birthMonth,
+                    birthYear: birthYear,
                 });
                 this.setState({
+                    is_male: this.state.is_male,
                     name: this.state.name,
                     surname: this.state.surname,
                     isConfirm: true,
                     isStatus: true,
+                    birthDay: birthDay,
+                    birthMonth: birthMonth,
+                    birthYear: birthYear,
                 });
             } else {
                 this.setState({ isConfirm: true, isStatus: false });
@@ -166,8 +208,8 @@ class ProfilePage extends Death13.Component {
         return isTouched && value && !error;
     };
 
-    handleGenderChange = (value: string) => {
-        this.setState({ gender: value });
+    handleGenderChange = (value: boolean) => {
+        this.setState({ is_male: value });
     };
 
     handleLogout = async (event: Event) => {
@@ -212,6 +254,14 @@ class ProfilePage extends Death13.Component {
         this.setState({ profileState: 3 });
     };
 
+    handleDateChange = (date: { day: string; month: string; year: string }) => {
+        this.setState({
+            birthDay: date.day,
+            birthMonth: date.month,
+            birthYear: date.year,
+        });
+    };
+
     t(key: string): string {
         return AppStorage.t(key);
     }
@@ -228,8 +278,8 @@ class ProfilePage extends Death13.Component {
             avatarUrl,
             isModalOpen,
             isConfirm,
+            is_male,
             isStatus,
-            gender,
         } = this.state;
 
         return (
@@ -287,7 +337,12 @@ class ProfilePage extends Death13.Component {
                                                 this.handleInputChange("surname", e.target.value);
                                             }}
                                         />
-                                        <SelectDate />
+                                        <SelectDate
+                                            onChange={this.handleDateChange}
+                                            birthDay={this.state.birthDay}
+                                            birthMonth={this.state.birthMonth}
+                                            birthYear={this.state.birthYear}
+                                        />
                                         <div className="profile__checkbox">
                                             <span>{this.t("gender")}</span>
                                             <div className="checkbox-actions">
@@ -296,8 +351,8 @@ class ProfilePage extends Death13.Component {
                                                         id="male"
                                                         type="radio"
                                                         name="radio-gender"
-                                                        checked={gender === "male"}
-                                                        onInput={() => this.handleGenderChange("male")}
+                                                        checked={is_male === true}
+                                                        onInput={() => this.handleGenderChange(true)}
                                                     />
                                                     <label for="male">{this.t("male")}</label>
                                                 </div>
@@ -307,8 +362,8 @@ class ProfilePage extends Death13.Component {
                                                         id="female"
                                                         type="radio"
                                                         name="radio-gender"
-                                                        checked={gender === "female"}
-                                                        onInput={() => this.handleGenderChange("female")}
+                                                        checked={is_male !== true}
+                                                        onInput={() => this.handleGenderChange(false)}
                                                     />
                                                     <label for="female">{this.t("female")}</label>
                                                 </div>

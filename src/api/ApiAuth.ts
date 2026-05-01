@@ -239,7 +239,7 @@ export async function uploadAvatar(file: File) {
     }
 }
 
-export async function changeProfile(data: { name: string; surname: string }) {
+export async function changeProfile(data: { name: string; surname: string; is_male: string }) {
     const csrfToken = await getCSRFToken();
     try {
         const response = await fetch(`${URL}/profile/change`, {

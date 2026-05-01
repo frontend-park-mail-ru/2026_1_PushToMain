@@ -16,6 +16,10 @@ export const AppStorage = {
     name: "",
     surname: "",
     email: "",
+    is_male: true,
+    birthDay: "",
+    birthMonth: "",
+    birthYear: "",
     image_path: "",
     folders: [] as Array<{
         id: number;
@@ -217,6 +221,7 @@ export const AppStorage = {
                 this.surname = data.surname || "";
                 this.email = data.email || "";
                 this.image_path = data.image_path || "";
+                this.is_male = data.is_male ?? true;
                 this._lastUpdate = data._lastUpdate || Date.now();
             }
 
@@ -282,6 +287,10 @@ export const AppStorage = {
             surname: string;
             email: string;
             image_path: string;
+            is_male: boolean;
+            birthDay: string;
+            birthMonth: string;
+            birthYear: string;
         } | null,
     ) {
         if (!data) {
@@ -292,7 +301,11 @@ export const AppStorage = {
         this.name = data.name || "";
         this.surname = data.surname || "";
         this.email = data.email || "";
+        this.is_male = data.is_male ?? true;
         this.image_path = data.image_path || "";
+        this.birthDay = data.birthDay;
+        this.birthMonth = data.birthMonth;
+        this.birthYear = data.birthYear;
         this._lastUpdate = Date.now();
 
         this._saveToStorage();
@@ -307,7 +320,11 @@ export const AppStorage = {
                     name: this.name,
                     surname: this.surname,
                     email: this.email,
+                    is_male: this.is_male,
                     image_path: this.image_path,
+                    birthDay: this.birthDay,
+                    birthMonth: this.birthMonth,
+                    birthYear: this.birthYear,
                     _lastUpdate: this._lastUpdate,
                 }),
             );

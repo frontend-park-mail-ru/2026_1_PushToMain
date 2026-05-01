@@ -16,16 +16,49 @@ class SelectDate extends Death13.Component {
         year: "",
     };
 
+    getDay() {
+        return this.state.day || this.props.birthDay || "";
+    }
+
+    getMonth() {
+        return this.state.month || this.props.birthMonth || "";
+    }
+
+    getYear() {
+        return this.state.year || this.props.birthYear || "";
+    }
+
     handleDayChange(value: string) {
         this.setState({ day: value });
+        if (this.props.onChange) {
+            this.props.onChange({
+                day: value,
+                month: this.getMonth(),
+                year: this.getYear(),
+            });
+        }
     }
 
     handleMonthChange(value: string) {
         this.setState({ month: value, day: "" });
+        if (this.props.onChange) {
+            this.props.onChange({
+                day: "",
+                month: value,
+                year: this.getYear(),
+            });
+        }
     }
 
     handleYearChange(value: string) {
         this.setState({ year: value, day: "" });
+        if (this.props.onChange) {
+            this.props.onChange({
+                day: "",
+                month: this.getMonth(),
+                year: value,
+            });
+        }
     }
 
     t(key: string): string {
@@ -33,7 +66,9 @@ class SelectDate extends Death13.Component {
     }
 
     render() {
-        const { day, month, year } = this.state;
+        const day = this.getDay();
+        const month = this.getMonth();
+        const year = this.getYear();
         return (
             <div className="select-date">
                 <span>{this.t("date_of_birth")}</span>
