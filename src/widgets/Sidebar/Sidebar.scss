@@ -16,6 +16,15 @@
 
     width: 100%;
 
+    .sidebar-settings-back-button-mobile {
+        display: flex;
+        align-items: center;
+        width: fit-content;
+        gap: 5px;
+        padding: 0 10px;
+        margin-bottom: 5px;
+    }
+
     .logo-container {
         cursor: pointer;
     }
@@ -152,8 +161,18 @@
 
     .main-button-container,
     .extra-button-container {
+        margin-top: 10px;
         button {
             height: 50px !important;
         }
+    }
+
+    .sidebar-profile__name {
+        font-size: 20px;
+    }
+
+    .sidebar-profile__email {
+        margin-top: 5px;
+        font-size: 16px;
     }
 }

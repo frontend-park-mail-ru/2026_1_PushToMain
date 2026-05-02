@@ -52,10 +52,10 @@ class SidebarProfile extends Death13.Component {
           <img src={avatarUrl}></img>
         )}
         <div className="sidebar-profile__text">
-          <span>
+          <span className="sidebar-profile__name">
             {name} {surname}
           </span>
-          <p>{email}</p>
+          <p className="sidebar-profile__email">{email}</p>
         </div>
         {variant === "mobile" ? (
           <Button

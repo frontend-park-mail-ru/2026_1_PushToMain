@@ -208,10 +208,17 @@
 @media (max-width: 768px) {
     .mail {
         align-items: center;
-
         border: none;
-        .checkbox-container {
+
+        input[name="favorites-checkbox"] {
             display: none;
+        }
+
+        .checkbox-container {
+            .select-checkbox {
+                height: 24px;
+                width: 24px;
+            }
         }
 
         .mail-content {
@@ -272,6 +279,7 @@
                 }
 
                 .favorites-checkbox-mobile {
+                    display: flex;
                     align-self: flex-end;
                 }
             }

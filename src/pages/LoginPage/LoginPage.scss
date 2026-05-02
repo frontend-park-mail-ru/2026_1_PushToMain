@@ -93,3 +93,34 @@
         background-color: var(--color-main-background);
     }
 }
+
+@media (max-width: 768px) {
+    .auth-page {
+        justify-content: center;
+
+        .auth-container {
+            width: 80vw;
+            justify-self: center;
+
+            .auth-page__form-container {
+                width: 100%;
+
+                .auth-form__subtitle {
+                    font-size: 16px;
+                }
+
+                .auth-form {
+                    width: 100%;
+
+                    .auth-form__inputs {
+                        width: 100%;
+
+                        .input-container {
+                            width: 100%;
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

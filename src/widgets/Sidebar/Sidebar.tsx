@@ -36,7 +36,17 @@ class Sidebar extends Death13.Component {
     } = this.props;
 
     return (
-      <div className="sidebar-widget">
+      <div className={`sidebar-widget`}>
+        {isProfile === 1 ? (
+          <div
+            className="sidebar-settings-back-button-mobile"
+            onClick={backToMail}
+          >
+            {" "}
+            <img src="../../assets/svg/ArrowLeft.svg" />
+            <span>К почте</span>
+          </div>
+        ) : null}
         <div
           className="logo-container"
           onClick={(event: any) => {
@@ -187,13 +197,15 @@ class Sidebar extends Death13.Component {
             </div>
           </div>
         )}
-        <SidebarProfile
-          name={name}
-          surname={surname}
-          email={email}
-          avatarUrl={avatarUrl}
-          variant="mobile"
-        />
+        {isProfile === 0 ? (
+          <SidebarProfile
+            name={name}
+            surname={surname}
+            email={email}
+            avatarUrl={avatarUrl}
+            variant="mobile"
+          />
+        ) : null}
       </div>
     );
   }
