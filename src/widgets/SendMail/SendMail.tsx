@@ -7,126 +7,155 @@ import Button from "../../components/Button/Button";
 import { sendEmail } from "../../api/ApiEmail";
 
 class SendMail extends Death13.Component {
-    state: any = {
-        header: "",
-        body: "",
-        receivers: [],
-    };
+  state: any = {
+    header: "",
+    body: "",
+    receivers: [],
+  };
 
-    constructor(props: any) {
-        super(props);
-        this.initializeFromActionData();
+  constructor(props: any) {
+    super(props);
+    this.initializeFromActionData();
+  }
+
+  initializeFromActionData = () => {
+    const { actionData } = this.props;
+
+    if (actionData) {
+      if (actionData.type === "reply") {
+        this.state = {
+          header: actionData.subject || "",
+          body: actionData.body || "",
+          receivers: actionData.to ? [actionData.to] : [],
+        };
+      } else if (actionData.type === "forward") {
+        this.state = {
+          header: actionData.subject || "",
+          body: actionData.body || "",
+          receivers: [],
+        };
+      }
+    }
+  };
+
+  handleHeaderChange = (e: any) => {
+    this.setState({ header: e.target.value });
+  };
+
+  handleBodyChange = (e: any) => {
+    this.setState({ body: e.target.value });
+  };
+
+  handleReceiversChange = (emails: string[]) => {
+    this.setState({ receivers: emails });
+  };
+
+  async handleSubmit(e: any) {
+    const { header, body, receivers } = this.state;
+
+    e.preventDefault();
+
+    if (!header.trim()) {
+      return;
     }
 
-    initializeFromActionData = () => {
-        const { actionData } = this.props;
-
-        if (actionData) {
-            if (actionData.type === "reply") {
-                this.state = {
-                    header: actionData.subject || "",
-                    body: actionData.body || "",
-                    receivers: actionData.to ? [actionData.to] : [],
-                };
-            } else if (actionData.type === "forward") {
-                this.state = {
-                    header: actionData.subject || "",
-                    body: actionData.body || "",
-                    receivers: [],
-                };
-            }
-        }
-    };
-
-    handleHeaderChange = (e: any) => {
-        this.setState({ header: e.target.value });
-    };
-
-    handleBodyChange = (e: any) => {
-        this.setState({ body: e.target.value });
-    };
-
-    handleReceiversChange = (emails: string[]) => {
-        this.setState({ receivers: emails });
-    };
-
-    async handleSubmit(e: any) {
-        const { header, body, receivers } = this.state;
-
-        e.preventDefault();
-
-        if (!header.trim()) {
-            return;
-        }
-
-        if (!body.trim()) {
-            return;
-        }
-
-        if (!receivers || receivers.length === 0) {
-            return;
-        }
-
-        const response = await sendEmail({
-            header: header.trim(),
-            body: body.trim(),
-            receivers: receivers,
-        });
-
-        if (response) {
-            window.AppStorage.clearMailActionData();
-            this.props.backToMail();
-        }
+    if (!body.trim()) {
+      return;
     }
 
-    handleCancel = () => {
-        window.AppStorage.clearMailActionData();
-        this.props.backToMail();
-    };
-
-    handleSaveDraft = (event: any) => {
-        event.preventDefault();
-    };
-
-    render() {
-        const { body, header, receivers } = this.state;
-
-        return (
-            <div className="send-mail">
-                <div className="send-mail-header"></div>
-                <form action="" className="send-form">
-                    <div className="send-inputs">
-                        <InputEmail
-                            input_title="Кому:"
-                            placeholder="Введите почту"
-                            emails={receivers}
-                            onChange={this.handleReceiversChange.bind(this)}
-                        />
-                        <Input
-                            type="text"
-                            placeholder="Введите тему"
-                            input_title="Тема:"
-                            name="theme"
-                            maxLength="255"
-                            value={header}
-                            onInput={this.handleHeaderChange.bind(this)}
-                        />
-                    </div>
-                    <Textarea readonly={false} value={body} onChange={this.handleBodyChange.bind(this)} />
-                </form>
-                <div className="send-actions">
-                    <Button title="Сохранить" name="save-mail" onClick={this.handleSaveDraft} />{" "}
-                    <Button
-                        title="Отправить"
-                        name="send-mail"
-                        onClick={(event: any) => {
-                            this.handleSubmit(event);
-                        }}
-                    />
-                </div>
-            </div>
-        );
+    if (!receivers || receivers.length === 0) {
+      return;
     }
+
+    const response = await sendEmail({
+      header: header.trim(),
+      body: body.trim(),
+      receivers: receivers,
+    });
+
+    if (response) {
+      window.AppStorage.clearMailActionData();
+      this.props.backToMail();
+    }
+  }
+
+  handleCancel = () => {
+    window.AppStorage.clearMailActionData();
+    this.props.backToMail();
+  };
+
+  handleSaveDraft = (event: any) => {
+    event.preventDefault();
+  };
+
+  render() {
+    const { body, header, receivers } = this.state;
+    const isMobile = window.innerWidth < 769;
+
+    return (
+      <div className="send-mail">
+        {isMobile ? (
+          <div className="send-mail-mobile-buttons">
+            <img
+              className="close-button"
+              src="../../assets/svg/Close.svg"
+              onClick={this.handleCancel}
+            ></img>
+            <img
+              className="send-button"
+              src="../../assets/svg/Sent.svg"
+              onClick={(event: any) => {
+                this.handleSubmit(event);
+              }}
+            ></img>
+          </div>
+        ) : null}
+        <div className="send-mail-header">
+          <span className="send-mail-header__text">Новое письмо</span>
+        </div>
+        <form action="" className="send-form">
+          <div className="send-inputs">
+            <InputEmail
+              input_title="Кому:"
+              placeholder="Введите почту"
+              emails={receivers}
+              onChange={this.handleReceiversChange.bind(this)}
+            />
+            <Input
+              type="text"
+              placeholder="Введите тему"
+              input_title="Тема:"
+              name="theme"
+              maxLength="255"
+              value={header}
+              onInput={this.handleHeaderChange.bind(this)}
+            />
+          </div>
+          <Textarea
+            readonly={false}
+            value={body}
+            onChange={this.handleBodyChange.bind(this)}
+          />
+        </form>
+        {!isMobile ? (
+          <div className="send-actions">
+            <Button
+              title="Сохранить"
+              name="save-mail"
+              onClick={this.handleSaveDraft}
+            />{" "}
+            <Button
+              title="Отправить"
+              name="send-mail"
+              onClick={(event: any) => {
+                this.handleSubmit(event);
+              }}
+            />
+          </div>
+        ) : null}
+      </div>
+    );
+  }
 }
 
 export default SendMail;

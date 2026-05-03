@@ -63,3 +63,31 @@
         }
     }
 }
+
+@media (max-width: 768px) {
+    .send-mail {
+        .send-mail-mobile-buttons {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 15px 20px;
+
+            .close-button {
+                height: 22px;
+                width: 22px;
+                fill: black;
+            }
+
+            .send-button {
+                height: 32px;
+                width: 32px;
+            }
+        }
+
+        .send-mail-header {
+            font-size: 1.3rem;
+            font-weight: 600;
+            padding: 10px 20px 0 20px;
+        }
+    }
+}

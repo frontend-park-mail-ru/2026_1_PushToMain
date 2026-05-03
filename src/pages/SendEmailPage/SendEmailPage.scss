@@ -177,3 +177,122 @@
         }
     }
 }
+
+@media (max-width: 768px) {
+    .send-email-page {
+        grid-template-columns: 1fr;
+        display: block;
+
+        .right-part {
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+            height: 100vh;
+            width: 100vw;
+            margin: 0;
+            box-sizing: border-box;
+        }
+
+        .top-bar {
+            display: none;
+            height: 15%;
+            margin: 0 15px;
+
+            .search-bar {
+                height: 60px;
+                width: 100%;
+                margin-left: 10px;
+                margin-right: 0;
+
+                .input-form input {
+                    width: 100%;
+                    min-width: 0;
+                    box-sizing: border-box;
+                }
+            }
+
+            .top-right-menu {
+                display: none;
+            }
+        }
+
+        .mail-box-container {
+            margin: 5px 0 0 0;
+            border-radius: 20px 20px 0 0;
+            height: 93%;
+        }
+    }
+
+    body
+        .main-page
+        body
+        .main-page
+        .main-page
+        .top-bar
+        .main-page
+        .top-bar
+        .main-page
+        .top-bar
+        .hamburger-btn {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 60px;
+        height: 60px;
+        background-color: #ffffff;
+        border: none;
+        border-radius: 20px;
+        cursor: pointer;
+        flex-shrink: 0;
+
+        img {
+            width: 24px;
+            height: 24px;
+        }
+
+        &:active {
+            background-color: #f0f0f0;
+        }
+    }
+
+    body .sidebar {
+        position: fixed;
+        left: 0;
+        top: 0;
+        transform: translateX(-100%);
+        transition: transform 0.3s ease-in-out;
+        z-index: 1000;
+        margin: 0;
+
+        &.open {
+            transform: translateX(0);
+            width: 85%;
+        }
+
+        .sidebar-widget {
+            .sidebar-content .main-button {
+                display: none;
+            }
+        }
+    }
+
+    body .main-page .sidebar-overlay {
+        display: block;
+        visibility: hidden;
+        opacity: 0;
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: rgba(0, 0, 0, 0.5);
+        z-index: 999;
+        transition: opacity 0.3s ease-in-out;
+
+        &.open {
+            visibility: visible;
+            opacity: 1;
+            transition: opacity 0.3s ease-in-out;
+        }
+    }
+}

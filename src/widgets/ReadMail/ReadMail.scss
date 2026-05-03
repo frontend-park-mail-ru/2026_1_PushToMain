@@ -46,3 +46,46 @@
         }
     }
 }
+
+@media (max-width: 768px) {
+    .read-mail {
+        .read-mail__header-mobile {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 5px;
+
+            .back-button {
+                padding: 0 10px;
+                height: 28px;
+                width: 28px;
+            }
+        }
+
+        .tools-bottom-mobile {
+            display: flex;
+            justify-content: flex-end;
+            padding: 10px;
+
+            button {
+                display: flex;
+                align-items: center;
+                background-color: transparent;
+                color: var(--tretiry-text);
+                height: 30px;
+                font-size: 16px;
+                gap: 10px;
+                padding: 21px 6px;
+
+                &:hover {
+                    background-color: var(--color-main-background);
+                }
+
+                img {
+                    width: 32px;
+                    height: 32px;
+                }
+            }
+        }
+    }
+}

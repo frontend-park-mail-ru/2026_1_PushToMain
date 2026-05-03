@@ -227,9 +227,11 @@ class MainPage extends Death13.Component {
               />
             </div>
           </div>
-          <div className="mail-box-container__mobile-header">
-            <span>Входящие</span>
-          </div>
+          {isStateMode !== 3 ? (
+            <div className="mail-box-container__mobile-header">
+              <span>Входящие</span>
+            </div>
+          ) : null}
           <div className="mail-box-container">
             {isStateMode === 0 && (
               <div className="container-form">
@@ -288,15 +290,17 @@ class MainPage extends Death13.Component {
             onProfileClick={this.handleProfileClick}
           />
         </div>
-        <Button
-          className="button-new-letter-mobile"
-          name="button-new-letter-mobile"
-          svg="../../assets/svg/Compose.svg"
-          onClick={(event: any) => {
-            event.preventDefault();
-            this.handleNewMail();
-          }}
-        />
+        {isStateMode === 0 ? (
+          <Button
+            className="button-new-letter-mobile"
+            name="button-new-letter-mobile"
+            svg="../../assets/svg/Compose.svg"
+            onClick={(event: any) => {
+              event.preventDefault();
+              this.handleNewMail();
+            }}
+          />
+        ) : null}
       </div>
     );
   }

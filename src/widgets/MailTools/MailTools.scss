@@ -45,3 +45,21 @@
     }
 }
 
+@media (max-width: 768px) {
+    .tools-container {
+        justify-content: flex-end;
+
+        .tools-left {
+            border-right: none;
+            gap: 10px;
+            padding-right: 5px;
+        }
+
+        button {
+            img {
+                width: 28px;
+                height: 28px;
+            }
+        }
+    }
+}
