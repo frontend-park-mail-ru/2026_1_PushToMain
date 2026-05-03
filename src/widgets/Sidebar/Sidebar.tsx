@@ -48,6 +48,8 @@ class Sidebar extends Death13.Component {
     const { isVisible, name, surname, email, avatarUrl } = this.state;
     const { isProfile = 0, backToMail, newMail, updateMail } = this.props;
 
+    const isMobile = window.innerWidth < 769;
+
     return (
       <div className={`sidebar-widget`}>
         {isProfile === 1 ? (
@@ -190,13 +192,17 @@ class Sidebar extends Death13.Component {
                 }}
               />
             </div>
-            <div className="main-button-container">
+            <div
+              className={`main-button-container ${isMobile ? "mobile-tiles" : ""}`}
+            >
               <Button
+                svg="../../assets/svg/Avatar.svg"
                 name="button-profile"
                 title="Личные данные"
                 onClick={this.openChangeProfile}
               />
               <Button
+                svg="../../assets/svg/Security.svg"
                 name="button-security"
                 title="Безопасность"
                 onClick={this.openChangePassword}

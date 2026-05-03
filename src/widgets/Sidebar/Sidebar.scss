@@ -102,6 +102,10 @@
     .main-button-container {
         button {
             color: var(--tertiary-text);
+
+            img {
+                display: none;
+            }
         }
     }
 
@@ -155,7 +159,7 @@
     .main-button,
     .main-button-profile {
         button {
-            height: 50px !important;
+            height: 50px;
         }
     }
 
@@ -163,12 +167,43 @@
     .extra-button-container {
         margin-top: 10px;
         button {
-            height: 50px !important;
+            height: 50px;
+        }
+
+        &.mobile-tiles {
+            display: grid;
+            grid-template-columns: 50% 50%;
+
+            button {
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                justify-content: center;
+                aspect-ratio: 1/1;
+                width: 100%;
+                height: auto;
+                background: var(--color-main-background);
+                padding: 10px;
+                gap: 25px;
+                font-size: 1.05rem;
+
+                img {
+                    display: block;
+                    width: 30%;
+                    height: 30%;
+                    fill: var(--accent-2);
+                }
+
+                .button-count {
+                    display: none;
+                }
+            }
         }
     }
 
     .sidebar-profile__name {
         font-size: 20px;
+        font-weight: 500;
     }
 
     .sidebar-profile__email {
