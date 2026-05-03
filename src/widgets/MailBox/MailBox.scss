@@ -44,7 +44,7 @@
         }
     }
 
-    input[name="select-checkbox"] {
+    .select-checkbox{
         appearance: none;
         -webkit-appearance: none;
         width: 24px;
@@ -56,10 +56,20 @@
         mask-position: center;
         mask-repeat: no-repeat;
         cursor: pointer;
+    }
 
-        &:checked {
-            mask-image: url("/assets/svg/CheckboxOn.svg");
-        }
+    .select-checkbox.selected  {
+        appearance: none;
+        -webkit-appearance: none;
+        width: 24px;
+        height: 24px;
+        margin: 0;
+        background-color: var(--accent-2);
+        mask-image: url("/assets/svg/CheckboxOn.svg");
+        mask-size: contain;
+        mask-position: center;
+        mask-repeat: no-repeat;
+        cursor: pointer;
     }
 
     input[name="favorites-checkbox"] {
@@ -81,7 +91,25 @@
         }
     }
 
-    input[name="read-checkbox"] {
+    .read-checkbox.read {
+        padding: 0;
+        -webkit-appearance: none;
+        -moz-appearance: none;
+        appearance: none;
+        border-radius: 50%;
+        width: 9px;
+        height: 9px;
+        border: none;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        margin-left: 20px;
+
+        &:hover {
+            border: 2px solid var(--accent-2);
+        }
+    }
+
+    .read-checkbox {
         padding: 0;
         -webkit-appearance: none;
         -moz-appearance: none;
@@ -93,14 +121,6 @@
         cursor: pointer;
         transition: all 0.2s ease;
         margin-left: 20px;
-
-        &:checked {
-            border: none;
-        }
-
-        &:hover {
-            border: 2px solid var(--accent-2);
-        }
     }
 
     .sent-checkbox {

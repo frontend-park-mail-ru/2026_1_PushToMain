@@ -46,6 +46,7 @@ class ProfilePage extends Death13.Component {
             birthDay: AppStorage.birthDay,
             birthMonth: AppStorage.birthMonth,
             birthYear: AppStorage.birthYear,
+            isFolderEditMode: false,
         };
     }
 
@@ -252,6 +253,15 @@ class ProfilePage extends Death13.Component {
 
     handleFolder = () => {
         this.setState({ profileState: 3 });
+    };
+
+    handleToggleFolderEditMode = async () => {
+        if (this.state.isFolderEditMode) {
+            if (AppStorage.folderChangeInstance) {
+                await AppStorage.folderChangeInstance.saveAllPendingChanges();
+            }
+        }
+        this.setState({ isFolderEditMode: !this.state.isFolderEditMode });
     };
 
     handleDateChange = (date: { day: string; month: string; year: string }) => {
@@ -501,11 +511,21 @@ class ProfilePage extends Death13.Component {
                             </div>
                         )}
                         {profileState === 3 && (
-                            <div className="profile-security">
+                            <div className="profile-folder">
                                 <h1>{this.t("folder")}</h1>
+                                <div className="profile-header">
+                                    <Button
+                                        name={this.state.isFolderEditMode ? "done" : "edit"}
+                                        onClick={(event: any) => {
+                                            event.preventDefault();
+                                            this.handleToggleFolderEditMode();
+                                        }}
+                                    />
+                                </div>
+
                                 <div className="profile-content">
                                     <form action="" className="profile-form">
-                                        <FolderChange />
+                                        <FolderChange isEditMode={this.state.isFolderEditMode} />
                                     </form>
                                 </div>
                             </div>

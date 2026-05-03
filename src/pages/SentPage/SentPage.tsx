@@ -28,6 +28,7 @@ class SentPage extends Death13.Component {
         isSelectAll: false,
         offset: 0,
         total: 0,
+        selectedEmails: [], // Добавлено
     };
 
     constructor(props: any) {
@@ -125,8 +126,40 @@ class SentPage extends Death13.Component {
         window.app.handleRoute(`/read/${email.id}`);
     }
 
+    // Добавленные методы для выделения
+    handleSelectEmail = (emailId: number, isSelected: boolean) => {
+        const { selectedEmails, emails } = this.state;
+        let newSelectedEmails;
+
+        if (isSelected) {
+            newSelectedEmails = [...selectedEmails, emailId];
+        } else {
+            newSelectedEmails = selectedEmails.filter((id: number) => id !== emailId);
+        }
+
+        const allSelected = emails.length > 0 && newSelectedEmails.length === emails.length;
+
+        this.setState({
+            selectedEmails: newSelectedEmails,
+            isSelectAll: allSelected,
+        });
+    };
+
     handleSelectAll = (isChecked: boolean) => {
-        this.setState({ isSelectAll: isChecked });
+        const { emails } = this.state;
+
+        if (isChecked) {
+            const allEmailIds = emails.map((email: any) => email.id);
+            this.setState({
+                isSelectAll: true,
+                selectedEmails: allEmailIds,
+            });
+        } else {
+            this.setState({
+                isSelectAll: false,
+                selectedEmails: [],
+            });
+        }
     };
 
     handleBackToMail = () => {
@@ -145,7 +178,7 @@ class SentPage extends Death13.Component {
     }
 
     render() {
-        const { emails, isModalOpen, isStateMode, isSelectAll, total } = this.state;
+        const { emails, isModalOpen, isStateMode, isSelectAll, total, selectedEmails } = this.state;
 
         return (
             <div className="main-page" onClick={() => this.handleCloseModal()}>
@@ -185,6 +218,8 @@ class SentPage extends Death13.Component {
                                     reloadMail={this.handleUpdateEmail}
                                     loadEmail={this.loadEmails}
                                     total={total}
+                                    offset={this.state.offset}
+                                    selectedCount={selectedEmails.length}
                                 />
                                 {emails.length === 0 && (
                                     <div className="mail-box-container-form__placeholder">
@@ -203,7 +238,10 @@ class SentPage extends Death13.Component {
                                                 emails={email.receivers_emails}
                                                 title={email.body}
                                                 date={this.formatTime(email.created_at)}
+                                                isSelected={selectedEmails.includes(email.id)}
+                                                onSelect={this.handleSelectEmail}
                                                 isRead={true}
+                                                pageMain={false}
                                                 onClick={() => this.handleReadMail(email.id)}
                                             />
                                         ))}

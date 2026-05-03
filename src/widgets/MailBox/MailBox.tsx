@@ -1,34 +1,27 @@
 import Death13 from "@react/stands";
 import "./MailBox.scss";
-import { readEmail, unReadEmail } from "../../api/ApiEmail";
-import { AppStorage } from "../../App";
 
 class MailBox extends Death13.Component {
     state: any = {
         isFavorite: false,
-        isRead: this.props.isRead || false,
     };
 
     handleSelect = (e: any) => {
         e.stopPropagation();
         const { id, onSelect } = this.props;
+        const isChecked = e.target.checked;
+
         if (onSelect) {
-            onSelect(id, e.target.checked);
+            onSelect(id, isChecked);
         }
     };
 
-    handleToggleRead = async () => {
-        const { id } = this.props;
-        const newReadState = !this.state.isRead;
+    handleToggleRead = (e: any) => {
+        e.stopPropagation();
+        const { id, isRead, onToggleRead } = this.props;
 
-        this.setState({ isRead: newReadState });
-
-        if (!newReadState) {
-            await unReadEmail(id);
-            AppStorage.setUnReadCount(AppStorage.unReadCount + 1);
-        } else {
-            await readEmail(id);
-            AppStorage.setUnReadCount(AppStorage.unReadCount - 1);
+        if (onToggleRead) {
+            onToggleRead(id, !isRead);
         }
     };
 
@@ -38,14 +31,15 @@ class MailBox extends Death13.Component {
     };
 
     render() {
-        const { theme, title, date, onClick, isSelected = false, pageMain } = this.props;
-        const { isFavorite, isRead } = this.state;
+        const { theme, title, date, onClick, isSelected = false, pageMain, isRead } = this.props;
+        const { isFavorite } = this.state;
 
         return (
             <div className={`mail ${isSelected ? "selected" : ""} ${isRead ? "read" : ""}`} onClick={onClick}>
                 <div className="checkbox-container">
                     <input
                         type="checkbox"
+                        className={`select-checkbox ${isSelected ? "selected" : ""}`}
                         name="select-checkbox"
                         checked={isSelected}
                         onChange={this.handleSelect}
@@ -62,6 +56,7 @@ class MailBox extends Death13.Component {
                         <input
                             type="checkbox"
                             name="read-checkbox"
+                            className={`read-checkbox ${isRead ? "read" : ""}`}
                             checked={isRead}
                             onChange={this.handleToggleRead}
                             onClick={(e: any) => e.stopPropagation()}

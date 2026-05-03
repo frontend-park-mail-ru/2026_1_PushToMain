@@ -5,10 +5,11 @@ import Button from "../../components/Button/Button";
 import MailHeader from "../../widgets/MailHeader/MailHeader";
 import MailBox from "../../widgets/MailBox/MailBox";
 import { getProfile } from "../../api/ApiAuth";
-import { getEmailAll, getEmailSend, readEmail, seacrhEmail } from "../../api/ApiEmail";
+import { getEmailAll, getEmailSend, readEmail, seacrhEmail, unReadEmail } from "../../api/ApiEmail";
 import "./MainPage.scss";
 import ProfileModal from "../../widgets/ProfileModal/ProfileModal";
 import { AppStorage } from "../../App";
+import { getEmailsFromFolder, addEmailsInFolder } from "../../api/ApiFolder";
 
 class MainPage extends Death13.Component {
     state: any = {
@@ -27,9 +28,9 @@ class MainPage extends Death13.Component {
         super(props);
         this.loadEmails(this.state.offset);
 
-        setInterval(() => {
+        /* setInterval(() => {
             this.loadEmails(this.state.offset);
-        }, 10000);
+        }, 10000); */
 
         this.loadProfile();
     }
@@ -127,32 +128,131 @@ class MainPage extends Death13.Component {
 
     async handleReadMail(email: any) {
         this.setState({ isStateMode: 3, selectedEmail: email });
-        await readEmail(email.id);
+        await readEmail([email.id]);
         window.app.handleRoute(`/read/${email.id}`);
     }
 
-    handleSelectAll = (isChecked: boolean) => {
+    handleToggleReadSingle = async (emailId: number, newReadState: boolean) => {
         const { emails } = this.state;
-        const selectedEmails = isChecked ? emails.map((email: any) => email.id) : [];
-        this.setState({
-            isSelectAll: isChecked,
-            selectedEmails: selectedEmails,
-        });
+
+        try {
+            if (newReadState) {
+                await readEmail([emailId]);
+                AppStorage.setUnReadCount(Math.max(0, AppStorage.unReadCount - 1));
+            } else {
+                await unReadEmail(emailId);
+                AppStorage.setUnReadCount(AppStorage.unReadCount + 1);
+            }
+
+            const updatedEmails = emails.map((email: any) => {
+                if (email.id === emailId) {
+                    return { ...email, is_read: newReadState };
+                }
+                return email;
+            });
+
+            this.setState({
+                emails: updatedEmails,
+            });
+        } catch (error) {
+            console.error("Error toggling read status:", error);
+        }
     };
 
-    handleSelectEmail = (emailId: string, isSelected: boolean) => {
+    handleMarkAsRead = async () => {
+        const { selectedEmails } = this.state;
+        const unreadIds = selectedEmails.filter((selectedId: number) => {
+            const email = this.state.emails.find((e: any) => e.id === selectedId);
+            return email && !email.is_read;
+        });
+
+        if (unreadIds.length > 0) {
+            await readEmail(unreadIds);
+            const updatedEmails = this.state.emails.map((email: any) => {
+                if (unreadIds.includes(email.id)) {
+                    return { ...email, is_read: true };
+                }
+                return email;
+            });
+
+            this.setState({
+                emails: updatedEmails,
+            });
+
+            this.setState((prevState: any) => ({
+                emails: prevState.emails.map((email: any) => {
+                    if (unreadIds.includes(email.id)) {
+                        return { ...email, is_read: true };
+                    }
+                    return email;
+                }),
+            }));
+            AppStorage.setUnReadCount(AppStorage.unReadCount - unreadIds.length);
+        }
+    };
+
+    handleSelectEmail = (emailId: number, isSelected: boolean) => {
         const { selectedEmails, emails } = this.state;
         let newSelectedEmails;
 
         if (isSelected) {
             newSelectedEmails = [...selectedEmails, emailId];
         } else {
-            newSelectedEmails = selectedEmails.filter((id: string) => id !== emailId);
+            newSelectedEmails = selectedEmails.filter((id: number) => id !== emailId);
         }
+
+        // Проверяем, все ли письма выделены
+        const allSelected = emails.length > 0 && newSelectedEmails.length === emails.length;
 
         this.setState({
             selectedEmails: newSelectedEmails,
-            isSelectAll: newSelectedEmails.length === emails.length,
+            isSelectAll: allSelected,
+        });
+    };
+
+    handleSelectAll = (isChecked: boolean) => {
+        const { emails } = this.state;
+
+        if (isChecked) {
+            // Выбираем все письма
+            const allEmailIds = emails.map((email: any) => email.id);
+            this.setState({
+                isSelectAll: true,
+                selectedEmails: allEmailIds,
+            });
+        } else {
+            // Снимаем выделение со всех
+            this.setState({
+                isSelectAll: false,
+                selectedEmails: [],
+            });
+        }
+    };
+
+    handleMoveToFolder = async (folderId: number) => {
+        const { selectedEmails } = this.state;
+
+        if (selectedEmails.length === 0) return;
+
+        try {
+            await addEmailsInFolder(folderId, selectedEmails);
+
+            await this.loadEmails(this.state.offset);
+
+            this.setState({
+                selectedEmails: [],
+                isSelectAll: false,
+            });
+        } catch (error) {
+            console.error("Error moving emails to folder:", error);
+        }
+    };
+
+    hasUnreadSelected = () => {
+        const { selectedEmails, emails } = this.state;
+        return selectedEmails.some((selectedId: number) => {
+            const email = emails.find((e: any) => e.id === selectedId);
+            return email && !email.is_read;
         });
     };
 
@@ -166,6 +266,17 @@ class MainPage extends Death13.Component {
 
     handleSearch = async (data: string) => {
         await seacrhEmail(data);
+    };
+
+    loadEmailFromFolder = async (offset: number, folderID: number) => {
+        const data = await getEmailsFromFolder(offset, folderID);
+        const emails = data.emails;
+        this.setState({
+            emails: emails,
+            isLoading: false,
+            total: data.total,
+            offset: offset,
+        });
     };
 
     t(key: string): string {
@@ -184,6 +295,7 @@ class MainPage extends Death13.Component {
                         backToMail={this.handleGoToMain}
                         updateMail={this.handleUpdateEmail}
                         handleGetSendEmail={this.handleGetSendEmail}
+                        loadEmailFromFolder={this.loadEmailFromFolder}
                     />
                 </aside>
                 <div className="right-part">
@@ -212,6 +324,12 @@ class MainPage extends Death13.Component {
                                     reloadMail={this.handleUpdateEmail}
                                     loadEmail={this.loadEmails}
                                     total={total}
+                                    offset={this.state.offset}
+                                    selectedCount={selectedEmails.length}
+                                    hasUnreadSelected={this.hasUnreadSelected()}
+                                    onMarkAsRead={this.handleMarkAsRead}
+                                    onMoveToFolder={this.handleMoveToFolder}
+                                    mainPage={true}
                                 />
                                 {emails.length === 0 && (
                                     <div className="mail-box-container-form__placeholder">
@@ -222,18 +340,19 @@ class MainPage extends Death13.Component {
                                 )}
                                 {emails.length !== 0 && (
                                     <div className="mail-box-container-form">
-                                        {emails.map((email: any, index: number) => (
+                                        {emails.map((email: any) => (
                                             <MailBox
-                                                key={index}
+                                                key={email.id}
                                                 id={email.id}
                                                 theme={email.header}
                                                 title={email.body}
                                                 date={this.formatTime(email.created_at)}
                                                 isSelected={selectedEmails.includes(email.id)}
-                                                onSelect={(id: string, selected: boolean) => this.handleSelectEmail(id, selected)}
+                                                onSelect={this.handleSelectEmail}
                                                 isRead={email.is_read}
                                                 pageMain={true}
                                                 onClick={() => this.handleReadMail(email)}
+                                                onToggleRead={this.handleToggleReadSingle}
                                             />
                                         ))}
                                     </div>

@@ -10,6 +10,7 @@ import { URLMINIO } from "./api/config";
 import ReadEmailPage from "./pages/ReadEmailPage/ReadEmailPage";
 
 export const AppStorage = {
+    folderChangeInstance: null as any,
     _subscribers: [] as Array<() => void>,
     _lastUpdate: 0,
     unReadCount: 0,

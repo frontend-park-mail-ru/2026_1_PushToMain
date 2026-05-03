@@ -44,16 +44,17 @@ export async function sendEmail(data = {}) {
     }
 }
 
-export async function readEmail(ID: number) {
+export async function readEmail(email_ids: number[]) {
     try {
         const csrfToken = await getCSRFToken();
-        const response = await fetch(`${URL}/emails/${ID}/read`, {
+        const response = await fetch(`${URL}/emails/read`, {
             method: "PUT",
             headers: {
                 "Content-Type": "application/json",
                 "X-CSRF-Token": csrfToken,
             },
             credentials: "include",
+            body: JSON.stringify({ email_ids: email_ids }),
         });
 
         if (response.ok) {

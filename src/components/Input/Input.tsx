@@ -25,15 +25,16 @@ class Input extends Death13.Component {
                     {this.props.svg && <img src={this.props.svg} alt="" />}
                     <input
                         type={inputType}
+                        className={this.props.className}
                         id={this.props.id}
                         name={this.props.name}
                         placeholder={this.props.placeholder}
                         onInput={!isCheckbox && !isRadio ? this.props.onInput : undefined}
-                        onChange={isCheckbox || isRadio ? this.props.onChange || this.props.onInput : undefined}
+                        onChange={isCheckbox || isRadio ? this.props.onChange : undefined}
                         checked={isCheckbox || isRadio ? this.props.checked : undefined}
                         readOnly={this.props.readonly || false}
                         maxLength={this.props.maxLength || 100}
-                        value={!isCheckbox && !isRadio ? this.props.value || "" : this.props.value}
+                        value={!isCheckbox && !isRadio ? this.props.value || "" : undefined}
                     />
                     {isPassword && (
                         <div

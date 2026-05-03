@@ -149,6 +149,7 @@ class Sidebar extends Death13.Component {
                                                     title={folder.name}
                                                     onClick={(event: any) => {
                                                         event.preventDefault();
+                                                        this.props.loadEmailFromFolder(0, folder.id);
                                                     }}
                                                 />
                                             </div>

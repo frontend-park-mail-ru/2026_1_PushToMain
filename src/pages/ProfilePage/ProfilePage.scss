@@ -91,13 +91,60 @@
         }
 
         .profile-container,
-        .profile-security {
+        .profile-security,
+        .profile-folder {
             display: flex;
             flex-direction: column;
             gap: 10px;
-            color: var(--tertiary-text)
+            color: var(--tertiary-text);
         }
+        .profile-folder {
+            gap: 0;
+            .profile-header {
+                button {
+                    position: absolute;
+                    background-color: transparent;
+                    display: flex;
+                    align-items: center;
+                    border-radius: 50%;
+                    padding: 0 11px;
+                    top: 120px;
+                    left: 560px;
+                    &[name="edit"] {
+                        &::before {
+                            content: "";
+                            display: inline-block;
+                            width: 24px;
+                            height: 24px;
+                            background-color: var(--tertiary-text);
+                            mask-image: url("/assets/svg/Pencil.svg");
+                            mask-size: contain;
+                            mask-repeat: no-repeat;
+                            mask-position: center;
+                        }
+                    }
 
+                    &[name="done"] {
+                        &::before {
+                            content: "";
+                            display: inline-block;
+                            width: 24px;
+                            height: 24px;
+                            background-color: var(--tertiary-text);
+                            mask-image: url("/assets/svg/TickBold.svg");
+                            mask-size: contain;
+                            mask-repeat: no-repeat;
+                            mask-position: center;
+                        }
+                    }
+
+                    &:hover {
+                        background-color: var(--color-main-background);
+                        transition: 400ms;
+                    }
+                }
+            }
+        }
         .profile-content {
             display: flex;
             gap: 40px;
@@ -202,7 +249,7 @@
                                 }
 
                                 [name="radio-theme"],
-                                [name="radio-language"]{
+                                [name="radio-language"] {
                                     padding: 0;
                                     -webkit-appearance: none;
                                     -moz-appearance: none;
