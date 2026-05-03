@@ -465,7 +465,7 @@ class ProfilePage extends Death13.Component {
                                                         type="radio"
                                                         name="radio-theme"
                                                         checked={AppStorage.theme === "dark"}
-                                                        onInput={() => AppStorage.setTheme("dark")}
+                                                        onChange={() => AppStorage.setTheme("dark")}
                                                     />
                                                     <label for="dark">{this.t("dark_theme")}</label>
                                                 </div>
@@ -475,7 +475,7 @@ class ProfilePage extends Death13.Component {
                                                         type="radio"
                                                         name="radio-theme"
                                                         checked={AppStorage.theme === "light"}
-                                                        onInput={() => AppStorage.setTheme("light")}
+                                                        onChange={() => AppStorage.setTheme("light")}
                                                     />
                                                     <label for="light">{this.t("light_theme")}</label>
                                                 </div>
@@ -490,7 +490,7 @@ class ProfilePage extends Death13.Component {
                                                         type="radio"
                                                         name="radio-language"
                                                         checked={AppStorage.language === "ru"}
-                                                        onInput={() => AppStorage.setLanguage("ru")}
+                                                        onChange={() => AppStorage.setLanguage("ru")}
                                                     />
                                                     <label for="ru">{this.t("russian")}</label>
                                                 </div>
@@ -500,7 +500,7 @@ class ProfilePage extends Death13.Component {
                                                         type="radio"
                                                         name="radio-language"
                                                         checked={AppStorage.language === "en"}
-                                                        onInput={() => AppStorage.setLanguage("en")}
+                                                        onChange={() => AppStorage.setLanguage("en")}
                                                     />
                                                     <label for="en">{this.t("english")}</label>
                                                 </div>
