@@ -3,6 +3,10 @@
     flex-direction: column;
     height: 100%;
 
+    .send-mail-header {
+        display: none;
+    }
+
     .send-form {
         display: flex;
         flex-direction: column;
@@ -85,6 +89,7 @@
         }
 
         .send-mail-header {
+            display: block;
             font-size: 1.3rem;
             font-weight: 600;
             padding: 10px 20px 0 20px;
