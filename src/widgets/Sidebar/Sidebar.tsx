@@ -24,16 +24,29 @@ class Sidebar extends Death13.Component {
       });
     }) || null;
 
+  openChangeProfile = (event: any) => {
+    event.preventDefault();
+    const { changeProfile } = this.props;
+    changeProfile();
+    const sidebar = document.querySelector(".sidebar");
+    if (sidebar) {
+      sidebar.classList.toggle("open");
+    }
+  };
+
+  openChangePassword = (event: any) => {
+    event.preventDefault();
+    const { changePassword } = this.props;
+    changePassword();
+    const sidebar = document.querySelector(".sidebar");
+    if (sidebar) {
+      sidebar.classList.toggle("open");
+    }
+  };
+
   render() {
     const { isVisible, name, surname, email, avatarUrl } = this.state;
-    const {
-      isProfile = 0,
-      backToMail,
-      changeProfile,
-      changePassword,
-      newMail,
-      updateMail,
-    } = this.props;
+    const { isProfile = 0, backToMail, newMail, updateMail } = this.props;
 
     return (
       <div className={`sidebar-widget`}>
@@ -181,18 +194,12 @@ class Sidebar extends Death13.Component {
               <Button
                 name="button-profile"
                 title="Личные данные"
-                onClick={(event: any) => {
-                  event.preventDefault();
-                  changeProfile();
-                }}
+                onClick={this.openChangeProfile}
               />
               <Button
                 name="button-security"
                 title="Безопасность"
-                onClick={(event: any) => {
-                  event.preventDefault();
-                  changePassword();
-                }}
+                onClick={this.openChangePassword}
               />
             </div>
           </div>

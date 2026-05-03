@@ -285,5 +285,57 @@
                 }
             }
         }
+
+        .right-part {
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+            height: 100vh;
+            width: 100vw;
+            margin: 0;
+            box-sizing: border-box;
+
+            .profile-content-area {
+                margin: 5px 0 0 0;
+                border-radius: 20px 20px 0 0;
+                height: 93%;
+
+                .profile-container,
+                .profile-security {
+                    .settings-back-to-menu-button-mobile {
+                        display: flex;
+                        align-items: center;
+                        width: fit-content;
+                        gap: 5px;
+                        padding: 15px 0 0 15px;
+                        margin-bottom: 5px;
+                    }
+
+                    h1 {
+                        padding: 10px 20px;
+                    }
+
+                    .profile-content {
+                        flex-direction: column;
+                        align-items: center;
+                        padding: 0 20px;
+
+                        .profile-form {
+                            width: 100%;
+                            gap: 0px;
+
+                            .profile-actions {
+                                margin-top: 10px;
+                                button {
+                                    .button-count {
+                                        display: none;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
     }
 }

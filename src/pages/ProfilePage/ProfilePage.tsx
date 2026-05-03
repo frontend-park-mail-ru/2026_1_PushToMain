@@ -178,6 +178,13 @@ class ProfilePage extends Death13.Component {
     this.setState({ profileState: 1 });
   };
 
+  handleBackToSettings = () => {
+    const sidebar = document.querySelector(".sidebar");
+    if (sidebar) {
+      sidebar.classList.toggle("open");
+    }
+  };
+
   render() {
     const {
       errors,
@@ -192,9 +199,11 @@ class ProfilePage extends Death13.Component {
       deviceWidth,
     } = this.state;
 
+    const isMobile = deviceWidth < 769;
+
     return (
       <div className="profile-page">
-        <aside className={`sidebar ${deviceWidth < 769 ? "open" : ""}`}>
+        <aside className={`sidebar ${isMobile ? "open" : ""}`}>
           <Sidebar
             isProfile={1}
             backToMail={this.handleBackToMail}
@@ -206,20 +215,33 @@ class ProfilePage extends Death13.Component {
         </aside>
 
         <div className="right-part">
-          <div className="top-bar">
-            <div className="search-bar"></div>
-            <div className="top-right-menu">
-              <Button
-                svg={AppStorage.getAvatarUrl()}
-                name="avatar"
-                help="Аккаунт"
-                onClick={this.handleAvatar}
-              />
+          {!isMobile ? (
+            <div className="top-bar">
+              <div className="search-bar"></div>
+              <div className="top-right-menu">
+                <Button
+                  svg={AppStorage.getAvatarUrl()}
+                  name="avatar"
+                  help="Аккаунт"
+                  onClick={this.handleAvatar}
+                />
+              </div>
             </div>
-          </div>
+          ) : null}
+
           <div className="profile-content-area">
             {profileState === 0 && (
               <div className="profile-container">
+                {isMobile ? (
+                  <div
+                    className="settings-back-to-menu-button-mobile"
+                    onClick={this.handleBackToSettings}
+                  >
+                    {" "}
+                    <img src="../../assets/svg/ArrowLeft.svg" />
+                    <span>Настройки</span>
+                  </div>
+                ) : null}
                 <h1>Личные данные</h1>
                 <div className="profile-content">
                   <div className="profile-avatar">
@@ -307,6 +329,16 @@ class ProfilePage extends Death13.Component {
 
             {profileState === 1 && (
               <div className="profile-security">
+                {isMobile ? (
+                  <div
+                    className="settings-back-to-menu-button-mobile"
+                    onClick={this.handleBackToSettings}
+                  >
+                    {" "}
+                    <img src="../../assets/svg/ArrowLeft.svg" />
+                    <span>Настройки</span>
+                  </div>
+                ) : null}
                 <h1>Безопасность</h1>
                 <div className="profile-content">
                   <form action="" className="profile-form">
