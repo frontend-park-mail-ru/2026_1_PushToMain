@@ -1,10 +1,13 @@
 import { URL } from "./config";
 import { getCSRFToken } from "./ApiAuth";
 
-export async function createNewFolder(folderName: string = "Новая папка") {
+// private.HandleFunc("/drafts/{id}", h.UpdateDraft).Methods(http.MethodPut, http.MethodOptions);
+// private.HandleFunc("/drafts/{id}/send", h.SendDraft).Methods(http.MethodPost, http.MethodOptions);
+
+export async function createDraft(draftData: { header: string; body: string; receivers: string[] }) {
     try {
         const csrfToken = await getCSRFToken();
-        const response = await fetch(`${URL}/folder/new`, {
+        const response = await fetch(`${URL}/drafts`, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
@@ -12,7 +15,9 @@ export async function createNewFolder(folderName: string = "Новая папк�
             },
             credentials: "include",
             body: JSON.stringify({
-                folder_name: folderName,
+                header: draftData.header,
+                body: draftData.body,
+                receivers: draftData.receivers,
             }),
         });
 
@@ -25,17 +30,16 @@ export async function createNewFolder(folderName: string = "Новая папк�
     }
 }
 
-export async function changeFolderName(folderID: number, folderName: string) {
+export async function getDraftByID(ID: number) {
     try {
         const csrfToken = await getCSRFToken();
-        const response = await fetch(`${URL}/folder/${folderID}/name`, {
-            method: "PUT",
+        const response = await fetch(`${URL}/drafts/${ID}`, {
+            method: "GET",
             headers: {
                 "Content-Type": "application/json",
                 "X-CSRF-Token": csrfToken,
             },
             credentials: "include",
-            body: JSON.stringify({ folder_name: folderName }),
         });
         if (response.ok) {
             return response;
@@ -43,9 +47,31 @@ export async function changeFolderName(folderID: number, folderName: string) {
     } catch {}
 }
 
-export async function getEmailsFromFolder(offset: number, folderID: number) {
+export async function deleteDraft(IDs: number[]) {
     try {
-        const response = await fetch(`${URL}/folder/${folderID}?limit=50&offset=${offset}`, {
+        const csrfToken = await getCSRFToken();
+        const response = await fetch(`${URL}/drafts/delete`, {
+            method: "DELETE",
+            headers: {
+                "Content-Type": "application/json",
+                "X-CSRF-Token": csrfToken,
+            },
+            credentials: "include",
+            body: JSON.stringify({ drafts_id: IDs }),
+        });
+        if (response.ok) {
+            return true;
+        } else {
+            return false;
+        }
+    } catch {
+        return false;
+    }
+}
+
+export async function getDrafts(offset: number) {
+    try {
+        const response = await fetch(`${URL}/drafts?limit=50&offset=${offset}`, {
             method: "GET",
             headers: {
                 "Content-Type": "application/json",
@@ -62,66 +88,23 @@ export async function getEmailsFromFolder(offset: number, folderID: number) {
     }
 }
 
-export async function deleteEmailsFromFolder(folderID: number, emailID: number[]) {
+export async function sendDraft(data = {}, draftID: number) {
     try {
         const csrfToken = await getCSRFToken();
-        const response = await fetch(`${URL}/folder/${folderID}/delete`, {
-            method: "DELETE",
-            headers: {
-                "Content-Type": "application/json",
-                "X-CSRF-Token": csrfToken,
-            },
-            credentials: "include",
-            body: JSON.stringify({ emails_id: emailID }),
-        });
-
-        if (response.ok) {
-            return true;
-        }
-        return false;
-    } catch {
-        return false;
-    }
-}
-
-export async function addEmailsInFolder(folderID: number, emailID: number[]) {
-    try {
-        const csrfToken = await getCSRFToken();
-        const response = await fetch(`${URL}/folder/${folderID}/add`, {
+        const response = await fetch(`${URL}/drafts/${draftID}/send`, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
                 "X-CSRF-Token": csrfToken,
             },
             credentials: "include",
-            body: JSON.stringify({ emails_id: emailID }),
+            body: JSON.stringify(data),
         });
 
         if (response) {
-            const data = await response.json();
-            return data;
+            const res = await response.json();
+            return res;
         }
-    } catch {
-        return false;
-    }
-}
-
-export async function deleteFolder(folderID: number) {
-    try {
-        const csrfToken = await getCSRFToken();
-        const response = await fetch(`${URL}/folder/${folderID}`, {
-            method: "DELETE",
-            headers: {
-                "Content-Type": "application/json",
-                "X-CSRF-Token": csrfToken,
-            },
-            credentials: "include",
-        });
-
-        if (response.ok) {
-            return true;
-        }
-        return false;
     } catch {
         return false;
     }

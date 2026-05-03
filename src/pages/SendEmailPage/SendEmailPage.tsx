@@ -20,6 +20,7 @@ class SendEmailPage extends Death13.Component {
         isModalOpen: false,
         unReadCount: 0,
         replyData: null,
+        currentView: "send",
         forwardData: null,
         avatarKey: 0,
     };
@@ -58,14 +59,61 @@ class SendEmailPage extends Death13.Component {
         window.app.handleRoute("/profile");
     };
 
-    handleBackToMail = () => {
-        AppStorage.clearMailActionData();
-        window.app.handleRoute("/");
-    };
-
     handleNewMail = () => {
         AppStorage.clearMailActionData();
         this.setState({ replyData: null, forwardData: null });
+    };
+
+    handleBackToMail = () => {
+        AppStorage.clearMailActionData();
+        AppStorage.setCurrentFolderId(null);
+        AppStorage.setCurrentView("inbox");
+        window.app.handleRoute("/");
+    };
+
+    handleBackToSent = () => {
+        AppStorage.clearMailActionData();
+        AppStorage.setCurrentFolderId(null);
+        AppStorage.setCurrentView("sent");
+        window.app.handleRoute("/sent");
+    };
+
+    handleGetSendEmail = () => {
+        AppStorage.setCurrentView("sent");
+        window.app.handleRoute("/sent");
+    };
+
+    handleGetDrafts = () => {
+        AppStorage.setCurrentView("drafts");
+        window.app.handleRoute("/");
+    };
+
+    handleGetSpam = () => {
+        AppStorage.setCurrentView("spam");
+        window.app.handleRoute("/");
+    };
+
+    handleGetTrash = () => {
+        AppStorage.setCurrentView("trash");
+        window.app.handleRoute("/");
+    };
+
+    handleGetFavorite = () => {
+        AppStorage.setCurrentView("favorite");
+        window.app.handleRoute("/");
+    };
+
+    handleGoToMain = () => {
+        AppStorage.setCurrentView("inbox");
+        AppStorage.clearMailActionData();
+        AppStorage.setCurrentFolderId(null);
+        window.app.handleRoute("/");
+    };
+
+    loadEmailFromFolder = async (offset: number, folderID: number) => {
+        AppStorage.setCurrentFolderId(folderID);
+        AppStorage.setCurrentView("folder");
+        window.app.handleRoute("/");
     };
 
     t(key: string): string {
@@ -73,19 +121,39 @@ class SendEmailPage extends Death13.Component {
     }
 
     render() {
-        const { isModalOpen, unReadCount, replyData, forwardData } = this.state;
+        const { isModalOpen, replyData, forwardData, currentView } = this.state;
 
         const mailActionData = replyData || forwardData;
 
         return (
             <div className="send-email-page" onClick={() => this.handleCloseModal()}>
                 <aside className="sidebar">
-                    <Sidebar isProfile={0} unReadCount={unReadCount} newMail={this.handleNewMail} backToMail={this.handleBackToMail} />
+                    <Sidebar
+                        isProfile={0}
+                        isPress={0}
+                        newMail={this.handleNewMail}
+                        backToMail={this.handleGoToMain}
+                        updateMail={this.handleGoToMain}
+                        handleGetDrafts={this.handleGetDrafts}
+                        handleGetSendEmail={this.handleGetSendEmail}
+                        handleGetSpam={this.handleGetSpam}
+                        handleGetTrash={this.handleGetTrash}
+                        handleGetFavorite={this.handleGetFavorite}
+                        loadEmailFromFolder={this.loadEmailFromFolder}
+                        selectedFolderId={this.state.selectedFolderId}
+                        currentView={currentView}
+                    />
                 </aside>
                 <div className="right-part">
                     <div className="top-bar">
                         <div className="search-bar">
-                            <Input type="text" placeholder={this.t("search")} name="search" svg="../../assets/svg/Search.svg" onInput={() => {}} />
+                            <Input
+                                type="text"
+                                placeholder={this.t("search")}
+                                name="search"
+                                svg="../../assets/svg/Search.svg"
+                                onInput={() => {}}
+                            />
                         </div>
 
                         <div className="top-right-menu">

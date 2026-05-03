@@ -2,6 +2,7 @@ import Death13 from "@react/stands";
 import Button from "../../components/Button/Button";
 import "./MailTools.scss";
 import { AppStorage } from "../../App";
+import { changeFolderV2 } from "../../api/ApiEmail";
 
 class MailTools extends Death13.Component {
     handleDeleteClick = async (event: any) => {
@@ -26,6 +27,23 @@ class MailTools extends Death13.Component {
         }
     };
 
+    handleSpamClick = async (event: any) => {
+        event.preventDefault();
+        const { email } = this.props;
+        if (email) {
+            await changeFolderV2([email.id], "spam");
+            this.props.backToMail?.();
+        }
+    };
+
+    handleFavoriteClick = async (event: any) => {
+        event.preventDefault();
+        const { email } = this.props;
+        if (email) {
+            await changeFolderV2([email.id], "favorite");
+        }
+    };
+
     t(key: string): string {
         return AppStorage.t(key);
     }
@@ -37,22 +55,18 @@ class MailTools extends Death13.Component {
                     <Button
                         name="favorites"
                         help={this.t("starred")}
-                        onClick={(event: any) => {
-                            event.preventDefault();
-                        }}
-                    />{" "}
+                        onClick={this.handleFavoriteClick}
+                    />
                     <Button
                         name="spam"
                         help={this.t("spam")}
-                        onClick={(event: any) => {
-                            event.preventDefault();
-                        }}
-                    />{" "}
-                    <Button name="trash" help={this.t("trash")} onClick={this.handleDeleteClick} />{" "}
+                        onClick={this.handleSpamClick}
+                    />
+                    <Button name="trash" help={this.t("trash")} onClick={this.handleDeleteClick} />
                 </div>
                 <div className="tools-right">
-                    <Button name="answer" help={this.t("answer")} title={this.t("answer")} onClick={this.handleReplyClick} />{" "}
-                    <Button name="reply" title={this.t("reply")} help={this.t("reply")} onClick={this.handleForwardClick} />{" "}
+                    <Button name="answer" help={this.t("answer")} title={this.t("answer")} onClick={this.handleReplyClick} />
+                    <Button name="reply" title={this.t("reply")} help={this.t("reply")} onClick={this.handleForwardClick} />
                 </div>
             </div>
         );

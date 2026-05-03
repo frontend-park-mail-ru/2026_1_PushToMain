@@ -9,12 +9,6 @@ import ReadMail from "../../widgets/ReadMail/ReadMail";
 import { getEmailByID } from "../../api/ApiEmail";
 
 class ReadEmailPage extends Death13.Component {
-    constructor(props: any) {
-        super(props);
-        const strID = location.pathname.split("/").pop();
-        const id = strID ? parseInt(strID, 10) : 0;
-        this.loadEmail(id);
-    }
     state: any = {
         isModalOpen: false,
         unReadCount: 0,
@@ -22,6 +16,8 @@ class ReadEmailPage extends Death13.Component {
         isPress: 0,
         forwardData: null,
         avatarKey: 0,
+        selectedFolderId: null,
+        currentView: "read",
         email: {
             id: "",
             header: "",
@@ -34,6 +30,22 @@ class ReadEmailPage extends Death13.Component {
             receiverList: [],
         },
     };
+
+    constructor(props: any) {
+        super(props);
+        const strID = location.pathname.split("/").pop();
+        const id = strID ? parseInt(strID, 10) : 0;
+
+        const selectedFolderId = AppStorage.getCurrentFolderId?.() || null;
+
+        this.state = {
+            ...this.state,
+            selectedFolderId: selectedFolderId,
+            currentView: "read",
+        };
+
+        this.loadEmail(id);
+    }
 
     async loadEmail(id: number) {
         const data = await getEmailByID(id);
@@ -76,18 +88,58 @@ class ReadEmailPage extends Death13.Component {
         window.app.handleRoute("/profile");
     };
 
+    handleGetSpam = () => {
+        AppStorage.setCurrentView("spam");
+        window.app.handleRoute("/");
+    };
+
+    handleGetTrash = () => {
+        AppStorage.setCurrentView("trash");
+        window.app.handleRoute("/");
+    };
+
+    handleGetFavorite = () => {
+        AppStorage.setCurrentView("favorite");
+        window.app.handleRoute("/");
+    };
+
+    handleGetDrafts = () => {
+        AppStorage.setCurrentView("drafts");
+        window.app.handleRoute("/");
+    };
+
+    handleGetSendEmail = () => {
+        AppStorage.setCurrentView("sent");
+        window.app.handleRoute("/sent");
+    };
+
+    handleGoToMain = () => {
+        AppStorage.setCurrentView("inbox");
+        AppStorage.clearMailActionData();
+        AppStorage.setCurrentFolderId(null);
+        window.app.handleRoute("/");
+    };
+
     handleNewMail = () => {
         window.app.handleRoute("/send");
     };
 
     handleBackToMail = () => {
         AppStorage.clearMailActionData();
+        AppStorage.setCurrentFolderId(null);
         window.app.handleRoute("/");
     };
 
     handleBackToSent = () => {
         AppStorage.clearMailActionData();
+        AppStorage.setCurrentFolderId(null);
         window.app.handleRoute("/sent");
+    };
+
+    loadEmailFromFolder = async (offset: number, folderID: number) => {
+        AppStorage.setCurrentFolderId(folderID);
+        AppStorage.setCurrentView("folder");
+        window.app.handleRoute("/");
     };
 
     t(key: string): string {
@@ -95,18 +147,25 @@ class ReadEmailPage extends Death13.Component {
     }
 
     render() {
-        const { isModalOpen, unReadCount, isPress } = this.state;
+        const { isModalOpen, selectedFolderId, currentView } = this.state;
 
         return (
             <div className="send-email-page" onClick={() => this.handleCloseModal()}>
                 <aside className="sidebar">
                     <Sidebar
                         isProfile={0}
-                        isPress={isPress}
-                        unReadCount={unReadCount}
+                        isPress={0}
                         newMail={this.handleNewMail}
-                        backToMail={this.handleBackToMail}
-                        backToSent={this.handleBackToSent}
+                        backToMail={this.handleGoToMain}
+                        updateMail={this.handleGoToMain}
+                        handleGetDrafts={this.handleGetDrafts}
+                        handleGetSendEmail={this.handleGetSendEmail}
+                        handleGetSpam={this.handleGetSpam}
+                        handleGetTrash={this.handleGetTrash}
+                        handleGetFavorite={this.handleGetFavorite}
+                        loadEmailFromFolder={this.loadEmailFromFolder}
+                        selectedFolderId={this.state.selectedFolderId}
+                        currentView={currentView}
                     />
                 </aside>
                 <div className="right-part">
@@ -126,7 +185,12 @@ class ReadEmailPage extends Death13.Component {
                         </div>
                     </div>
                     <div className="mail-box-container">
-                        <ReadMail email={this.state.email} backToMail={this.handleBackToMail} backToSent={this.handleBackToSent} />
+                        <ReadMail
+                            email={this.state.email}
+                            backToMail={this.handleBackToMail}
+                            backToSent={this.handleBackToSent}
+                            selectedFolderId={selectedFolderId}
+                        />
                     </div>
 
                     <ProfileModal isOpen={isModalOpen} onClose={this.handleCloseModal} onProfileClick={this.handleProfileClick} />

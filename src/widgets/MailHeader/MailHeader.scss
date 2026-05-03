@@ -88,6 +88,20 @@
                     mask-position: center;
                 }
             }
+
+            [name="move-to-inbox"] {
+                &::before {
+                    content: "";
+                    display: inline-block;
+                    width: 24px;
+                    height: 24px;
+                    background-color: var(--tertiary-text);
+                    mask-image: url("/assets/svg/Inbox.svg");
+                    mask-size: contain;
+                    mask-repeat: no-repeat;
+                    mask-position: center;
+                }
+            }
         }
 
         .select-all__tools-right {

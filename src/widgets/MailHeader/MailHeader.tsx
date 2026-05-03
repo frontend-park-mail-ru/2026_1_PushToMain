@@ -3,6 +3,7 @@ import Button from "../../components/Button/Button";
 import Input from "../../components/Input/Input";
 import "./MailHeader.scss";
 import { AppStorage } from "../../App";
+import { changeFolderV2, restoreFromTrash } from "../../api/ApiEmail";
 
 class MailHeader extends Death13.Component {
     state: any = {
@@ -44,6 +45,36 @@ class MailHeader extends Death13.Component {
         }
     };
 
+    handleMarkAsSpam = async (event: any) => {
+        event.preventDefault();
+        if (this.props.selectedEmails && this.props.selectedEmails.length > 0) {
+            await changeFolderV2(this.props.selectedEmails, "spam");
+            this.props.reloadMail?.();
+        }
+    };
+
+    handleMarkAsFavorite = async (event: any) => {
+        event.preventDefault();
+        if (this.props.selectedEmails && this.props.selectedEmails.length > 0) {
+            await changeFolderV2(this.props.selectedEmails, "favorite");
+        }
+    };
+
+    handleMoveToInbox = async (event: any) => {
+        event.preventDefault();
+        if (this.props.selectedEmails && this.props.selectedEmails.length > 0) {
+            const { currentView } = this.props;
+
+            if (currentView === "trash") {
+                await restoreFromTrash(this.props.selectedEmails);
+            } else if (currentView === "spam") {
+                await changeFolderV2(this.props.selectedEmails, "inbox");
+            }
+
+            this.props.reloadMail?.();
+        }
+    };
+
     handleClickOutside = () => {
         this.setState({ showFolderList: false });
     };
@@ -53,11 +84,13 @@ class MailHeader extends Death13.Component {
     }
 
     render() {
-        const { isSelectAll, offset = 0, total = 0, hasUnreadSelected = false, mainPage = false } = this.props;
+        const { isSelectAll, offset = 0, total = 0, hasUnreadSelected = false, mainPage = false, currentView = "" } = this.props;
         const startItem = total > 0 ? offset + 1 : 0;
         const endItem = Math.min(offset + 50, total);
         const hasSelected = this.props.selectedCount > 0;
         const { showFolderList } = this.state;
+        const isSpamOrTrash = currentView === "spam" || currentView === "trash";
+        const isDrafts = currentView === "drafts";
 
         const folders = AppStorage.folders || [];
 
@@ -96,33 +129,30 @@ class MailHeader extends Death13.Component {
                     {hasSelected && (
                         <div className="select-all-container">
                             <div className="select-all__tools-left">
-                                <Button
-                                    name="favorites"
-                                    help={this.t("starred")}
-                                    onClick={(event: any) => {
-                                        event.preventDefault();
-                                        this.props.reloadMail();
-                                    }}
-                                />
-                                <Button
-                                    name="spam"
-                                    help={this.t("spam")}
-                                    onClick={(event: any) => {
-                                        event.preventDefault();
-                                        this.props.reloadMail();
-                                    }}
-                                />
+                                {isSpamOrTrash && (
+                                    <Button name="move-to-inbox" help={this.t("move_to_inbox")} onClick={this.handleMoveToInbox} />
+                                )}
+
+                                {!isSpamOrTrash && !isDrafts && (
+                                    <div className="select-all-container">
+                                        <Button name="favorites" help={this.t("starred")} onClick={this.handleMarkAsFavorite} />
+                                        <Button name="spam" help={this.t("spam")} onClick={this.handleMarkAsSpam} />
+                                    </div>
+                                )}
+
                                 <Button
                                     name="trash"
                                     help={this.t("trash")}
                                     onClick={(event: any) => {
                                         event.preventDefault();
-                                        this.props.reloadMail();
+                                        if (this.props.onDelete) {
+                                            this.props.onDelete();
+                                        }
                                     }}
                                 />
                             </div>
                             <div className="select-all__tools-right">
-                                {hasUnreadSelected && mainPage && (
+                                {hasUnreadSelected && mainPage && !isSpamOrTrash && !isDrafts && (
                                     <Button
                                         name="read-all-mail"
                                         help={this.t("mark_as_read")}
@@ -132,7 +162,7 @@ class MailHeader extends Death13.Component {
                                         }}
                                     />
                                 )}
-                                {mainPage && (
+                                {mainPage && !isSpamOrTrash && !isDrafts && (
                                     <div className="move-to-folder-container">
                                         <Button name="move-to-folder" help={this.t("move-to-folder")} onClick={this.handleMoveToFolder} />
                                         {showFolderList && (

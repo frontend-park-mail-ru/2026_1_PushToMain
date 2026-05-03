@@ -4,8 +4,9 @@ import InputEmail from "../../components/InputEmail/InputEmail";
 import Input from "../../components/Input/Input";
 import Textarea from "../../components/Textarea/Textarea";
 import Button from "../../components/Button/Button";
-import { sendEmail} from "../../api/ApiEmail";
+import { sendEmail } from "../../api/ApiEmail";
 import { AppStorage } from "../../App";
+import { createDraft, sendDraft } from "../../api/ApiDraft";
 
 class SendMail extends Death13.Component {
     state: any = {
@@ -15,32 +16,41 @@ class SendMail extends Death13.Component {
         invalidReceivers: [],
         buttonBlock: true,
         files: [],
+        draftId: null,
     };
 
     constructor(props: any) {
         super(props);
-        this.initializeFromActionData();
-    }
 
-    initializeFromActionData = () => {
-        const { actionData } = this.props;
+        const actionData = props.actionData;
+        const draftData = AppStorage.getDraftData();
+
+        const newState: any = {
+            ...this.state,
+        };
 
         if (actionData) {
             if (actionData.type === "reply") {
-                this.state = {
-                    header: actionData.subject || "",
-                    body: actionData.body || "",
-                    receivers: actionData.to ? [actionData.to] : [],
-                };
+                newState.header = actionData.subject || "";
+                newState.body = actionData.body || "";
+                newState.receivers = actionData.to ? [actionData.to] : [];
             } else if (actionData.type === "forward") {
-                this.state = {
-                    header: actionData.subject || "",
-                    body: actionData.body || "",
-                    receivers: [],
-                };
+                newState.header = actionData.subject || "";
+                newState.body = actionData.body || "";
+                newState.receivers = [];
             }
+        } else if (draftData) {
+            newState.header = draftData.header || "";
+            newState.body = draftData.body || "";
+            newState.receivers = draftData.receivers || [];
+            newState.draftId = draftData.id || null;
         }
-    };
+
+        const isValid = this.isFormValid(newState.header, newState.body, newState.receivers, newState.invalidReceivers);
+        newState.buttonBlock = !isValid;
+
+        this.state = newState;
+    }
 
     isFormValid = (header: string, body: string, receivers: string[], invalidReceivers: string[]): boolean => {
         return header.trim().length > 0 && body.trim().length > 0 && receivers.length > 0 && (invalidReceivers || []).length === 0;
@@ -68,24 +78,34 @@ class SendMail extends Death13.Component {
     };
 
     async handleSubmit(e: any) {
-        const { header, body, receivers } = this.state;
+        const { header, body, receivers, draftId } = this.state;
         e.preventDefault();
 
         this.setState({ buttonBlock: true });
 
-        const responseSend = await sendEmail({
-            header: header.trim(),
-            body: body.trim(),
-            receivers: receivers,
-        });
+        let responseSend;
 
-        /* const responseFile = await uploadFile(file, responseSend.emailId); */
+        if (draftId) {
+            responseSend = await sendDraft(
+                {
+                    header: header.trim(),
+                    body: body.trim(),
+                    receivers: receivers,
+                },
+                draftId,
+            );
+        } else {
+            responseSend = await sendEmail({
+                header: header.trim(),
+                body: body.trim(),
+                receivers: receivers,
+            });
+        }
 
         if (responseSend) {
             window.AppStorage.clearMailActionData();
             this.props.backToMail();
         }
-            
     }
 
     handleCancel = () => {
@@ -93,8 +113,21 @@ class SendMail extends Death13.Component {
         this.props.backToMail();
     };
 
-    handleSaveDraft = (event: any) => {
+    handleSaveDraft = async (event: any) => {
+        const { header, body, receivers } = this.state;
+
         event.preventDefault();
+
+        const response = await createDraft({
+            header: header.trim(),
+            body: body.trim(),
+            receivers: receivers,
+        });
+
+        if (response) {
+            window.AppStorage.clearMailActionData();
+            this.props.backToMail();
+        }
     };
 
     handleFileChange = (e: any) => {
@@ -131,7 +164,7 @@ class SendMail extends Death13.Component {
     }
 
     render() {
-        const { body, header, receivers, buttonBlock } = this.state;
+        const { body, header, receivers, buttonBlock, files } = this.state;
 
         return (
             <div className="send-mail">
@@ -154,9 +187,9 @@ class SendMail extends Death13.Component {
                             onInput={this.handleHeaderChange.bind(this)}
                         />
                     </div>
-                    <Textarea readonly={false} value={body} onInput={this.handleBodyChange} />{" "}
+                    <Textarea readonly={false} value={body} onInput={this.handleBodyChange} />
                     <div className="files-list">
-                        {this.state.files.map((fileItem: any) => (
+                        {files.map((fileItem: any) => (
                             <div key={fileItem.id} className="file-item">
                                 <span>{fileItem.name}</span>
                                 <button onClick={() => this.removeFile(fileItem.id)}>✕</button>
@@ -166,11 +199,11 @@ class SendMail extends Death13.Component {
                 </form>
                 <div className="send-down">
                     <div className="send-tools">
-                        <input type="file" name="file" id="input-file" hidden multiple onChange={this.handleFileChange} />
-                        <label for="input-file" name="button-file"></label>
+                        {/* <input type="file" name="file" id="input-file" hidden multiple onChange={this.handleFileChange} /> 
+                        <label htmlFor="input-file" name="button-file"></label>*/}
                     </div>
                     <div className="send-actions">
-                        <Button title={this.t("save")} name="save-mail" onClick={this.handleSaveDraft} />{" "}
+                        <Button title={this.t("save")} name="save-mail" onClick={this.handleSaveDraft} />
                         <Button
                             title={this.t("send")}
                             name="send-mail"

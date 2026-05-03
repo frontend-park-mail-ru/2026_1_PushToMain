@@ -3,7 +3,7 @@ import "./FolderChange.scss";
 import Button from "../../components/Button/Button";
 import { AppStorage } from "../../App";
 import { getProfile } from "../../api/ApiAuth";
-import { createNewFolder, changeFolderName } from "../../api/ApiFolder";
+import { createNewFolder, changeFolderName, deleteFolder } from "../../api/ApiFolder";
 
 class FolderChange extends Death13.Component {
     constructor(props: any) {
@@ -47,11 +47,7 @@ class FolderChange extends Death13.Component {
         try {
             await changeFolderName(folderId, newName.trim());
 
-            const updatedFolders = folders.map((folder: any) => 
-                folder.id === folderId 
-                    ? { ...folder, name: newName.trim() }
-                    : folder
-            );
+            const updatedFolders = folders.map((folder: any) => (folder.id === folderId ? { ...folder, name: newName.trim() } : folder));
 
             const newPendingChanges = { ...pendingChanges };
             delete newPendingChanges[folderId];
@@ -122,12 +118,15 @@ class FolderChange extends Death13.Component {
     };
 
     handleDeleteFolder = async (folderId: number, event: any) => {
+        event.preventDefault();
         event.stopPropagation();
 
         const { folders } = this.state;
         const updatedFolders = folders.filter((folder: any) => folder.id !== folderId);
 
-        this.setState({ 
+        await deleteFolder(folderId);
+
+        this.setState({
             folders: updatedFolders,
             editingFolderId: null,
             editingFolderName: "",
@@ -152,11 +151,11 @@ class FolderChange extends Death13.Component {
 
     handleBlur = async (folderId: number) => {
         const { pendingChanges } = this.state;
-        
+
         if (pendingChanges[folderId] && pendingChanges[folderId].trim()) {
             await this.saveFolderName(folderId);
         }
-        
+
         this.setState({
             editingFolderId: null,
             editingFolderName: "",
@@ -206,14 +205,11 @@ class FolderChange extends Death13.Component {
                         folders.map((folder: any) => (
                             <div key={folder.id} className="folder-item">
                                 {isEditMode && editingFolderId !== folder.id && (
-                                    <button 
-                                        className="folder-delete-btn" 
-                                        onClick={(e: any) => this.handleDeleteFolder(folder.id, e)}
-                                    >
+                                    <button className="folder-delete-btn" onClick={(e: any) => this.handleDeleteFolder(folder.id, e)}>
                                         ✕
                                     </button>
                                 )}
-                                
+
                                 {isEditMode && editingFolderId === folder.id ? (
                                     <div className="folder-edit">
                                         <input
@@ -236,7 +232,7 @@ class FolderChange extends Death13.Component {
                                         {folder.name}
                                     </span>
                                 )}
-                                
+
                                 {isEditMode && editingFolderId !== folder.id && (
                                     <button className="folder-drag-btn" onClick={(e: any) => e.preventDefault()}></button>
                                 )}

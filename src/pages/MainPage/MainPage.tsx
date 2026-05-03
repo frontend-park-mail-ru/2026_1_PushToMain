@@ -5,11 +5,23 @@ import Button from "../../components/Button/Button";
 import MailHeader from "../../widgets/MailHeader/MailHeader";
 import MailBox from "../../widgets/MailBox/MailBox";
 import { getProfile } from "../../api/ApiAuth";
-import { getEmailAll, getEmailSend, readEmail, seacrhEmail, unReadEmail } from "../../api/ApiEmail";
+import {
+    getEmailAll,
+    getEmailSend,
+    readEmail,
+    seacrhEmail,
+    unReadEmail,
+    deleteEmailByID,
+    deleteMyEmailByID,
+    getEmailsFavorite,
+    getEmailsSpam,
+    getEmailsTrash,
+} from "../../api/ApiEmail";
 import "./MainPage.scss";
 import ProfileModal from "../../widgets/ProfileModal/ProfileModal";
 import { AppStorage } from "../../App";
-import { getEmailsFromFolder, addEmailsInFolder } from "../../api/ApiFolder";
+import { getEmailsFromFolder, addEmailsInFolder, deleteEmailsFromFolder } from "../../api/ApiFolder";
+import { getDrafts, getDraftByID, deleteDraft } from "../../api/ApiDraft";
 
 class MainPage extends Death13.Component {
     state: any = {
@@ -22,15 +34,41 @@ class MainPage extends Death13.Component {
         offset: 0,
         selectedEmails: [],
         isSettings: false,
+        selectedFolderId: null,
+        currentView: "inbox",
     };
 
     constructor(props: any) {
         super(props);
-        this.loadEmails(this.state.offset);
 
-        /* setInterval(() => {
+        const savedView = AppStorage.getCurrentView();
+        const savedFolderId = AppStorage.getCurrentFolderId?.() || null;
+
+        if (savedView && savedView !== "inbox") {
+            this.state = {
+                ...this.state,
+                currentView: savedView,
+                selectedFolderId: savedView === "folder" ? savedFolderId : null,
+            };
+
+            setTimeout(() => {
+                if (savedView === "spam") {
+                    this.handleGetSpam();
+                } else if (savedView === "trash") {
+                    this.handleGetTrash();
+                } else if (savedView === "favorite") {
+                    this.handleGetFavorite();
+                } else if (savedView === "drafts") {
+                    this.handleGetDrafts();
+                } else if (savedView === "folder" && savedFolderId) {
+                    this.loadEmailFromFolder(0, savedFolderId);
+                } else if (savedView === "sent") {
+                    this.handleGetSendEmail();
+                }
+            }, 0);
+        } else {
             this.loadEmails(this.state.offset);
-        }, 10000); */
+        }
 
         this.loadProfile();
     }
@@ -59,6 +97,66 @@ class MainPage extends Death13.Component {
         } catch (error) {
             console.error("Failed to load emails:", error);
             window.app.handleRoute("/login");
+        }
+    };
+
+    handleGetSpam = async () => {
+        try {
+            const data = await getEmailsSpam(0);
+            const emails = data.emails || data || [];
+
+            this.setState({
+                emails: Array.isArray(emails) ? emails : [],
+                isLoading: false,
+                total: data.total || (Array.isArray(emails) ? emails.length : 0),
+                offset: 0,
+                currentView: "spam",
+                selectedFolderId: null,
+                selectedEmails: [],
+                isSelectAll: false,
+            });
+        } catch (error) {
+            console.error("Failed to load spam:", error);
+        }
+    };
+
+    handleGetTrash = async () => {
+        try {
+            const data = await getEmailsTrash(0);
+            const emails = data.emails || data || [];
+
+            this.setState({
+                emails: Array.isArray(emails) ? emails : [],
+                isLoading: false,
+                total: data.total || (Array.isArray(emails) ? emails.length : 0),
+                offset: 0,
+                currentView: "trash",
+                selectedFolderId: null,
+                selectedEmails: [],
+                isSelectAll: false,
+            });
+        } catch (error) {
+            console.error("Failed to load trash:", error);
+        }
+    };
+
+    handleGetFavorite = async () => {
+        try {
+            const data = await getEmailsFavorite(0);
+            const emails = data.emails || data || [];
+
+            this.setState({
+                emails: Array.isArray(emails) ? emails : [],
+                isLoading: false,
+                total: data.total || (Array.isArray(emails) ? emails.length : 0),
+                offset: 0,
+                currentView: "favorite",
+                selectedFolderId: null,
+                selectedEmails: [],
+                isSelectAll: false,
+            });
+        } catch (error) {
+            console.error("Failed to load favorites:", error);
         }
     };
 
@@ -127,10 +225,69 @@ class MainPage extends Death13.Component {
     };
 
     async handleReadMail(email: any) {
+        // Если это черновик - открываем редактирование
+        if (this.state.currentView === "drafts") {
+            const response = await getDraftByID(email.id);
+            if (response) {
+                const draft = await response.json();
+
+                // Сохраняем данные черновика для редактирования
+                AppStorage.setDraftData({
+                    id: draft.id,
+                    header: draft.header,
+                    body: draft.body,
+                    receivers: draft.receivers || [],
+                });
+
+                window.app.handleRoute("/send");
+            }
+            return;
+        }
+
         this.setState({ isStateMode: 3, selectedEmail: email });
         await readEmail([email.id]);
+        AppStorage.setCurrentFolderId(this.state.selectedFolderId);
         window.app.handleRoute(`/read/${email.id}`);
     }
+
+    handleDeleteSelected = async () => {
+        const { selectedEmails, currentView, selectedFolderId } = this.state;
+
+        if (selectedEmails.length === 0) return;
+
+        try {
+            let success = false;
+
+            if (currentView === "drafts") {
+                success = await deleteDraft(selectedEmails);
+            } else if (currentView === "sent") {
+                success = await deleteMyEmailByID(selectedEmails);
+            } else if (currentView === "folder" && selectedFolderId) {
+                success = await deleteEmailsFromFolder(selectedFolderId, selectedEmails);
+            } else {
+                success = await deleteEmailByID(selectedEmails);
+            }
+
+            if (success) {
+                if (currentView === "drafts") {
+                    await this.handleGetDrafts();
+                } else if (currentView === "sent") {
+                    await this.handleGetSendEmail();
+                } else if (currentView === "folder" && this.state.selectedFolderId) {
+                    await this.loadEmailFromFolder(this.state.offset, this.state.selectedFolderId);
+                } else {
+                    await this.loadEmails(this.state.offset);
+                }
+
+                this.setState({
+                    selectedEmails: [],
+                    isSelectAll: false,
+                });
+            }
+        } catch (error) {
+            console.error("Error deleting emails:", error);
+        }
+    };
 
     handleToggleReadSingle = async (emailId: number, newReadState: boolean) => {
         const { emails } = this.state;
@@ -201,7 +358,6 @@ class MainPage extends Death13.Component {
             newSelectedEmails = selectedEmails.filter((id: number) => id !== emailId);
         }
 
-        // Проверяем, все ли письма выделены
         const allSelected = emails.length > 0 && newSelectedEmails.length === emails.length;
 
         this.setState({
@@ -214,14 +370,12 @@ class MainPage extends Death13.Component {
         const { emails } = this.state;
 
         if (isChecked) {
-            // Выбираем все письма
             const allEmailIds = emails.map((email: any) => email.id);
             this.setState({
                 isSelectAll: true,
                 selectedEmails: allEmailIds,
             });
         } else {
-            // Снимаем выделение со всех
             this.setState({
                 isSelectAll: false,
                 selectedEmails: [],
@@ -234,18 +388,14 @@ class MainPage extends Death13.Component {
 
         if (selectedEmails.length === 0) return;
 
-        try {
-            await addEmailsInFolder(folderId, selectedEmails);
+        await addEmailsInFolder(folderId, selectedEmails);
 
-            await this.loadEmails(this.state.offset);
+        await this.loadEmails(this.state.offset);
 
-            this.setState({
-                selectedEmails: [],
-                isSelectAll: false,
-            });
-        } catch (error) {
-            console.error("Error moving emails to folder:", error);
-        }
+        this.setState({
+            selectedEmails: [],
+            isSelectAll: false,
+        });
     };
 
     hasUnreadSelected = () => {
@@ -257,11 +407,55 @@ class MainPage extends Death13.Component {
     };
 
     handleGetSendEmail = async () => {
-        await getEmailSend(this.state.offset);
+        try {
+            const data = await getEmailSend(0);
+            const emails = data.emails;
+
+            this.setState({
+                emails: emails,
+                isLoading: false,
+                total: data.total,
+                offset: 0,
+                currentView: "sent",
+                selectedFolderId: null,
+                selectedEmails: [],
+                isSelectAll: false,
+            });
+            window.app.handleRoute("/sent");
+        } catch (error) {
+            console.error("Failed to load sent emails:", error);
+        }
+    };
+
+    handleGetDrafts = async () => {
+        try {
+            const data = await getDrafts(0);
+            const emails = data.drafts;
+
+            this.setState({
+                emails: emails,
+                isLoading: false,
+                total: data.total || emails.length,
+                offset: 0,
+                currentView: "drafts",
+                selectedFolderId: null,
+                selectedEmails: [],
+                isSelectAll: false,
+            });
+        } catch (error) {
+            console.error("Failed to load drafts:", error);
+        }
     };
 
     handleGoToMain = () => {
-        this.setState({ isStateMode: 0 });
+        this.setState({
+            isStateMode: 0,
+            selectedFolderId: null,
+            currentView: "inbox",
+            selectedEmails: [],
+            isSelectAll: false,
+        });
+        this.loadEmails(0);
     };
 
     handleSearch = async (data: string) => {
@@ -276,6 +470,10 @@ class MainPage extends Death13.Component {
             isLoading: false,
             total: data.total,
             offset: offset,
+            selectedFolderId: folderID,
+            currentView: "folder",
+            selectedEmails: [],
+            isSelectAll: false,
         });
     };
 
@@ -284,7 +482,7 @@ class MainPage extends Death13.Component {
     }
 
     render() {
-        const { emails, isModalOpen, isStateMode, isSelectAll, total, selectedEmails } = this.state;
+        const { emails, isModalOpen, isStateMode, isSelectAll, total, selectedEmails, currentView } = this.state;
         return (
             <div className="main-page" onClick={() => this.handleCloseModal()}>
                 <aside className="sidebar">
@@ -294,8 +492,14 @@ class MainPage extends Death13.Component {
                         newMail={this.handleNewMail}
                         backToMail={this.handleGoToMain}
                         updateMail={this.handleUpdateEmail}
+                        handleGetDrafts={this.handleGetDrafts}
                         handleGetSendEmail={this.handleGetSendEmail}
+                        handleGetSpam={this.handleGetSpam}
+                        handleGetTrash={this.handleGetTrash}
+                        handleGetFavorite={this.handleGetFavorite}
                         loadEmailFromFolder={this.loadEmailFromFolder}
+                        selectedFolderId={this.state.selectedFolderId}
+                        currentView={currentView}
                     />
                 </aside>
                 <div className="right-part">
@@ -326,10 +530,13 @@ class MainPage extends Death13.Component {
                                     total={total}
                                     offset={this.state.offset}
                                     selectedCount={selectedEmails.length}
+                                    selectedEmails={selectedEmails}
                                     hasUnreadSelected={this.hasUnreadSelected()}
                                     onMarkAsRead={this.handleMarkAsRead}
                                     onMoveToFolder={this.handleMoveToFolder}
+                                    onDelete={this.handleDeleteSelected}
                                     mainPage={true}
+                                    currentView={currentView}
                                 />
                                 {emails.length === 0 && (
                                     <div className="mail-box-container-form__placeholder">
@@ -350,9 +557,10 @@ class MainPage extends Death13.Component {
                                                 isSelected={selectedEmails.includes(email.id)}
                                                 onSelect={this.handleSelectEmail}
                                                 isRead={email.is_read}
-                                                pageMain={true}
+                                                pageMain={currentView === "inbox"}
                                                 onClick={() => this.handleReadMail(email)}
                                                 onToggleRead={this.handleToggleReadSingle}
+                                                selectedFolderId={this.state.selectedFolderId}
                                             />
                                         ))}
                                     </div>

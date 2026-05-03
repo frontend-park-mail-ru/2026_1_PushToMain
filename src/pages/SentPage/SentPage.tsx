@@ -4,7 +4,7 @@ import Input from "../../components/Input/Input";
 import Button from "../../components/Button/Button";
 import MailHeader from "../../widgets/MailHeader/MailHeader";
 import MailBox from "../../widgets/MailBox/MailBox";
-import { getEmailSend, getEmailByID } from "../../api/ApiEmail";
+import { getEmailSend, getEmailByID, deleteMyEmailByID } from "../../api/ApiEmail";
 import "./SentPage.scss";
 import ProfileModal from "../../widgets/ProfileModal/ProfileModal";
 import { AppStorage } from "../../App";
@@ -16,6 +16,7 @@ class SentPage extends Death13.Component {
         isLoading: true,
         isModalOpen: false,
         isStateMode: 0,
+        currentView: "sent",
         email: {
             header: "",
             body: "",
@@ -28,7 +29,7 @@ class SentPage extends Death13.Component {
         isSelectAll: false,
         offset: 0,
         total: 0,
-        selectedEmails: [], // Добавлено
+        selectedEmails: [],
     };
 
     constructor(props: any) {
@@ -65,6 +66,11 @@ class SentPage extends Death13.Component {
             console.error("Failed to load sent emails:", error);
             window.app.handleRoute("/login");
         }
+    };
+
+    handleGetDrafts = () => {
+        AppStorage.setCurrentView("drafts");
+        window.app.handleRoute("/");
     };
 
     handleUpdateEmail = () => {
@@ -126,7 +132,30 @@ class SentPage extends Death13.Component {
         window.app.handleRoute(`/read/${email.id}`);
     }
 
-    // Добавленные методы для выделения
+    handleDeleteSelected = async () => {
+        const { selectedEmails } = this.state;
+        if (selectedEmails.length === 0) return;
+
+        try {
+            const success = await deleteMyEmailByID(selectedEmails);
+            if (success) {
+                await this.loadEmails(this.state.offset);
+                this.setState({
+                    selectedEmails: [],
+                    isSelectAll: false,
+                });
+            }
+        } catch (error) {
+            console.error("Error deleting sent emails:", error);
+        }
+    };
+
+    loadEmailFromFolder = async (offset: number, folderID: number) => {
+        AppStorage.setCurrentFolderId(folderID);
+        AppStorage.setCurrentView("folder");
+        window.app.handleRoute("/");
+    };
+
     handleSelectEmail = (emailId: number, isSelected: boolean) => {
         const { selectedEmails, emails } = this.state;
         let newSelectedEmails;
@@ -162,10 +191,6 @@ class SentPage extends Death13.Component {
         }
     };
 
-    handleBackToMail = () => {
-        window.app.handleRoute("/");
-    };
-
     handleBackToSent = () => {
         this.setState({ isStateMode: 0 });
         this.loadEmails(this.state.offset);
@@ -173,22 +198,56 @@ class SentPage extends Death13.Component {
 
     handleSearch = () => {};
 
+    handleGoToMain = () => {
+        AppStorage.setCurrentView("inbox");
+        AppStorage.clearMailActionData();
+        AppStorage.setCurrentFolderId(null);
+        window.app.handleRoute("/");
+    };
+
+    handleGetSendEmail = () => {
+        this.loadEmails(0);
+    };
+
+    handleGetSpam = () => {
+        AppStorage.setCurrentView("spam");
+        window.app.handleRoute("/");
+    };
+
+    handleGetTrash = () => {
+        AppStorage.setCurrentView("trash");
+        window.app.handleRoute("/");
+    };
+
+    handleGetFavorite = () => {
+        AppStorage.setCurrentView("favorite");
+        window.app.handleRoute("/");
+    };
+
     t(key: string): string {
         return AppStorage.t(key);
     }
 
     render() {
-        const { emails, isModalOpen, isStateMode, isSelectAll, total, selectedEmails } = this.state;
+        const { emails, isModalOpen, isStateMode, isSelectAll, total, selectedEmails, currentView } = this.state;
 
         return (
             <div className="main-page" onClick={() => this.handleCloseModal()}>
                 <aside className="sidebar">
                     <Sidebar
                         isProfile={0}
-                        isPress={1}
+                        isPress={0}
                         newMail={this.handleNewMail}
-                        backToMail={this.handleBackToMail}
-                        updateMail={this.handleUpdateEmail}
+                        backToMail={this.handleGoToMain}
+                        updateMail={this.handleGoToMain}
+                        handleGetDrafts={this.handleGetDrafts}
+                        handleGetSendEmail={this.handleGetSendEmail}
+                        handleGetSpam={this.handleGetSpam}
+                        handleGetTrash={this.handleGetTrash}
+                        handleGetFavorite={this.handleGetFavorite}
+                        loadEmailFromFolder={this.loadEmailFromFolder}
+                        selectedFolderId={this.state.selectedFolderId}
+                        currentView={currentView}
                     />
                 </aside>
                 <div className="right-part">
@@ -220,6 +279,7 @@ class SentPage extends Death13.Component {
                                     total={total}
                                     offset={this.state.offset}
                                     selectedCount={selectedEmails.length}
+                                    onDelete={this.handleDeleteSelected}
                                 />
                                 {emails.length === 0 && (
                                     <div className="mail-box-container-form__placeholder">

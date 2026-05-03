@@ -150,6 +150,10 @@
             }
         }
 
+        .folder-item {
+            width: 100%;
+        }
+
         [name="button-folder"] {
             &::before {
                 content: "";

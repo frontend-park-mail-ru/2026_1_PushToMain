@@ -10,7 +10,11 @@ import { URLMINIO } from "./api/config";
 import ReadEmailPage from "./pages/ReadEmailPage/ReadEmailPage";
 
 export const AppStorage = {
+    sidebarDropdownVisible: false as boolean,
+    currentView: "inbox" as string,
+    draftData: null as any,
     folderChangeInstance: null as any,
+    currentFolderId: null as any,
     _subscribers: [] as Array<() => void>,
     _lastUpdate: 0,
     unReadCount: 0,
@@ -64,6 +68,7 @@ export const AppStorage = {
             of: "из",
             mark_as_read: "Сделать прочитанным",
             mark_as_unread: "Сделать непрочитанным",
+            move_to_inbox: "Переместить во входящие",
             refresh: "Обновить",
 
             //ReadPage
@@ -153,6 +158,7 @@ export const AppStorage = {
             mark_as_read: "Mark as read",
             mark_as_unread: "Mark as unread",
             refresh: "Refresh",
+            move_to_inbox: "Move to inbox",
 
             //ReadPage
             //SendPage
@@ -349,10 +355,42 @@ export const AppStorage = {
         this._notify();
     },
 
+    setCurrentFolderId(folderId: number | null) {
+        AppStorage.currentFolderId = folderId;
+    },
+
+    getCurrentFolderId(): number | null {
+        return AppStorage.currentFolderId;
+    },
+
     setUnReadCount(count: number) {
         this.unReadCount = count;
         this._saveToStorage();
         this._notify();
+    },
+
+    setCurrentView(view: string) {
+        AppStorage.currentView = view;
+    },
+
+    getCurrentView(): string {
+        const view = AppStorage.currentView;
+        AppStorage.currentView = "inbox";
+        return view;
+    },
+
+    setDraftData(data: any) {
+        AppStorage.draftData = data;
+    },
+
+    getDraftData(): any {
+        const data = AppStorage.draftData;
+        AppStorage.draftData = null;
+        return data;
+    },
+
+    learDraftData() {
+        AppStorage.draftData = null;
     },
 
     setLanguage(lang: "ru" | "en") {
@@ -408,6 +446,15 @@ export const AppStorage = {
 
     getForwardData() {
         return this.forwardData;
+    },
+
+    setSidebarDropdownVisible(visible: boolean) {
+        AppStorage.sidebarDropdownVisible = visible;
+        AppStorage._notify();
+    },
+
+    getSidebarDropdownVisible(): boolean {
+        return AppStorage.sidebarDropdownVisible;
     },
 
     clearMailActionData() {

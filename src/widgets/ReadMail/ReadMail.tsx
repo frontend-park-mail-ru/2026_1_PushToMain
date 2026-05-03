@@ -3,14 +3,20 @@ import "./ReadMail.scss";
 import Input from "../../components/Input/Input";
 import Textarea from "../../components/Textarea/Textarea";
 import MailTools from "../MailTools/MailTools";
-import { deleteEmailByID, deleteMyEmailByID } from "../../api/ApiEmail";
+import { deleteEmailByID, deleteMyEmailByID, changeFolderV2 } from "../../api/ApiEmail";
 import { AppStorage } from "../../App";
 import { URLMINIO } from "../../api/config";
+import { deleteEmailsFromFolder } from "../../api/ApiFolder";
 
 class ReadMail extends Death13.Component {
     handleDeleteEmail = async () => {
-        const { email, backToMail, backToSent } = this.props;
-        if (window.app.previousPath === "/sent") {
+        const { email, backToMail, backToSent, selectedFolderId } = this.props;
+
+        if (selectedFolderId) {
+            const ids = [email.id];
+            await deleteEmailsFromFolder(selectedFolderId, ids);
+            backToMail();
+        } else if (window.app.previousPath === "/sent") {
             await deleteMyEmailByID(email.id);
             backToSent();
         } else {
@@ -46,12 +52,28 @@ class ReadMail extends Death13.Component {
         window.app.handleRoute("/send");
     };
 
+    handleMarkAsSpam = async (event: any) => {
+        event.preventDefault();
+        if (this.props.selectedEmails && this.props.selectedEmails.length > 0) {
+            await changeFolderV2(this.props.selectedEmails, "spam");
+            this.props.reloadMail?.();
+        }
+    };
+
+    handleMarkAsFavorite = async (event: any) => {
+        event.preventDefault();
+        if (this.props.selectedEmails && this.props.selectedEmails.length > 0) {
+            await changeFolderV2(this.props.selectedEmails, "favorite");
+        }
+    };
+
     t(key: string): string {
         return AppStorage.t(key);
     }
 
     render() {
         const { email } = this.props;
+
         return (
             <div className="read-mail">
                 <form action="" className="read-form">
@@ -87,6 +109,7 @@ class ReadMail extends Death13.Component {
                     <Textarea readonly={true} value={email.body} />
                 </form>
                 <MailTools
+                    email={this.props.email}
                     deleteEmail={this.handleDeleteEmail}
                     backToMail={this.props.backToMail}
                     reloadEMail={this.props.reloadMail}

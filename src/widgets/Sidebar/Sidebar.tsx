@@ -5,7 +5,7 @@ import { AppStorage } from "../../App";
 
 class Sidebar extends Death13.Component {
     state: any = {
-        isVisible: false,
+        isVisible: AppStorage.getSidebarDropdownVisible() || false, // Получаем сохраненное состояние
         name: AppStorage.name,
         surname: AppStorage.surname,
         email: AppStorage.email,
@@ -30,6 +30,16 @@ class Sidebar extends Death13.Component {
             });
         });
     }
+
+    toggleDropdown = (event: any) => {
+        event.preventDefault();
+        const newState = !this.state.isVisible;
+        this.setState({ isVisible: newState });
+        AppStorage.setSidebarDropdownVisible(newState); // Сохраняем состояние
+        
+        const button = event.currentTarget;
+        button.classList.toggle("active");
+    };
 
     t(key: string): string {
         return AppStorage.t(key);
@@ -69,7 +79,7 @@ class Sidebar extends Death13.Component {
                             <Button
                                 name="button-inbox"
                                 title={this.t("inbox")}
-                                isSelect={this.props.isPress === 0}
+                                isSelect={this.props.currentView === "inbox" && !this.props.selectedFolderId}
                                 count={unReadCount}
                                 onClick={(event: any) => {
                                     event.preventDefault();
@@ -83,25 +93,36 @@ class Sidebar extends Death13.Component {
                             <Button
                                 name="button-drafs"
                                 title={this.t("drafts")}
+                                isSelect={this.props.currentView === "drafts"}
                                 onClick={(event: any) => {
                                     event.preventDefault();
+                                    if (this.props.handleGetDrafts) {
+                                        this.props.handleGetDrafts();
+                                    }
                                 }}
                             />
+
                             <Button
                                 name="button-sends"
                                 title={this.t("sent")}
-                                isSelect={this.props.isPress === 1}
+                                isSelect={this.props.currentView === "sent"}
                                 onClick={(event: any) => {
                                     event.preventDefault();
-                                    window.app.handleRoute("/sent");
+                                    if (this.props.handleGetSendEmail) {
+                                        this.props.handleGetSendEmail();
+                                    }
                                 }}
                             />
 
                             <Button
                                 name="button-favorites"
                                 title={this.t("starred")}
+                                isSelect={this.props.currentView === "favorite"}
                                 onClick={(event: any) => {
                                     event.preventDefault();
+                                    if (this.props.handleGetFavorite) {
+                                        this.props.handleGetFavorite();
+                                    }
                                 }}
                             />
                         </div>
@@ -110,27 +131,30 @@ class Sidebar extends Death13.Component {
                             <Button
                                 name="button-drop-down"
                                 title={isVisible ? this.t("hide") : this.t("yet")}
-                                onClick={(event: any) => {
-                                    event.preventDefault();
-                                    this.setState({ isVisible: !isVisible });
-                                    const button = event.currentTarget;
-                                    button.classList.toggle("active");
-                                }}
+                                onClick={this.toggleDropdown}
                             />
                             {isVisible && (
                                 <div className="extra-button-container">
                                     <Button
                                         name="button-spam"
                                         title={this.t("spam")}
+                                        isSelect={this.props.currentView === "spam"}
                                         onClick={(event: any) => {
                                             event.preventDefault();
+                                            if (this.props.handleGetSpam) {
+                                                this.props.handleGetSpam();
+                                            }
                                         }}
                                     />
                                     <Button
                                         name="button-trash"
                                         title={this.t("trash")}
+                                        isSelect={this.props.currentView === "trash"}
                                         onClick={(event: any) => {
                                             event.preventDefault();
+                                            if (this.props.handleGetTrash) {
+                                                this.props.handleGetTrash();
+                                            }
                                         }}
                                     />
                                     <Button
@@ -147,6 +171,7 @@ class Sidebar extends Death13.Component {
                                                 <Button
                                                     name="button-folder"
                                                     title={folder.name}
+                                                    isSelect={this.props.selectedFolderId === folder.id}
                                                     onClick={(event: any) => {
                                                         event.preventDefault();
                                                         this.props.loadEmailFromFolder(0, folder.id);
@@ -158,7 +183,7 @@ class Sidebar extends Death13.Component {
                             )}
                         </div>
                     </div>
-                )}{" "}
+                )}
                 {isProfile === 1 && (
                     <div className="sidebar-content">
                         <div className="sidebar-profile">
