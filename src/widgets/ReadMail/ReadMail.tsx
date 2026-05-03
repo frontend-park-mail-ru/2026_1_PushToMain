@@ -68,11 +68,30 @@ class ReadMail extends Death13.Component {
         ) : null}
         <form action="" className="read-form">
           <div className="read-inputs">
-            <InputEmail
-              input_title="Кому:"
-              emails={email.receivers_emails}
-              isReading={true}
-            />
+            <div className="read-header">
+              <div className="sender-info">
+                <img src="../../assets/svg/Avatar.svg"></img>
+                <div className="sender-info__text">
+                  <div className="sender-name">
+                    {email.sender_name} {email.sender_surname}
+                    <small>({email.sender_email})</small>
+                  </div>
+                  <InputEmail
+                    input_title="Кому:"
+                    emails={email.receivers_emails}
+                    isReading={true}
+                  />
+                </div>
+              </div>
+              {!isMobile ? (
+                <img
+                  src="../../assets/svg/Close.svg"
+                  className="close-button"
+                  onClick={this.props.backToMail}
+                ></img>
+              ) : null}
+            </div>
+
             <Input
               type="text"
               placeholder="Введите тему"
