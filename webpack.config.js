@@ -18,12 +18,12 @@ export default {
     new HtmlWebpackPlugin({
       template: "./public/index.html",
       filename: "index.html",
-      favicon: "./public/assets/svg/favicon.svg", // Добавлен favicon
+      favicon: "./public/assets/svg/favicon.svg",
     }),
     new MiniCssExtractPlugin(),
     new CopyWebpackPlugin({
       patterns: [
-        { from: "public/sw.js", to: "sw.js" }, // Service Worker
+        { from: "public/sw.js", to: "sw.js" },
         {
           from: "**/*",
           to: "assets/",
@@ -35,7 +35,7 @@ export default {
   ],
 
   optimization: {
-    minimize: false, // В development не минифицируем
+    minimize: false,
     minimizer: [
       new CssMinimizerPlugin(),
       new ImageMinimizerPlugin({

@@ -1,0 +1,18 @@
+.send-email-page {
+    .right-part {
+        .top-bar {
+            .top-right-menu {
+                &[name="avatar"] {
+                    img {
+                        min-width: 55px;
+                        min-height: 55px;
+                        max-width: 55px;
+                        max-height: 55px;
+                        border-radius: 50%;
+                        object-fit: cover;
+                    }
+                }
+            }
+        }
+    }
+}

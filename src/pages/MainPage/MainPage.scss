@@ -28,7 +28,7 @@
     .search-bar {
         display: flex;
         align-items: center;
-        background-color: #ffffff;
+        background-color: var(--color-sidebar-background);
         border-radius: 20px;
         padding: 0 20px;
         height: 48px;
@@ -43,15 +43,20 @@
             flex-direction: row;
             align-items: center;
             border: none;
-            
+
             img {
                 margin: 0;
             }
-            
+
             input {
                 background: none;
                 height: 40px;
                 width: 400px;
+                font-size: 16px;
+
+                &::placeholder {
+                    font-size: 16px;
+                }
 
                 &:focus {
                     outline: none;
@@ -66,12 +71,6 @@
 
         .auth-input__error {
             height: 0;
-        }
-
-        .search-input {
-            &::placeholder {
-                color: #999999;
-            }
         }
     }
 
@@ -95,8 +94,10 @@
 
             &[name="avatar"] {
                 img {
-                    width: 55px;
-                    height: 55px;
+                    min-width: 55px;
+                    min-height: 55px;
+                    max-width: 55px;
+                    max-height: 55px;
                     border-radius: 50%;
                     object-fit: cover;
                 }
@@ -130,6 +131,7 @@
             flex-direction: column;
             padding-bottom: 30px;
             padding-right: 10px;
+            overflow-x: hidden;
 
             &::-webkit-scrollbar {
                 width: 6px;
@@ -159,8 +161,8 @@
             &__icon {
                 content: "";
                 display: inline-block;
-                width: 200px;
-                height: 200px;
+                width: 100px;
+                height: 100px;
                 background-color: rgb(192, 192, 192);
                 mask-image: url("/assets/svg/Inbox.svg");
                 mask-size: contain;

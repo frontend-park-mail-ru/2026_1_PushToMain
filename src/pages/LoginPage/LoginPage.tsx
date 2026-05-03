@@ -4,6 +4,7 @@ import Input from "../../components/Input/Input";
 import { validation } from "../../utils/validation";
 import { postDataLogin } from "../../api/ApiAuth";
 import "./LoginPage.scss";
+import { AppStorage } from "../../App";
 
 class LoginPage extends Death13.Component {
     state: any = {
@@ -19,7 +20,7 @@ class LoginPage extends Death13.Component {
             password: field === "password" ? value : this.state.password,
         };
 
-        const result = validation(data);
+        const result = validation(data, this.t);
 
         if (!result.isValid) {
             const fieldError = result.errors.find((err: any) => err.field === field);
@@ -48,7 +49,7 @@ class LoginPage extends Death13.Component {
             password: this.state.password,
         };
 
-        const result = validation(data);
+        const result = validation(data, this.t);
         const newErrors: any = {};
 
         if (!result.isValid) {
@@ -92,6 +93,10 @@ class LoginPage extends Death13.Component {
         }
     }
 
+    t(key: string): string {
+        return AppStorage.t(key);
+    }
+
     render() {
         const { errors, email, password } = this.state;
         return (
@@ -102,14 +107,14 @@ class LoginPage extends Death13.Component {
                             <img src="../../assets/svg/Logo.svg" />
                             <h1 className="logo__title">SMail</h1>
                         </div>
-                        <h1 className="auth-form__subtitle">Твоя главная студенческая почта</h1>
-                        <h1 className="auth-form__title">Авторизация</h1>
+                        <h1 className="auth-form__subtitle">{this.t("auth_subtitle")}</h1>
+                        <h1 className="auth-form__title">{this.t("auth_title")}</h1>
                         <form action="" className="auth-form">
                             <div className="auth-form__inputs">
                                 <Input
                                     type="email"
-                                    placeholder="Введите почту"
-                                    input_title="Почта"
+                                    placeholder={this.t("enter_email")}
+                                    input_title={this.t("email")}
                                     name="email"
                                     error={errors.email}
                                     value={email}
@@ -119,8 +124,8 @@ class LoginPage extends Death13.Component {
                                 />
                                 <Input
                                     type="password"
-                                    placeholder="Введите пароль"
-                                    input_title="Пароль"
+                                    placeholder={this.t("enter_password")}
+                                    input_title={this.t("password")}
                                     name="password"
                                     error={errors.password}
                                     value={password}
@@ -131,7 +136,7 @@ class LoginPage extends Death13.Component {
                             </div>
                             <div className="auth-form__actions">
                                 <Button
-                                    title="Войти"
+                                    title={this.t("enter")}
                                     name="button-login-for-login"
                                     onClick={async (event: Event) => {
                                         event.preventDefault();
@@ -139,7 +144,7 @@ class LoginPage extends Death13.Component {
                                     }}
                                 />
                                 <Button
-                                    title="Зарегистрироваться"
+                                    title={this.t("register")}
                                     name="button-reg-for-login"
                                     onClick={(event: Event) => {
                                         event.preventDefault();

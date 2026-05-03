@@ -9,6 +9,56 @@
         flex: 1;
         height: 100%;
 
+        .read-header {
+            display: flex;
+            align-items: center;
+            gap: 30px;
+            padding: 10px;
+
+            .sender-avatar {
+                img {
+                    height: 60px;
+                    width: 60px;
+                    border-radius: 50%;
+                    object-fit: cover;
+                }
+            }
+
+            .sender-data {
+                display: flex;
+                flex-direction: column;
+                gap: 10px;
+
+                .sender__email {
+                    font-weight: bold;
+                    font-size: 18px;
+                    color: var(--tertiary-text);
+                }
+                .recivers__emails {
+                    display: flex;
+                    gap: 10px;
+                    color: var(--tertiary-text);
+                    
+                    .input-form {
+                        display: flex;
+                        flex-direction: row;
+                        gap: 10px;
+
+                        .email-tag {
+                            display: flex;
+                            flex-direction: row;
+                            align-items: center;
+                            gap: 10px;
+                            background-color: var(--button-background-second);
+                            border-radius: 12px;
+                            padding: 0 10px;
+                            height: 24px;
+                        }
+                    }
+                }
+            }
+        }
+
         .input-container {
             display: flex;
             flex-direction: row;
@@ -28,7 +78,7 @@
 
             input {
                 max-width: 100%;
-                color: var(--tretiry-text);
+                color: var(--tertiary-text);
                 font-size: 16px;
             }
         }

@@ -9,8 +9,19 @@ class MailBox extends Death13.Component {
     handleSelect = (e: any) => {
         e.stopPropagation();
         const { id, onSelect } = this.props;
+        const isChecked = e.target.checked;
+
         if (onSelect) {
-            onSelect(id, e.target.checked);
+            onSelect(id, isChecked);
+        }
+    };
+
+    handleToggleRead = (e: any) => {
+        e.stopPropagation();
+        const { id, isRead, onToggleRead } = this.props;
+
+        if (onToggleRead) {
+            onToggleRead(id, !isRead);
         }
     };
 
@@ -20,17 +31,15 @@ class MailBox extends Death13.Component {
     };
 
     render() {
-        const { theme, title, date, onClick, isSelected = false, isRead } = this.props;
+        const { theme, title, date, onClick, isSelected = false, pageMain, isRead } = this.props;
         const { isFavorite } = this.state;
 
         return (
-            <div 
-                className={`mail ${isSelected ? "selected" : ""} ${isRead ? "read" : ""}`} 
-                onClick={onClick}
-            >
+            <div className={`mail ${isSelected ? "selected" : ""} ${isRead ? "read" : ""}`} onClick={onClick}>
                 <div className="checkbox-container">
                     <input
                         type="checkbox"
+                        className={`select-checkbox ${isSelected ? "selected" : ""}`}
                         name="select-checkbox"
                         checked={isSelected}
                         onChange={this.handleSelect}
@@ -43,6 +52,17 @@ class MailBox extends Death13.Component {
                         onChange={this.handleFavorite}
                         onClick={(e: any) => e.stopPropagation()}
                     />
+                    {pageMain && (
+                        <input
+                            type="checkbox"
+                            name="read-checkbox"
+                            className={`read-checkbox ${isRead ? "read" : ""}`}
+                            checked={isRead}
+                            onChange={this.handleToggleRead}
+                            onClick={(e: any) => e.stopPropagation()}
+                        />
+                    )}
+                    {!pageMain && <div className="sent-checkbox"></div>}
                 </div>
                 <div className="mail-content">
                     <span className="mail-theme">{theme}</span>
