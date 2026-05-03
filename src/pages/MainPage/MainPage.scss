@@ -318,8 +318,7 @@
         }
     }
 
-    body .main-page .sidebar-overlay {
-        display: block;
+    body .sidebar-overlay {
         visibility: hidden;
         opacity: 0;
         position: fixed;
@@ -329,12 +328,13 @@
         bottom: 0;
         background: rgba(0, 0, 0, 0.5);
         z-index: 999;
-        transition: opacity 0.3s ease-in-out;
+        transition:
+            opacity 0.3s ease-in-out,
+            visibility 0.3s ease-in-out;
 
         &.open {
             visibility: visible;
             opacity: 1;
-            transition: opacity 0.3s ease-in-out;
         }
     }
 }
