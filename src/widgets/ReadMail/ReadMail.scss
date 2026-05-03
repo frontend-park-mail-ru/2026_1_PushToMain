@@ -50,6 +50,9 @@
                         justify-content: center;
 
                         .sender-name {
+                            display: flex;
+                            flex-direction: row;
+                            align-items: center;
                             height: 25px;
                             justify-self: center;
                             margin: 0 15px;
@@ -135,6 +138,26 @@
         }
 
         .read-form {
+            .read-inputs {
+                .read-header {
+                    .sender-info {
+                        .sender-info__text {
+                            gap: 5px;
+
+                            .sender-name {
+                                flex-direction: column;
+                                height: fit-content;
+                                align-items: flex-start;
+
+                                small {
+                                    margin-left: 0;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
             textarea {
                 width: auto;
             }

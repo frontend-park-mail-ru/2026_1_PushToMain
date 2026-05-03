@@ -73,8 +73,12 @@ class ReadMail extends Death13.Component {
                 <img src="../../assets/svg/Avatar.svg"></img>
                 <div className="sender-info__text">
                   <div className="sender-name">
-                    {email.sender_name} {email.sender_surname}
-                    <small>({email.sender_email})</small>
+                    <div>
+                      {email.sender_name} {email.sender_surname}
+                    </div>
+                    <div>
+                      <small>({email.sender_email})</small>
+                    </div>
                   </div>
                   <InputEmail
                     input_title="Кому:"
