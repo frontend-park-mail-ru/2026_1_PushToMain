@@ -81,7 +81,7 @@ class Sidebar extends Death13.Component {
             onClick={backToMail}
           >
             {" "}
-            <img src="../../assets/svg/ArrowLeft.svg" />
+            <div className="arrow-left-icon" />
             <span>{this.t("back_to_mail")}</span>
           </div>
         ) : null}

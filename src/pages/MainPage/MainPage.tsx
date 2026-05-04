@@ -542,7 +542,7 @@ class MainPage extends Death13.Component {
                 this.toggleSidebar();
               }}
             >
-              <img src="../../assets/svg/Hamburger.svg" alt="Menu" />
+              <div className="hamburger-icon" />
             </div>
             <div className="search-bar">
               <Input

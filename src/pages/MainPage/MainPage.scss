@@ -281,15 +281,19 @@
         justify-content: center;
         width: 60px;
         height: 60px;
-        background-color: #ffffff;
+        background-color: var(--color-sidebar-background);
         border: none;
         border-radius: 20px;
         cursor: pointer;
         flex-shrink: 0;
 
-        img {
+        .hamburger-icon {
             width: 24px;
             height: 24px;
+            background-color: var(--tertiary-text);
+            mask-image: url(/assets/svg/Hamburger.svg);
+            mask-size: contain;
+            mask-position: center;
         }
 
         &:active {

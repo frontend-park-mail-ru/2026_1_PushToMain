@@ -52,12 +52,8 @@ class SidebarProfile extends Death13.Component {
           <p className="sidebar-profile__email">{email}</p>
         </div>
         {variant === "mobile" ? (
-          <Button
+          <div
             className="sidebar-profile__logout-btn"
-            svg="../../assets/svg/Logout.svg"
-            name="logout"
-            help="Выйти"
-            size="32"
             onClick={this.handleExit}
           />
         ) : null}

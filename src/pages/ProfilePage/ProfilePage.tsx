@@ -344,7 +344,7 @@ class ProfilePage extends Death13.Component {
                     onClick={this.handleBackToSettings}
                   >
                     {" "}
-                    <img src="../../assets/svg/ArrowLeft.svg" />
+                    <div className="arrow-left-icon" />
                     <span>{this.t("back_to_settings")}</span>
                   </div>
                 ) : null}
@@ -448,7 +448,7 @@ class ProfilePage extends Death13.Component {
                     onClick={this.handleBackToSettings}
                   >
                     {" "}
-                    <img src="../../assets/svg/ArrowLeft.svg" />
+                    <div className="arrow-left-icon" />
                     <span>{this.t("back_to_settings")}</span>
                   </div>
                 ) : null}
@@ -508,7 +508,7 @@ class ProfilePage extends Death13.Component {
                     onClick={this.handleBackToSettings}
                   >
                     {" "}
-                    <img src="../../assets/svg/ArrowLeft.svg" />
+                    <div className="arrow-left-icon" />
                     <span>{this.t("back_to_settings")}</span>
                   </div>
                 ) : null}
@@ -576,7 +576,7 @@ class ProfilePage extends Death13.Component {
                     className="settings-back-to-menu-button-mobile"
                     onClick={this.handleBackToSettings}
                   >
-                    <img src="../../assets/svg/ArrowLeft.svg" />
+                    <div className="arrow-left-icon" />
                     <span>{this.t("back_to_settings")}</span>
                   </div>
                 ) : null}

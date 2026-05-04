@@ -90,6 +90,17 @@
             padding: 10px;
         }
 
+        .settings-back-to-menu-button-mobile {
+            .arrow-left-icon {
+                width: 24px;
+                height: 24px;
+                background-color: var(--tertiary-text);
+                mask-image: url(/assets/svg/ArrowLeft.svg);
+                mask-size: contain;
+                mask-position: center;
+            }
+        }
+
         .profile-container,
         .profile-security,
         .profile-folder {

@@ -95,14 +95,14 @@
             }
 
             .sidebar-profile__logout-btn {
-                padding: 8px;
                 margin-left: auto;
-
-                img {
-                    width: auto;
-                    height: auto;
-                    margin-bottom: 0;
-                }
+                margin-right: 20px;
+                width: 32px;
+                height: 32px;
+                background-color: var(--tertiary-text);
+                mask-image: url(/assets/svg/Logout.svg);
+                mask-size: contain;
+                mask-position: center;
             }
         }
     }
