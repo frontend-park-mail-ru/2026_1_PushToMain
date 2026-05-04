@@ -6,7 +6,7 @@ import SidebarProfile from "../../components/SidebarProfile/SidebarProfile";
 
 class Sidebar extends Death13.Component {
   state: any = {
-    isVisible: AppStorage.getSidebarDropdownVisible() || false, // Получаем сохраненное состояние
+    isVisible: AppStorage.getSidebarDropdownVisible() || false,
     name: AppStorage.name,
     surname: AppStorage.surname,
     email: AppStorage.email,
@@ -36,7 +36,7 @@ class Sidebar extends Death13.Component {
     event.preventDefault();
     const newState = !this.state.isVisible;
     this.setState({ isVisible: newState });
-    AppStorage.setSidebarDropdownVisible(newState); // Сохраняем состояние
+    AppStorage.setSidebarDropdownVisible(newState);
 
     const button = event.currentTarget;
     button.classList.toggle("active");
@@ -53,6 +53,72 @@ class Sidebar extends Death13.Component {
     }
   };
 
+  // Обработчик клика по папке
+  handleFolderClick = (folderId: number) => {
+    AppStorage.setCurrentFolderId(folderId);
+    AppStorage.setCurrentView("folder");
+    window.app.handleRoute(`/folder/${folderId}`);
+    this.toggleSidebar();
+  };
+
+  // Обработчик клика по "Входящие"
+  handleInboxClick = (event: any) => {
+    event.preventDefault();
+    AppStorage.setCurrentView("inbox");
+    AppStorage.setCurrentFolderId(null);
+    window.app.handleRoute("/");
+    this.toggleSidebar();
+  };
+
+  // Обработчик клика по "Черновики"
+  handleDraftsClick = (event: any) => {
+    event.preventDefault();
+    AppStorage.setCurrentView("drafts");
+    window.app.handleRoute("/drafts");
+    this.toggleSidebar();
+  };
+
+  // Обработчик клика по "Отправленные"
+  handleSentClick = (event: any) => {
+    event.preventDefault();
+    AppStorage.setCurrentView("sent");
+    window.app.handleRoute("/sent");
+    this.toggleSidebar();
+  };
+
+  // Обработчик клика по "Избранные"
+  handleFavoriteClick = (event: any) => {
+    event.preventDefault();
+    AppStorage.setCurrentView("favorite");
+    window.app.handleRoute("/favorite");
+    this.toggleSidebar();
+  };
+
+  // Обработчик клика по "Спам"
+  handleSpamClick = (event: any) => {
+    event.preventDefault();
+    AppStorage.setCurrentView("spam");
+    window.app.handleRoute("/spam");
+    this.toggleSidebar();
+  };
+
+  // Обработчик клика по "Корзина"
+  handleTrashClick = (event: any) => {
+    event.preventDefault();
+    AppStorage.setCurrentView("trash");
+    window.app.handleRoute("/trash");
+    this.toggleSidebar();
+  };
+
+  // Обработчик клика по "Все письма"
+  handleAllMailClick = (event: any) => {
+    event.preventDefault();
+    AppStorage.setCurrentView("inbox");
+    AppStorage.setCurrentFolderId(null);
+    window.app.handleRoute("/");
+    this.toggleSidebar();
+  };
+
   t(key: string): string {
     return AppStorage.t(key);
   }
@@ -66,7 +132,6 @@ class Sidebar extends Death13.Component {
       changeProfile,
       changePassword,
       newMail,
-      updateMail,
       handleSetting,
       handleFolder,
     } = this.props;
@@ -89,10 +154,7 @@ class Sidebar extends Death13.Component {
           className="logo-container"
           onClick={(event: any) => {
             event.preventDefault();
-            if (this.props.updateMail) {
-              updateMail();
-            }
-            backToMail();
+            this.handleInboxClick(event);
           }}
         >
           <img src="../../assets/svg/Logo.svg" />
@@ -119,52 +181,28 @@ class Sidebar extends Death13.Component {
                   !this.props.selectedFolderId
                 }
                 count={unReadCount}
-                onClick={(event: any) => {
-                  event.preventDefault();
-                  if (this.props.updateMail) {
-                    updateMail();
-                  }
-                  backToMail();
-                }}
+                onClick={this.handleInboxClick}
               />
 
               <Button
                 name="button-drafs"
                 title={this.t("drafts")}
                 isSelect={this.props.currentView === "drafts"}
-                onClick={(event: any) => {
-                  event.preventDefault();
-                  if (this.props.handleGetDrafts) {
-                    this.props.handleGetDrafts();
-                    this.toggleSidebar();
-                  }
-                }}
+                onClick={this.handleDraftsClick}
               />
 
               <Button
                 name="button-sends"
                 title={this.t("sent")}
                 isSelect={this.props.currentView === "sent"}
-                onClick={(event: any) => {
-                  event.preventDefault();
-                  if (this.props.handleGetSendEmail) {
-                    this.props.handleGetSendEmail();
-                    this.toggleSidebar();
-                  }
-                }}
+                onClick={this.handleSentClick}
               />
 
               <Button
                 name="button-favorites"
                 title={this.t("starred")}
                 isSelect={this.props.currentView === "favorite"}
-                onClick={(event: any) => {
-                  event.preventDefault();
-                  if (this.props.handleGetFavorite) {
-                    this.props.handleGetFavorite();
-                    this.toggleSidebar();
-                  }
-                }}
+                onClick={this.handleFavoriteClick}
               />
             </div>
 
@@ -180,34 +218,18 @@ class Sidebar extends Death13.Component {
                     name="button-spam"
                     title={this.t("spam")}
                     isSelect={this.props.currentView === "spam"}
-                    onClick={(event: any) => {
-                      event.preventDefault();
-                      if (this.props.handleGetSpam) {
-                        this.props.handleGetSpam();
-                        this.toggleSidebar();
-                      }
-                    }}
+                    onClick={this.handleSpamClick}
                   />
                   <Button
                     name="button-trash"
                     title={this.t("trash")}
                     isSelect={this.props.currentView === "trash"}
-                    onClick={(event: any) => {
-                      event.preventDefault();
-                      if (this.props.handleGetTrash) {
-                        this.props.handleGetTrash();
-                        this.toggleSidebar();
-                      }
-                    }}
+                    onClick={this.handleTrashClick}
                   />
                   <Button
                     name="button-all-letter"
                     title={this.t("all_letter")}
-                    onClick={(event: any) => {
-                      event.preventDefault();
-                      backToMail();
-                      this.toggleSidebar();
-                    }}
+                    onClick={this.handleAllMailClick}
                   />
                   {AppStorage.folders &&
                     AppStorage.folders.map((folder: any) => (
@@ -218,8 +240,7 @@ class Sidebar extends Death13.Component {
                           isSelect={this.props.selectedFolderId === folder.id}
                           onClick={(event: any) => {
                             event.preventDefault();
-                            this.props.loadEmailFromFolder(0, folder.id);
-                            this.toggleSidebar();
+                            this.handleFolderClick(folder.id);
                           }}
                         />
                       </div>

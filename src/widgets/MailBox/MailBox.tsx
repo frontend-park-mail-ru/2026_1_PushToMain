@@ -42,8 +42,13 @@ class MailBox extends Death13.Component {
       isSelected = false,
       pageMain,
       isRead,
+      currentView, // Добавляем currentView из props
     } = this.props;
     const { isFavorite } = this.state;
+
+    // Определяем, нужно ли показывать информацию об отправителе
+    const isSentView = currentView === "sent";
+    const showSenderInfo = !isSentView && (sender_name || sender_email);
 
     return (
       <div
@@ -81,7 +86,11 @@ class MailBox extends Death13.Component {
                 />
               )}
               {!pageMain && <div className="sent-checkbox"></div>}
-              {sender_name ? `${sender_name} ${sender_surname}` : sender_email}
+              {showSenderInfo
+                ? sender_name 
+                  ? `${sender_name} ${sender_surname || ""}`.trim()
+                  : sender_email
+                : ""}
             </span>
             <div className="mail-text-content">
               <span className="mail-theme">{theme}</span>

@@ -2,7 +2,7 @@ import Death13 from "@react/stands";
 import Button from "../../components/Button/Button";
 import "./MailTools.scss";
 import { AppStorage } from "../../App";
-import { changeFolderV2 } from "../../api/ApiEmail";
+import { sendSpam } from "../../api/ApiSpam";
 
 class MailTools extends Death13.Component {
     handleDeleteClick = async (event: any) => {
@@ -31,7 +31,7 @@ class MailTools extends Death13.Component {
         event.preventDefault();
         const { email } = this.props;
         if (email) {
-            await changeFolderV2([email.id], "spam");
+            await sendSpam([email.id])
             this.props.backToMail?.();
         }
     };
@@ -40,7 +40,6 @@ class MailTools extends Death13.Component {
         event.preventDefault();
         const { email } = this.props;
         if (email) {
-            await changeFolderV2([email.id], "favorite");
         }
     };
 

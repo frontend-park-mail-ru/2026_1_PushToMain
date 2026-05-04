@@ -2,7 +2,7 @@ import Death13 from "@react/stands";
 import Button from "../../components/Button/Button";
 import Input from "../../components/Input/Input";
 import { validation } from "../../utils/validation";
-import { postDataReg } from "../../api/ApiAuth";
+import { postDataReg, getProfile } from "../../api/ApiAuth";
 import "./RegPage.scss";
 import { AppStorage } from "../../App";
 
@@ -122,6 +122,8 @@ class RegPage extends Death13.Component {
             const response = await postDataReg(this.state.formData);
 
             if (response && response.isValid) {
+                const data = await getProfile();
+                AppStorage.setProfileData(data);
                 window.app.handleRoute("/");
             } else if (response && !response.isValid) {
                 const serverErrors: any = {};

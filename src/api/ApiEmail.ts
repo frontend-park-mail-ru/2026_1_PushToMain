@@ -219,30 +219,6 @@ export async function uploadFile(file: File, emailId: number) {
     }
 }
 
-// Ручка для спама, избранного и т.д с кастомными хз работает ли
-export async function changeFolderV2(IDs: number[], folderName: string) {
-    try {
-        const csrfToken = await getCSRFToken();
-        const response = await fetch(`${URL}/emails/${IDs}/folder`, {
-            method: "PUT",
-            headers: {
-                "Content-Type": "application/json",
-                "X-CSRF-Token": csrfToken,
-            },
-            credentials: "include",
-            body: JSON.stringify({ folder: folderName }),
-        });
-
-        if (response.ok) {
-            return true;
-        }
-
-        return false;
-    } catch {
-        return false;
-    }
-}
-
 export async function restoreFromTrash(IDs: number[]) {
     try {
         const csrfToken = await getCSRFToken();
@@ -266,47 +242,9 @@ export async function restoreFromTrash(IDs: number[]) {
     }
 }
 
-export async function getEmailsSpam(offset: number) {
-    try {
-        const response = await fetch(`${URL}/emails/spam?limit=50&offset=${offset}`, {
-            method: "GET",
-            headers: {
-                "Content-Type": "application/json",
-            },
-            credentials: "include",
-        });
-
-        if (response.ok) {
-            const data = await response.json();
-            return data;
-        }
-    } catch {
-        return null;
-    }
-}
-
 export async function getEmailsTrash(offset: number) {
     try {
         const response = await fetch(`${URL}/emails/trash?limit=50&offset=${offset}`, {
-            method: "GET",
-            headers: {
-                "Content-Type": "application/json",
-            },
-            credentials: "include",
-        });
-
-        if (response.ok) {
-            const data = await response.json();
-            return data;
-        }
-    } catch {
-        return null;
-    }
-}
-
-export async function getEmailsFavorite(offset: number) {
-    try {
-        const response = await fetch(`${URL}/emails/favorite?limit=50&offset=${offset}`, {
             method: "GET",
             headers: {
                 "Content-Type": "application/json",

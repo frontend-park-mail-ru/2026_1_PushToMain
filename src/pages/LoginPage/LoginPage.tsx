@@ -2,7 +2,7 @@ import Death13 from "@react/stands";
 import Button from "../../components/Button/Button";
 import Input from "../../components/Input/Input";
 import { validation } from "../../utils/validation";
-import { postDataLogin } from "../../api/ApiAuth";
+import { postDataLogin, getProfile} from "../../api/ApiAuth";
 import "./LoginPage.scss";
 import { AppStorage } from "../../App";
 
@@ -81,6 +81,8 @@ class LoginPage extends Death13.Component {
         });
 
         if (response && response.isValid) {
+            const data = await getProfile();
+            AppStorage.setProfileData(data);
             window.app.handleRoute("/");
         } else if (response && !response.isValid) {
             const serverErrors: any = {};

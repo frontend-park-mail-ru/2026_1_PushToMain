@@ -155,11 +155,11 @@ export async function logOut() {
         if (response.ok) {
             return response;
         }
-    } catch {
-    }
+    } catch {}
 }
 
 export async function getProfile() {
+    
     try {
         const response = await fetch(`${URL}/profile/me`, {
             method: "GET",

@@ -126,3 +126,23 @@ export async function deleteFolder(folderID: number) {
         return false;
     }
 }
+
+/*  
+
+	private.HandleFunc("/emails", h.Delete).Methods(http.MethodDelete, http.MethodOptions)
+
+	private.HandleFunc("/spam-senders", h.UnmarkSpamSenders).Methods(http.MethodDelete, http.MethodOptions)
+	private.HandleFunc("/emails/read", h.MarkEmailsAsRead).Methods(http.MethodPut, http.MethodOptions)
+	private.HandleFunc("/emails/unread", h.MarkEmailsAsUnRead).Methods(http.MethodPut, http.MethodOptions)
+
+
+	private.HandleFunc("/emails/{id}", h.GetEmailByID).Methods(http.MethodGet, http.MethodOptions)
+
+	// Drafts
+	private.HandleFunc("/drafts", h.CreateDraft).Methods(http.MethodPost, http.MethodOptions)
+	private.HandleFunc("/drafts", h.GetDrafts).Methods(http.MethodGet, http.MethodOptions)
+	private.HandleFunc("/drafts", h.DeleteDrafts).Methods(http.MethodDelete, http.MethodOptions)
+	private.HandleFunc("/drafts/{id}", h.GetDraftByID).Methods(http.MethodGet, http.MethodOptions)
+	private.HandleFunc("/drafts/{id}", h.UpdateDraft).Methods(http.MethodPut, http.MethodOptions)
+	private.HandleFunc("/drafts/{id}/send", h.SendDraft).Methods(http.MethodPost, http.MethodOptions)
+*/
