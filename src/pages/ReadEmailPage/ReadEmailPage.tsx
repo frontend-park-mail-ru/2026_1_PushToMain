@@ -1,48 +1,77 @@
 import Death13 from "@react/stands";
-import Sidebar from "../../widgets/Sidebar/Sidebar";
-import Button from "../../components/Button/Button";
-import SendMail from "../../widgets/SendMail/SendMail";
-import "./SendEmailPage.scss";
-import ProfileModal from "../../widgets/ProfileModal/ProfileModal";
-import Input from "../../components/Input/Input";
+import "./ReadEmailPage.scss";
 import { AppStorage } from "../../App";
-import { getProfile } from "../../api/ApiAuth";
+import Sidebar from "../../widgets/Sidebar/Sidebar";
+import Input from "../../components/Input/Input";
+import Button from "../../components/Button/Button";
+import ProfileModal from "../../widgets/ProfileModal/ProfileModal";
+import ReadMail from "../../widgets/ReadMail/ReadMail";
+import { getEmailByID } from "../../api/ApiEmail";
 
-class SendEmailPage extends Death13.Component {
-    constructor(props: any) {
-        super(props);
-
-        this.loadMailActionData();
-        this.loadProfile();
-    }
-
+class ReadEmailPage extends Death13.Component {
     state: any = {
         isModalOpen: false,
         unReadCount: 0,
         replyData: null,
-        currentView: "send",
+        isPress: 0,
         forwardData: null,
         avatarKey: 0,
+        selectedFolderId: null,
+        currentView: "read",
+        email: {
+            id: "",
+            header: "",
+            body: "",
+            createdAt: "",
+            senderEmail: "",
+            senderImage: "",
+            senderName: "",
+            senderSurname: "",
+            receiverList: [],
+        },
     };
 
-    loadProfile = async () => {
-        const data = await getProfile();
-        if (data === null) {
-            window.app.handleRoute("/login");
-        } else {
-            AppStorage.setProfileData(data);
+    constructor(props: any) {
+        super(props);
+        const strID = location.pathname.split("/").pop();
+        const id = strID ? parseInt(strID, 10) : 0;
+
+        const selectedFolderId = AppStorage.getCurrentFolderId?.() || null;
+
+        this.state = {
+            ...this.state,
+            selectedFolderId: selectedFolderId,
+            currentView: "read",
+        };
+
+        this.loadEmail(id);
+    }
+
+    async loadEmail(id: number) {
+        const data = await getEmailByID(id);
+        if (!data) {
+            window.app.handleRoute("/");
         }
-    };
 
-    loadMailActionData = () => {
-        const replyData = AppStorage.getReplyData();
-        const forwardData = AppStorage.getForwardData();
-
+        if (window.app.previousPath === "/sent") {
+            this.setState({ isPress: 1 });
+        } else {
+            this.setState({ isPress: 0 });
+        }
         this.setState({
-            replyData,
-            forwardData,
+            email: {
+                id: data.id,
+                header: data.header,
+                body: data.body,
+                createdAt: data.created_at,
+                senderEmail: data.sender_email,
+                senderImage: data.sender_image_path,
+                senderName: data.sender_name,
+                senderSurname: data.sender_surname,
+                receiverList: data.receiver_list,
+            },
         });
-    };
+    }
 
     handleAvatar = (event: Event) => {
         event.stopPropagation();
@@ -57,35 +86,6 @@ class SendEmailPage extends Death13.Component {
     handleProfileClick = () => {
         this.setState({ isModalOpen: false });
         window.app.handleRoute("/profile");
-    };
-
-    handleNewMail = () => {
-        AppStorage.clearMailActionData();
-        this.setState({ replyData: null, forwardData: null });
-    };
-
-    handleBackToMail = () => {
-        AppStorage.clearMailActionData();
-        AppStorage.setCurrentFolderId(null);
-        AppStorage.setCurrentView("inbox");
-        window.app.handleRoute("/");
-    };
-
-    handleBackToSent = () => {
-        AppStorage.clearMailActionData();
-        AppStorage.setCurrentFolderId(null);
-        AppStorage.setCurrentView("sent");
-        window.app.handleRoute("/sent");
-    };
-
-    handleGetSendEmail = () => {
-        AppStorage.setCurrentView("sent");
-        window.app.handleRoute("/sent");
-    };
-
-    handleGetDrafts = () => {
-        AppStorage.setCurrentView("drafts");
-        window.app.handleRoute("/");
     };
 
     handleGetSpam = () => {
@@ -103,11 +103,37 @@ class SendEmailPage extends Death13.Component {
         window.app.handleRoute("/");
     };
 
+    handleGetDrafts = () => {
+        AppStorage.setCurrentView("drafts");
+        window.app.handleRoute("/");
+    };
+
+    handleGetSendEmail = () => {
+        AppStorage.setCurrentView("sent");
+        window.app.handleRoute("/sent");
+    };
+
     handleGoToMain = () => {
         AppStorage.setCurrentView("inbox");
         AppStorage.clearMailActionData();
         AppStorage.setCurrentFolderId(null);
         window.app.handleRoute("/");
+    };
+
+    handleNewMail = () => {
+        window.app.handleRoute("/send");
+    };
+
+    handleBackToMail = () => {
+        AppStorage.clearMailActionData();
+        AppStorage.setCurrentFolderId(null);
+        window.app.handleRoute("/");
+    };
+
+    handleBackToSent = () => {
+        AppStorage.clearMailActionData();
+        AppStorage.setCurrentFolderId(null);
+        window.app.handleRoute("/sent");
     };
 
     loadEmailFromFolder = async (offset: number, folderID: number) => {
@@ -121,9 +147,7 @@ class SendEmailPage extends Death13.Component {
     }
 
     render() {
-        const { isModalOpen, replyData, forwardData, currentView } = this.state;
-
-        const mailActionData = replyData || forwardData;
+        const { isModalOpen, selectedFolderId, currentView } = this.state;
 
         return (
             <div className="send-email-page" onClick={() => this.handleCloseModal()}>
@@ -161,7 +185,12 @@ class SendEmailPage extends Death13.Component {
                         </div>
                     </div>
                     <div className="mail-box-container">
-                        <SendMail backToMail={this.handleBackToMail} actionData={mailActionData} />
+                        <ReadMail
+                            email={this.state.email}
+                            backToMail={this.handleBackToMail}
+                            backToSent={this.handleBackToSent}
+                            selectedFolderId={selectedFolderId}
+                        />
                     </div>
 
                     <ProfileModal isOpen={isModalOpen} onClose={this.handleCloseModal} onProfileClick={this.handleProfileClick} />
@@ -171,4 +200,4 @@ class SendEmailPage extends Death13.Component {
     }
 }
 
-export default SendEmailPage;
+export default ReadEmailPage;

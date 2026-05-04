@@ -94,12 +94,34 @@ class Select extends Death13.Component {
         return [];
     }
 
-    render() {
-        const { selectedLabel, isOpen } = this.state;
+    getDisplayLabel() {
+        const { value, placeholder } = this.props;
+        if (!value) {
+            return placeholder;
+        }
+
+        if (value === this.state.selectedValue && this.state.selectedLabel) {
+            return this.state.selectedLabel;
+        }
+
         const options = this.getOption();
+        const option = options.find((opt: any) => opt.value === value);
+        if (option) {
+            return option.label;
+        }
+
+        return value || placeholder;
+    }
+
+    render() {
+        const { isOpen } = this.state;
+        const options = this.getOption();
+
+        const displayLabel = this.getDisplayLabel();
+
         return (
             <div className="select" name={this.props.name} onClick={this.toggleDropDown}>
-                <div className="select__value">{selectedLabel || this.props.placeholder}</div>
+                <div className="select__value">{displayLabel}</div>
                 <div className={`select__toggle ${isOpen ? "open" : ""}`}>
                     <img src="../../assets/svg/ArrowDown.svg" />
                 </div>

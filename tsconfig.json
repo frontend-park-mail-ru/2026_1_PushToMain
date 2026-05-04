@@ -2,13 +2,14 @@
   "compilerOptions": {
     "strict": true,
     "target": "ES6",
-    "moduleResolution": "node",
+    "moduleResolution": "bundler",
     "reactNamespace": "Death13",
     "jsx": "react",
     "paths": {
-      "@react/*": ["./src/react/*"],
+      "@react/*": ["./src/react/*"]
     },
+    "typeRoots": ["./node_modules/@types", "./src/types"]
   },
   "include": ["src/**/*"],
-  "exclude": ["node_modules"],
+  "exclude": ["node_modules"]
 }

@@ -1,0 +1,26 @@
+.confirmation-modal {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: absolute;
+    bottom: 7%;
+    right: 29%;
+    z-index: 100;
+    height: 50px;
+    width: 400px;
+    border-radius: 20px;
+
+    &.access {
+        border: 1px solid var(--accent-2);
+        color: var(--accent-2);
+        background-color: var(--input-success-background);
+    }
+
+    &.error {
+        border: 1px solid var(--error-text);
+        color: var(--error-text);
+        background-color: var(--input-error-background);
+    }
+
+    
+}

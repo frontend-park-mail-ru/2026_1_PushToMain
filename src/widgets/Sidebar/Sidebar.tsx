@@ -4,192 +4,248 @@ import "./Sidebar.scss";
 import { AppStorage } from "../../App";
 
 class Sidebar extends Death13.Component {
-  state: any = {
-    isVisible: false,
-    name: AppStorage.name,
-    surname: AppStorage.surname,
-    email: AppStorage.email,
-    avatarUrl: AppStorage.getAvatarUrl(),
-  };
-
-  unsubscribe =
-    AppStorage.subscribe(() => {
-      console.log("Profile data updated, updating sidebar...");
-      this.setState({
+    state: any = {
+        isVisible: AppStorage.getSidebarDropdownVisible() || false, // Получаем сохраненное состояние
         name: AppStorage.name,
         surname: AppStorage.surname,
         email: AppStorage.email,
         avatarUrl: AppStorage.getAvatarUrl(),
-      });
-    }) || null;
+        language: AppStorage.language,
+        unReadCount: AppStorage.unReadCount,
+    };
 
-  render() {
-    const { isVisible, name, surname, email, avatarUrl } = this.state;
-    const {
-      isProfile = 0,
-      backToMail,
-      changeProfile,
-      changePassword,
-      newMail,
-      updateMail,
-    } = this.props;
+    private unsubscribe: (() => void) | null = null;
 
-    return (
-      <div className="sidebar-widget">
-        <div
-          className="logo-container"
-          onClick={(event: any) => {
-            event.preventDefault();
-            if (this.props.updateMail) {
-              updateMail();
-            }
-            backToMail();
-          }}
-        >
-          <img src="../../assets/svg/Logo.svg" />
-          <h1 className="logo__title">SMail</h1>
-        </div>
-        {isProfile !== 1 && (
-          <div className="sidebar-content">
-            <div className="main-button">
-              <Button
-                title="Новое письмо"
-                name="button-new-letter"
-                svg="../../assets/svg/Compose.svg"
-                onClick={(event: any) => {
-                  event.preventDefault();
-                  newMail();
-                }}
-              />
-            </div>
-            <div className="main-button-container">
-              <Button
-                name="button-inbox"
-                title="Входящие"
-                isSelect={this.props.isPress === 0}
-                svg="../../assets/svg/Inbox.svg"
-                count={AppStorage.unReadCount}
-                onClick={(event: any) => {
-                  event.preventDefault();
-                  if (this.props.updateMail) {
-                    updateMail();
-                  }
-                  backToMail();
-                }}
-              />
-              <Button
-                name="button-drafs"
-                title="Черновики"
-                svg="../../assets/svg/Draft.svg"
-                onClick={(event: any) => {
-                  event.preventDefault();
-                }}
-              />
-              <Button
-                name="button-sends"
-                title="Отправленные"
-                isSelect={this.props.isPress === 1}
-                svg="../../assets/svg/Sent.svg"
-                onClick={(event: any) => {
-                  event.preventDefault();
-                  window.app.handleRoute("/sent");
-                }}
-              />
-              <Button
-                name="button-favorites"
-                title="Избранные"
-                svg="../../assets/svg/SidebarFavorites.svg"
-                onClick={(event: any) => {
-                  event.preventDefault();
-                }}
-              />
-            </div>
-            <div className="drop-down">
-              <Button
-                name="button-drop-down"
-                title={isVisible ? "Скрыть" : "Ещё"}
-                svg="../../assets/svg/DropdownArrow.svg"
-                onClick={(event: any) => {
-                  event.preventDefault();
-                  this.setState({ isVisible: !isVisible });
-                  const button = event.currentTarget;
-                  button.classList.toggle("active");
-                }}
-              />
-              {isVisible && (
-                <div className="extra-button-container">
-                  <Button
-                    name="button-spam"
-                    title="Спам"
-                    svg="../../assets/svg/Spam.svg"
+    constructor(props: any) {
+        super(props);
+
+        this.unsubscribe = AppStorage.subscribe(() => {
+            this.setState({
+                name: AppStorage.name,
+                surname: AppStorage.surname,
+                email: AppStorage.email,
+                avatarUrl: AppStorage.getAvatarUrl(),
+                unReadCount: AppStorage.unReadCount,
+                language: AppStorage.language,
+            });
+        });
+    }
+
+    toggleDropdown = (event: any) => {
+        event.preventDefault();
+        const newState = !this.state.isVisible;
+        this.setState({ isVisible: newState });
+        AppStorage.setSidebarDropdownVisible(newState); // Сохраняем состояние
+        
+        const button = event.currentTarget;
+        button.classList.toggle("active");
+    };
+
+    t(key: string): string {
+        return AppStorage.t(key);
+    }
+
+    render() {
+        const { isVisible, name, surname, email, avatarUrl, unReadCount } = this.state;
+        const { isProfile = 0, backToMail, changeProfile, changePassword, newMail, updateMail, handleSetting, handleFolder } = this.props;
+
+        return (
+            <div className="sidebar-widget">
+                <div
+                    className="logo-container"
                     onClick={(event: any) => {
-                      event.preventDefault();
-                    }}
-                  />
-                  <Button
-                    name="button-trash"
-                    title="Корзина"
-                    svg="../../assets/svg/Trash.svg"
-                    onClick={(event: any) => {
-                      event.preventDefault();
-                    }}
-                  />
-                  <Button
-                    name="button-all-letter"
-                    title="Все письма"
-                    svg="../../assets/svg/AllMail.svg"
-                    onClick={(event: any) => {
-                      event.preventDefault();
-                      backToMail();
-                    }}
-                  />
+                        event.preventDefault();
+                        if (this.props.updateMail) {
+                            updateMail();
+                        }
+                        backToMail();
+                    }}>
+                    <img src="../../assets/svg/Logo.svg" />
+                    <h1 className="logo__title">SMail</h1>
                 </div>
-              )}
+                {isProfile !== 1 && (
+                    <div className="sidebar-content">
+                        <div className="main-button">
+                            <Button
+                                title={this.t("new_letter")}
+                                name="button-new-letter"
+                                onClick={(event: any) => {
+                                    event.preventDefault();
+                                    newMail();
+                                }}
+                            />
+                        </div>
+                        <div className="main-button-container">
+                            <Button
+                                name="button-inbox"
+                                title={this.t("inbox")}
+                                isSelect={this.props.currentView === "inbox" && !this.props.selectedFolderId}
+                                count={unReadCount}
+                                onClick={(event: any) => {
+                                    event.preventDefault();
+                                    if (this.props.updateMail) {
+                                        updateMail();
+                                    }
+                                    backToMail();
+                                }}
+                            />
+
+                            <Button
+                                name="button-drafs"
+                                title={this.t("drafts")}
+                                isSelect={this.props.currentView === "drafts"}
+                                onClick={(event: any) => {
+                                    event.preventDefault();
+                                    if (this.props.handleGetDrafts) {
+                                        this.props.handleGetDrafts();
+                                    }
+                                }}
+                            />
+
+                            <Button
+                                name="button-sends"
+                                title={this.t("sent")}
+                                isSelect={this.props.currentView === "sent"}
+                                onClick={(event: any) => {
+                                    event.preventDefault();
+                                    if (this.props.handleGetSendEmail) {
+                                        this.props.handleGetSendEmail();
+                                    }
+                                }}
+                            />
+
+                            <Button
+                                name="button-favorites"
+                                title={this.t("starred")}
+                                isSelect={this.props.currentView === "favorite"}
+                                onClick={(event: any) => {
+                                    event.preventDefault();
+                                    if (this.props.handleGetFavorite) {
+                                        this.props.handleGetFavorite();
+                                    }
+                                }}
+                            />
+                        </div>
+
+                        <div className="drop-down">
+                            <Button
+                                name="button-drop-down"
+                                title={isVisible ? this.t("hide") : this.t("yet")}
+                                onClick={this.toggleDropdown}
+                            />
+                            {isVisible && (
+                                <div className="extra-button-container">
+                                    <Button
+                                        name="button-spam"
+                                        title={this.t("spam")}
+                                        isSelect={this.props.currentView === "spam"}
+                                        onClick={(event: any) => {
+                                            event.preventDefault();
+                                            if (this.props.handleGetSpam) {
+                                                this.props.handleGetSpam();
+                                            }
+                                        }}
+                                    />
+                                    <Button
+                                        name="button-trash"
+                                        title={this.t("trash")}
+                                        isSelect={this.props.currentView === "trash"}
+                                        onClick={(event: any) => {
+                                            event.preventDefault();
+                                            if (this.props.handleGetTrash) {
+                                                this.props.handleGetTrash();
+                                            }
+                                        }}
+                                    />
+                                    <Button
+                                        name="button-all-letter"
+                                        title={this.t("all_letter")}
+                                        onClick={(event: any) => {
+                                            event.preventDefault();
+                                            backToMail();
+                                        }}
+                                    />
+                                    {AppStorage.folders &&
+                                        AppStorage.folders.map((folder: any) => (
+                                            <div key={folder.id} className="folder-item">
+                                                <Button
+                                                    name="button-folder"
+                                                    title={folder.name}
+                                                    isSelect={this.props.selectedFolderId === folder.id}
+                                                    onClick={(event: any) => {
+                                                        event.preventDefault();
+                                                        this.props.loadEmailFromFolder(0, folder.id);
+                                                    }}
+                                                />
+                                            </div>
+                                        ))}
+                                </div>
+                            )}
+                        </div>
+                    </div>
+                )}
+                {isProfile === 1 && (
+                    <div className="sidebar-content">
+                        <div className="sidebar-profile">
+                            <img src={avatarUrl}></img>
+                            <span>
+                                {name} {surname}
+                            </span>
+                            <p>{email}</p>
+                        </div>
+                        <div className="main-button-profile">
+                            <Button
+                                title={this.t("mailbox")}
+                                name="button-back-letter"
+                                onClick={(event: any) => {
+                                    event.preventDefault();
+                                    backToMail();
+                                }}
+                            />
+                        </div>
+                        <div className="main-button-container">
+                            <Button
+                                name="button-profile"
+                                title={this.t("personal_information")}
+                                isSelect={this.props.isPressProfile === 0}
+                                onClick={(event: any) => {
+                                    event.preventDefault();
+                                    changeProfile();
+                                }}
+                            />
+                            <Button
+                                name="button-security"
+                                title={this.t("security")}
+                                isSelect={this.props.isPressProfile === 1}
+                                onClick={(event: any) => {
+                                    event.preventDefault();
+                                    changePassword();
+                                }}
+                            />
+                            <Button
+                                name="button-settings"
+                                title={this.t("settings")}
+                                isSelect={this.props.isPressProfile === 2}
+                                onClick={(event: any) => {
+                                    event.preventDefault();
+                                    handleSetting();
+                                }}
+                            />
+                            <Button
+                                name="button-folder"
+                                title={this.t("folder")}
+                                isSelect={this.props.isPressProfile === 3}
+                                onClick={(event: any) => {
+                                    event.preventDefault();
+                                    handleFolder();
+                                }}
+                            />
+                        </div>
+                    </div>
+                )}
             </div>
-          </div>
-        )}{" "}
-        {isProfile === 1 && (
-          <div className="sidebar-content">
-            <div className="sidebar-profile">
-              <img src={avatarUrl}></img>
-              <span>
-                {name} {surname}
-              </span>
-              <p>{email}</p>
-            </div>
-            <div className="main-button-profile">
-              <Button
-                title="Почтовый ящик"
-                name="button-new-letter"
-                onClick={(event: any) => {
-                  event.preventDefault();
-                  backToMail();
-                }}
-              />
-            </div>
-            <div className="main-button-container">
-              <Button
-                name="button-profile"
-                title="Личные данные"
-                onClick={(event: any) => {
-                  event.preventDefault();
-                  changeProfile();
-                }}
-              />
-              <Button
-                name="button-security"
-                title="Безопасность"
-                onClick={(event: any) => {
-                  event.preventDefault();
-                  changePassword();
-                }}
-              />
-            </div>
-          </div>
-        )}
-      </div>
-    );
-  }
+        );
+    }
 }
 
 export default Sidebar;

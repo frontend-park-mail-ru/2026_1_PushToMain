@@ -45,8 +45,10 @@
 
             &[name="avatar"] {
                 img {
-                    width: 55px;
-                    height: 55px;
+                    min-width: 55px;
+                    min-height: 55px;
+                    max-width: 55px;
+                    max-height: 55px;
                     border-radius: 50%;
                     object-fit: cover;
                 }
@@ -57,7 +59,7 @@
     .profile-content-area {
         background-color: var(--color-sidebar-background);
         border-radius: 20px;
-        padding: 10px;
+        padding: 20px 30px;
         margin: 20px 0 0 0;
         gap: 3px;
 
@@ -89,12 +91,60 @@
         }
 
         .profile-container,
-        .profile-security {
+        .profile-security,
+        .profile-folder {
             display: flex;
             flex-direction: column;
             gap: 10px;
+            color: var(--tertiary-text);
         }
+        .profile-folder {
+            gap: 0;
+            .profile-header {
+                button {
+                    position: absolute;
+                    background-color: transparent;
+                    display: flex;
+                    align-items: center;
+                    border-radius: 50%;
+                    padding: 0 11px;
+                    top: 120px;
+                    left: 560px;
+                    &[name="edit"] {
+                        &::before {
+                            content: "";
+                            display: inline-block;
+                            width: 24px;
+                            height: 24px;
+                            background-color: var(--tertiary-text);
+                            mask-image: url("/assets/svg/Pencil.svg");
+                            mask-size: contain;
+                            mask-repeat: no-repeat;
+                            mask-position: center;
+                        }
+                    }
 
+                    &[name="done"] {
+                        &::before {
+                            content: "";
+                            display: inline-block;
+                            width: 24px;
+                            height: 24px;
+                            background-color: var(--tertiary-text);
+                            mask-image: url("/assets/svg/TickBold.svg");
+                            mask-size: contain;
+                            mask-repeat: no-repeat;
+                            mask-position: center;
+                        }
+                    }
+
+                    &:hover {
+                        background-color: var(--color-main-background);
+                        transition: 400ms;
+                    }
+                }
+            }
+        }
         .profile-content {
             display: flex;
             gap: 40px;
@@ -197,6 +247,28 @@
                                         border-color: var(--accent);
                                     }
                                 }
+
+                                [name="radio-theme"],
+                                [name="radio-language"] {
+                                    padding: 0;
+                                    -webkit-appearance: none;
+                                    -moz-appearance: none;
+                                    appearance: none;
+                                    border-radius: 50%;
+                                    width: 18px;
+                                    height: 18px;
+                                    border: 2px solid var(--accent-2);
+                                    cursor: pointer;
+                                    transition: all 0.2s ease;
+
+                                    &:checked {
+                                        border: 6px solid var(--accent-2);
+                                    }
+
+                                    &:hover {
+                                        border-color: var(--accent);
+                                    }
+                                }
                             }
                         }
                     }
@@ -220,9 +292,6 @@
                         height: 44px;
                         border-radius: 14px;
                         font-size: 16px;
-                        display: flex;
-                        align-items: center;
-                        justify-content: center;
                         padding: 0 24px;
                         min-width: 135px;
 
