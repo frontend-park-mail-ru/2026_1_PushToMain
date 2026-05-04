@@ -31,7 +31,7 @@ class SidebarProfile extends Death13.Component {
   };
 
   render() {
-    const { name, surname, email, avatarUrl, variant = "" } = this.state;
+    const { name, surname, email, variant = "" } = this.state;
     return (
       <div className={`sidebar-profile ${variant}`}>
         {variant === "mobile" ? (
@@ -43,7 +43,9 @@ class SidebarProfile extends Death13.Component {
             onClick={this.handleAvatar}
           />
         ) : (
-          <img src={avatarUrl || "../../assets/svg/Avatar.svg"}></img>
+          <img
+            src={AppStorage.getAvatarUrl() || "../../assets/svg/Avatar.svg"}
+          ></img>
         )}
         <div className="sidebar-profile__text">
           <span className="sidebar-profile__name">
