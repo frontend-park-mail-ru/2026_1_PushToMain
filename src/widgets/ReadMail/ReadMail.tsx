@@ -125,13 +125,6 @@ class ReadMail extends Death13.Component {
                     )}
                   </div>
                 </div>
-                {!isMobile ? (
-                  <img
-                    src="../../assets/svg/Close.svg"
-                    className="close-button"
-                    onClick={this.props.backToMail}
-                  ></img>
-                ) : null}
               </div>
             </div>
             <Input

@@ -160,7 +160,8 @@
                 display: flex;
                 flex-direction: column;
                 gap: 12px;
-                width: 400px;
+                width: auto;
+                min-width: 0;
 
                 .input-form {
                     border: 2px solid var(--input-stroke);
@@ -324,6 +325,43 @@
     }
 }
 
+@media (min-width: 769px) {
+    @media (max-width: 1000px) {
+        .profile-page {
+            .profile-content-area {
+                .profile-container {
+                    height: 100%;
+                    overflow-y: auto;
+                    gap: 0;
+
+                    h1 {
+                        margin-bottom: 0;
+                    }
+
+                    .profile-content {
+                        flex-direction: column;
+                        gap: 20px;
+
+                        .profile-avatar .upload {
+                            .upload-preview img {
+                                width: 150px;
+                                height: 150px;
+                            }
+                            label {
+                                width: 50%;
+                            }
+                        }
+
+                        .profile-form {
+                            gap: 0;
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
 @media (max-width: 768px) {
     .profile-page {
         .sidebar {
@@ -369,6 +407,24 @@
                 margin: 5px 0 0 0;
                 border-radius: 20px 20px 0 0;
                 height: 93%;
+
+                .profile-container {
+                    height: 100%;
+                    overflow-y: auto;
+                    &::-webkit-scrollbar {
+                        width: 6px;
+                    }
+
+                    &::-webkit-scrollbar-track {
+                        background: transparent;
+                        border-radius: 3px;
+                    }
+
+                    &::-webkit-scrollbar-thumb {
+                        background: var(--mail-stroke);
+                        border-radius: 3px;
+                    }
+                }
 
                 .profile-container,
                 .profile-security,

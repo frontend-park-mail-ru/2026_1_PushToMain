@@ -276,6 +276,15 @@ class SentPage extends Death13.Component {
         </aside>
         <div className="right-part">
           <div className="top-bar">
+            <div
+              className="hamburger-btn"
+              onClick={(e: any) => {
+                e.stopPropagation();
+                this.toggleSidebar();
+              }}
+            >
+              <img src="../../assets/svg/Hamburger.svg" alt="Menu" />
+            </div>
             <div className="search-bar">
               <Input
                 type="text"
@@ -296,6 +305,9 @@ class SentPage extends Death13.Component {
                 onClick={this.handleAvatar}
               />
             </div>
+          </div>
+          <div className="mail-box-container__mobile-header">
+            <span>{this.t("sent")}</span>
           </div>
           <div className="mail-box-container">
             {isStateMode === 0 && (

@@ -547,7 +547,7 @@ class MainPage extends Death13.Component {
             <div className="search-bar">
               <Input
                 type="text"
-                placeholder="Поиск в почте"
+                placeholder={this.t("search")}
                 name="search"
                 svg="../../assets/svg/Search.svg"
                 onInput={(e: any) => {
@@ -564,9 +564,9 @@ class MainPage extends Death13.Component {
               />
             </div>
           </div>
-          {isStateMode !== 3 ? (
+          {isStateMode === 0 ? (
             <div className="mail-box-container__mobile-header">
-              <span>Входящие</span>
+              <span>{this.t(currentView)}</span>
             </div>
           ) : null}
           <div className="mail-box-container">

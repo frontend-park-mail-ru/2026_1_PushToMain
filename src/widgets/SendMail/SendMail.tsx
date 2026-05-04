@@ -189,7 +189,7 @@ class SendMail extends Death13.Component {
             <img
               className="close-button"
               src="../../assets/svg/Close.svg"
-              onClick={this.handleCancel}
+              onClick={this.handleSaveDraft}
             ></img>
             <img
               className="send-button"
@@ -201,7 +201,7 @@ class SendMail extends Death13.Component {
           </div>
         ) : null}
         <div className="send-mail-header">
-          <span className="send-mail-header__text">Новое письмо</span>
+          <span className="send-mail-header__text">{this.t("new_letter")}</span>
         </div>
         <form action="" className="send-form">
           <div className="send-inputs">

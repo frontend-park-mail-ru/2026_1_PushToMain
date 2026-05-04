@@ -44,8 +44,12 @@ class Sidebar extends Death13.Component {
 
   toggleSidebar = () => {
     const sidebar = document.querySelector(".sidebar");
+    const sidebarOverlay = document.querySelector(".sidebar-overlay");
     if (sidebar) {
       sidebar.classList.toggle("open");
+    }
+    if (sidebarOverlay) {
+      sidebarOverlay.classList.toggle("open");
     }
   };
 
@@ -71,7 +75,7 @@ class Sidebar extends Death13.Component {
 
     return (
       <div className="sidebar-widget">
-        {isProfile === 1 ? (
+        {isMobile && isProfile === 1 ? (
           <div
             className="sidebar-settings-back-button-mobile"
             onClick={backToMail}
@@ -132,6 +136,7 @@ class Sidebar extends Death13.Component {
                   event.preventDefault();
                   if (this.props.handleGetDrafts) {
                     this.props.handleGetDrafts();
+                    this.toggleSidebar();
                   }
                 }}
               />
@@ -144,6 +149,7 @@ class Sidebar extends Death13.Component {
                   event.preventDefault();
                   if (this.props.handleGetSendEmail) {
                     this.props.handleGetSendEmail();
+                    this.toggleSidebar();
                   }
                 }}
               />
@@ -156,6 +162,7 @@ class Sidebar extends Death13.Component {
                   event.preventDefault();
                   if (this.props.handleGetFavorite) {
                     this.props.handleGetFavorite();
+                    this.toggleSidebar();
                   }
                 }}
               />
@@ -177,6 +184,7 @@ class Sidebar extends Death13.Component {
                       event.preventDefault();
                       if (this.props.handleGetSpam) {
                         this.props.handleGetSpam();
+                        this.toggleSidebar();
                       }
                     }}
                   />
@@ -188,6 +196,7 @@ class Sidebar extends Death13.Component {
                       event.preventDefault();
                       if (this.props.handleGetTrash) {
                         this.props.handleGetTrash();
+                        this.toggleSidebar();
                       }
                     }}
                   />
@@ -197,6 +206,7 @@ class Sidebar extends Death13.Component {
                     onClick={(event: any) => {
                       event.preventDefault();
                       backToMail();
+                      this.toggleSidebar();
                     }}
                   />
                   {AppStorage.folders &&
@@ -209,6 +219,7 @@ class Sidebar extends Death13.Component {
                           onClick={(event: any) => {
                             event.preventDefault();
                             this.props.loadEmailFromFolder(0, folder.id);
+                            this.toggleSidebar();
                           }}
                         />
                       </div>
