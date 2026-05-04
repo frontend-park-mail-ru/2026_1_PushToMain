@@ -9,6 +9,15 @@
         display: flex;
         flex-direction: column;
         align-items: center;
+
+        span {
+            font-size: 1rem;
+        }
+
+        p {
+            color: var(--secondary-text);
+            font-size: 0.75rem;
+        }
     }
 
     img {
@@ -17,11 +26,6 @@
         border-radius: 50%;
         object-fit: cover;
         margin-bottom: 20px;
-    }
-
-    p {
-        color: var(--secondary-text);
-        font-size: 14px;
     }
 
     &.mobile {
