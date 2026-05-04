@@ -144,7 +144,7 @@ export const AppStorage = {
       change_avatar: "Change avatar",
       auth_title: "Authorization",
       auth_title2: "Registration",
-      auth_subtitle: "Your main student mail",
+      auth_subtitle: "Your best student mail",
       enter: "Login",
       register: "Register",
       password: "Password",

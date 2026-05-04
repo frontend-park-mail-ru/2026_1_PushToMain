@@ -5,6 +5,10 @@
 
     .send-mail-header {
         display: none;
+
+        .send-mail-header__text {
+            color: var(--tertiary-text);
+        }
     }
 
     .send-form {
@@ -80,11 +84,19 @@
                 height: 22px;
                 width: 22px;
                 fill: black;
+                background-color: var(--tertiary-text);
+                mask-image: url(/assets/svg/Close.svg);
+                mask-size: contain;
+                mask-position: center;
             }
 
             .send-button {
                 height: 32px;
                 width: 32px;
+                background-color: var(--tertiary-text);
+                mask-image: url(/assets/svg/Sent.svg);
+                mask-size: contain;
+                mask-position: center;
             }
         }
 

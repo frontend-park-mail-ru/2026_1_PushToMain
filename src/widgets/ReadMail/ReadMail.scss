@@ -108,9 +108,14 @@
             padding: 5px;
 
             .back-button {
-                padding: 0 10px;
+                margin: 0 10px;
+                padding: 0;
                 height: 28px;
                 width: 28px;
+                background-color: var(--tertiary-text);
+                mask-image: url(/assets/svg/ArrowLeft.svg);
+                mask-size: contain;
+                mask-position: center;
             }
 
             .tools-container {
@@ -156,25 +161,34 @@
             display: flex;
             justify-content: flex-end;
             padding: 10px;
+            gap: 20px;
 
-            button {
+            .reply,
+            .answer {
                 display: flex;
                 align-items: center;
                 background-color: transparent;
-                color: var(--tretiry-text);
-                height: 30px;
+                color: var(--tertiary-text);
+                height: 32px;
+                width: 32px;
                 font-size: 16px;
                 gap: 10px;
-                padding: 21px 6px;
+                padding: 0;
+                background-color: var(--tertiary-text);
+                mask-size: contain;
+                mask-position: center;
 
                 &:hover {
                     background-color: var(--color-main-background);
                 }
+            }
 
-                img {
-                    width: 32px;
-                    height: 32px;
-                }
+            .reply {
+                mask-image: url(/assets/svg/Reply.svg);
+            }
+
+            .answer {
+                mask-image: url(/assets/svg/Answer.svg);
             }
         }
     }

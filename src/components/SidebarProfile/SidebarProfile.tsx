@@ -43,7 +43,7 @@ class SidebarProfile extends Death13.Component {
             onClick={this.handleAvatar}
           />
         ) : (
-          <img src={avatarUrl}></img>
+          <img src={avatarUrl || "../../assets/svg/Avatar.svg"}></img>
         )}
         <div className="sidebar-profile__text">
           <span className="sidebar-profile__name">

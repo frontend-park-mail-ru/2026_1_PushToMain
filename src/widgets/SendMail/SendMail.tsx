@@ -186,18 +186,16 @@ class SendMail extends Death13.Component {
       <div className="send-mail">
         {isMobile ? (
           <div className="send-mail-mobile-buttons">
-            <img
+            <div
               className="close-button"
-              src="../../assets/svg/Close.svg"
               onClick={this.handleSaveDraft}
-            ></img>
-            <img
+            ></div>
+            <div
               className="send-button"
-              src="../../assets/svg/Sent.svg"
               onClick={(event: any) => {
                 this.handleSubmit(event);
               }}
-            ></img>
+            ></div>
           </div>
         ) : null}
         <div className="send-mail-header">

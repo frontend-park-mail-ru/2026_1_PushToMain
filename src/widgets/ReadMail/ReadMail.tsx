@@ -84,11 +84,7 @@ class ReadMail extends Death13.Component {
       <div className="read-mail">
         {isMobile ? (
           <div className="read-mail__header-mobile">
-            <img
-              className="back-button"
-              src="../../assets/svg/ArrowLeft.svg"
-              onClick={this.props.backToMail}
-            ></img>
+            <div className="back-button" onClick={this.props.backToMail}></div>
 
             <MailTools
               deleteEmail={this.handleDeleteEmail}
@@ -149,18 +145,18 @@ class ReadMail extends Death13.Component {
           />
         ) : (
           <div className="tools-bottom-mobile">
-            <Button
+            <div
               svg="../../assets/svg/Reply.svg"
-              name="reply"
+              className="reply"
               help="Переслать"
               onClick={this.handleForward}
-            />{" "}
-            <Button
+            />
+            <div
               svg="../../assets/svg/Answer.svg"
-              name="answer"
+              className="answer"
               help="Ответить"
               onClick={this.handleReply}
-            />{" "}
+            />
           </div>
         )}
       </div>
