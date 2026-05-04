@@ -108,7 +108,7 @@
                     align-items: center;
                     border-radius: 50%;
                     padding: 0 11px;
-                    top: 120px;
+                    top: 117px;
                     left: 560px;
                     &[name="edit"] {
                         &::before {
@@ -302,7 +302,9 @@
                             border: none;
 
                             &:hover {
-                                background-color: var(--button-hover-background);
+                                background-color: var(
+                                    --button-hover-background
+                                );
                             }
                         }
 
@@ -313,6 +315,126 @@
 
                             &:hover {
                                 background-color: var(--color-main-background);
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
+@media (max-width: 768px) {
+    .profile-page {
+        .sidebar {
+            position: fixed;
+            left: 0;
+            bottom: 0;
+            transform: translateX(-100%);
+            transition: transform 0.3s ease-in-out;
+            z-index: 1000;
+            margin: 0;
+            width: 100%;
+
+            &.open {
+                width: 100%;
+            }
+
+            .sidebar-widget {
+                border-radius: 20px 20px 0 0;
+                height: 100%;
+                margin-bottom: 0;
+                margin-top: 30px;
+
+                .logo-container {
+                    display: none;
+                }
+
+                .main-button-profile {
+                    display: none;
+                }
+            }
+        }
+
+        .right-part {
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+            height: 100vh;
+            width: 100vw;
+            margin: 0;
+            box-sizing: border-box;
+
+            .profile-content-area {
+                margin: 5px 0 0 0;
+                border-radius: 20px 20px 0 0;
+                height: 93%;
+
+                .profile-container,
+                .profile-security,
+                .profile-folder {
+                    .settings-back-to-menu-button-mobile {
+                        display: flex;
+                        align-items: center;
+                        width: fit-content;
+                        gap: 5px;
+                        padding: 15px 0 0 15px;
+                        margin-bottom: 5px;
+                    }
+
+                    h1 {
+                        padding: 10px 20px;
+                        margin-bottom: 0;
+                    }
+
+                    .profile-header {
+                        width: 100%;
+                        height: fit-content;
+
+                        button {
+                            width: 48px;
+                            position: absolute;
+                            right: 0;
+                            left: 80%;
+                            top: 10%;
+                        }
+                    }
+
+                    .profile-content {
+                        flex-direction: column;
+                        align-items: center;
+                        padding: 0 20px;
+                        gap: 10px;
+
+                        .profile-avatar {
+                            .upload__preview {
+                                display: flex;
+                                align-items: center;
+                                justify-content: center;
+                                width: fit-content;
+                                height: fit-content;
+                                img {
+                                    width: 150px;
+                                    height: 150px;
+                                }
+                            }
+                        }
+
+                        .profile-form {
+                            width: 100%;
+                            gap: 0px;
+
+                            .profile__checkbox {
+                                margin-bottom: 20px;
+                            }
+
+                            .profile-actions {
+                                margin-top: 10px;
+                                button {
+                                    .button-count {
+                                        display: none;
+                                    }
+                                }
                             }
                         }
                     }

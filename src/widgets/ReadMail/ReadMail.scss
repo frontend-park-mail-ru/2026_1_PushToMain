@@ -38,7 +38,7 @@
                     display: flex;
                     gap: 10px;
                     color: var(--tertiary-text);
-                    
+
                     .input-form {
                         display: flex;
                         flex-direction: row;
@@ -93,6 +93,89 @@
 
         button {
             height: 40px;
+        }
+    }
+}
+
+@media (max-width: 768px) {
+    .read-mail {
+        padding: 5px;
+
+        .read-mail__header-mobile {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 5px;
+
+            .back-button {
+                padding: 0 10px;
+                height: 28px;
+                width: 28px;
+            }
+
+            .tools-container {
+                .tools-left {
+                    padding-right: 0;
+                }
+                .tools-left::after {
+                    display: none;
+                }
+                .tools-right {
+                    display: none;
+                }
+            }
+        }
+
+        .read-form {
+            .read-inputs {
+                .read-header {
+                    .sender-info {
+                        .sender-info__text {
+                            gap: 5px;
+
+                            .sender-name {
+                                flex-direction: column;
+                                height: fit-content;
+                                align-items: flex-start;
+
+                                small {
+                                    margin-left: 0;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
+            textarea {
+                width: auto;
+            }
+        }
+
+        .tools-bottom-mobile {
+            display: flex;
+            justify-content: flex-end;
+            padding: 10px;
+
+            button {
+                display: flex;
+                align-items: center;
+                background-color: transparent;
+                color: var(--tretiry-text);
+                height: 30px;
+                font-size: 16px;
+                gap: 10px;
+                padding: 21px 6px;
+
+                &:hover {
+                    background-color: var(--color-main-background);
+                }
+
+                img {
+                    width: 32px;
+                    height: 32px;
+                }
+            }
         }
     }
 }

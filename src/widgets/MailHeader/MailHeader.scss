@@ -299,3 +299,87 @@
         mask-position: center;
     }
 }
+
+@media (max-width: 768px) {
+    .mail-header {
+        &__left-container {
+            [name="refresh"] {
+                &::before {
+                    width: 36px;
+                    height: 36px;
+                }
+            }
+
+            .select-all__tools-left {
+                display: flex;
+                padding-right: 15px;
+                position: relative;
+
+                &::after {
+                    content: "";
+                    position: absolute;
+                    right: 0;
+                    top: 50%;
+                    transform: translateY(-50%);
+                    width: 2px;
+                    height: 40%;
+                    background-color: var(--muted-text);
+                }
+
+                [name="favorites"] {
+                    &::before {
+                        content: "";
+                        display: inline-block;
+                        width: 32px;
+                        height: 32px;
+                        background-color: var(--tertiary-text);
+                        mask-image: url("/assets/svg/SidebarFavorites.svg");
+                        mask-size: contain;
+                        mask-repeat: no-repeat;
+                        mask-position: center;
+                    }
+                }
+                [name="spam"] {
+                    &::before {
+                        content: "";
+                        display: inline-block;
+                        width: 32px;
+                        height: 32px;
+                        background-color: var(--tertiary-text);
+                        mask-image: url("/assets/svg/Spam.svg");
+                        mask-size: contain;
+                        mask-repeat: no-repeat;
+                        mask-position: center;
+                    }
+                }
+                [name="trash"] {
+                    &::before {
+                        content: "";
+                        display: inline-block;
+                        width: 32px;
+                        height: 32px;
+                        background-color: var(--tertiary-text);
+                        mask-image: url("/assets/svg/Trash.svg");
+                        mask-size: contain;
+                        mask-repeat: no-repeat;
+                        mask-position: center;
+                    }
+                }
+
+                [name="move-to-inbox"] {
+                    &::before {
+                        content: "";
+                        display: inline-block;
+                        width: 32px;
+                        height: 32px;
+                        background-color: var(--tertiary-text);
+                        mask-image: url("/assets/svg/Inbox.svg");
+                        mask-size: contain;
+                        mask-repeat: no-repeat;
+                        mask-position: center;
+                    }
+                }
+            }
+        }
+    }
+}

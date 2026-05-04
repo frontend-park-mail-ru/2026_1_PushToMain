@@ -2,23 +2,38 @@ import Death13 from "@react/stands";
 import "./Button.scss";
 
 class Button extends Death13.Component {
-    render() {
-        return (
-            <button
-                disabled={this.props.block}
-                data-is-select={this.props.isSelect}
-                type={this.props.type || "button"}
-                name={this.props.name}
-                title={this.props.help || ""}
-                onClick={(event: any) => {
-                    this.props.onClick(event);
-                }}>
-                {this.props.svg && <img src={this.props.svg} alt="" />}
-                {this.props.title || ""}
-                {this.props.count !== 0 && <span className="button-count">{this.props.count}</span>}
-            </button>
-        );
-    }
+  render() {
+    const {
+      svg,
+      className,
+      size = "20",
+      title,
+      count,
+      block,
+      isSelect,
+      type,
+      name,
+      help,
+      onClick,
+    } = this.props;
+    return (
+      <button
+        className={className}
+        disabled={block}
+        data-is-select={isSelect}
+        type={type || "button"}
+        name={name}
+        title={help || ""}
+        onClick={(event: any) => {
+          onClick(event);
+        }}
+      >
+        {svg && <img src={svg} width={size} height={size} alt="" />}
+        {title || ""}
+        {count !== 0 && <span className="button-count">{count}</span>}
+      </button>
+    );
+  }
 }
 
 export default Button;
