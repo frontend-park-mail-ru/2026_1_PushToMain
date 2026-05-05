@@ -42,7 +42,6 @@ class ConfirmationModal extends Death13.Component {
 
     const bottomOffset = 40 + index * 60;
 
-    console.log(isStatus, message, bottomOffset);
     return (
       <div
         className={`confirmation-modal ${isStatus ? "access" : "error"}`}

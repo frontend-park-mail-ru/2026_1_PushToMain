@@ -128,8 +128,6 @@ class ProfilePage extends Death13.Component {
         new_password: this.state.newPassword,
       });
 
-      console.log(response);
-
       if (response) {
         this.setState({
           oldPassword: "",
@@ -330,8 +328,6 @@ class ProfilePage extends Death13.Component {
     } = this.state;
 
     const isMobile = window.innerWidth < 769;
-
-    console.log(this.state.modals);
 
     return (
       <div className="profile-page" onClick={() => this.handleCloseModal()}>
