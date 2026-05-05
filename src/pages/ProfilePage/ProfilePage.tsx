@@ -47,6 +47,7 @@ class ProfilePage extends Death13.Component {
       birthMonth: AppStorage.birthMonth,
       birthYear: AppStorage.birthYear,
       isFolderEditMode: false,
+      message: null,
     };
   }
 
@@ -236,7 +237,7 @@ class ProfilePage extends Death13.Component {
   };
 
   handleCloseModal = () => {
-    this.setState({ isModalOpen: false, isConfirm: false });
+    this.setState({ isModalOpen: false, isConfirm: false, message: null });
   };
 
   handleProfileClick = () => {
@@ -284,6 +285,20 @@ class ProfilePage extends Death13.Component {
     }
   };
 
+  handleShowConfirmationModal = (status: boolean, message: string) => {
+    this.setState({
+      isConfirm: true,
+      isStatus: status,
+      message: message,
+    });
+    console.log(
+      "changed state",
+      this.state.isConfirm,
+      this.state.isStatus,
+      this.state.message,
+    );
+  };
+
   t(key: string): string {
     return AppStorage.t(key);
   }
@@ -302,6 +317,7 @@ class ProfilePage extends Death13.Component {
       isConfirm,
       is_male,
       isStatus,
+      message,
     } = this.state;
 
     const isMobile = window.innerWidth < 769;
@@ -593,7 +609,10 @@ class ProfilePage extends Death13.Component {
 
                 <div className="profile-content">
                   <form action="" className="profile-form">
-                    <FolderChange isEditMode={this.state.isFolderEditMode} />
+                    <FolderChange
+                      isEditMode={this.state.isFolderEditMode}
+                      showConfirmationModal={this.handleShowConfirmationModal}
+                    />
                   </form>
                 </div>
               </div>
@@ -609,6 +628,7 @@ class ProfilePage extends Death13.Component {
             isOpen={isConfirm}
             onClose={this.handleCloseModal}
             isStatus={isStatus}
+            message={message}
           />
         </div>
       </div>
