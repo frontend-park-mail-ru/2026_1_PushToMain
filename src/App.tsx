@@ -64,6 +64,7 @@ export const AppStorage = {
             enter_name: "Введите имя",
             enter_surname: "Введите фамилию",
             continue: "Продолжить",
+            favorite: "Избранное",
 
             //MainPage
             back: "Назад",
@@ -178,6 +179,7 @@ export const AppStorage = {
             move_to_inbox: "Move to inbox",
             unstarred: "Unstarred",
             move_to_folder: "Move to folder",
+            favorite: "Starred",
 
             //ReadPage
             //SendPage
