@@ -111,7 +111,7 @@ export const AppStorage = {
             english: "Английский",
             russian: "Русский",
             oldpassword: "Старый пароль",
-            newpassword: "Старый пароль",
+            newpassword: "Новый пароль",
             gender: "Пол",
             male: "Мужской",
             female: "Женский",

@@ -2,7 +2,8 @@ import Death13 from "@react/stands";
 import Button from "../../components/Button/Button";
 import "./MailTools.scss";
 import { AppStorage } from "../../App";
-import { sendSpam } from "../../api/ApiSpam";
+import { sendSpam, unSpam } from "../../api/ApiSpam";
+import { sendFavorite, unFavorite } from "../../api/ApiFavorite";
 
 class MailTools extends Death13.Component {
     handleDeleteClick = async (event: any) => {
@@ -31,8 +32,17 @@ class MailTools extends Death13.Component {
         event.preventDefault();
         const { email } = this.props;
         if (email) {
-            await sendSpam([email.id])
+            await sendSpam([email.id]);
             this.props.backToMail?.();
+        }
+    };
+
+    handleUnSpamClick = async (event: any) => {
+        event.preventDefault();
+        const { email } = this.props;
+        if (email) {
+            await unSpam([email.id]);
+            this.props.reloadMail?.();
         }
     };
 
@@ -40,6 +50,17 @@ class MailTools extends Death13.Component {
         event.preventDefault();
         const { email } = this.props;
         if (email) {
+            await sendFavorite([email.id]);
+            this.props.reloadMail?.();
+        }
+    };
+
+    handleUnFavoriteClick = async (event: any) => {
+        event.preventDefault();
+        const { email } = this.props;
+        if (email) {
+            await unFavorite([email.id]);
+            this.props.reloadMail?.();
         }
     };
 
@@ -48,19 +69,39 @@ class MailTools extends Death13.Component {
     }
 
     render() {
+        const { email } = this.props;
+        const isFavorite = email?.is_favorite;
+        const isSpam = email?.is_spam;
+
         return (
             <div className="tools-container">
                 <div className="tools-left">
-                    <Button
-                        name="favorites"
-                        help={this.t("starred")}
-                        onClick={this.handleFavoriteClick}
-                    />
-                    <Button
-                        name="spam"
-                        help={this.t("spam")}
-                        onClick={this.handleSpamClick}
-                    />
+                    {isFavorite ? (
+                        <Button
+                            name="unfavorite"
+                            help={this.t("unstarred")}
+                            onClick={this.handleUnFavoriteClick}
+                        />
+                    ) : (
+                        <Button
+                            name="favorites"
+                            help={this.t("starred")}
+                            onClick={this.handleFavoriteClick}
+                        />
+                    )}
+                    {isSpam ? (
+                        <Button
+                            name="unspam"
+                            help={this.t("unspam")}
+                            onClick={this.handleUnSpamClick}
+                        />
+                    ) : (
+                        <Button
+                            name="spam"
+                            help={this.t("spam")}
+                            onClick={this.handleSpamClick}
+                        />
+                    )}
                     <Button name="trash" help={this.t("trash")} onClick={this.handleDeleteClick} />
                 </div>
                 <div className="tools-right">

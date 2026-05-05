@@ -18,10 +18,10 @@ class ReadMail extends Death13.Component {
             await deleteEmailsFromFolder(selectedFolderId, ids);
             backToMail();
         } else if (window.app.previousPath === "/sent") {
-            await trash(email.id);
+            await trash([email.id]);
             backToSent();
         } else {
-            await trash(email.id);
+            await trash([email.id]);
             backToMail();
         }
     };
@@ -83,10 +83,11 @@ class ReadMail extends Death13.Component {
 
                         <MailTools
                             deleteEmail={this.handleDeleteEmail}
-                            backToMail={this.props.backToMail}
-                            reloadEMail={this.props.reloadMail}
                             onReply={this.handleReply}
                             onForward={this.handleForward}
+                            email={email}
+                            reloadMail={this.props.reloadMail}
+                            backToMail={this.props.backToMail}
                         />
                     </div>
                 ) : null}
@@ -125,10 +126,11 @@ class ReadMail extends Death13.Component {
                 {!isMobile ? (
                     <MailTools
                         deleteEmail={this.handleDeleteEmail}
-                        backToMail={this.props.backToMail}
-                        reloadEMail={this.props.reloadMail}
                         onReply={this.handleReply}
                         onForward={this.handleForward}
+                        email={email}
+                        reloadMail={this.props.reloadMail}
+                        backToMail={this.props.backToMail}
                     />
                 ) : (
                     <div className="tools-bottom-mobile">
