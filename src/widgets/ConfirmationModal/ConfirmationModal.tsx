@@ -23,6 +23,11 @@ class ConfirmationModal extends Death13.Component {
 
   render() {
     const { isOpen } = this.props;
+
+    const popupLength = window.innerWidth < 769 ? 2000 : 4000;
+
+    console.log(popupLength);
+
     if (!isOpen) {
       if (this.timer) {
         clearTimeout(this.timer);
@@ -35,7 +40,7 @@ class ConfirmationModal extends Death13.Component {
       this.timer = setTimeout(() => {
         this.timer = null;
         this.props.onClose();
-      }, 5000);
+      }, popupLength);
     }
 
     const { isStatus, message, index } = this.props;
