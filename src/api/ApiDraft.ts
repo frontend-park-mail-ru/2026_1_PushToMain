@@ -3,6 +3,8 @@ import { getCSRFToken } from "./ApiAuth";
 
 // private.HandleFunc("/drafts/{id}", h.UpdateDraft).Methods(http.MethodPut, http.MethodOptions);
 // private.HandleFunc("/drafts/{id}/send", h.SendDraft).Methods(http.MethodPost, http.MethodOptions);
+//	private.HandleFunc("/drafts/{id}", h.UpdateDraft).Methods(http.MethodPut, http.MethodOptions)
+
 
 export async function createDraft(draftData: { header: string; body: string; receivers: string[] }) {
     try {
@@ -47,6 +49,32 @@ export async function getDraftByID(ID: number) {
     } catch {}
 }
 
+export async function updateDraft(draftData: { header: string; body: string; receivers: string[] }, ID: number) {
+    try {
+        const csrfToken = await getCSRFToken();
+        const response = await fetch(`${URL}/drafts/${ID}`, {
+            method: "PUT",
+            headers: {
+                "Content-Type": "application/json",
+                "X-CSRF-Token": csrfToken,
+            },
+            credentials: "include",
+            body: JSON.stringify({
+                header: draftData.header,
+                body: draftData.body,
+                receivers: draftData.receivers,
+            }),
+        });
+
+        if (response) {
+            const data = await response.json();
+            return data;
+        }
+    } catch {
+        return false;
+    }
+}
+
 export async function deleteDraft(IDs: number[]) {
     try {
         const csrfToken = await getCSRFToken();
@@ -57,7 +85,7 @@ export async function deleteDraft(IDs: number[]) {
                 "X-CSRF-Token": csrfToken,
             },
             credentials: "include",
-            body: JSON.stringify({ drafts_id: IDs }),
+            body: JSON.stringify({ ids: IDs }),
         });
         if (response.ok) {
             return true;

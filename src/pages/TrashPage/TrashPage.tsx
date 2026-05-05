@@ -1,12 +1,12 @@
 import BaseEmailPage from "../../widgets/BaseEmailPage/BaseEmailPage";
-import { getEmailsTrash, deleteEmailByID } from "../../api/ApiEmail";
+import { getEmailsTrash, trash } from "../../api/ApiTrash";
 
 class TrashPage extends BaseEmailPage {
     constructor(props: any) {
         super({
             currentView: "trash",
             fetchEmails: getEmailsTrash,
-            deleteEmails: deleteEmailByID,
+            deleteEmails: trash,
             emptyMessage: "Корзина пуста",
             ...props,
         });

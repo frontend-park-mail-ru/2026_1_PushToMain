@@ -3,9 +3,9 @@ import Button from "../../components/Button/Button";
 import Input from "../../components/Input/Input";
 import "./MailHeader.scss";
 import { AppStorage } from "../../App";
-import { restoreFromTrash } from "../../api/ApiEmail";
 import { getEmailsSpam, sendSpam, unSpam } from "../../api/ApiSpam";
 import { sendFavorite } from "../../api/ApiFavorite";
+import { untrash } from "../../api/ApiTrash";
 
 class MailHeader extends Death13.Component {
     state: any = {
@@ -69,7 +69,7 @@ class MailHeader extends Death13.Component {
             const { currentView } = this.props;
 
             if (currentView === "trash") {
-                await restoreFromTrash(this.props.selectedEmails);
+                await untrash(this.props.selectedEmails);
             } else if (currentView === "spam") {
                 await unSpam(this.props.selectedEmails);
                 await getEmailsSpam(0);

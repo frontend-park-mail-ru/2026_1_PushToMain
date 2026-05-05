@@ -1,13 +1,13 @@
 import BaseEmailPage from "../../widgets/BaseEmailPage/BaseEmailPage";
 import { getEmailsSpam } from "../../api/ApiSpam";
-import { deleteEmailByID } from "../../api/ApiEmail";
+import { trash } from "../../api/ApiTrash";
 
 class SpamPage extends BaseEmailPage {
     constructor(props: any) {
         super({
             currentView: "spam",
             fetchEmails: getEmailsSpam,
-            deleteEmails: deleteEmailByID,
+            deleteEmails: trash,
             emptyMessage: "Спам пуст",
             ...props,
         });

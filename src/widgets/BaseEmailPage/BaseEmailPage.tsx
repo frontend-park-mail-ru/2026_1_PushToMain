@@ -5,10 +5,13 @@ import Button from "../../components/Button/Button";
 import MailHeader from "../../widgets/MailHeader/MailHeader";
 import MailBox from "../../widgets/MailBox/MailBox";
 import { getProfile } from "../../api/ApiAuth";
-import { readEmail, seacrhEmail, unReadEmail, deleteEmailByID } from "../../api/ApiEmail";
+import { readEmail, seacrhEmail, unReadEmail } from "../../api/ApiEmail";
 import "./BaseEmailPage.scss";
 import ProfileModal from "../../widgets/ProfileModal/ProfileModal";
 import { AppStorage } from "../../App";
+import { addEmailsInFolder } from "../../api/ApiFolder";
+import { deleteDraft } from "../../api/ApiDraft";
+import { trash } from "../../api/ApiTrash";
 
 interface BaseEmailprops {
     currentView: string;
@@ -151,31 +154,30 @@ class BaseEmailPage extends Death13.Component {
         window.app.handleRoute(`/read/${email.id}`);
     };
 
-    handleDeleteSelected = async () => {
-        const { selectedEmails } = this.state;
+handleDeleteSelected = async () => {
+    const { selectedEmails } = this.state;
 
-        if (selectedEmails.length === 0) return;
+    if (selectedEmails.length === 0) return;
 
-        try {
-            let success = false;
-
-            if (this.props.deleteEmails) {
-                success = await this.props.deleteEmails(selectedEmails);
-            } else {
-                success = await deleteEmailByID(selectedEmails);
-            }
-
-            if (success) {
-                await this.loadEmails(this.state.offset);
-                this.setState({
-                    selectedEmails: [],
-                    isSelectAll: false,
-                });
-            }
-        } catch (error) {
-            console.error("Error deleting emails:", error);
+    try {
+        let success = false;
+        if (AppStorage.currentView === "drafts") {
+            success = await deleteDraft(selectedEmails);
+        } else {
+            success = await trash(selectedEmails);
         }
-    };
+
+        if (success) {
+            await this.loadEmails(this.state.offset);
+            this.setState({
+                selectedEmails: [],
+                isSelectAll: false,
+            });
+        }
+    } catch (error) {
+        console.error("Error deleting emails:", error);
+    }
+};
 
     handleToggleReadSingle = async (emailId: number, newReadState: boolean) => {
         if (!this.props.showUnreadToggle) return;
@@ -301,6 +303,22 @@ class BaseEmailPage extends Death13.Component {
         }
     };
 
+    handleMoveToFolder = async (folderId: number) => {
+        const { selectedEmails } = this.state;
+        if (selectedEmails.length === 0 || !folderId) return;
+
+        try {
+            await addEmailsInFolder(folderId, selectedEmails);
+            await this.loadEmails(this.state.offset);
+            this.setState({
+                selectedEmails: [],
+                isSelectAll: false,
+            });
+        } catch (error) {
+            console.error("Error moving emails to folder:", error);
+        }
+    };
+
     render() {
         const { emails, isModalOpen, isSelectAll, total, selectedEmails } = this.state;
         const {
@@ -308,7 +326,6 @@ class BaseEmailPage extends Death13.Component {
             emptySubMessage = "",
             showUnreadToggle = false,
             showMarkAsRead = false,
-            showMoveToFolder = false,
             currentFolderName = "",
         } = this.props || {};
         const currentView = AppStorage.currentView || "inbox";
@@ -390,7 +407,7 @@ class BaseEmailPage extends Death13.Component {
                                 selectedEmails={selectedEmails}
                                 hasUnreadSelected={this.hasUnreadSelected()}
                                 onMarkAsRead={showMarkAsRead ? this.handleMarkAsRead : undefined}
-                                onMoveToFolder={showMoveToFolder ? () => {} : undefined}
+                                onMoveToFolder={this.handleMoveToFolder}
                                 onDelete={this.handleDeleteSelected}
                                 mainPage={currentView === "inbox"}
                                 currentView={currentView}

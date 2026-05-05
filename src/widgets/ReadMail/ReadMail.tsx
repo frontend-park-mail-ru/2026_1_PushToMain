@@ -3,11 +3,11 @@ import "./ReadMail.scss";
 import Input from "../../components/Input/Input";
 import Textarea from "../../components/Textarea/Textarea";
 import MailTools from "../MailTools/MailTools";
-import { deleteEmailByID, deleteMyEmailByID } from "../../api/ApiEmail";
 import { AppStorage } from "../../App";
 import { URLMINIO } from "../../api/config";
 import { deleteEmailsFromFolder } from "../../api/ApiFolder";
 import { sendSpam } from "../../api/ApiSpam";
+import { trash } from "../../api/ApiTrash";
 
 class ReadMail extends Death13.Component {
     handleDeleteEmail = async () => {
@@ -18,10 +18,10 @@ class ReadMail extends Death13.Component {
             await deleteEmailsFromFolder(selectedFolderId, ids);
             backToMail();
         } else if (window.app.previousPath === "/sent") {
-            await deleteMyEmailByID(email.id);
+            await trash(email.id);
             backToSent();
         } else {
-            await deleteEmailByID(email.id);
+            await trash(email.id);
             backToMail();
         }
     };

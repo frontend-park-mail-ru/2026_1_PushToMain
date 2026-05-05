@@ -13,6 +13,7 @@
     width: 100%;
     box-sizing: border-box;
     margin-left: 5px;
+    color: var(--tertiary-text);
 
     &.read {
         background-color: var(--input-success-background);

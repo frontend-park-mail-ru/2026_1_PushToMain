@@ -47,7 +47,9 @@ class MailBox extends Death13.Component {
         const { isFavorite } = this.state;
 
         const isSentView = currentView === "sent";
+        const isDraftsView = currentView === "drafts";
         const showSenderInfo = !isSentView && (sender_name || sender_email);
+        const showFavoriteCheckbox = !isSentView && !isDraftsView;
 
         return (
             <div className={`mail ${isSelected ? "selected" : ""} ${isRead ? "read" : ""}`} onClick={onClick}>
@@ -60,13 +62,15 @@ class MailBox extends Death13.Component {
                         onChange={this.handleSelect}
                         onClick={(e: any) => e.stopPropagation()}
                     />
-                    <input
-                        type="checkbox"
-                        name="favorites-checkbox"
-                        checked={isFavorite}
-                        onChange={this.handleFavorite}
-                        onClick={(e: any) => e.stopPropagation()}
-                    />
+                    {showFavoriteCheckbox && (
+                        <input
+                            type="checkbox"
+                            name="favorites-checkbox"
+                            checked={isFavorite}
+                            onChange={this.handleFavorite}
+                            onClick={(e: any) => e.stopPropagation()}
+                        />
+                    )}
                 </div>
                 <div className="mail-content">
                     <div className="mail-content__left-part">
@@ -92,14 +96,16 @@ class MailBox extends Death13.Component {
                     </div>
                     <div className="mail-content__right-part-mobile">
                         <span className="mail-date-mobile">{date}</span>
-                        <input
-                            className="favorites-checkbox-mobile"
-                            type="checkbox"
-                            name="favorites-checkbox"
-                            checked={isFavorite}
-                            onChange={this.handleFavorite}
-                            onClick={(e: any) => e.stopPropagation()}
-                        />
+                        {showFavoriteCheckbox && (
+                            <input
+                                className="favorites-checkbox-mobile"
+                                type="checkbox"
+                                name="favorites-checkbox"
+                                checked={isFavorite}
+                                onChange={this.handleFavorite}
+                                onClick={(e: any) => e.stopPropagation()}
+                            />
+                        )}
                     </div>
                 </div>
             </div>
