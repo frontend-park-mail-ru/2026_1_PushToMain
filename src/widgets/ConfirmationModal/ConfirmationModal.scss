@@ -22,6 +22,16 @@
         color: var(--error-text);
         background-color: var(--input-error-background);
     }
+
+    @media (max-width: 768px) {
+        width: 80%;
+        right: auto;
+        left: 50%;
+        top: 10%;
+        transform: translateX(-50%);
+        animation: slideFromAbove 0.3s ease-out;
+        transform-origin: top center;
+    }
 }
 
 @keyframes popUp {
@@ -31,6 +41,17 @@
     }
     100% {
         transform: scale(1);
+        opacity: 1;
+    }
+}
+
+@keyframes slideFromAbove {
+    0% {
+        transform: translateX(-50%) translateY(-100%);
+        opacity: 0;
+    }
+    100% {
+        transform: translateX(-50%) translateY(0);
         opacity: 1;
     }
 }
