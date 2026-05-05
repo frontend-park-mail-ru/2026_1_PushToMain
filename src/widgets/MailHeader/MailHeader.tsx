@@ -143,6 +143,7 @@ class MailHeader extends Death13.Component {
         const isSpamOrTrash = currentView === "spam" || currentView === "trash";
         const isDrafts = currentView === "drafts";
         const isMobile = window.innerWidth < 769;
+        const isSent = currentView === "sent"
         const hasReadSelected = this.hasReadSelected();
         const hasFavoriteSelected = this.hasFavoriteSelected();
         const hasOnlyUnread = hasSelected && !hasReadSelected;
@@ -195,7 +196,9 @@ class MailHeader extends Death13.Component {
                                         ) : (
                                             <Button name="favorites" help={this.t("starred")} onClick={this.handleMarkAsFavorite} />
                                         )}
+                                        {!isSent && (
                                         <Button name="spam" help={this.t("spam")} onClick={this.handleMarkAsSpam} />
+                                        )}
                                     </div>
                                 )}
 

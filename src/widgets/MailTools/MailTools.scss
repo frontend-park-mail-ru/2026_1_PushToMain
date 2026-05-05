@@ -75,14 +75,18 @@
         padding-left: 15px;
 
         button {
-            width: 120px;
+            width: 150px;
             border-radius: 30px;
+            
+            span {
+                margin-left: 10px;
+            }
         }
 
         [name="answer"]::before,
         [name="reply"]::before {
             content: "";
-            margin-left: 25px;
+            margin-left: 5px;
 
             display: block;
             width: 24px;
@@ -93,7 +97,7 @@
             mask-position: center;
         }
         [name="answer"]::before {
-            margin-left: 16px;
+            margin-left: 10px;
         }
 
         [name="answer"]::before {
