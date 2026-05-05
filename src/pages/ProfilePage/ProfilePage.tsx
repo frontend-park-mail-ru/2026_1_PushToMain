@@ -28,6 +28,7 @@ class ProfilePage extends Death13.Component {
 
     this.state = {
       errors: {},
+      modals: [],
       touched: {},
       name: AppStorage.name,
       surname: AppStorage.surname,
@@ -127,16 +128,19 @@ class ProfilePage extends Death13.Component {
         new_password: this.state.newPassword,
       });
 
+      console.log(response);
+
       if (response) {
         this.setState({
           oldPassword: "",
           newPassword: "",
-          isConfirm: true,
-          isStatus: true,
         });
+        this.addModal(true);
+      } else {
+        this.addModal(false, "passwords_dont_match");
       }
     } catch {
-      this.setState({ isConfirm: true });
+      this.addModal(false);
     }
   }
 
@@ -176,14 +180,13 @@ class ProfilePage extends Death13.Component {
           is_male: this.state.is_male,
           name: this.state.name,
           surname: this.state.surname,
-          isConfirm: true,
-          isStatus: true,
           birthDay: birthDay,
           birthMonth: birthMonth,
           birthYear: birthYear,
         });
+        this.addModal(true);
       } else {
-        this.setState({ isConfirm: true, isStatus: false });
+        this.addModal(false);
       }
     } catch (error) {
       console.error("Ошибка изменения профиля:", error);
@@ -237,7 +240,11 @@ class ProfilePage extends Death13.Component {
   };
 
   handleCloseModal = () => {
-    this.setState({ isModalOpen: false, isConfirm: false, message: null });
+    this.setState({ isModalOpen: false });
+  };
+
+  handleCloseAlert = () => {
+    this.setState({ isConfirm: false, message: null });
   };
 
   handleProfileClick = () => {
@@ -293,6 +300,17 @@ class ProfilePage extends Death13.Component {
     });
   };
 
+  addModal = (status: boolean, message?: string) => {
+    const id = Date.now();
+    const prevModals = this.state.modals;
+    this.setState({ modals: [...prevModals, { id, status, message }] });
+  };
+
+  removeModal = (id: Date) => {
+    const newModals = this.state.modals.filter((m: any) => m.id !== id);
+    this.setState({ modals: newModals });
+  };
+
   t(key: string): string {
     return AppStorage.t(key);
   }
@@ -308,13 +326,12 @@ class ProfilePage extends Death13.Component {
       avatarKey,
       avatarUrl,
       isModalOpen,
-      isConfirm,
       is_male,
-      isStatus,
-      message,
     } = this.state;
 
     const isMobile = window.innerWidth < 769;
+
+    console.log(this.state.modals);
 
     return (
       <div className="profile-page" onClick={() => this.handleCloseModal()}>
@@ -605,7 +622,7 @@ class ProfilePage extends Death13.Component {
                   <form action="" className="profile-form">
                     <FolderChange
                       isEditMode={this.state.isFolderEditMode}
-                      showConfirmationModal={this.handleShowConfirmationModal}
+                      showConfirmationModal={this.addModal}
                     />
                   </form>
                 </div>
@@ -618,13 +635,17 @@ class ProfilePage extends Death13.Component {
             onProfileClick={this.handleProfileClick}
             onLogout={this.handleLogout}
           />
-          <ConfirmationModal
-            isOpen={isConfirm}
-            onClose={this.handleCloseModal}
-            isStatus={isStatus}
-            message={message}
-          />
         </div>
+        {this.state.modals.map((modal: any, index: number) => (
+          <ConfirmationModal
+            key={modal.id}
+            isOpen={true}
+            onClose={() => this.removeModal(modal.id)}
+            isStatus={modal.status}
+            message={modal.message}
+            index={index}
+          />
+        ))}
       </div>
     );
   }

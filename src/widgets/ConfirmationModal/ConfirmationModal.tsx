@@ -35,17 +35,24 @@ class ConfirmationModal extends Death13.Component {
       this.timer = setTimeout(() => {
         this.timer = null;
         this.props.onClose();
-      }, 2000);
+      }, 5000);
     }
 
+    const { isStatus, message, index } = this.props;
+
+    const bottomOffset = 40 + index * 60;
+
+    console.log(isStatus, message, bottomOffset);
     return (
       <div
-        className={`confirmation-modal ${this.props.isStatus ? "access" : "error"}`}
+        className={`confirmation-modal ${isStatus ? "access" : "error"}`}
+        onClick={this.handleClose}
+        style={{ bottom: `${bottomOffset}px` }}
       >
         <div className="__title">
-          {this.props.isStatus
-            ? this.t(this.props.message || "saved_successfully")
-            : this.t("server_error")}
+          {isStatus
+            ? this.t(message || "saved_successfully")
+            : this.t(message || "server_error")}
         </div>
       </div>
     );

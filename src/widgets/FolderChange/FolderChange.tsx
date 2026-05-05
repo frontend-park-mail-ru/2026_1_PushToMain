@@ -105,17 +105,30 @@ class FolderChange extends Death13.Component {
     if (folders.length >= 6) {
       const showConfirmationModal = this.props.showConfirmationModal;
       if (showConfirmationModal) {
-        showConfirmationModal(false, "Limit of 6 folders reached");
+        showConfirmationModal(false, "too_many_folders");
       }
       return;
     }
 
-    const response = await createNewFolder();
+    let newFolderName = this.t("new_folder");
+
+    // добавляем цифру в конце если есть уже папка "Новая папка"
+    if (folders.some((folder: any) => folder.name === newFolderName)) {
+      let i = 2;
+      while (
+        folders.some((folder: any) => folder.name === newFolderName + ` ${i}`)
+      ) {
+        i++;
+      }
+      newFolderName = newFolderName + ` ${i}`;
+    }
+
+    const response = await createNewFolder(newFolderName);
 
     if (response && response.folder_id) {
       const newFolder = {
         id: response.folder_id,
-        name: "Новая папка",
+        name: newFolderName,
       };
 
       const updatedFolders = [...folders, newFolder];
