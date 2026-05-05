@@ -105,7 +105,6 @@ class FolderChange extends Death13.Component {
     if (folders.length >= 6) {
       const showConfirmationModal = this.props.showConfirmationModal;
       if (showConfirmationModal) {
-        console.log("calling showConfirmationModal", showConfirmationModal);
         showConfirmationModal(false, "Limit of 6 folders reached");
       }
       return;

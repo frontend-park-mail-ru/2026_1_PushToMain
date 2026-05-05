@@ -291,12 +291,6 @@ class ProfilePage extends Death13.Component {
       isStatus: status,
       message: message,
     });
-    console.log(
-      "changed state",
-      this.state.isConfirm,
-      this.state.isStatus,
-      this.state.message,
-    );
   };
 
   t(key: string): string {

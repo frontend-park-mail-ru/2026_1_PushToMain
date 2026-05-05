@@ -5,7 +5,7 @@ import { getCSRFToken } from "./ApiAuth";
  */
 export async function getEmailAll(offset: number) {
     try {
-        const response = await fetch(`${URL}/emails?limit=50&offset=${offset}`, {
+        const response = await fetch(`${URL}/emails/inbox?limit=50&offset=${offset}`, {
             method: "GET",
             headers: {
                 "Content-Type": "application/json",
@@ -44,6 +44,10 @@ export async function sendEmail(data = {}) {
     }
 }
 
+/*
+	private.HandleFunc("/emails/read", h.MarkEmailsAsRead).Methods(http.MethodPut, http.MethodOptions)
+	private.HandleFunc("/emails/unread", h.MarkEmailsAsUnRead).Methods(http.MethodPut, http.MethodOptions)
+    */
 export async function readEmail(email_ids: number[]) {
     try {
         const csrfToken = await getCSRFToken();
@@ -67,16 +71,17 @@ export async function readEmail(email_ids: number[]) {
     }
 }
 
-export async function unReadEmail(ID: number) {
+export async function unReadEmail(email_ids: number[]) {
     try {
         const csrfToken = await getCSRFToken();
-        const response = await fetch(`${URL}/emails/${ID}/unread`, {
+        const response = await fetch(`${URL}/emails/unread`, {
             method: "PUT",
             headers: {
                 "Content-Type": "application/json",
                 "X-CSRF-Token": csrfToken,
             },
             credentials: "include",
+            body: JSON.stringify({ email_ids: email_ids }),
         });
 
         if (response.ok) {
@@ -158,7 +163,7 @@ export async function deleteMyEmailByID(IDs: number[]) {
 
 export async function getEmailSend(offset: number) {
     try {
-        const response = await fetch(`${URL}/myemails?limit=50&offset=${offset}`, {
+        const response = await fetch(`${URL}/emails/sent?limit=50&offset=${offset}`, {
             method: "GET",
             headers: {
                 "Content-Type": "application/json",

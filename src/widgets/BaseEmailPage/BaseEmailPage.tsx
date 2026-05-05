@@ -20,12 +20,13 @@ interface BaseEmailprops {
     showUnreadToggle?: boolean;
     showMarkAsRead?: boolean;
     showMoveToFolder?: boolean;
-    currentFolderId?: number;
+    currentFolderId?: number | null;
     currentFolderName?: string;
 }
 
 class BaseEmailPage extends Death13.Component {
     private isLoaded: boolean = false;
+    private lastFolderId: number | null = null;
 
     state: any = {
         emails: [],
@@ -57,14 +58,9 @@ class BaseEmailPage extends Death13.Component {
     };
 
     loadEmails = async (offset: number) => {
-        if (!this.props || typeof this.props.fetchEmails !== "function") {
-            console.error("fetchEmails is not a function", this.props);
-            return;
-        }
-
         try {
             const data = await this.props.fetchEmails(offset);
-            const emails = data.emails || data || [];
+            const emails = data.emails || data.drafts || data || [];
 
             this.setState({
                 emails: Array.isArray(emails) ? emails : [],
@@ -140,8 +136,8 @@ class BaseEmailPage extends Death13.Component {
     };
 
     handleReadMail = async (email: any) => {
-        if (this.props.onReadMail) {
-            this.props.onReadMail(email);
+        if (this.props.currentView === "drafts") {
+            window.app.handleRoute("/send");
             return;
         }
 
@@ -190,7 +186,7 @@ class BaseEmailPage extends Death13.Component {
             if (newReadState) {
                 await readEmail([emailId]);
             } else {
-                await unReadEmail(emailId);
+                await unReadEmail([emailId]);
             }
 
             const updatedEmails = emails.map((email: any) => {
@@ -308,7 +304,6 @@ class BaseEmailPage extends Death13.Component {
     render() {
         const { emails, isModalOpen, isSelectAll, total, selectedEmails } = this.state;
         const {
-            currentView = "inbox",
             emptyMessage = "",
             emptySubMessage = "",
             showUnreadToggle = false,
@@ -316,9 +311,17 @@ class BaseEmailPage extends Death13.Component {
             showMoveToFolder = false,
             currentFolderName = "",
         } = this.props || {};
+        const currentView = AppStorage.currentView || "inbox";
 
         if (!this.props) {
             return <div>Loading...</div>;
+        }
+
+        const currentFolderId = this.props.currentFolderId;
+
+        if (this.props.currentView === "folder" && currentFolderId !== this.lastFolderId) {
+            this.lastFolderId = currentFolderId;
+            this.loadEmails(0);
         }
 
         const mobileHeaderTitle = currentView === "folder" ? currentFolderName : this.t(currentView);
@@ -342,7 +345,7 @@ class BaseEmailPage extends Death13.Component {
                             AppStorage.setCurrentFolderId(folderId);
                             window.app.handleRoute(`/folder/${folderId}`);
                         }}
-                        selectedFolderId={this.props.currentFolderId}
+                        selectedFolderId={this.props.currentFolderId || null}
                         currentView={currentView}
                     />
                 </aside>
@@ -414,6 +417,7 @@ class BaseEmailPage extends Death13.Component {
                                             isSelected={selectedEmails.includes(email.id)}
                                             onSelect={this.handleSelectEmail}
                                             isRead={email.is_read !== undefined ? email.is_read : true}
+                                            isFavorite={email.is_favorite !== undefined ? email.is_favorite : false}
                                             pageMain={currentView === "inbox"}
                                             currentView={currentView}
                                             onClick={() => this.handleReadMail(email)}

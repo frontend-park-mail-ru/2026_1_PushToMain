@@ -2,13 +2,19 @@ import BaseEmailPage from "../../widgets/BaseEmailPage/BaseEmailPage";
 import { getEmailAll } from "../../api/ApiEmail";
 
 class MainPage extends BaseEmailPage {
-    constructor(props: any) {
-        super({
+    constructor() {
+        const mainProps = {
             currentView: "inbox",
             fetchEmails: getEmailAll,
             emptyMessage: "Ваш почтовый ящик пуст :(",
-            ...props,
-        });
+            emptySubMessage: "Напишите ваше первое письмо, нажав на кнопку слева",
+            showUnreadToggle: true,
+            showMarkAsRead: true,
+            showMoveToFolder: true,
+            currentFolderId: null,
+        };
+        
+        super(mainProps);
     }
 }
 

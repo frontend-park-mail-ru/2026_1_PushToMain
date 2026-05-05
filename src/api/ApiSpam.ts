@@ -65,26 +65,3 @@ export async function unSpam(IDs: number[]) {
         return false;
     }
 }
-
-export async function unSpamSenders(IDs: number[]) {
-    try {
-        const csrfToken = await getCSRFToken();
-        const response = await fetch(`${URL}/spam-senders`, {
-            method: "DELETE",
-            headers: {
-                "Content-Type": "application/json",
-                "X-CSRF-Token": csrfToken,
-            },
-            credentials: "include",
-            body: JSON.stringify({ ids: IDs }),
-        });
-
-        if (response.ok) {
-            return true;
-        }
-
-        return false;
-    } catch {
-        return false;
-    }
-}
