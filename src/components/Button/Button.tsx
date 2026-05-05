@@ -29,7 +29,7 @@ class Button extends Death13.Component {
         }}
       >
         {svg && <img src={svg} width={size} height={size} alt="" />}
-        {title || ""}
+        <span>{title || ""}</span>
         {count !== 0 && <span className="button-count">{count}</span>}
       </button>
     );

@@ -46,6 +46,10 @@
         align-items: start;
         gap: 15px;
         width: 100%;
+
+        .drop-down {
+            width: 100%;
+        }
     }
 
     .main-button,
@@ -172,6 +176,16 @@
 
         .folder-item {
             width: 100%;
+
+            .folder-button {
+                padding: 0 0 0 50px;
+                span {
+                    width: auto;
+                    overflow: hidden;
+                    white-space: nowrap;
+                    text-overflow: ellipsis;
+                }
+            }
         }
 
         [name="button-folder"] {
@@ -179,6 +193,7 @@
                 content: "";
                 display: inline-block;
                 width: 28px;
+                min-width: 28px;
                 height: 28px;
                 background-color: var(--tertiary-text);
                 mask-image: url("/assets/svg/Folder.svg");
@@ -337,11 +352,11 @@
         }
     }
 
-    .extra-button-container {
+    .drop-down .extra-button-container {
         padding-top: 15px;
         button {
             color: var(--tertiary-text) !important;
-            padding: 0 20px 0 50px !important;
+            padding: 0 20px 0 50px;
             gap: 15px;
         }
     }

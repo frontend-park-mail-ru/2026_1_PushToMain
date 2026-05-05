@@ -136,7 +136,11 @@
                 align-self: center;
                 justify-self: flex-start;
                 min-width: 150px;
+                max-width: 20%;
                 font-weight: 500;
+                overflow: hidden;
+                white-space: nowrap;
+                text-overflow: ellipsis;
             }
 
             .unread-dot {

@@ -236,6 +236,7 @@ class Sidebar extends Death13.Component {
                       <div key={folder.id} className="folder-item">
                         <Button
                           name="button-folder"
+                          className="folder-button"
                           title={folder.name}
                           isSelect={this.props.selectedFolderId === folder.id}
                           onClick={(event: any) => {
