@@ -96,15 +96,28 @@
             margin-top: auto;
             padding-left: 10px;
             width: 100%;
+            min-width: 0;
 
             .sidebar-profile__text {
+                flex: 1 1 auto;
+                min-width: 0;
                 margin-left: 10px;
                 flex-direction: column;
                 align-items: flex-start;
                 justify-content: flex-start;
+
+                .sidebar-profile__name,
+                .sidebar-profile__email {
+                    max-width: 100%;
+                    overflow: hidden;
+                    white-space: nowrap;
+                    text-overflow: ellipsis;
+                    width: 100%;
+                }
             }
 
             .sidebar-profile__logout-btn {
+                flex-shrink: 0;
                 margin-left: auto;
                 margin-right: 20px;
                 width: 32px;
