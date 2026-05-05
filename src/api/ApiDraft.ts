@@ -78,7 +78,7 @@ export async function updateDraft(draftData: { header: string; body: string; rec
 export async function deleteDraft(IDs: number[]) {
     try {
         const csrfToken = await getCSRFToken();
-        const response = await fetch(`${URL}/drafts/delete`, {
+        const response = await fetch(`${URL}/drafts`, {
             method: "DELETE",
             headers: {
                 "Content-Type": "application/json",

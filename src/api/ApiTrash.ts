@@ -24,7 +24,7 @@ export async function trash(IDs: number[]) {
     try {
         const csrfToken = await getCSRFToken();
         const response = await fetch(`${URL}/emails/trash`, {
-            method: "DELETE",
+            method: "PUT",
             headers: {
                 "Content-Type": "application/json",
                 "X-CSRF-Token": csrfToken,
@@ -45,8 +45,8 @@ export async function trash(IDs: number[]) {
 export async function untrash(IDs: number[]) {
     try {
         const csrfToken = await getCSRFToken();
-        const response = await fetch(`${URL}/myemails/delete`, {
-            method: "DELETE",
+        const response = await fetch(`${URL}/emails/untrash`, {
+            method: "PUT",
             headers: {
                 "Content-Type": "application/json",
                 "X-CSRF-Token": csrfToken,

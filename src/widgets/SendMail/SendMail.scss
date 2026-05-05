@@ -40,7 +40,7 @@
 
             input {
                 max-width: 100%;
-                color: var(--tretiry-text);
+                color: var(--tertiary-text);
                 font-size: 16px;
                 overflow-x: auto !important;
                 white-space: nowrap;
@@ -48,24 +48,27 @@
         }
     }
 
-    .send-actions {
-        display: flex;
-        flex-direction: row;
-        gap: 10px;
+    .send-down {
         margin-left: auto;
-        padding: 10px;
+        .send-actions {
+            display: flex;
+            flex-direction: row;
+            gap: 10px;
+            margin-left: auto;
+            padding: 10px;
 
-        button {
-            height: 40px;
+            button {
+                height: 40px;
 
-            &[name="save-mail"] {
-                display: flex;
-                align-items: center;
-                background-color: var(--color-main-background);
-                color: var(--tretiry-text);
-
-                &:hover {
+                &[name="save-mail"] {
+                    display: flex;
+                    align-items: center;
                     background-color: var(--color-main-background);
+                    color: var(--tertiary-text);
+
+                    &:hover {
+                        background-color: var(--color-main-background);
+                    }
                 }
             }
         }

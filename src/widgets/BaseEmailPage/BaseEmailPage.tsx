@@ -9,7 +9,7 @@ import { readEmail, seacrhEmail, unReadEmail } from "../../api/ApiEmail";
 import "./BaseEmailPage.scss";
 import ProfileModal from "../../widgets/ProfileModal/ProfileModal";
 import { AppStorage } from "../../App";
-import { addEmailsInFolder } from "../../api/ApiFolder";
+import { addEmailsInFolder, deleteEmailsFromFolder } from "../../api/ApiFolder";
 import { deleteDraft } from "../../api/ApiDraft";
 import { trash } from "../../api/ApiTrash";
 
@@ -43,6 +43,7 @@ class BaseEmailPage extends Death13.Component {
 
     constructor(props: BaseEmailprops) {
         super(props);
+        
         this.loadProfile();
         this.loadEmails(0);
     }
@@ -154,30 +155,32 @@ class BaseEmailPage extends Death13.Component {
         window.app.handleRoute(`/read/${email.id}`);
     };
 
-handleDeleteSelected = async () => {
-    const { selectedEmails } = this.state;
+    handleDeleteSelected = async () => {
+        const { selectedEmails } = this.state;
 
-    if (selectedEmails.length === 0) return;
+        if (selectedEmails.length === 0) return;
 
-    try {
-        let success = false;
-        if (AppStorage.currentView === "drafts") {
-            success = await deleteDraft(selectedEmails);
-        } else {
-            success = await trash(selectedEmails);
+        try {
+            let success = false;
+            if (AppStorage.currentView === "drafts") {
+                success = await deleteDraft(selectedEmails);
+            } else if (AppStorage.currentView === "folder") {
+                success = await deleteEmailsFromFolder(this.props.currentFolderId, selectedEmails);
+            } else {
+                success = await trash(selectedEmails);
+            }
+
+            if (success) {
+                await this.loadEmails(this.state.offset);
+                this.setState({
+                    selectedEmails: [],
+                    isSelectAll: false,
+                });
+            }
+        } catch (error) {
+            console.error("Error deleting emails:", error);
         }
-
-        if (success) {
-            await this.loadEmails(this.state.offset);
-            this.setState({
-                selectedEmails: [],
-                isSelectAll: false,
-            });
-        }
-    } catch (error) {
-        console.error("Error deleting emails:", error);
-    }
-};
+    };
 
     handleToggleReadSingle = async (emailId: number, newReadState: boolean) => {
         if (!this.props.showUnreadToggle) return;
@@ -325,7 +328,6 @@ handleDeleteSelected = async () => {
             emptyMessage = "",
             emptySubMessage = "",
             showUnreadToggle = false,
-            showMarkAsRead = false,
             currentFolderName = "",
         } = this.props || {};
         const currentView = AppStorage.currentView || "inbox";
@@ -400,13 +402,13 @@ handleDeleteSelected = async () => {
                                 onSelectAll={this.handleSelectAll}
                                 isSelectAll={isSelectAll}
                                 reloadMail={() => this.loadEmails(this.state.offset)}
-                                loadEmail={this.loadEmails}
+                                loadEmail={this.loadEmails.bind(this)}
                                 total={total}
                                 offset={this.state.offset}
                                 selectedCount={selectedEmails.length}
                                 selectedEmails={selectedEmails}
                                 hasUnreadSelected={this.hasUnreadSelected()}
-                                onMarkAsRead={showMarkAsRead ? this.handleMarkAsRead : undefined}
+                                onMarkAsRead={this.handleMarkAsRead}
                                 onMoveToFolder={this.handleMoveToFolder}
                                 onDelete={this.handleDeleteSelected}
                                 mainPage={currentView === "inbox"}

@@ -5,7 +5,7 @@ import "./MailHeader.scss";
 import { AppStorage } from "../../App";
 import { getEmailsSpam, sendSpam, unSpam } from "../../api/ApiSpam";
 import { sendFavorite } from "../../api/ApiFavorite";
-import { untrash } from "../../api/ApiTrash";
+import { getEmailsTrash, untrash } from "../../api/ApiTrash";
 
 class MailHeader extends Death13.Component {
     state: any = {
@@ -70,10 +70,12 @@ class MailHeader extends Death13.Component {
 
             if (currentView === "trash") {
                 await untrash(this.props.selectedEmails);
+                await getEmailsTrash(0);
             } else if (currentView === "spam") {
                 await unSpam(this.props.selectedEmails);
                 await getEmailsSpam(0);
             }
+            this.props.reloadMail?.();
         }
     };
 
