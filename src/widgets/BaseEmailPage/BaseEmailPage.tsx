@@ -12,6 +12,7 @@ import { AppStorage } from "../../App";
 import { addEmailsInFolder, deleteEmailsFromFolder } from "../../api/ApiFolder";
 import { deleteDraft } from "../../api/ApiDraft";
 import { trash } from "../../api/ApiTrash";
+import { sendFavorite, unFavorite } from "../../api/ApiFavorite";
 
 interface BaseEmailprops {
     currentView: string;
@@ -43,7 +44,7 @@ class BaseEmailPage extends Death13.Component {
 
     constructor(props: BaseEmailprops) {
         super(props);
-        
+
         this.loadProfile();
         this.loadEmails(0);
     }
@@ -207,6 +208,29 @@ class BaseEmailPage extends Death13.Component {
         }
     };
 
+    handleToggleFavoriteSingle = async (emailId: number, newState: boolean) => {
+        const { emails } = this.state;
+
+        try {
+            if (newState) {
+                await sendFavorite([emailId]);
+            } else {
+                await unFavorite([emailId]);
+            }
+
+            const updatedEmails = emails.map((email: any) => {
+                if (email.id === emailId) {
+                    return { ...email, is_favorite: newState };
+                }
+                return email;
+            });
+
+            this.setState({ emails: updatedEmails });
+        } catch (error) {
+            console.error("Error toggling favorite:", error);
+        }
+    };
+
     handleMarkAsRead = async () => {
         if (!this.props.showMarkAsRead) return;
 
@@ -324,12 +348,7 @@ class BaseEmailPage extends Death13.Component {
 
     render() {
         const { emails, isModalOpen, isSelectAll, total, selectedEmails } = this.state;
-        const {
-            emptyMessage = "",
-            emptySubMessage = "",
-            showUnreadToggle = false,
-            currentFolderName = "",
-        } = this.props || {};
+        const { emptyMessage = "", emptySubMessage = "", showUnreadToggle = false, currentFolderName = "" } = this.props || {};
         const currentView = AppStorage.currentView || "inbox";
 
         if (!this.props) {
@@ -413,6 +432,7 @@ class BaseEmailPage extends Death13.Component {
                                 onDelete={this.handleDeleteSelected}
                                 mainPage={currentView === "inbox"}
                                 currentView={currentView}
+                                emails={emails}
                             />
                             {emails.length === 0 && (
                                 <div className="mail-box-container-form__placeholder">
@@ -441,6 +461,7 @@ class BaseEmailPage extends Death13.Component {
                                             currentView={currentView}
                                             onClick={() => this.handleReadMail(email)}
                                             onToggleRead={showUnreadToggle ? this.handleToggleReadSingle : undefined}
+                                            onToggleFavorite={this.handleToggleFavoriteSingle}
                                             selectedFolderId={this.props.currentFolderId}
                                         />
                                     ))}

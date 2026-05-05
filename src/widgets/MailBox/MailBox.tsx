@@ -28,6 +28,7 @@ class MailBox extends Death13.Component {
     handleFavorite = (e: any) => {
         e.stopPropagation();
         this.setState({ isFavorite: e.target.checked });
+        this.props.onToggleFavorite?.(this.props.id, !this.props.isFavorite);
     };
 
     render() {
@@ -43,8 +44,8 @@ class MailBox extends Death13.Component {
             pageMain,
             isRead,
             currentView,
+            isFavorite,
         } = this.props;
-        const { isFavorite } = this.state;
 
         const isSentView = currentView === "sent";
         const isDraftsView = currentView === "drafts";
@@ -52,7 +53,7 @@ class MailBox extends Death13.Component {
         const showFavoriteCheckbox = !isSentView && !isDraftsView;
 
         return (
-            <div className={`mail ${isSelected ? "selected" : ""} ${isRead ? "read" : ""}`} onClick={onClick}>
+            <div className={`mail ${isSelected ? "selected" : ""} ${isRead ? "read" : ""} ${isFavorite ? "favorite" : ""}`} onClick={onClick}>
                 <div className="checkbox-container">
                     <input
                         type="checkbox"

@@ -56,12 +56,27 @@
                     width: 24px;
                     height: 24px;
                     background-color: var(--tertiary-text);
+                    mask-image: url("/assets/svg/StarOn.svg");
+                    mask-size: contain;
+                    mask-repeat: no-repeat;
+                    mask-position: center;
+                }
+            }
+
+            [name="unfavorite"] {
+                &::before {
+                    content: "";
+                    display: inline-block;
+                    width: 24px;
+                    height: 24px;
+                    background-color: var(--tertiary-text);
                     mask-image: url("/assets/svg/SidebarFavorites.svg");
                     mask-size: contain;
                     mask-repeat: no-repeat;
                     mask-position: center;
                 }
             }
+
             [name="spam"] {
                 &::before {
                     content: "";
@@ -115,6 +130,20 @@
                     height: 24px;
                     background-color: var(--tertiary-text);
                     mask-image: url("/assets/svg/ReadAllMail.svg");
+                    mask-size: contain;
+                    mask-repeat: no-repeat;
+                    mask-position: center;
+                }
+            }
+
+            [name="unread-all-mail"] {
+                &::before {
+                    content: "";
+                    display: inline-block;
+                    width: 24px;
+                    height: 24px;
+                    background-color: var(--tertiary-text);
+                    mask-image: url("/assets/svg/Mail.svg");
                     mask-size: contain;
                     mask-repeat: no-repeat;
                     mask-position: center;
