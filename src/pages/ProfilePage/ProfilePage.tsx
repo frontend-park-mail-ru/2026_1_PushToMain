@@ -115,9 +115,8 @@ class ProfilePage extends Death13.Component {
     this.setState({
       avatarKey: this.state.avatarKey + 1,
       avatarUrl: AppStorage.getAvatarUrl(),
-      isConfirm: true,
-      isStatus: true,
     });
+    this.addModal(true);
   };
 
   async handleChangePassword(event: any) {
