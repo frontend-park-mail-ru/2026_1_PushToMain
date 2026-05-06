@@ -1,11 +1,11 @@
-import { URL } from "./config";
+import { EMAIL_URL } from "./config";
 import { getCSRFToken } from "./ApiAuth";
 /**
  * Отправляет GET-запрос на эндпоинт /emails.
  */
 export async function getEmailAll(offset: number) {
     try {
-        const response = await fetch(`${URL}/emails/inbox?limit=50&offset=${offset}`, {
+        const response = await fetch(`${EMAIL_URL}/emails/inbox?limit=50&offset=${offset}`, {
             method: "GET",
             headers: {
                 "Content-Type": "application/json",
@@ -25,7 +25,7 @@ export async function getEmailAll(offset: number) {
 export async function sendEmail(data = {}) {
     try {
         const csrfToken = await getCSRFToken();
-        const response = await fetch(`${URL}/send`, {
+        const response = await fetch(`${EMAIL_URL}/send`, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
@@ -51,7 +51,7 @@ export async function sendEmail(data = {}) {
 export async function readEmail(email_ids: number[]) {
     try {
         const csrfToken = await getCSRFToken();
-        const response = await fetch(`${URL}/emails/read`, {
+        const response = await fetch(`${EMAIL_URL}/emails/read`, {
             method: "PUT",
             headers: {
                 "Content-Type": "application/json",
@@ -74,7 +74,7 @@ export async function readEmail(email_ids: number[]) {
 export async function unReadEmail(email_ids: number[]) {
     try {
         const csrfToken = await getCSRFToken();
-        const response = await fetch(`${URL}/emails/unread`, {
+        const response = await fetch(`${EMAIL_URL}/emails/unread`, {
             method: "PUT",
             headers: {
                 "Content-Type": "application/json",
@@ -97,7 +97,7 @@ export async function unReadEmail(email_ids: number[]) {
 export async function getEmailByID(ID: number) {
     try {
         const csrfToken = await getCSRFToken();
-        const response = await fetch(`${URL}/emails/${ID}`, {
+        const response = await fetch(`${EMAIL_URL}/emails/${ID}`, {
             method: "GET",
             headers: {
                 "Content-Type": "application/json",
@@ -119,7 +119,7 @@ export async function getEmailByID(ID: number) {
 
 export async function getEmailSend(offset: number) {
     try {
-        const response = await fetch(`${URL}/emails/sent?limit=50&offset=${offset}`, {
+        const response = await fetch(`${EMAIL_URL}/emails/sent?limit=50&offset=${offset}`, {
             method: "GET",
             headers: {
                 "Content-Type": "application/json",
@@ -139,7 +139,7 @@ export async function getEmailSend(offset: number) {
 export async function seacrhEmail(data: string) {
     try {
         const csrfToken = await getCSRFToken();
-        const response = await fetch(`${URL}/emails/search`, {
+        const response = await fetch(`${EMAIL_URL}/emails/search`, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
@@ -164,7 +164,7 @@ export async function uploadFile(file: File, emailId: number) {
         const formData = new FormData();
         formData.append("file", file);
 
-        const response = await fetch(`${URL}/emails/send/${emailId}/file`, {
+        const response = await fetch(`${EMAIL_URL}/emails/send/${emailId}/file`, {
             method: "POST",
             headers: {
                 "X-CSRF-Token": csrfToken,

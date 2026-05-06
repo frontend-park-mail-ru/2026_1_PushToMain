@@ -1,11 +1,20 @@
+let userUrl: string;
+let emailUrl: string;
+let folderUrl: string;
+
 // чтобы можно было на локальной машине тестить
-let url: string;
 if (location.hostname === "localhost") {
-  url = `${location.protocol}//localhost:8080/api/v1`;
+  userUrl = `${location.protocol}//localhost:8081/api/v1`;
+  emailUrl = `${location.protocol}//localhost:8082/api/v1`;
+  folderUrl = `${location.protocol}//localhost:8083/api/v1`;
 } else {
-  url = `${location.protocol}//${location.hostname}/api/v1`;
+  userUrl = `${location.protocol}//${location.hostname}:8081/api/v1`;
+  emailUrl = `${location.protocol}//${location.hostname}:8082/api/v1`;
+  folderUrl = `${location.protocol}//${location.hostname}:8083/api/v1`;
 }
 
-export const URL: string = url;
+export const USER_URL: string = userUrl;
+export const EMAIL_URL: string = emailUrl;
+export const FOLDER_URL: string = folderUrl;
 
 export const URLMINIO = `${location.protocol}//${location.hostname}:9000/avatars`;
