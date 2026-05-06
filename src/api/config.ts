@@ -17,4 +17,4 @@ export const USER_URL: string = userUrl;
 export const EMAIL_URL: string = emailUrl;
 export const FOLDER_URL: string = folderUrl;
 
-export const URLMINIO = `${location.protocol}//${location.hostname}:9000/avatars`;
+export const URLMINIO = `${location.protocol}//${location.hostname}/avatars`;
