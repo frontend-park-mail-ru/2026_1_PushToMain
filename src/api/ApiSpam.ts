@@ -1,9 +1,9 @@
-import { URL } from "./config";
+import { EMAIL_URL } from "./config";
 import { getCSRFToken } from "./ApiAuth";
 
 export async function getEmailsSpam(offset: number) {
     try {
-        const response = await fetch(`${URL}/emails/spam?limit=50&offset=${offset}`, {
+        const response = await fetch(`${EMAIL_URL}/emails/spam?limit=50&offset=${offset}`, {
             method: "GET",
             headers: {
                 "Content-Type": "application/json",
@@ -23,7 +23,7 @@ export async function getEmailsSpam(offset: number) {
 export async function sendSpam(IDs: number[]) {
     try {
         const csrfToken = await getCSRFToken();
-        const response = await fetch(`${URL}/emails/spam`, {
+        const response = await fetch(`${EMAIL_URL}/emails/spam`, {
             method: "PUT",
             headers: {
                 "Content-Type": "application/json",
@@ -46,7 +46,7 @@ export async function sendSpam(IDs: number[]) {
 export async function unSpam(IDs: number[]) {
     try {
         const csrfToken = await getCSRFToken();
-        const response = await fetch(`${URL}/emails/unspam`, {
+        const response = await fetch(`${EMAIL_URL}/emails/unspam`, {
             method: "PUT",
             headers: {
                 "Content-Type": "application/json",

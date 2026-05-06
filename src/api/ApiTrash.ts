@@ -1,9 +1,9 @@
-import { URL } from "./config";
+import { EMAIL_URL } from "./config";
 import { getCSRFToken } from "./ApiAuth";
 
 export async function getEmailsTrash(offset: number) {
     try {
-        const response = await fetch(`${URL}/emails/trash?limit=50&offset=${offset}`, {
+        const response = await fetch(`${EMAIL_URL}/emails/trash?limit=50&offset=${offset}`, {
             method: "GET",
             headers: {
                 "Content-Type": "application/json",
@@ -23,7 +23,7 @@ export async function getEmailsTrash(offset: number) {
 export async function trash(IDs: number[]) {
     try {
         const csrfToken = await getCSRFToken();
-        const response = await fetch(`${URL}/emails/trash`, {
+        const response = await fetch(`${EMAIL_URL}/emails/trash`, {
             method: "PUT",
             headers: {
                 "Content-Type": "application/json",
@@ -45,7 +45,7 @@ export async function trash(IDs: number[]) {
 export async function untrash(IDs: number[]) {
     try {
         const csrfToken = await getCSRFToken();
-        const response = await fetch(`${URL}/emails/untrash`, {
+        const response = await fetch(`${EMAIL_URL}/emails/untrash`, {
             method: "PUT",
             headers: {
                 "Content-Type": "application/json",
