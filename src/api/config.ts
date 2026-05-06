@@ -8,9 +8,9 @@ if (location.hostname === "localhost") {
   emailUrl = `${location.protocol}//localhost:8082/api/v1`;
   folderUrl = `${location.protocol}//localhost:8083/api/v1`;
 } else {
-  userUrl = `${location.protocol}//${location.hostname}:8081/api/v1`;
-  emailUrl = `${location.protocol}//${location.hostname}:8082/api/v1`;
-  folderUrl = `${location.protocol}//${location.hostname}:8083/api/v1`;
+  userUrl = `${location.protocol}//${location.hostname}/api/v1`;
+  emailUrl = `${location.protocol}//${location.hostname}/api/v1`;
+  folderUrl = `${location.protocol}//${location.hostname}/api/v1`;
 }
 
 export const USER_URL: string = userUrl;
