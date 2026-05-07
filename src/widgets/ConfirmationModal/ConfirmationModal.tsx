@@ -26,8 +26,6 @@ class ConfirmationModal extends Death13.Component {
 
     const popupLength = window.innerWidth < 769 ? 2000 : 4000;
 
-    console.log(popupLength);
-
     if (!isOpen) {
       if (this.timer) {
         clearTimeout(this.timer);
