@@ -1,5 +1,4 @@
 import { EMAIL_URL } from "./config";
-import { getCSRFToken } from "./ApiAuth";
 import { AppStorage } from "../App";
 /**
  * Отправляет GET-запрос на эндпоинт /emails.

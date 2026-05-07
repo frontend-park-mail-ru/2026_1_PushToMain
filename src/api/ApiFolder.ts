@@ -1,5 +1,4 @@
 import { FOLDER_URL } from "./config";
-import { getCSRFToken } from "./ApiAuth";
 import { AppStorage } from "../App";
 
 export async function createNewFolder(folderName: string = "Новая папка") {
