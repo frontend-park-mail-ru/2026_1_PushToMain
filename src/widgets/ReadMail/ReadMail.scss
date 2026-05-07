@@ -38,7 +38,7 @@
                     display: flex;
                     gap: 10px;
                     color: var(--tertiary-text);
-                    
+
                     .input-form {
                         display: flex;
                         flex-direction: row;
@@ -93,6 +93,103 @@
 
         button {
             height: 40px;
+        }
+    }
+}
+
+@media (max-width: 768px) {
+    .read-mail {
+        padding: 5px;
+
+        .read-mail__header-mobile {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 5px;
+
+            .back-button {
+                margin: 0 10px;
+                padding: 0;
+                height: 28px;
+                width: 28px;
+                background-color: var(--tertiary-text);
+                mask-image: url(/assets/svg/ArrowLeft.svg);
+                mask-size: contain;
+                mask-position: center;
+            }
+
+            .tools-container {
+                .tools-left {
+                    padding-right: 0;
+                }
+                .tools-left::after {
+                    display: none;
+                }
+                .tools-right {
+                    display: none;
+                }
+            }
+        }
+
+        .read-form {
+            .read-inputs {
+                .read-header {
+                    .sender-info {
+                        .sender-info__text {
+                            gap: 5px;
+
+                            .sender-name {
+                                flex-direction: column;
+                                height: fit-content;
+                                align-items: flex-start;
+
+                                small {
+                                    margin-left: 0;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
+            textarea {
+                width: auto;
+            }
+        }
+
+        .tools-bottom-mobile {
+            display: flex;
+            justify-content: flex-end;
+            padding: 10px;
+            gap: 20px;
+
+            .reply,
+            .answer {
+                display: flex;
+                align-items: center;
+                background-color: transparent;
+                color: var(--tertiary-text);
+                height: 32px;
+                width: 32px;
+                font-size: 16px;
+                gap: 10px;
+                padding: 0;
+                background-color: var(--tertiary-text);
+                mask-size: contain;
+                mask-position: center;
+
+                &:hover {
+                    background-color: var(--color-main-background);
+                }
+            }
+
+            .reply {
+                mask-image: url(/assets/svg/Reply.svg);
+            }
+
+            .answer {
+                mask-image: url(/assets/svg/Answer.svg);
+            }
         }
     }
 }

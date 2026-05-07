@@ -3,7 +3,7 @@ import "./MailBox.scss";
 
 class MailBox extends Death13.Component {
     state: any = {
-        isFavorite: false,
+        isFavorite: this.props.isFavorite || false,
     };
 
     handleSelect = (e: any) => {
@@ -28,14 +28,32 @@ class MailBox extends Death13.Component {
     handleFavorite = (e: any) => {
         e.stopPropagation();
         this.setState({ isFavorite: e.target.checked });
+        this.props.onToggleFavorite?.(this.props.id, !this.props.isFavorite);
     };
 
     render() {
-        const { theme, title, date, onClick, isSelected = false, pageMain, isRead } = this.props;
-        const { isFavorite } = this.state;
+        const {
+            theme,
+            sender_name,
+            sender_surname,
+            sender_email,
+            title,
+            date,
+            onClick,
+            isSelected = false,
+            pageMain,
+            isRead,
+            currentView,
+            isFavorite,
+        } = this.props;
+
+        const isSentView = currentView === "sent";
+        const isDraftsView = currentView === "drafts";
+        const showSenderInfo = !isSentView && (sender_name || sender_email);
+        const showFavoriteCheckbox = !isSentView && !isDraftsView;
 
         return (
-            <div className={`mail ${isSelected ? "selected" : ""} ${isRead ? "read" : ""}`} onClick={onClick}>
+            <div className={`mail ${isSelected ? "selected" : ""} ${isRead ? "read" : ""} ${isFavorite ? "favorite" : ""}`} onClick={onClick}>
                 <div className="checkbox-container">
                     <input
                         type="checkbox"
@@ -45,29 +63,51 @@ class MailBox extends Death13.Component {
                         onChange={this.handleSelect}
                         onClick={(e: any) => e.stopPropagation()}
                     />
-                    <input
-                        type="checkbox"
-                        name="favorites-checkbox"
-                        checked={isFavorite}
-                        onChange={this.handleFavorite}
-                        onClick={(e: any) => e.stopPropagation()}
-                    />
-                    {pageMain && (
+                    {showFavoriteCheckbox && (
                         <input
                             type="checkbox"
-                            name="read-checkbox"
-                            className={`read-checkbox ${isRead ? "read" : ""}`}
-                            checked={isRead}
-                            onChange={this.handleToggleRead}
+                            name="favorites-checkbox"
+                            checked={isFavorite}
+                            onChange={this.handleFavorite}
                             onClick={(e: any) => e.stopPropagation()}
                         />
                     )}
-                    {!pageMain && <div className="sent-checkbox"></div>}
                 </div>
                 <div className="mail-content">
-                    <span className="mail-theme">{theme}</span>
-                    <span className="mail-title">{title}</span>
-                    <span className="mail-date">{date}</span>
+                    <div className="mail-content__left-part">
+                        <span className="mail-sender">
+                            {pageMain && (
+                                <input
+                                    type="checkbox"
+                                    name="read-checkbox"
+                                    className={`read-checkbox ${isRead ? "read" : ""}`}
+                                    checked={isRead}
+                                    onChange={this.handleToggleRead}
+                                    onClick={(e: any) => e.stopPropagation()}
+                                />
+                            )}
+                            {!pageMain && <div className="sent-checkbox"></div>}
+                            {showSenderInfo ? (sender_name ? `${sender_name} ${sender_surname || ""}`.trim() : sender_email) : ""}
+                        </span>
+                        <div className="mail-text-content">
+                            <span className="mail-theme">{theme}</span>
+                            <span className="mail-title">{title}</span>
+                            <span className="mail-date">{date}</span>
+                        </div>
+                    </div>
+                    <div className="mail-content__right-part-mobile">
+                        <span className="mail-date-mobile">{date}</span>
+                        {showFavoriteCheckbox && (
+                            <input
+                                className="favorites-checkbox-mobile"
+                                type="checkbox"
+                                name="favorites-checkbox"
+                                checked={isFavorite}
+                                onChange={this.handleFavorite}
+                                onClick={(e: any) => e.stopPropagation()}
+                            />
+                        )}
+                    </div>
                 </div>
             </div>
         );

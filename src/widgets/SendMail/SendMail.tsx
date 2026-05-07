@@ -6,7 +6,7 @@ import Textarea from "../../components/Textarea/Textarea";
 import Button from "../../components/Button/Button";
 import { sendEmail } from "../../api/ApiEmail";
 import { AppStorage } from "../../App";
-import { createDraft, sendDraft } from "../../api/ApiDraft";
+import { createDraft, sendDraft, updateDraft } from "../../api/ApiDraft";
 
 class SendMail extends Death13.Component {
     state: any = {
@@ -114,19 +114,35 @@ class SendMail extends Death13.Component {
     };
 
     handleSaveDraft = async (event: any) => {
-        const { header, body, receivers } = this.state;
+        const { header, body, receivers, draftId } = this.state;
 
         event.preventDefault();
 
-        const response = await createDraft({
-            header: header.trim(),
-            body: body.trim(),
-            receivers: receivers,
-        });
+        if (draftId) {
+            const response = await updateDraft(
+                {
+                    header: header.trim(),
+                    body: body.trim(),
+                    receivers: receivers,
+                },
+                draftId,
+            );
 
-        if (response) {
-            window.AppStorage.clearMailActionData();
-            this.props.backToMail();
+            if (response) {
+                window.AppStorage.clearMailActionData();
+                this.props.backToMail();
+            }
+        } else {
+            const response = await createDraft({
+                header: header.trim(),
+                body: body.trim(),
+                receivers: receivers,
+            });
+
+            if (response) {
+                window.AppStorage.clearMailActionData();
+                this.props.backToMail();
+            }
         }
     };
 
@@ -165,10 +181,23 @@ class SendMail extends Death13.Component {
 
     render() {
         const { body, header, receivers, buttonBlock, files } = this.state;
+        const isMobile = window.innerWidth < 769;
 
         return (
             <div className="send-mail">
-                <div className="send-mail-header"></div>
+                {isMobile ? (
+                    <div className="send-mail-mobile-buttons">
+                        <div className="close-button" onClick={this.handleSaveDraft}></div>
+                        <div
+                            className="send-button"
+                            onClick={(event: any) => {
+                                this.handleSubmit(event);
+                            }}></div>
+                    </div>
+                ) : null}
+                <div className="send-mail-header">
+                    <span className="send-mail-header__text">{this.t("new_letter")}</span>
+                </div>
                 <form action="" className="send-form">
                     <div className="send-inputs">
                         <InputEmail
@@ -199,20 +228,22 @@ class SendMail extends Death13.Component {
                 </form>
                 <div className="send-down">
                     <div className="send-tools">
-                        {/* <input type="file" name="file" id="input-file" hidden multiple onChange={this.handleFileChange} /> 
+                        {/* <input type="file" name="file" id="input-file" hidden multiple onChange={this.handleFileChange} />
                         <label htmlFor="input-file" name="button-file"></label>*/}
                     </div>
-                    <div className="send-actions">
-                        <Button title={this.t("save")} name="save-mail" onClick={this.handleSaveDraft} />
-                        <Button
-                            title={this.t("send")}
-                            name="send-mail"
-                            block={buttonBlock}
-                            onClick={(event: any) => {
-                                this.handleSubmit(event);
-                            }}
-                        />
-                    </div>
+                    {!isMobile ? (
+                        <div className="send-actions">
+                            <Button title={this.t("save")} name="save-mail" onClick={this.handleSaveDraft} />
+                            <Button
+                                title={this.t("send")}
+                                name="send-mail"
+                                block={buttonBlock}
+                                onClick={(event: any) => {
+                                    this.handleSubmit(event);
+                                }}
+                            />
+                        </div>
+                    ) : null}
                 </div>
             </div>
         );

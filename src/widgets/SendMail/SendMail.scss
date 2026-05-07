@@ -3,6 +3,14 @@
     flex-direction: column;
     height: 100%;
 
+    .send-mail-header {
+        display: none;
+
+        .send-mail-header__text {
+            color: var(--tertiary-text);
+        }
+    }
+
     .send-form {
         display: flex;
         flex-direction: column;
@@ -36,62 +44,12 @@
                 font-size: 16px;
                 overflow-x: auto !important;
                 white-space: nowrap;
-
-                &::placeholder {
-                    font-size: 16px;
-                }
-            }
-        }
-
-        .files-list{
-            .file-item{
-                color: var(--tertiary-text);
-                width: 300px;
-                border: 2px solid var(--tertiary-text);
-                padding: 10px 20px;
-                border-radius: 20px;
-
-                button {
-                    background-color: transparent;
-                    width: 24px;
-                    height: 24px;
-                    padding: 0;
-                    margin-left: auto;
-                }
             }
         }
     }
 
     .send-down {
-        display: flex;
-        flex-direction: row;
-        align-items: center;
-
-        .send-tools {
-            width: 24px;
-            height: 24px;
-            label {
-                display: inline-block;
-                width: 24px;
-                height: 24px;
-                cursor: pointer;
-            }
-            [name="button-file"] {
-
-                &::before {
-                    content: "";
-                    display: inline-block;
-                    width: 24px;
-                    height: 24px;
-                    background-color: var(--tertiary-text);
-                    mask-image: url("/assets/svg/Attachment.svg");
-                    mask-size: contain;
-                    mask-repeat: no-repeat;
-                    mask-position: center;
-                }
-            }
-        }
-
+        margin-left: auto;
         .send-actions {
             display: flex;
             flex-direction: row;
@@ -105,7 +63,7 @@
                 &[name="save-mail"] {
                     display: flex;
                     align-items: center;
-                    background-color: var(--button-background-second);
+                    background-color: var(--color-main-background);
                     color: var(--tertiary-text);
 
                     &:hover {
@@ -113,6 +71,43 @@
                     }
                 }
             }
+        }
+    }
+}
+
+@media (max-width: 768px) {
+    .send-mail {
+        .send-mail-mobile-buttons {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 15px 20px;
+
+            .close-button {
+                height: 22px;
+                width: 22px;
+                fill: black;
+                background-color: var(--tertiary-text);
+                mask-image: url(/assets/svg/Close.svg);
+                mask-size: contain;
+                mask-position: center;
+            }
+
+            .send-button {
+                height: 32px;
+                width: 32px;
+                background-color: var(--tertiary-text);
+                mask-image: url(/assets/svg/Sent.svg);
+                mask-size: contain;
+                mask-position: center;
+            }
+        }
+
+        .send-mail-header {
+            display: block;
+            font-size: 1.3rem;
+            font-weight: 600;
+            padding: 10px 20px 0 20px;
         }
     }
 }

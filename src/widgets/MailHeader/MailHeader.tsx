@@ -3,7 +3,10 @@ import Button from "../../components/Button/Button";
 import Input from "../../components/Input/Input";
 import "./MailHeader.scss";
 import { AppStorage } from "../../App";
-import { changeFolderV2, restoreFromTrash } from "../../api/ApiEmail";
+import { getEmailsSpam, sendSpam, unSpam } from "../../api/ApiSpam";
+import { sendFavorite, unFavorite } from "../../api/ApiFavorite";
+import { getEmailsTrash, untrash } from "../../api/ApiTrash";
+import { readEmail, unReadEmail } from "../../api/ApiEmail";
 
 class MailHeader extends Death13.Component {
     state: any = {
@@ -48,7 +51,7 @@ class MailHeader extends Death13.Component {
     handleMarkAsSpam = async (event: any) => {
         event.preventDefault();
         if (this.props.selectedEmails && this.props.selectedEmails.length > 0) {
-            await changeFolderV2(this.props.selectedEmails, "spam");
+            await sendSpam(this.props.selectedEmails);
             this.props.reloadMail?.();
         }
     };
@@ -56,7 +59,32 @@ class MailHeader extends Death13.Component {
     handleMarkAsFavorite = async (event: any) => {
         event.preventDefault();
         if (this.props.selectedEmails && this.props.selectedEmails.length > 0) {
-            await changeFolderV2(this.props.selectedEmails, "favorite");
+            await sendFavorite(this.props.selectedEmails);
+            this.props.reloadMail?.();
+        }
+    };
+
+    handleUnMarkAsFavorite = async (event: any) => {
+        event.preventDefault();
+        if (this.props.selectedEmails && this.props.selectedEmails.length > 0) {
+            await unFavorite(this.props.selectedEmails);
+            this.props.reloadMail?.();
+        }
+    };
+
+    handleMarkAsRead = async (event: any) => {
+        event.preventDefault();
+        if (this.props.selectedEmails && this.props.selectedEmails.length > 0) {
+            await readEmail(this.props.selectedEmails);
+            this.props.reloadMail?.();
+        }
+    };
+
+    handleMarkAsUnread = async (event: any) => {
+        event.preventDefault();
+        if (this.props.selectedEmails && this.props.selectedEmails.length > 0) {
+            await unReadEmail(this.props.selectedEmails);
+            this.props.reloadMail?.();
         }
     };
 
@@ -66,11 +94,12 @@ class MailHeader extends Death13.Component {
             const { currentView } = this.props;
 
             if (currentView === "trash") {
-                await restoreFromTrash(this.props.selectedEmails);
+                await untrash(this.props.selectedEmails);
+                await getEmailsTrash(0);
             } else if (currentView === "spam") {
-                await changeFolderV2(this.props.selectedEmails, "inbox");
+                await unSpam(this.props.selectedEmails);
+                await getEmailsSpam(0);
             }
-
             this.props.reloadMail?.();
         }
     };
@@ -83,14 +112,41 @@ class MailHeader extends Death13.Component {
         return AppStorage.t(key);
     }
 
+    hasReadSelected = () => {
+        const { selectedEmails } = this.props;
+        if (!selectedEmails) return false;
+        const { emails } = this.props;
+        if (!emails) return false;
+        return selectedEmails.some((selectedId: number) => {
+            const email = emails.find((e: any) => e.id === selectedId);
+            return email && email.is_read;
+        });
+    };
+
+    hasFavoriteSelected = () => {
+        const { selectedEmails } = this.props;
+        if (!selectedEmails) return false;
+        const { emails } = this.props;
+        if (!emails) return false;
+        return selectedEmails.some((selectedId: number) => {
+            const email = emails.find((e: any) => e.id === selectedId);
+            return email && email.is_favorite;
+        });
+    };
+
     render() {
-        const { isSelectAll, offset = 0, total = 0, hasUnreadSelected = false, mainPage = false, currentView = "" } = this.props;
+        const { isSelectAll, offset = 0, total = 0, mainPage = false, currentView = "" } = this.props;
         const startItem = total > 0 ? offset + 1 : 0;
         const endItem = Math.min(offset + 50, total);
         const hasSelected = this.props.selectedCount > 0;
         const { showFolderList } = this.state;
         const isSpamOrTrash = currentView === "spam" || currentView === "trash";
         const isDrafts = currentView === "drafts";
+        const isMobile = window.innerWidth < 769;
+        const isSent = currentView === "sent"
+        const hasReadSelected = this.hasReadSelected();
+        const hasFavoriteSelected = this.hasFavoriteSelected();
+        const hasOnlyUnread = hasSelected && !hasReadSelected;
 
         const folders = AppStorage.folders || [];
 
@@ -135,8 +191,14 @@ class MailHeader extends Death13.Component {
 
                                 {!isSpamOrTrash && !isDrafts && (
                                     <div className="select-all-container">
-                                        <Button name="favorites" help={this.t("starred")} onClick={this.handleMarkAsFavorite} />
+                                        {hasFavoriteSelected ? (
+                                            <Button name="unfavorite" help={this.t("unstarred")} onClick={this.handleUnMarkAsFavorite} />
+                                        ) : (
+                                            <Button name="favorites" help={this.t("starred")} onClick={this.handleMarkAsFavorite} />
+                                        )}
+                                        {!isSent && (
                                         <Button name="spam" help={this.t("spam")} onClick={this.handleMarkAsSpam} />
+                                        )}
                                     </div>
                                 )}
 
@@ -152,19 +214,22 @@ class MailHeader extends Death13.Component {
                                 />
                             </div>
                             <div className="select-all__tools-right">
-                                {hasUnreadSelected && mainPage && !isSpamOrTrash && !isDrafts && (
-                                    <Button
-                                        name="read-all-mail"
-                                        help={this.t("mark_as_read")}
-                                        onClick={(event: any) => {
-                                            event.preventDefault();
-                                            this.props.onMarkAsRead();
-                                        }}
-                                    />
+                                {mainPage && !isSpamOrTrash && !isDrafts && (
+                                    <>
+                                        {hasOnlyUnread ? (
+                                            <Button name="read-all-mail" help={this.t("mark_as_read")} onClick={this.handleMarkAsRead} />
+                                        ) : hasReadSelected ? (
+                                            <Button
+                                                name="unread-all-mail"
+                                                help={this.t("mark_as_unread")}
+                                                onClick={this.handleMarkAsUnread}
+                                            />
+                                        ) : null}
+                                    </>
                                 )}
                                 {mainPage && !isSpamOrTrash && !isDrafts && (
                                     <div className="move-to-folder-container">
-                                        <Button name="move-to-folder" help={this.t("move-to-folder")} onClick={this.handleMoveToFolder} />
+                                        <Button name="move-to-folder" help={this.t("move_to_folder")} onClick={this.handleMoveToFolder} />
                                         {showFolderList && (
                                             <div className="folder-dropdown">
                                                 {folders.length > 0 ? (
@@ -189,13 +254,15 @@ class MailHeader extends Death13.Component {
                         </div>
                     )}
                 </div>
-                <div className="mail-header__right-container">
-                    <div className="count-email">
-                        {startItem} - {endItem} {this.t("of")} {total}
+                {!isMobile || !hasSelected ? (
+                    <div className="mail-header__right-container">
+                        <div className="count-email">
+                            {startItem} - {endItem} {this.t("of")} {total}
+                        </div>
+                        <Button name="left" help="Пред." block={offset === 0} onClick={this.handlePrevPage} />
+                        <Button name="right" help="След." block={offset + 50 >= total} onClick={this.handleNextPage} />
                     </div>
-                    <Button name="left" help="Пред." block={offset === 0} onClick={this.handlePrevPage} />
-                    <Button name="right" help="След." block={offset + 50 >= total} onClick={this.handleNextPage} />
-                </div>
+                ) : null}
             </div>
         );
     }

@@ -3,10 +3,11 @@ import "./ReadMail.scss";
 import Input from "../../components/Input/Input";
 import Textarea from "../../components/Textarea/Textarea";
 import MailTools from "../MailTools/MailTools";
-import { deleteEmailByID, deleteMyEmailByID, changeFolderV2 } from "../../api/ApiEmail";
 import { AppStorage } from "../../App";
 import { URLMINIO } from "../../api/config";
 import { deleteEmailsFromFolder } from "../../api/ApiFolder";
+import { sendSpam } from "../../api/ApiSpam";
+import { trash } from "../../api/ApiTrash";
 
 class ReadMail extends Death13.Component {
     handleDeleteEmail = async () => {
@@ -17,10 +18,10 @@ class ReadMail extends Death13.Component {
             await deleteEmailsFromFolder(selectedFolderId, ids);
             backToMail();
         } else if (window.app.previousPath === "/sent") {
-            await deleteMyEmailByID(email.id);
+            await trash([email.id]);
             backToSent();
         } else {
-            await deleteEmailByID(email.id);
+            await trash([email.id]);
             backToMail();
         }
     };
@@ -55,7 +56,7 @@ class ReadMail extends Death13.Component {
     handleMarkAsSpam = async (event: any) => {
         event.preventDefault();
         if (this.props.selectedEmails && this.props.selectedEmails.length > 0) {
-            await changeFolderV2(this.props.selectedEmails, "spam");
+            await sendSpam(this.props.selectedEmails);
             this.props.reloadMail?.();
         }
     };
@@ -63,7 +64,6 @@ class ReadMail extends Death13.Component {
     handleMarkAsFavorite = async (event: any) => {
         event.preventDefault();
         if (this.props.selectedEmails && this.props.selectedEmails.length > 0) {
-            await changeFolderV2(this.props.selectedEmails, "favorite");
         }
     };
 
@@ -73,9 +73,24 @@ class ReadMail extends Death13.Component {
 
     render() {
         const { email } = this.props;
+        const isMobile = window.innerWidth < 769;
 
         return (
             <div className="read-mail">
+                {isMobile ? (
+                    <div className="read-mail__header-mobile">
+                        <div className="back-button" onClick={this.props.backToMail}></div>
+
+                        <MailTools
+                            deleteEmail={this.handleDeleteEmail}
+                            onReply={this.handleReply}
+                            onForward={this.handleForward}
+                            email={email}
+                            reloadMail={this.props.reloadMail}
+                            backToMail={this.props.backToMail}
+                        />
+                    </div>
+                ) : null}
                 <form action="" className="read-form">
                     <div className="read-inputs">
                         <div className="read-header">
@@ -108,14 +123,21 @@ class ReadMail extends Death13.Component {
                     </div>
                     <Textarea readonly={true} value={email.body} />
                 </form>
-                <MailTools
-                    email={this.props.email}
-                    deleteEmail={this.handleDeleteEmail}
-                    backToMail={this.props.backToMail}
-                    reloadEMail={this.props.reloadMail}
-                    onReply={this.handleReply}
-                    onForward={this.handleForward}
-                />
+                {!isMobile ? (
+                    <MailTools
+                        deleteEmail={this.handleDeleteEmail}
+                        onReply={this.handleReply}
+                        onForward={this.handleForward}
+                        email={email}
+                        reloadMail={this.props.reloadMail}
+                        backToMail={this.props.backToMail}
+                    />
+                ) : (
+                    <div className="tools-bottom-mobile">
+                        <div svg="../../assets/svg/Reply.svg" className="reply" help="Переслать" onClick={this.handleForward} />
+                        <div svg="../../assets/svg/Answer.svg" className="answer" help="Ответить" onClick={this.handleReply} />
+                    </div>
+                )}
             </div>
         );
     }

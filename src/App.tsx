@@ -8,6 +8,11 @@ import SentPage from "./pages/SentPage/SentPage";
 import SendEmailPage from "./pages/SendEmailPage/SendEmailPage";
 import { URLMINIO } from "./api/config";
 import ReadEmailPage from "./pages/ReadEmailPage/ReadEmailPage";
+import TrashPage from "./pages/TrashPage/TrashPage";
+import FavoritePage from "./pages/FavoritePage/FavoritePage";
+import SpamPage from "./pages/SpamPage/SpamPage";
+import DraftsPage from "./pages/DraftsPage/DraftsPage";
+import FolderPage from "./pages/FolderPage/FolderPage";
 
 export const AppStorage = {
     sidebarDropdownVisible: false as boolean,
@@ -49,6 +54,7 @@ export const AppStorage = {
             save: "Сохранить",
             change_avatar: "Сменить аватар",
             auth_title: "Авторизация",
+            auth_title2: "Регистрация",
             auth_subtitle: "Твоя главная студенческая почта",
             enter: "Войти",
             register: "Зарегистрироваться",
@@ -58,24 +64,27 @@ export const AppStorage = {
             enter_name: "Введите имя",
             enter_surname: "Введите фамилию",
             continue: "Продолжить",
+            favorite: "Избранное",
 
             //MainPage
             back: "Назад",
             profile: "Профиль",
             exit: "Выйти",
             hello: "Здравствуйте",
-            search: "Поиск",
+            search: "Поиск в почте",
             of: "из",
             mark_as_read: "Сделать прочитанным",
             mark_as_unread: "Сделать непрочитанным",
             move_to_inbox: "Переместить во входящие",
             refresh: "Обновить",
+            unstarred: "Убрать избранное",
+            move_to_folder: "Переместить в папку",
 
             //ReadPage
             //SendPage
             reply: "Ответить",
             send: "Отправить",
-            answer: "Отвевить",
+            answer: "Переслать",
             subject: "Тема:",
             enter_subject: "Введите тему",
             to: "Кому:",
@@ -86,10 +95,14 @@ export const AppStorage = {
             email_max_length: "Почта должна быть не более 40 символов",
             password_required: "Поле пароля обязательно",
             password_min_length: "Пароль должен быть не менее 8 символов",
+            password_max_length: "Пароль должен быть не более 20 символов",
+            passwords_dont_match: "Пароли не совпадают",
             name_required: "Поле имя обязательно",
             name_only_letters: "Имя должно состоять только из букв",
             surname_required: "Поле фамилия обязательно",
             surname_only_letters: "Фамилия должно состоять только из букв",
+            server_error: "Ошибка сервера!",
+            too_many_folders: "Максимум 6 папок",
 
             // ProfilePage
             theme: "Тема",
@@ -99,7 +112,7 @@ export const AppStorage = {
             english: "Английский",
             russian: "Русский",
             oldpassword: "Старый пароль",
-            newpassword: "Старый пароль",
+            newpassword: "Новый пароль",
             gender: "Пол",
             male: "Мужской",
             female: "Женский",
@@ -108,8 +121,8 @@ export const AppStorage = {
             month: "Месяц",
             year: "Год",
             saved_successfully: "Успешно сохранено!",
-            server_error: "Ошибка сервера!",
             add_a_folder: "Добавить папку...",
+            new_folder: "Новая папка",
 
             //Sidebar
             new_letter: "Новое письмо",
@@ -123,10 +136,15 @@ export const AppStorage = {
             hide: "Скрыть",
             all_letter: "Все письма",
             mailbox: "Почтовый ящик",
+            settings: "Настройки",
             personal_information: "Личные данные",
             security: "Безопасность",
-            settings: "Настройки",
+            interface: "Интерфейс",
             folder: "Папки",
+
+            //Navigation
+            back_to_settings: "Настройки",
+            back_to_mail: "К почте",
         },
         en: {
             //LoginPage
@@ -138,7 +156,7 @@ export const AppStorage = {
             change_avatar: "Change avatar",
             auth_title: "Authorization",
             auth_title2: "Registration",
-            auth_subtitle: "Your main student mail",
+            auth_subtitle: "Your best student mail",
             enter: "Login",
             register: "Register",
             password: "Password",
@@ -153,18 +171,21 @@ export const AppStorage = {
             profile: "Profile",
             exit: "Exit",
             hello: "Hello",
-            search: "Search",
+            search: "Search in mail",
             of: "of",
             mark_as_read: "Mark as read",
             mark_as_unread: "Mark as unread",
             refresh: "Refresh",
             move_to_inbox: "Move to inbox",
+            unstarred: "Unstarred",
+            move_to_folder: "Move to folder",
+            favorite: "Starred",
 
             //ReadPage
             //SendPage
             reply: "Reply",
             send: "Send",
-            answer: "Answer",
+            answer: "Forward",
             subject: "Subject:",
             enter_subject: "Enter subject",
             to: "To:",
@@ -175,10 +196,14 @@ export const AppStorage = {
             email_max_length: "Email must be no more than 40 characters",
             password_required: "Password field is required",
             password_min_length: "Password must be at least 8 characters",
+            password_max_length: "Password must be 20 characters or less",
+            passwords_dont_match: "Passwords do not match",
             name_required: "Name field is required",
             name_only_letters: "Name must contain only letters",
             surname_required: "Surname field is required",
             surname_only_letters: "Surname must contain only letters",
+            server_error: "Server error!",
+            too_many_folders: "Limit of 6 folders reached",
 
             // ProfilePage
             theme: "Theme",
@@ -197,11 +222,11 @@ export const AppStorage = {
             month: "Month",
             year: "Year",
             saved_successfully: "Saved successfully!",
-            server_error: "Server error!",
             add_a_folder: "Add a folder...",
+            new_folder: "New folder",
 
             //Sidebar
-            new_letter: "Compose",
+            new_letter: "New mail",
             inbox: "Inbox",
             starred: "Starred",
             sent: "Sent",
@@ -212,10 +237,15 @@ export const AppStorage = {
             hide: "Less",
             all_letter: "All emails",
             mailbox: "Mailbox",
+            settings: "Settings",
             personal_information: "Personal info",
             security: "Security",
-            settings: "Settings",
-            folder: "Folder",
+            interface: "Interface",
+            folder: "Folders",
+
+            //Navigation
+            back_to_settings: "Settings",
+            back_to_mail: "To mail",
         },
     },
 
@@ -472,10 +502,15 @@ export const AppStorage = {
 
 class App {
     private routes: Record<string, any>;
-    private dynamicRoutes: Array<{ pattern: RegExp; component: any; paramName: string }>;
+    private dynamicRoutes: Array<{
+        pattern: RegExp;
+        component: any;
+        paramName: string;
+    }>;
+
     private setPath!: (path: string) => void;
     public previousPath: string = "";
-    private currentPath: string = "";
+    private currentPath: string = window.location.pathname;
 
     constructor() {
         this.routes = {
@@ -484,35 +519,41 @@ class App {
             "/profile": ProfilePage,
             "/send": SendEmailPage,
             "/sent": SentPage,
-            "/read/": ReadEmailPage,
             "/": MainPage,
+            "/trash": TrashPage,
+            "/drafts": DraftsPage,
+            "/spam": SpamPage,
+            "/favorite": FavoritePage,
         };
 
-        this.dynamicRoutes = [{ pattern: /^\/read\/(\d+)$/, component: ReadEmailPage, paramName: "id" }];
+        this.dynamicRoutes = [
+            {
+                pattern: /^\/read\/(\d+)$/,
+                component: ReadEmailPage,
+                paramName: "id",
+            },
+            {
+                pattern: /^\/folder\/(\d+)$/,
+                component: FolderPage,
+                paramName: "folderId",
+            },
+        ];
 
         window.addEventListener("popstate", () => {
-            if (this.setPath) {
-                this.previousPath = this.currentPath;
-                this.currentPath = window.location.pathname;
-                this.setPath(this.currentPath);
-            }
-        });
-
-        window.matchMedia("(prefers-color-scheme: dark)").addEventListener("change", (e) => {
-            if (!localStorage.getItem("theme")) {
-                AppStorage.setTheme(e.matches ? "dark" : "light");
-            }
+            this.handleRoute(window.location.pathname, false);
         });
     }
 
-    handleRoute(path: string) {
-        if (location.pathname === path) {
-            return;
+    handleRoute(path: string, push: boolean = true) {
+        if (this.currentPath === path) return;
+
+        if (push) {
+            history.pushState({}, "", path);
         }
 
-        history.pushState({}, "", path);
         this.previousPath = this.currentPath;
-        this.currentPath = window.location.pathname;
+        this.currentPath = path;
+
         this.setPath(this.currentPath);
     }
 
@@ -539,7 +580,7 @@ class App {
     }
 
     Router = () => {
-        const [path, setPath] = Death13.useState(window.location.pathname);
+        const [path, setPath] = Death13.useState(this.currentPath);
 
         this.setPath = setPath;
 
