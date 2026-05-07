@@ -13,7 +13,10 @@ class SendEmailPage extends Death13.Component {
         super(props);
 
         this.loadMailActionData();
-        this.loadProfile();
+        if (!AppStorage.isProfileLoaded) {
+            AppStorage.isProfileLoaded = true;
+            this.loadProfile();
+        }
     }
 
     state: any = {

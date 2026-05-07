@@ -29,9 +29,7 @@ interface BaseEmailprops {
 }
 
 class BaseEmailPage extends Death13.Component {
-    private isLoaded: boolean = false;
     private lastFolderId: number | null = null;
-    private isProfileLoaded: boolean = false;
 
     state: any = {
         emails: [],
@@ -46,8 +44,8 @@ class BaseEmailPage extends Death13.Component {
     constructor(props: BaseEmailprops) {
         super(props);
 
-        if (!this.isProfileLoaded) {
-            this.isProfileLoaded = true;
+        if (!AppStorage.isProfileLoaded) {
+            AppStorage.isProfileLoaded = true;
             this.loadProfile();
         }
         this.loadEmails(0);

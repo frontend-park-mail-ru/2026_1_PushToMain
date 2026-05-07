@@ -16,6 +16,7 @@ import FolderPage from "./pages/FolderPage/FolderPage";
 
 export const AppStorage = {
     csrfToken: "",
+    isProfileLoaded: false,
     sidebarDropdownVisible: false as boolean,
     currentView: "inbox" as string,
     draftData: null as any,
