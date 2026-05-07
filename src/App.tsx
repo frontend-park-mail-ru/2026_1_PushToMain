@@ -15,6 +15,7 @@ import DraftsPage from "./pages/DraftsPage/DraftsPage";
 import FolderPage from "./pages/FolderPage/FolderPage";
 
 export const AppStorage = {
+    csrfToken: "",
     sidebarDropdownVisible: false as boolean,
     currentView: "inbox" as string,
     draftData: null as any,
@@ -397,6 +398,10 @@ export const AppStorage = {
         this.unReadCount = count;
         this._saveToStorage();
         this._notify();
+    },
+
+    setCSRF(token: string) {
+        AppStorage.csrfToken = token;
     },
 
     setCurrentView(view: string) {
