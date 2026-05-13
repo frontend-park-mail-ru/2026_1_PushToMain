@@ -119,7 +119,7 @@ export async function getEmailByID(ID: number) {
 export async function getEmailSend(offset: number) {
   try {
     const response = await fetch(
-      `${EMAIL_URL}/myemails?limit=50&offset=${offset}`,
+      `${EMAIL_URL}/sent?limit=50&offset=${offset}`,
       {
         method: "GET",
         headers: {
