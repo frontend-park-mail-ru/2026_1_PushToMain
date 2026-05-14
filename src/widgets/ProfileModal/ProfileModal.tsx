@@ -17,6 +17,10 @@ class ProfileModal extends Death13.Component {
       surname: "",
       email: "",
       image_path: "",
+      birthDay: "",
+      birthMonth: "",
+      birthYear: "",
+      is_male: false,
     });
     AppStorage.setUnReadCount(0);
 

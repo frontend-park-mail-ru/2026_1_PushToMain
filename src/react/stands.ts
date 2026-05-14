@@ -123,12 +123,14 @@ function updateDomProperties(dom: Node, prevProps: any, nextProps: any) {
     } else if (name === "style") {
       if (prevProps.style && typeof prevProps.style === "object") {
         Object.keys(prevProps.style).forEach((cssProp: any) => {
-          element.style[cssProp] = "";
+          (element.style as any)[cssProp] = "";
         });
       }
     } else if (!(name in nextProps)) {
       if (name === "value") {
         (element as any).value = "";
+      } else if (name === "checked") {
+        (element as HTMLInputElement).checked = false;
       } else {
         element.removeAttribute(attrName);
       }
@@ -148,7 +150,7 @@ function updateDomProperties(dom: Node, prevProps: any, nextProps: any) {
       const styleObj = nextProps.style;
       if (styleObj && typeof styleObj === "object") {
         Object.keys(styleObj).forEach((cssProp: any) => {
-          element.style[cssProp] = styleObj[cssProp];
+          (element.style as any)[cssProp] = styleObj[cssProp];
         });
       }
     } else if (prevProps[name] !== nextProps[name]) {
@@ -159,12 +161,16 @@ function updateDomProperties(dom: Node, prevProps: any, nextProps: any) {
       ) {
         if (name === "value") {
           (element as any).value = "";
+        } else if (name === "checked") {
+          (element as HTMLInputElement).checked = false;
         } else {
           element.removeAttribute(attrName);
         }
       } else {
         if (name === "value") {
           (element as any).value = nextProps[name];
+        } else if (name === "checked") {
+          (element as HTMLInputElement).checked = nextProps[name];
         } else {
           element.setAttribute(attrName, String(nextProps[name]));
         }

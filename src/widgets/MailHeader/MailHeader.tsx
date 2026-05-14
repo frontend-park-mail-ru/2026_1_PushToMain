@@ -76,6 +76,7 @@ class MailHeader extends Death13.Component {
     event.preventDefault();
     if (this.props.selectedEmails && this.props.selectedEmails.length > 0) {
       await readEmail(this.props.selectedEmails);
+      this.props.onMarkAsRead?.();
       this.props.reloadMail?.();
     }
   };

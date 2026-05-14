@@ -165,7 +165,7 @@ class BaseEmailPage extends Death13.Component {
   handleDeleteSelected = async () => {
     const { selectedEmails } = this.state;
 
-    if (selectedEmails.length === 0) return;
+    if (selectedEmails.size === 0) return;
 
     try {
       let success = false;
@@ -339,7 +339,7 @@ class BaseEmailPage extends Death13.Component {
 
   handleMoveToFolder = async (folderId: number) => {
     const { selectedEmails } = this.state;
-    if (selectedEmails.length === 0 || !folderId) return;
+    if (selectedEmails.size === 0 || !folderId) return;
 
     try {
       await addEmailsInFolder(folderId, this.getSelectedArray());
@@ -489,8 +489,8 @@ class BaseEmailPage extends Death13.Component {
                         email.is_read !== undefined ? email.is_read : true
                       }
                       isFavorite={
-                        email.is_favorite !== undefined
-                          ? email.is_favorite
+                        email.is_starred !== undefined
+                          ? email.is_starred
                           : false
                       }
                       pageMain={currentView === "inbox"}
