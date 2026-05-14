@@ -111,6 +111,12 @@
                 }
             }
 
+            .email-tag:not(.editing),
+            .email-tag__error:not(.editing) {
+                user-select: none;
+                -webkit-user-select: none;
+            }
+
             .email-tag span,
             .email-tag__error span {
                 overflow: hidden;

@@ -4,6 +4,7 @@ import { AppStorage } from "../../App";
 
 class InputEmail extends Death13.Component {
   tagsEl: HTMLElement | null = null;
+  lastClickTime: number = 0;
   lastTapTime: number = 0;
 
   constructor(props: any) {
@@ -51,81 +52,76 @@ class InputEmail extends Death13.Component {
     this.updateFadeState();
   };
 
-  handleTagDoubleClick = (e: any) => {
-    const span = e.currentTarget.querySelector("span");
-    if (!span) return;
-    span.contentEditable = "true";
-    console.log(span.contentEditable);
-    span.focus();
-    const range = document.createRange();
-    range.selectNodeContents(span);
-    const sel = window.getSelection();
-    sel?.removeAllRanges();
-    sel?.addRange(range);
+  startEditing = (index: number) => {
+    this.setState({
+      editingIndex: index,
+      editValue: this.state.emails[index],
+    });
   };
 
-  handleTagBlur = (e: any, index: number) => {
-    const span = e.currentTarget;
-    const newValue = span.textContent.trim();
-    const oldValue = this.state.emails[index];
+  handleTagClick = (index: number) => {
+    const now = Date.now();
+    if (now - this.lastClickTime < 300) {
+      this.startEditing(index);
+    }
+    this.lastClickTime = now;
+  };
 
-    // Immediately make non-editable
-    span.contentEditable = "false";
-    window.getSelection()?.removeAllRanges();
+  cancelEdit = () => {
+    this.setState({ editingIndex: null, editValue: "", error: "" });
+  };
 
-    if (!newValue || newValue === oldValue) {
-      // Revert text visually
-      span.textContent = oldValue;
+  commitEdit = () => {
+    const { editingIndex, editValue, emails, invalidEmails } = this.state;
+    if (editingIndex === null) return;
+
+    const trimmed = editValue.trim();
+
+    if (!trimmed || trimmed === emails[editingIndex]) {
+      this.cancelEdit();
       return;
     }
 
-    if (!this.validateEmail(newValue)) {
-      this.setState({ error: "Некорректный email адрес" });
-      span.textContent = oldValue;
+    if (!this.validateEmail(trimmed)) {
+      this.setState({
+        error: "Некорректный email адрес",
+        editingIndex: null,
+        editValue: "",
+      });
       return;
     }
 
     if (
-      this.state.emails.some(
-        (email: string, i: number) => i !== index && email === newValue,
-      )
+      emails.some((e: string, i: number) => i !== editingIndex && e === trimmed)
     ) {
       this.setState({ error: "Такой email уже добавлен" });
-      span.textContent = oldValue;
       return;
     }
 
-    // Commit the change
-    const newEmails = [...this.state.emails];
-    newEmails[index] = newValue;
-    const invalidEmails = this.state.invalidEmails.filter(
-      (e: string) => e !== oldValue,
+    const newEmails = [...emails];
+    newEmails[editingIndex] = trimmed;
+    const newInvalid = invalidEmails.filter(
+      (e: string) => e !== emails[editingIndex],
     );
-    this.setState({ emails: newEmails, invalidEmails, error: "" });
-    this.props.onChange?.(newEmails, invalidEmails);
+
+    this.setState({
+      emails: newEmails,
+      invalidEmails: newInvalid,
+      editingIndex: null,
+      editValue: "",
+      error: "",
+    });
+    this.props.onChange?.(newEmails, newInvalid);
   };
 
-  handleTagKeyDown = (e: any, index: number) => {
+  handleEditKeyDown = (e: any) => {
     if (e.key === "Enter") {
       e.preventDefault();
-      e.currentTarget.blur();
-    }
-    if (e.key === "Escape") {
-      const span = e.currentTarget;
-      // Revert, then blur (blur will see the original text)
-      span.textContent = this.state.emails[index];
-      span.blur();
-    }
-  };
-
-  handleTagTouchEnd = (e: any) => {
-    if (e.target.closest(".remove-email")) return;
-    const now = Date.now();
-    if (now - this.lastTapTime < 300) {
+      this.commitEdit();
+    } else if (e.key === "Escape") {
       e.preventDefault();
-      this.handleTagDoubleClick(e);
+      this.cancelEdit();
     }
-    this.lastTapTime = now;
   };
 
   validateEmail(email: string) {
@@ -222,8 +218,6 @@ class InputEmail extends Death13.Component {
     const { emails, currentInput, invalidEmails, editingIndex, editValue } =
       this.state;
 
-    console.log(emails);
-
     return (
       <div className="input-container">
         <span className="input__title">{this.props.input_title}</span>
@@ -237,28 +231,47 @@ class InputEmail extends Death13.Component {
           >
             {emails.map((email: string, index: number) => {
               const isInvalid = invalidEmails.includes(email);
+              const isEditing = index === editingIndex;
+
               return (
                 <span
                   key={index}
                   className={isInvalid ? "email-tag__error" : "email-tag"}
-                  onDoubleClick={(e: any) => this.handleTagDoubleClick(e)}
-                  onTouchEnd={(e: any) => this.handleTagTouchEnd(e)}
+                  onClick={() => this.handleTagClick(index)}
+                  onTouchEnd={(e: any) => {
+                    if (e.target.closest(".remove-email")) return;
+                    const now = Date.now();
+                    if (now - this.lastTapTime < 300) {
+                      e.preventDefault();
+                      this.startEditing(index);
+                    }
+                    this.lastTapTime = now;
+                  }}
                 >
-                  <span
-                    contentEditable="true"
-                    suppressContentEditableWarning={true}
-                    onBlur={(e: any) => this.handleTagBlur(e, index)}
-                    onKeyDown={(e: any) => this.handleTagKeyDown(e, index)}
-                  >
-                    {email}
-                  </span>
-                  <button
-                    type="button"
-                    className="remove-email"
-                    onClick={() => this.removeEmail(index)}
-                  >
-                    ×
-                  </button>
+                  {isEditing ? (
+                    <input
+                      className="edit-input"
+                      value={editValue}
+                      onInput={(e: any) =>
+                        this.setState({ editValue: e.target.value })
+                      }
+                      onBlur={this.commitEdit}
+                      onKeyDown={this.handleEditKeyDown}
+                      autoFocus
+                    />
+                  ) : (
+                    [
+                      <span key="text">{email}</span>,
+                      <button
+                        key="remove"
+                        type="button"
+                        className="remove-email"
+                        onClick={() => this.removeEmail(index)}
+                      >
+                        ×
+                      </button>,
+                    ]
+                  )}
                 </span>
               );
             })}
