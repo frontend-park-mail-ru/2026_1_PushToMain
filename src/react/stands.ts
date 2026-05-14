@@ -21,6 +21,7 @@ interface Fiber {
   hooks?: Hook[];
   hookIndex?: number;
   instance?: any;
+  ref?: ((node: Node | null) => void) | null;
 }
 
 function useState<T>(initial: T): [T, (action: T | ((prev: T) => T)) => void] {
@@ -183,16 +184,21 @@ function reconcileChildren(wipFiber: Fiber, elements: any[]) {
     const element = validElements[index];
     let newFiber: Fiber | null = null;
 
+    const elementProps = element ? { ...element.props } : null;
+    const ref = elementProps?.ref;
+    if (elementProps) delete elementProps.ref;
+
     const sameType = oldFiber && element && oldFiber.type === element.type;
 
     if (sameType) {
       newFiber = {
         type: oldFiber!.type,
-        props: element.props,
+        props: elementProps,
         parent: wipFiber,
         dom: oldFiber!.dom,
         alternate: oldFiber,
         effectTag: "UPDATE",
+        ref,
       };
       if (oldFiber?.instance) {
         newFiber.instance = oldFiber.instance;
@@ -205,6 +211,7 @@ function reconcileChildren(wipFiber: Fiber, elements: any[]) {
         dom: null,
         alternate: undefined,
         effectTag: "PLACEMENT",
+        ref,
       };
     }
 
@@ -228,6 +235,10 @@ function reconcileChildren(wipFiber: Fiber, elements: any[]) {
     }
 
     index++;
+  }
+
+  if (wipFiber) {
+    wipFiber.hookIndex = 0;
   }
 }
 
@@ -318,9 +329,21 @@ function commitWork(fiber: Fiber | null | undefined) {
 
   if (fiber.effectTag === "PLACEMENT" && fiber.dom && domParent) {
     domParent.appendChild(fiber.dom);
+    if (typeof fiber.ref === "function") {
+      fiber.ref(fiber.dom);
+    }
   } else if (fiber.effectTag === "UPDATE" && fiber.dom) {
     updateDomProperties(fiber.dom, fiber.alternate?.props || {}, fiber.props);
+    const oldRef = fiber.alternate?.ref;
+    const newRef = fiber.ref;
+    if (oldRef !== newRef) {
+      if (typeof oldRef === "function") oldRef(null);
+      if (typeof newRef === "function") newRef(fiber.dom);
+    }
   } else if (fiber.effectTag === "DELETION") {
+    if (typeof fiber.ref === "function") {
+      fiber.ref(null);
+    }
     commitDeletion(fiber, domParent!);
     return;
   }
@@ -328,8 +351,23 @@ function commitWork(fiber: Fiber | null | undefined) {
   if (fiber.child) {
     commitWork(fiber.child);
   }
+
+  if (fiber.instance) {
+    if (fiber.effectTag === "PLACEMENT") {
+      fiber.instance.componentDidMount();
+    } else if (fiber.effectTag === "UPDATE") {
+      const prevProps = fiber.alternate?.props || {};
+      const prevState = fiber.alternate?.instance?.state || {};
+      fiber.instance.componentDidUpdate(prevProps, prevState);
+    }
+  }
+
   if (fiber.sibling) {
     commitWork(fiber.sibling);
+  }
+
+  if (fiber.hooks) {
+    fiber.hooks.forEach((h) => (h.queue = []));
   }
 }
 
@@ -423,6 +461,15 @@ class Component {
   setState(partialState: any) {
     const newState = { ...this.state, ...partialState };
 
+    const keys = Object.keys(newState);
+    for (const k of keys) {
+      if (newState[k] !== this.state[k]) {
+        this.state = newState;
+        this._scheduleUpdate();
+        return;
+      }
+    }
+
     if (JSON.stringify(this.state) === JSON.stringify(newState)) {
       return;
     }
@@ -450,6 +497,29 @@ class Component {
 
     requestIdleCallback(workLoop);
   }
+
+  private _scheduleUpdate() {
+    const fiber = this._fiber;
+    if (!fiber) return;
+    let rootFiber: Fiber = fiber;
+    while (rootFiber.parent) rootFiber = rootFiber.parent;
+
+    wipRoot = {
+      dom: rootFiber.dom,
+      props: rootFiber.props,
+      alternate: currentRoot,
+      type: "root",
+      parent: null,
+    } as Fiber;
+
+    deletions = [];
+    nextUnitOfWork = wipRoot;
+    requestIdleCallback(workLoop);
+  }
+
+  componentDidMount() {}
+  componentDidUpdate() {}
+  componentWillUnmount() {}
 
   render(): any {
     return null;

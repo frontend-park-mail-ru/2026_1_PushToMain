@@ -1,9 +1,12 @@
 .input-container {
+    width: 100%;
     border-bottom: none;
     padding: 5px 0;
     color: var(--tertiary-text);
 
     .input-form {
+        width: 100%;
+        flex-wrap: nowrap;
         display: flex;
         flex-direction: row;
         gap: 10px;
@@ -15,27 +18,84 @@
             height: 24px;
         }
 
-        .email-tag {
-            display: flex;
-            flex-direction: row;
-            align-items: center;
-            gap: 10px;
-            background-color: var(--button-background-second);
-            border-radius: 12px;
-            padding: 0 10px;
-            height: 24px;
-            color: var(--tertiary-text);
+        .email-input {
+            flex: 1 1 120px;
+            min-width: 120px;
+            max-width: 40%;
+        }
 
-            &__error {
+        .tags-scrollable {
+            display: flex;
+            justify-content: flex-start;
+            overflow-x: auto;
+            flex-shrink: 1;
+            min-width: 0;
+            gap: 10px;
+            scrollbar-width: none;
+            -ms-overflow-style: none;
+            &::-webkit-scrollbar {
+                display: none;
+            }
+
+            &.has-overflow {
+                mask-image: linear-gradient(
+                    to left,
+                    transparent 0%,
+                    black 30px,
+                    black 100%
+                );
+                -webkit-mask-image: linear-gradient(
+                    to left,
+                    transparent 0%,
+                    black 30px,
+                    black 100%
+                );
+            }
+
+            .email-tag {
                 display: flex;
                 flex-direction: row;
                 align-items: center;
-                gap: 10px;
-                background-color: var(--input-error-background);
+                gap: 5px;
+                background-color: var(--button-background-second);
                 border-radius: 12px;
-                padding: 0 10px;
+                padding: 0 8px;
                 height: 24px;
                 color: var(--tertiary-text);
+                white-space: nowrap;
+                flex-shrink: 0;
+                max-width: 200px;
+                overflow: hidden;
+                text-overflow: ellipsis;
+                flex-shrink: 0;
+            }
+
+            .email-tag__error {
+                display: flex;
+                flex-direction: row;
+                align-items: center;
+                background-color: var(--input-error-background);
+                border-radius: 12px;
+                padding: 0 8px;
+                height: 24px;
+                color: var(--tertiary-text);
+                white-space: nowrap;
+                flex-shrink: 0;
+                max-width: 200px;
+                overflow: hidden;
+                text-overflow: ellipsis;
+                flex-shrink: 0;
+            }
+
+            .email-tag span,
+            .email-tag__error span {
+                overflow: hidden;
+                text-overflow: ellipsis;
+                white-space: nowrap;
+                max-width: 180px;
+                display: inline-block;
+                height: auto;
+                align-self: center;
             }
         }
     }

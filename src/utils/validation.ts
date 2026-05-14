@@ -9,18 +9,18 @@ export function validation(dataForm: object, t: (key: string) => string) {
 
   for (const [type, data] of Object.entries(dataForm)) {
     if (type == "email") {
-      if (!data) {
+      if (!data || data === "@e-smail.ru") {
         errors.push({ field: "email", message: t("email_required") });
       } else {
-        const regex = /^[a-zA-Z0-9._-]+@smail.ru/gm;
+        const regex = /^[a-zA-Z0-9._-]+@e-smail.ru/gm;
         if (!regex.test(data)) {
           errors.push({
             field: "email",
             message: t("email_invalid_format"),
           });
         }
-        if (data.length > 75) {
-          errors.push({ field: "email", message: t("email_max_lenght") });
+        if (data.length > 40) {
+          errors.push({ field: "email", message: t("email_max_length") });
         }
       }
     }
