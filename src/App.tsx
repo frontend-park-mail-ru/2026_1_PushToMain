@@ -91,6 +91,7 @@ export const AppStorage = {
       subject: "Тема:",
       enter_subject: "Введите тему",
       to: "Кому:",
+      empty_subject: "<Без темы>",
 
       //Error
       email_required: "Поле почты обязательно",
@@ -192,6 +193,7 @@ export const AppStorage = {
       subject: "Subject:",
       enter_subject: "Enter subject",
       to: "To:",
+      empty_subject: "<No subject>",
 
       //Error
       email_required: "Email field is required",

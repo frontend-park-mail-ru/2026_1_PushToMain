@@ -142,6 +142,7 @@ class MailHeader extends Death13.Component {
       total = 0,
       mainPage = false,
       currentView = "",
+      isLoading,
     } = this.props;
     const startItem = total > 0 ? offset + 1 : 0;
     const endItem = Math.min(offset + 50, total);
@@ -181,6 +182,7 @@ class MailHeader extends Death13.Component {
           {!hasSelected && (
             <Button
               name="refresh"
+              className={isLoading ? "refreshing" : ""}
               help={this.t("refresh")}
               onClick={(event: any) => {
                 event.preventDefault();

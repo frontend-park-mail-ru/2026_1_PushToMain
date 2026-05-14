@@ -28,6 +28,19 @@
             }
         }
 
+        @keyframes spin {
+            from {
+                transform: rotate(0deg);
+            }
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        [name="refresh"].refreshing::before {
+            animation: spin 1s linear infinite;
+        }
+
         .select-all-container {
             display: flex;
             gap: 5px;

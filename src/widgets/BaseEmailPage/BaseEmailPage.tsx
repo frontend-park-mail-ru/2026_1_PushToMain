@@ -69,6 +69,7 @@ class BaseEmailPage extends Death13.Component {
   };
 
   loadEmails = async (offset: number) => {
+    this.setState({ isLoading: true });
     try {
       const data = await this.props.fetchEmails(offset);
       const emails = data.emails || data.drafts || data || [];
@@ -83,6 +84,7 @@ class BaseEmailPage extends Death13.Component {
       });
     } catch (error) {
       console.error(`Failed to load ${this.props.currentView}:`, error);
+      this.setState({ isLoading: false });
     }
   };
 
@@ -459,6 +461,7 @@ class BaseEmailPage extends Death13.Component {
                 mainPage={currentView === "inbox"}
                 currentView={currentView}
                 emails={emails}
+                isLoading={this.state.isLoading}
               />
               {emails.length === 0 && (
                 <div className="mail-box-container-form__placeholder">
