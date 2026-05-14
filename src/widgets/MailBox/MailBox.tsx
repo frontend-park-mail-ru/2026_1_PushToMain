@@ -48,6 +48,7 @@ class MailBox extends Death13.Component {
       isFavorite,
     } = this.props;
 
+    const isMobile = window.innerWidth < 769;
     const isSentView = currentView === "sent";
     const isDraftsView = currentView === "drafts";
     const showSenderInfo = !isSentView && (sender_name || sender_email);
@@ -104,13 +105,51 @@ class MailBox extends Death13.Component {
                     : sender_email
                   : ""}
             </span>
-            <div className="mail-text-content">
-              <span className="mail-theme">
-                {theme !== "" ? theme : this.t("empty_subject")}
-              </span>
-              <span className="mail-title">{title}</span>
-              <span className="mail-date">{date}</span>
-            </div>
+            {}
+            {!isMobile ? (
+              <div className="mail-text-content">
+                <span className="mail-theme" data-mail-theme={this.props.id}>
+                  {theme !== "" ? theme : this.t("empty_subject")}
+                  <span className="mail-title"> - {title}</span>
+                </span>
+                <span className="mail-date">
+                  <span className="mail-date__text">{date}</span>
+                  <div className="mail-date__actions">
+                    <div
+                      className="action-btn action-btn--read"
+                      onClick={(e: any) => {
+                        e.stopPropagation();
+                        this.props.onToggleRead?.(
+                          this.props.id,
+                          !this.props.isRead,
+                        );
+                      }}
+                      title={
+                        this.props.isRead
+                          ? this.t("mark_as_unread")
+                          : this.t("mark_as_read")
+                      }
+                    />
+                    <div
+                      className="action-btn action-btn--trash"
+                      onClick={(e: any) => {
+                        e.stopPropagation();
+                        this.props.onTrash?.(this.props.id);
+                      }}
+                      title={this.t("trash")}
+                    />
+                  </div>
+                </span>
+              </div>
+            ) : (
+              <div className="mail-text-content">
+                <span className="mail-theme">
+                  {theme !== "" ? theme : this.t("empty_subject")}
+                </span>
+                <span className="mail-title">{title}</span>
+                <span className="mail-date">{date}</span>
+              </div>
+            )}
           </div>
           <div className="mail-content__right-part-mobile">
             <span className="mail-date-mobile">{date}</span>

@@ -17,9 +17,9 @@ import { formatTime } from "../../utils/date";
 
 interface BaseEmailprops {
   currentView: string;
-  fetchEmails: (offset: number) => Promise<any>;
-  deleteEmails?: (ids: number[]) => Promise<boolean>;
-  onReadMail?: (email: any) => void;
+  fetchEmails: (_offset: number) => Promise<any>;
+  deleteEmails?: (_ids: number[]) => Promise<boolean>;
+  onReadMail?: (_email: any) => void;
   emptyMessage?: string;
   emptySubMessage?: string;
   showUnreadToggle?: boolean;
@@ -175,6 +175,23 @@ class BaseEmailPage extends Death13.Component {
     }
 
     window.app.handleRoute(`/read/${email.id}`);
+  };
+
+  handleTrashSingle = async (emailId: number) => {
+    let success = false;
+    if (AppStorage.currentView === "drafts") {
+      success = await deleteDraft([emailId]);
+    } else if (AppStorage.currentView === "folder") {
+      success = await deleteEmailsFromFolder(this.props.currentFolderId, [
+        emailId,
+      ]);
+    } else {
+      success = await trash([emailId]);
+    }
+
+    if (success) {
+      await this.loadEmails(this.state.offset);
+    }
   };
 
   handleDeleteSelected = async () => {
@@ -524,6 +541,7 @@ class BaseEmailPage extends Death13.Component {
                             : undefined
                         }
                         onToggleFavorite={this.handleToggleFavoriteSingle}
+                        onTrash={this.handleTrashSingle}
                         selectedFolderId={this.props.currentFolderId}
                       />
                     );

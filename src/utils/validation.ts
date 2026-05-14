@@ -4,7 +4,7 @@
  * @returns {{isValid: boolean, errors: Array<{field: string, message: string}>}}
  */
 
-export function validation(dataForm: object, t: (key: string) => string) {
+export function validation(dataForm: object, t: (_key: string) => string) {
   const errors = [];
 
   for (const [type, data] of Object.entries(dataForm)) {

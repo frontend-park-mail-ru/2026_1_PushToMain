@@ -10,7 +10,7 @@ interface Hook {
 }
 
 interface Fiber {
-  type: string | ((props: any) => any);
+  type: string | ((_props: any) => any);
   props: any;
   parent: Fiber | null;
   dom: Node | null;
@@ -21,10 +21,12 @@ interface Fiber {
   hooks?: Hook[];
   hookIndex?: number;
   instance?: any;
-  ref?: ((node: Node | null) => void) | null;
+  ref?: ((_node: Node | null) => void) | null;
 }
 
-function useState<T>(initial: T): [T, (action: T | ((prev: T) => T)) => void] {
+function useState<T>(
+  initial: T,
+): [T, (_action: T | ((_prev: T) => T)) => void] {
   const fiber = wipFiber;
   if (!fiber) throw new Error("useState must be called inside a component");
 
@@ -41,7 +43,7 @@ function useState<T>(initial: T): [T, (action: T | ((prev: T) => T)) => void] {
     hook.state = action instanceof Function ? action(hook.state) : action;
   });
 
-  const setState = (action: T | ((prev: T) => T)) => {
+  const setState = (action: T | ((_prev: T) => T)) => {
     hook.queue.push(action);
 
     wipRoot = {
@@ -253,7 +255,7 @@ function updateFunctionComponent(fiber: Fiber) {
   wipFiber.hookIndex = 0;
   wipFiber.hooks = [];
 
-  const children = [(fiber.type as (props: any) => any)(fiber.props)];
+  const children = [(fiber.type as (_props: any) => any)(fiber.props)];
   reconcileChildren(fiber, children);
 }
 
@@ -523,9 +525,9 @@ class Component {
     requestIdleCallback(workLoop);
   }
 
-  componentDidMount(..._args: any[]) {}
-  componentDidUpdate(..._args: any[]) {}
-  componentWillUnmount(..._args: any[]) {}
+  componentDidMount() {}
+  componentDidUpdate(_prevProps: any, _prevState: any) {}
+  componentWillUnmount() {}
 
   render(): any {
     return null;

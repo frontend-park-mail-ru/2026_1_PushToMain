@@ -551,7 +551,7 @@ class App {
     paramName: string;
   }>;
 
-  private setPath!: (path: string) => void;
+  private setPath!: (_path: string) => void;
   public previousPath: string = "";
   private currentPath: string = window.location.pathname;
 
