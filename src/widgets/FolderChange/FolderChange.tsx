@@ -8,6 +8,7 @@ import {
   changeFolderName,
   deleteFolder,
 } from "../../api/ApiFolder";
+import ConfirmationDialog from "../../widgets/ConfirmationDialog/ConfirmationDialog";
 
 class FolderChange extends Death13.Component {
   lastClickTime: number = 0;
@@ -23,6 +24,9 @@ class FolderChange extends Death13.Component {
     newFolderName: "Новая папка",
     editingFolderId: null,
     editingFolderName: "",
+    showDeleteConfirm: false,
+    folderToDeleteId: null,
+    folderToDeleteName: "",
   };
 
   loadFolders = async () => {
@@ -132,19 +136,39 @@ class FolderChange extends Death13.Component {
     }
   };
 
-  handleDeleteFolder = async (folderId: number, event: any) => {
+  handleDeleteFolder = (folderId: number, folderName: string, event: any) => {
     event.preventDefault();
     event.stopPropagation();
-    const updatedFolders = this.state.folders.filter(
-      (f: any) => f.id !== folderId,
+    this.setState({
+      showDeleteConfirm: true,
+      folderToDeleteId: folderId,
+      folderToDeleteName: folderName,
+    });
+  };
+
+  confirmDelete = async () => {
+    const { folderToDeleteId, folders } = this.state;
+    if (!folderToDeleteId) return;
+
+    const updatedFolders = folders.filter(
+      (f: any) => f.id !== folderToDeleteId,
     );
-    await deleteFolder(folderId);
+    await deleteFolder(folderToDeleteId);
     this.setState({
       folders: updatedFolders,
       editingFolderId: null,
       editingFolderName: "",
+      showDeleteConfirm: false,
+      folderToDeleteId: null,
     });
     AppStorage.setFolders(updatedFolders);
+  };
+
+  cancelDelete = () => {
+    this.setState({
+      showDeleteConfirm: false,
+      folderToDeleteId: null,
+    });
   };
 
   t(key: string): string {
@@ -162,7 +186,9 @@ class FolderChange extends Death13.Component {
             <div key={folder.id} className="folder-item">
               <button
                 className="folder-delete-btn"
-                onClick={(e: any) => this.handleDeleteFolder(folder.id, e)}
+                onClick={(e: any) =>
+                  this.handleDeleteFolder(folder.id, folder.name, e)
+                }
               >
                 ✕
               </button>
@@ -212,6 +238,13 @@ class FolderChange extends Death13.Component {
             }}
           />
         </div>
+        {this.state.showDeleteConfirm && (
+          <ConfirmationDialog
+            text={`${this.t("confirm_delete_folder")} "${this.state.folderToDeleteName}"?`}
+            callbackConfirm={this.confirmDelete}
+            callbackCancel={this.cancelDelete}
+          />
+        )}
       </div>
     );
   }

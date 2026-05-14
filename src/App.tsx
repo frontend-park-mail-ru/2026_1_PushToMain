@@ -131,6 +131,7 @@ export const AppStorage = {
       saved_successfully: "Успешно сохранено!",
       add_a_folder: "Добавить папку...",
       new_folder: "Новая папка",
+      confirm_delete_folder: "Вы точно хотите удалить папку",
 
       //Sidebar
       new_letter: "Новое письмо",
@@ -153,6 +154,8 @@ export const AppStorage = {
       //Navigation
       back_to_settings: "Настройки",
       back_to_mail: "К почте",
+      action_cancel: "Отменить",
+      action_confirm: "Подтвердить",
     },
     en: {
       //LoginPage
@@ -236,6 +239,7 @@ export const AppStorage = {
       saved_successfully: "Saved successfully!",
       add_a_folder: "Add a folder...",
       new_folder: "New folder",
+      confirm_delete_folder: "Are you sure you want to delete folder",
 
       //Sidebar
       new_letter: "New mail",
@@ -258,6 +262,8 @@ export const AppStorage = {
       //Navigation
       back_to_settings: "Settings",
       back_to_mail: "To mail",
+      action_cancel: "Cancel",
+      action_confirm: "Confirm",
     },
   },
 

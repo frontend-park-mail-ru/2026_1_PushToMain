@@ -289,14 +289,6 @@ class ProfilePage extends Death13.Component {
     }
   };
 
-  handleShowConfirmationModal = (status: boolean, message: string) => {
-    this.setState({
-      isConfirm: true,
-      isStatus: status,
-      message: message,
-    });
-  };
-
   t(key: string): string {
     return AppStorage.t(key);
   }
