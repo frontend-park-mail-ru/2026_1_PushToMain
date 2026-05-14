@@ -8,9 +8,9 @@ import { validation } from "../../utils/validation";
 import { changePassword, getProfile, changeProfile } from "../../api/ApiAuth";
 import { AppStorage } from "../../App";
 import ProfileModal from "../../widgets/ProfileModal/ProfileModal";
-import ConfirmationModal from "../../widgets/ConfirmationModal/ConfirmationModal";
 import SelectDate from "../../components/SelectDate/SelectDate";
 import FolderChange from "../../widgets/FolderChange/FolderChange";
+import PopupManager from "../../widgets/PopupManager/PopupManager";
 
 class ProfilePage extends Death13.Component {
   private unsubscribe: (() => void) | null = null;
@@ -116,7 +116,7 @@ class ProfilePage extends Death13.Component {
       avatarKey: this.state.avatarKey + 1,
       avatarUrl: AppStorage.getAvatarUrl(),
     });
-    this.addModal(true);
+    PopupManager.show(true);
   };
 
   async handleChangePassword(event: any) {
@@ -132,12 +132,12 @@ class ProfilePage extends Death13.Component {
           oldPassword: "",
           newPassword: "",
         });
-        this.addModal(true);
+        PopupManager.show(true);
       } else {
-        this.addModal(false, "passwords_dont_match");
+        PopupManager.show(false, "passwords_dont_match");
       }
     } catch {
-      this.addModal(false);
+      PopupManager.show(false);
     }
   }
 
@@ -181,9 +181,9 @@ class ProfilePage extends Death13.Component {
           birthMonth: birthMonth,
           birthYear: birthYear,
         });
-        this.addModal(true);
+        PopupManager.show(true);
       } else {
-        this.addModal(false);
+        PopupManager.show(false);
       }
     } catch (error) {
       console.error("Ошибка изменения профиля:", error);
@@ -295,17 +295,6 @@ class ProfilePage extends Death13.Component {
       isStatus: status,
       message: message,
     });
-  };
-
-  addModal = (status: boolean, message?: string) => {
-    const id = Date.now();
-    const prevModals = this.state.modals;
-    this.setState({ modals: [...prevModals, { id, status, message }] });
-  };
-
-  removeModal = (id: Date) => {
-    const newModals = this.state.modals.filter((m: any) => m.id !== id);
-    this.setState({ modals: newModals });
   };
 
   t(key: string): string {
@@ -617,7 +606,7 @@ class ProfilePage extends Death13.Component {
                   <form action="" className="profile-form">
                     <FolderChange
                       isEditMode={this.state.isFolderEditMode}
-                      showConfirmationModal={this.addModal}
+                      showConfirmationModal={PopupManager.show}
                     />
                   </form>
                 </div>
@@ -631,16 +620,6 @@ class ProfilePage extends Death13.Component {
             onLogout={this.handleLogout}
           />
         </div>
-        {this.state.modals.map((modal: any, index: number) => (
-          <ConfirmationModal
-            key={modal.id}
-            isOpen={true}
-            onClose={() => this.removeModal(modal.id)}
-            isStatus={modal.status}
-            message={modal.message}
-            index={index}
-          />
-        ))}
       </div>
     );
   }

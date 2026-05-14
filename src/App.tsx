@@ -13,6 +13,7 @@ import FavoritePage from "./pages/FavoritePage/FavoritePage";
 import SpamPage from "./pages/SpamPage/SpamPage";
 import DraftsPage from "./pages/DraftsPage/DraftsPage";
 import FolderPage from "./pages/FolderPage/FolderPage";
+import PopupManager from "./widgets/PopupManager/PopupManager";
 
 export const AppStorage = {
   csrfToken: "",
@@ -618,4 +619,12 @@ AppStorage.init();
 window.AppStorage = AppStorage;
 window.app = new App();
 
-Death13.render(Death13.createElement(window.app.Router, {}), root);
+Death13.render(
+  Death13.createElement(
+    "div",
+    null,
+    Death13.createElement(window.app.Router, {}),
+    Death13.createElement(PopupManager, {}),
+  ),
+  root,
+);
