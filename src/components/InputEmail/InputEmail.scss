@@ -22,7 +22,10 @@
             flex: 1 1 120px;
             min-width: 120px;
             max-width: 40%;
-            font-size: 14px !important;
+
+            @media (max-width: 768px) {
+                font-size: 14px !important;
+            }
         }
 
         .tags-scrollable {
@@ -69,6 +72,16 @@
                 overflow: hidden;
                 text-overflow: ellipsis;
                 flex-shrink: 0;
+
+                span[contenteditable="true"] {
+                    outline: none;
+                    border: none;
+                    max-width: none;
+                    overflow: visible;
+                    text-overflow: clip;
+                    white-space: nowrap;
+                    cursor: text;
+                }
             }
 
             .email-tag__error {
@@ -86,6 +99,16 @@
                 overflow: hidden;
                 text-overflow: ellipsis;
                 flex-shrink: 0;
+
+                span[contenteditable="true"] {
+                    outline: none;
+                    border: none;
+                    max-width: none;
+                    overflow: visible;
+                    text-overflow: clip;
+                    white-space: nowrap;
+                    cursor: text;
+                }
             }
 
             .email-tag span,
