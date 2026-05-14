@@ -10,7 +10,7 @@ import { AppStorage } from "../../App";
 import ProfileModal from "../../widgets/ProfileModal/ProfileModal";
 import SelectDate from "../../components/SelectDate/SelectDate";
 import FolderChange from "../../widgets/FolderChange/FolderChange";
-import PopupManager from "../../widgets/PopupManager/PopupManager";
+import NotificationManager from "../../widgets/NotificationManager/NotificationManager";
 
 class ProfilePage extends Death13.Component {
   private unsubscribe: (() => void) | null = null;
@@ -116,7 +116,7 @@ class ProfilePage extends Death13.Component {
       avatarKey: this.state.avatarKey + 1,
       avatarUrl: AppStorage.getAvatarUrl(),
     });
-    PopupManager.show(true);
+    NotificationManager.show(true);
   };
 
   async handleChangePassword(event: any) {
@@ -132,12 +132,12 @@ class ProfilePage extends Death13.Component {
           oldPassword: "",
           newPassword: "",
         });
-        PopupManager.show(true);
+        NotificationManager.show(true);
       } else {
-        PopupManager.show(false, "passwords_dont_match");
+        NotificationManager.show(false, "passwords_dont_match");
       }
     } catch {
-      PopupManager.show(false);
+      NotificationManager.show(false);
     }
   }
 
@@ -181,9 +181,9 @@ class ProfilePage extends Death13.Component {
           birthMonth: birthMonth,
           birthYear: birthYear,
         });
-        PopupManager.show(true);
+        NotificationManager.show(true);
       } else {
-        PopupManager.show(false);
+        NotificationManager.show(false);
       }
     } catch (error) {
       console.error("Ошибка изменения профиля:", error);
@@ -606,7 +606,7 @@ class ProfilePage extends Death13.Component {
                   <form action="" className="profile-form">
                     <FolderChange
                       isEditMode={this.state.isFolderEditMode}
-                      showConfirmationModal={PopupManager.show}
+                      showConfirmationModal={NotificationManager.show}
                     />
                   </form>
                 </div>

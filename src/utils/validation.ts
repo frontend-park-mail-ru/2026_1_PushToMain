@@ -12,7 +12,6 @@ export function validation(dataForm: object, t: (key: string) => string) {
       if (!data || data === "@e-smail.ru") {
         errors.push({ field: "email", message: t("email_required") });
       } else {
-        console.log(data);
         const regex = /^[a-zA-Z0-9._-]+@e-smail.ru/gm;
         if (!regex.test(data)) {
           errors.push({

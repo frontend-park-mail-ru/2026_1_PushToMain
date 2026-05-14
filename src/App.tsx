@@ -13,7 +13,7 @@ import FavoritePage from "./pages/FavoritePage/FavoritePage";
 import SpamPage from "./pages/SpamPage/SpamPage";
 import DraftsPage from "./pages/DraftsPage/DraftsPage";
 import FolderPage from "./pages/FolderPage/FolderPage";
-import PopupManager from "./widgets/PopupManager/PopupManager";
+import NotificationManager from "./widgets/NotificationManager/NotificationManager";
 
 export const AppStorage = {
   csrfToken: "",
@@ -624,7 +624,7 @@ Death13.render(
     "div",
     null,
     Death13.createElement(window.app.Router, {}),
-    Death13.createElement(PopupManager, {}),
+    Death13.createElement(NotificationManager, {}),
   ),
   root,
 );

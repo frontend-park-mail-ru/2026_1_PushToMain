@@ -4,7 +4,6 @@ import Input from "../../components/Input/Input";
 import Button from "../../components/Button/Button";
 import MailHeader from "../../widgets/MailHeader/MailHeader";
 import MailBox from "../../widgets/MailBox/MailBox";
-import PopupManager from "../../widgets/PopupManager/PopupManager";
 import { getProfile } from "../../api/ApiAuth";
 import { readEmail, seacrhEmail, unReadEmail } from "../../api/ApiEmail";
 import "./BaseEmailPage.scss";

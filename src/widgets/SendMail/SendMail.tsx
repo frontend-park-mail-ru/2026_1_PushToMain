@@ -4,7 +4,7 @@ import InputEmail from "../../components/InputEmail/InputEmail";
 import Input from "../../components/Input/Input";
 import Textarea from "../../components/Textarea/Textarea";
 import Button from "../../components/Button/Button";
-import PopupManager from "../../widgets/PopupManager/PopupManager";
+import NotificationManager from "../NotificationManager/NotificationManager";
 import { sendEmail } from "../../api/ApiEmail";
 import { AppStorage } from "../../App";
 import { createDraft, sendDraft, updateDraft } from "../../api/ApiDraft";
@@ -123,7 +123,7 @@ class SendMail extends Death13.Component {
       this.props.backToMail();
     } else {
       this.setState({ buttonBlock: false });
-      PopupManager.show(false, "Ошибка отправки письма");
+      NotificationManager.show(false, "Ошибка отправки письма");
     }
   }
 

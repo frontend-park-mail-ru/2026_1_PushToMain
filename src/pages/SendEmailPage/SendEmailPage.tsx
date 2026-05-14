@@ -4,7 +4,7 @@ import Button from "../../components/Button/Button";
 import SendMail from "../../widgets/SendMail/SendMail";
 import "./SendEmailPage.scss";
 import ProfileModal from "../../widgets/ProfileModal/ProfileModal";
-import PopupManager from "../../widgets/PopupManager/PopupManager";
+import NotificationManager from "../../widgets/NotificationManager/NotificationManager";
 import Input from "../../components/Input/Input";
 import { AppStorage } from "../../App";
 import { getProfile } from "../../api/ApiAuth";
@@ -33,7 +33,7 @@ class SendEmailPage extends Death13.Component {
     const data = await getProfile();
     if (data === null) {
       window.app.handleRoute("/login");
-      PopupManager.show(false, "auth_error");
+      NotificationManager.show(false, "auth_error");
     } else {
       AppStorage.setProfileData(data);
     }
