@@ -13,6 +13,7 @@ import { addEmailsInFolder, deleteEmailsFromFolder } from "../../api/ApiFolder";
 import { deleteDraft } from "../../api/ApiDraft";
 import { trash } from "../../api/ApiTrash";
 import { sendFavorite, unFavorite } from "../../api/ApiFavorite";
+import { formatTime } from "../../utils/date";
 
 interface BaseEmailprops {
   currentView: string;
@@ -30,9 +31,12 @@ interface BaseEmailprops {
 
 class BaseEmailPage extends Death13.Component {
   private lastFolderId: number | null = null;
+  private loadEmailInterval: number | null = null;
+  private initialLoadDone: boolean = false;
 
   state: any = {
     emails: [],
+    fetchEmails: null,
     isLoading: true,
     isModalOpen: false,
     isSelectAll: false,
@@ -43,13 +47,46 @@ class BaseEmailPage extends Death13.Component {
 
   constructor(props: BaseEmailprops) {
     super(props);
+    this.initialLoadDone = false;
+    this.state.fetchEmails = props.fetchEmails;
 
     if (!AppStorage.isProfileLoaded) {
       AppStorage.isProfileLoaded = true;
       this.loadProfile();
     }
+
+    AppStorage.currentView = props.currentView;
+
     this.loadEmails(0);
   }
+
+  componentDidMount() {
+    document.addEventListener("visibilitychange", this.handleVisibilityChange);
+    this.loadEmailInterval = window.setInterval(
+      () => this.loadEmails(this.state.offset),
+      30000,
+    );
+  }
+
+  componentWillUnmount() {
+    if (this.loadEmailInterval) {
+      clearInterval(this.loadEmailInterval);
+      this.loadEmailInterval = null;
+    }
+
+    if (this.handleVisibilityChange) {
+      document.removeEventListener(
+        "visibilitychange",
+        this.handleVisibilityChange,
+      );
+    }
+  }
+
+  private handleVisibilityChange = () => {
+    if (!document.hidden && this.initialLoadDone) {
+      this.loadEmails(this.state.offset);
+    }
+  };
 
   private getSelectedArray(): number[] {
     return Array.from(this.state.selectedEmails);
@@ -70,9 +107,18 @@ class BaseEmailPage extends Death13.Component {
 
   loadEmails = async (offset: number) => {
     this.setState({ isLoading: true });
+
+    if (!this.state.fetchEmails) {
+      console.warn("fetchEmails prop is missing in BaseEmailPage");
+      return;
+    }
+
     try {
-      const data = await this.props.fetchEmails(offset);
+      const data = await this.state.fetchEmails(offset);
       const emails = data.emails || data.drafts || data || [];
+      const list = Array.isArray(emails) ? emails : [];
+
+      AppStorage.cacheEmails(list);
 
       this.setState({
         emails: Array.isArray(emails) ? emails : [],
@@ -84,43 +130,10 @@ class BaseEmailPage extends Death13.Component {
       });
     } catch (error) {
       console.error(`Failed to load ${this.props.currentView}:`, error);
-      this.setState({ isLoading: false });
-    }
-  };
-
-  formatTime = (dateString: string) => {
-    if (!dateString) return "";
-
-    const date = new Date(dateString);
-    const currentTime = new Date();
-
-    if (isNaN(date.getTime())) return "";
-
-    if (Math.abs(currentTime.getFullYear() - date.getFullYear()) >= 1) {
-      return date.toLocaleDateString("ru-RU", {
-        day: "2-digit",
-        month: "2-digit",
-        year: "numeric",
-      });
     }
 
-    if (date.toDateString() === currentTime.toDateString()) {
-      return date.toLocaleTimeString("ru-RU", {
-        hour: "2-digit",
-        minute: "2-digit",
-      });
-    }
-
-    const yesterday = new Date(currentTime);
-    yesterday.setDate(currentTime.getDate() - 1);
-    if (date.toDateString() === yesterday.toDateString()) {
-      return "Вчера";
-    }
-
-    return date.toLocaleDateString("ru-RU", {
-      day: "2-digit",
-      month: "short",
-    });
+    this.initialLoadDone = true;
+    this.setState({ isLoading: false });
   };
 
   handleAvatar = (event: Event) => {
@@ -472,42 +485,49 @@ class BaseEmailPage extends Death13.Component {
               )}
               {emails.length !== 0 && (
                 <div className="mail-box-container-form">
-                  {emails.map((email: any) => (
-                    <MailBox
-                      key={email.id}
-                      id={email.id}
-                      sender_name={
-                        email.sender_name || email.receivers_emails?.[0]
-                      }
-                      sender_surname={email.sender_surname}
-                      sender_email={
-                        email.sender_email || email.receivers_emails?.[0]
-                      }
-                      theme={email.header}
-                      title={email.body}
-                      date={this.formatTime(email.created_at)}
-                      isSelected={selectedArray.includes(email.id)}
-                      onSelect={this.handleSelectEmail}
-                      isRead={
-                        email.is_read !== undefined ? email.is_read : true
-                      }
-                      isFavorite={
-                        email.is_starred !== undefined
-                          ? email.is_starred
-                          : false
-                      }
-                      pageMain={currentView === "inbox"}
-                      currentView={currentView}
-                      onClick={() => this.handleReadMail(email)}
-                      onToggleRead={
-                        showUnreadToggle
-                          ? this.handleToggleReadSingle
-                          : undefined
-                      }
-                      onToggleFavorite={this.handleToggleFavoriteSingle}
-                      selectedFolderId={this.props.currentFolderId}
-                    />
-                  ))}
+                  {emails.map((email: any) => {
+                    return (
+                      <MailBox
+                        key={`${email.id}-${email.is_starred}`}
+                        id={email.id}
+                        sender_name={
+                          email.sender_name || email.receivers_emails?.[0]
+                        }
+                        sender_surname={email.sender_surname}
+                        sender_email={
+                          email.sender_email || email.receivers_emails?.[0]
+                        }
+                        receivers_emails={
+                          currentView === "drafts"
+                            ? email.receivers
+                            : email.receivers_emails
+                        }
+                        theme={email.header}
+                        title={email.body}
+                        date={formatTime(email.created_at)}
+                        isSelected={selectedArray.includes(email.id)}
+                        onSelect={this.handleSelectEmail}
+                        isRead={
+                          email.is_read !== undefined ? email.is_read : true
+                        }
+                        isFavorite={
+                          email.is_starred !== undefined
+                            ? email.is_starred
+                            : false
+                        }
+                        pageMain={currentView === "inbox"}
+                        currentView={currentView}
+                        onClick={() => this.handleReadMail(email)}
+                        onToggleRead={
+                          showUnreadToggle
+                            ? this.handleToggleReadSingle
+                            : undefined
+                        }
+                        onToggleFavorite={this.handleToggleFavoriteSingle}
+                        selectedFolderId={this.props.currentFolderId}
+                      />
+                    );
+                  })}
                 </div>
               )}
             </div>

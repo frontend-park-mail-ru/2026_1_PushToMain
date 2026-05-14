@@ -1,11 +1,8 @@
 import Death13 from "@react/stands";
+import { AppStorage } from "../../App";
 import "./MailBox.scss";
 
 class MailBox extends Death13.Component {
-  state: any = {
-    isFavorite: this.props.isFavorite || false,
-  };
-
   handleSelect = (e: any) => {
     e.stopPropagation();
     const { id, onSelect } = this.props;
@@ -27,14 +24,12 @@ class MailBox extends Death13.Component {
 
   handleFavorite = (e: any) => {
     e.stopPropagation();
-    if (e.target.checked) {
-      this.setState({ isFavorite: true });
-      this.props.onToggleFavorite?.(this.props.id, true);
-    } else {
-      this.setState({ isFavorite: false });
-      this.props.onToggleFavorite?.(this.props.id, false);
-    }
+    this.props.onToggleFavorite?.(this.props.id, e.target.checked);
   };
+
+  t(key: string): string {
+    return AppStorage.t(key);
+  }
 
   render() {
     const {
@@ -42,6 +37,7 @@ class MailBox extends Death13.Component {
       sender_name,
       sender_surname,
       sender_email,
+      receivers_emails,
       title,
       date,
       onClick,
@@ -56,6 +52,11 @@ class MailBox extends Death13.Component {
     const isDraftsView = currentView === "drafts";
     const showSenderInfo = !isSentView && (sender_name || sender_email);
     const showFavoriteCheckbox = !isSentView && !isDraftsView;
+
+    let sentToString = "";
+    if (receivers_emails) {
+      sentToString = "To: " + receivers_emails.join(", ");
+    }
 
     return (
       <div
@@ -95,14 +96,18 @@ class MailBox extends Death13.Component {
                 />
               )}
               {!pageMain && <div className="sent-checkbox"></div>}
-              {showSenderInfo
-                ? sender_name
-                  ? `${sender_name} ${sender_surname || ""}`.trim()
-                  : sender_email
-                : ""}
+              {isSentView || isDraftsView
+                ? sentToString
+                : showSenderInfo
+                  ? sender_name
+                    ? `${sender_name} ${sender_surname || ""}`.trim()
+                    : sender_email
+                  : ""}
             </span>
             <div className="mail-text-content">
-              <span className="mail-theme">{theme}</span>
+              <span className="mail-theme">
+                {theme !== "" ? theme : this.t("empty_subject")}
+              </span>
               <span className="mail-title">{title}</span>
               <span className="mail-date">{date}</span>
             </div>

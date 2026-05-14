@@ -57,6 +57,33 @@
                     }
                 }
             }
+
+            .top-right-bar {
+                display: flex;
+                align-items: center;
+                margin-left: auto;
+                align-self: flex-start;
+                gap: 20px;
+
+                .email-send-time {
+                    color: var(--secondary-text);
+                }
+
+                .close-button {
+                    margin: 5px;
+                    height: 16px;
+                    width: 16px;
+                    background-color: var(--tertiary-text);
+                    mask-image: url(/assets/svg/Close.svg);
+                    mask-size: contain;
+                    mask-position: center;
+                    cursor: pointer;
+
+                    @media (max-width: 768px) {
+                        display: none;
+                    }
+                }
+            }
         }
 
         .input-container {

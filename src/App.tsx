@@ -41,6 +41,7 @@ export const AppStorage = {
     createdAt: string;
     order: number;
   }>,
+  emailCache: {} as Record<number, any>,
   openSettingsOnProfile: false,
   replyData: null as any,
   forwardData: null as any,
@@ -92,6 +93,9 @@ export const AppStorage = {
       enter_subject: "Введите тему",
       to: "Кому:",
       empty_subject: "<Без темы>",
+
+      //Drafts
+      draft_saved: "Черновик сохранен",
 
       //Error
       email_required: "Поле почты обязательно",
@@ -194,6 +198,9 @@ export const AppStorage = {
       enter_subject: "Enter subject",
       to: "To:",
       empty_subject: "<No subject>",
+
+      //Drafts
+      draft_saved: "Draft saved",
 
       //Error
       email_required: "Email field is required",
@@ -326,6 +333,28 @@ export const AppStorage = {
         key as keyof typeof this.translations.ru
       ];
     return translation || key;
+  },
+
+  cacheEmails(emails: any[]) {
+    emails.forEach((email) => {
+      if (email && email.id) {
+        this.emailCache[email.id] = email;
+      }
+    });
+  },
+
+  getEmailFromCache(id: number) {
+    return this.emailCache[id];
+  },
+
+  cacheSingleEmail(email: any) {
+    if (email && email.id) {
+      this.emailCache[email.id] = email;
+    }
+  },
+
+  clearEmailCache() {
+    this.emailCache = {};
   },
 
   setProfileData(

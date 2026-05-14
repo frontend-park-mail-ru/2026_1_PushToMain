@@ -183,6 +183,7 @@ class MailHeader extends Death13.Component {
             <Button
               name="refresh"
               className={isLoading ? "refreshing" : ""}
+              block={isLoading}
               help={this.t("refresh")}
               onClick={(event: any) => {
                 event.preventDefault();

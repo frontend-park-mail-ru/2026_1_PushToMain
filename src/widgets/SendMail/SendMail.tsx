@@ -150,6 +150,7 @@ class SendMail extends Death13.Component {
       if (response) {
         window.AppStorage.clearMailActionData();
         this.props.backToMail();
+        NotificationManager.show(true, "draft_saved");
       }
     } else {
       const response = await createDraft({
@@ -161,6 +162,7 @@ class SendMail extends Death13.Component {
       if (response) {
         window.AppStorage.clearMailActionData();
         this.props.backToMail();
+        NotificationManager.show(true, "draft_saved");
       }
     }
   };

@@ -523,9 +523,9 @@ class Component {
     requestIdleCallback(workLoop);
   }
 
-  componentDidMount() {}
-  componentDidUpdate() {}
-  componentWillUnmount() {}
+  componentDidMount(..._args: any[]) {}
+  componentDidUpdate(..._args: any[]) {}
+  componentWillUnmount(..._args: any[]) {}
 
   render(): any {
     return null;
