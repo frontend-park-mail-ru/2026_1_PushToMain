@@ -1,8 +1,8 @@
 import Death13 from "@react/stands";
 import { AppStorage } from "../../App";
-import "./ConfirmationModal.scss";
+import "./Notification.scss";
 
-class ConfirmationModal extends Death13.Component {
+class Notification extends Death13.Component {
   private timer: any = null;
 
   constructor(props: any) {
@@ -61,4 +61,4 @@ class ConfirmationModal extends Death13.Component {
   }
 }
 
-export default ConfirmationModal;
+export default Notification;

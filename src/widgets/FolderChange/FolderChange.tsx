@@ -10,11 +10,11 @@ import {
 } from "../../api/ApiFolder";
 
 class FolderChange extends Death13.Component {
+  lastClickTime: number = 0;
+
   constructor(props: any) {
     super(props);
-
     AppStorage.folderChangeInstance = this;
-
     this.loadFolders();
   }
 
@@ -23,116 +23,108 @@ class FolderChange extends Death13.Component {
     newFolderName: "Новая папка",
     editingFolderId: null,
     editingFolderName: "",
-    pendingChanges: {},
   };
 
   loadFolders = async () => {
     const data = await getProfile();
-
     if (data && data.folder && Array.isArray(data.folder)) {
       const folders = data.folder.map((folder: any) => ({
         id: folder.folder_id,
         name: folder.folder_name,
       }));
-
       this.setState({ folders });
       AppStorage.setFolders(folders);
     }
   };
 
-  saveFolderName = async (folderId: number) => {
-    const { pendingChanges, folders } = this.state;
-    const newName = pendingChanges[folderId];
+  startEditing = (folderId: number, currentName: string) => {
+    if (this.state.editingFolderId !== null) {
+      this.commitFolderEdit(this.state.editingFolderId);
+    }
+    this.setState({
+      editingFolderId: folderId,
+      editingFolderName: currentName,
+    });
+  };
 
-    if (!newName || !newName.trim()) {
+  cancelEditing = () => {
+    this.setState({
+      editingFolderId: null,
+      editingFolderName: "",
+    });
+  };
+
+  commitFolderEdit = async (folderId: number) => {
+    const { editingFolderName, folders } = this.state;
+    const trimmed = editingFolderName.trim();
+    const original = folders.find((f: any) => f.id === folderId)?.name || "";
+
+    if (!trimmed || trimmed === original) {
+      this.cancelEditing();
+      return;
+    }
+
+    if (folders.some((f: any) => f.id !== folderId && f.name === trimmed)) {
+      this.setState({ error: "Папка с таким именем уже существует" });
       return;
     }
 
     try {
-      await changeFolderName(folderId, newName.trim());
-
+      await changeFolderName(folderId, trimmed);
       const updatedFolders = folders.map((folder: any) =>
-        folder.id === folderId ? { ...folder, name: newName.trim() } : folder,
+        folder.id === folderId ? { ...folder, name: trimmed } : folder,
       );
-
-      const newPendingChanges = { ...pendingChanges };
-      delete newPendingChanges[folderId];
-
       this.setState({
         folders: updatedFolders,
-        pendingChanges: newPendingChanges,
+        editingFolderId: null,
+        editingFolderName: "",
       });
-
       AppStorage.setFolders(updatedFolders);
     } catch (error) {
       console.error("Error saving folder name:", error);
+      this.cancelEditing();
     }
   };
 
-  saveAllPendingChanges = async () => {
-    const { pendingChanges, folders } = this.state;
-
-    const folderIds = Object.keys(pendingChanges);
-
-    for (let i = 0; i < folderIds.length; i++) {
-      const folderId = folderIds[i];
-      const newName = (pendingChanges as any)[folderId];
-
-      if (newName && newName.trim()) {
-        await changeFolderName(Number(folderId), newName.trim());
-
-        folders.forEach((folder: any) => {
-          if (folder.id === Number(folderId)) {
-            folder.name = newName.trim();
-          }
-        });
-      }
+  handleFolderKeyDown = (e: any, folderId: number) => {
+    if (e.key === "Enter") {
+      e.preventDefault();
+      this.commitFolderEdit(folderId);
+    } else if (e.key === "Escape") {
+      this.cancelEditing();
     }
+  };
 
-    this.setState({
-      folders: [...folders],
-      pendingChanges: {},
-      editingFolderId: null,
-      editingFolderName: "",
-    });
-
-    AppStorage.setFolders(folders);
+  handleNameClick = (e: any, folderId: number, name: string) => {
+    const now = Date.now();
+    if (now - this.lastClickTime < 300) {
+      this.startEditing(folderId, name);
+    }
+    this.lastClickTime = now;
   };
 
   handleAddFolder = async () => {
     const { folders } = this.state;
-
     if (folders.length >= 6) {
-      const showConfirmationModal = this.props.showConfirmationModal;
-      if (showConfirmationModal) {
-        showConfirmationModal(false, "too_many_folders");
-      }
+      this.props.showConfirmationModal?.(false, "too_many_folders");
       return;
     }
 
     let newFolderName = this.t("new_folder");
-
-    // добавляем цифру в конце если есть уже папка "Новая папка"
-    if (folders.some((folder: any) => folder.name === newFolderName)) {
+    if (folders.some((f: any) => f.name === newFolderName)) {
       let i = 2;
-      while (
-        folders.some((folder: any) => folder.name === newFolderName + ` ${i}`)
-      ) {
+      while (folders.some((f: any) => f.name === `${newFolderName} ${i}`)) {
         i++;
       }
-      newFolderName = newFolderName + ` ${i}`;
+      newFolderName = `${newFolderName} ${i}`;
     }
 
     const response = await createNewFolder(newFolderName);
-
-    if (response && response.folder_id) {
-      const newFolder = {
-        id: response.folder_id,
-        name: newFolderName,
-      };
-
-      const updatedFolders = [...folders, newFolder];
-
+    if (response?.folder_id) {
+      const updatedFolders = [
+        ...folders,
+        { id: response.folder_id, name: newFolderName },
+      ];
       this.setState({ folders: updatedFolders });
       AppStorage.setFolders(updatedFolders);
     } else {
@@ -143,84 +135,16 @@ class FolderChange extends Death13.Component {
   handleDeleteFolder = async (folderId: number, event: any) => {
     event.preventDefault();
     event.stopPropagation();
-
-    const { folders } = this.state;
-    const updatedFolders = folders.filter(
-      (folder: any) => folder.id !== folderId,
+    const updatedFolders = this.state.folders.filter(
+      (f: any) => f.id !== folderId,
     );
-
     await deleteFolder(folderId);
-
     this.setState({
       folders: updatedFolders,
       editingFolderId: null,
       editingFolderName: "",
     });
     AppStorage.setFolders(updatedFolders);
-  };
-
-  handleStartEdit = async (
-    folderId: number,
-    currentName: string,
-    event: any,
-  ) => {
-    event.stopPropagation();
-
-    const { editingFolderId, pendingChanges } = this.state;
-
-    if (
-      editingFolderId &&
-      editingFolderId !== folderId &&
-      pendingChanges[editingFolderId]
-    ) {
-      await this.saveFolderName(editingFolderId);
-    }
-
-    this.setState({
-      editingFolderId: folderId,
-      editingFolderName: currentName,
-    });
-  };
-
-  handleBlur = async (folderId: number) => {
-    const { pendingChanges } = this.state;
-
-    if (pendingChanges[folderId] && pendingChanges[folderId].trim()) {
-      await this.saveFolderName(folderId);
-    }
-
-    this.setState({
-      editingFolderId: null,
-      editingFolderName: "",
-    });
-  };
-
-  handleInputChange = (value: string) => {
-    const { editingFolderId } = this.state;
-
-    this.setState({
-      editingFolderName: value,
-      pendingChanges: {
-        ...this.state.pendingChanges,
-        [editingFolderId]: value,
-      },
-    });
-  };
-
-  handleKeyDown = async (folderId: number, event: any) => {
-    if (event.key === "Enter") {
-      event.preventDefault();
-      await this.saveFolderName(folderId);
-      this.setState({
-        editingFolderId: null,
-        editingFolderName: "",
-      });
-    } else if (event.key === "Escape") {
-      this.setState({
-        editingFolderId: null,
-        editingFolderName: "",
-      });
-    }
   };
 
   t(key: string): string {
@@ -234,59 +158,56 @@ class FolderChange extends Death13.Component {
     return (
       <div className="folder-container">
         <div className="folder-list">
-          {folders &&
-            folders.map((folder: any) => (
-              <div key={folder.id} className="folder-item">
-                {isEditMode && editingFolderId !== folder.id && (
-                  <button
-                    className="folder-delete-btn"
-                    onClick={(e: any) => this.handleDeleteFolder(folder.id, e)}
-                  >
-                    ✕
-                  </button>
-                )}
+          {folders.map((folder: any) => (
+            <div key={folder.id} className="folder-item">
+              <button
+                className="folder-delete-btn"
+                onClick={(e: any) => this.handleDeleteFolder(folder.id, e)}
+              >
+                ✕
+              </button>
 
-                {isEditMode && editingFolderId === folder.id ? (
-                  <div className="folder-edit">
-                    <input
-                      className="folder-edit__input"
-                      value={editingFolderName}
-                      onInput={(e: any) =>
-                        this.handleInputChange(e.target.value)
-                      }
-                      onBlur={() => this.handleBlur(folder.id)}
-                      onKeyDown={(e: any) => this.handleKeyDown(folder.id, e)}
-                      autoFocus
-                    />
-                  </div>
-                ) : (
-                  <span
-                    className="folder-name"
-                    onClick={(e: any) => {
-                      if (isEditMode) {
-                        this.handleStartEdit(folder.id, folder.name, e);
-                      }
-                    }}
-                  >
-                    {folder.name}
-                  </span>
-                )}
+              {editingFolderId === folder.id ? (
+                <div className="folder-edit">
+                  <input
+                    className="folder-edit__input"
+                    value={editingFolderName}
+                    onInput={(e: any) =>
+                      this.setState({ editingFolderName: e.target.value })
+                    }
+                    onBlur={() => this.commitFolderEdit(folder.id)}
+                    onKeyDown={(e: any) =>
+                      this.handleFolderKeyDown(e, folder.id)
+                    }
+                    autoFocus
+                  />
+                </div>
+              ) : (
+                <span
+                  className="folder-name"
+                  onClick={(e: any) =>
+                    this.handleNameClick(e, folder.id, folder.name)
+                  }
+                >
+                  {folder.name}
+                </span>
+              )}
 
-                {isEditMode && editingFolderId !== folder.id && (
-                  <button
-                    className="folder-drag-btn"
-                    onClick={(e: any) => e.preventDefault()}
-                  ></button>
-                )}
-              </div>
-            ))}
+              {isEditMode && editingFolderId !== folder.id && (
+                <button
+                  className="folder-drag-btn"
+                  onClick={(e: any) => e.preventDefault()}
+                />
+              )}
+            </div>
+          ))}
         </div>
         <div className="folder-actions">
           <Button
             title={this.t("add_a_folder")}
             name="add_a_folder"
-            onClick={(event: any) => {
-              event.preventDefault();
+            onClick={(e: any) => {
+              e.preventDefault();
               this.handleAddFolder();
             }}
           />

@@ -592,15 +592,6 @@ class ProfilePage extends Death13.Component {
                   </div>
                 ) : null}
                 <h1>{this.t("folder")}</h1>
-                <div className="profile-header">
-                  <Button
-                    name={this.state.isFolderEditMode ? "done" : "edit"}
-                    onClick={(event: any) => {
-                      event.preventDefault();
-                      this.handleToggleFolderEditMode();
-                    }}
-                  />
-                </div>
 
                 <div className="profile-content">
                   <form action="" className="profile-form">

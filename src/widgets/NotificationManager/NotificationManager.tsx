@@ -1,5 +1,5 @@
 import Death13 from "@react/stands";
-import ConfirmationModal from "../ConfirmationModal/ConfirmationModal";
+import Notification from "../Notification/Notification";
 
 class NotificationManager extends Death13.Component {
   static instance: NotificationManager | null = null;
@@ -35,7 +35,7 @@ class NotificationManager extends Death13.Component {
     return (
       <div className="popup-manager">
         {this.state.modals.map((modal: any, index: number) => (
-          <ConfirmationModal
+          <Notification
             key={modal.id}
             isOpen={true}
             onClose={() => this.removeModal(modal.id)}
