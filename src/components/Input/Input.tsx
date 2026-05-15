@@ -6,6 +6,12 @@ class Input extends Death13.Component {
     showPassword: false,
   };
 
+  componentDidUpdate(prevProps: any) {
+    if (prevProps.value !== this.props.value) {
+      this.setState({});
+    }
+  }
+
   togglePasswordVisibility = () => {
     this.setState({ showPassword: !this.state.showPassword });
   };

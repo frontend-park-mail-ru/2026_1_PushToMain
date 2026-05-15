@@ -395,16 +395,21 @@ function commitDeletion(fiber: Fiber, domParent: Node) {
 function workLoop(deadline: IdleDeadline) {
   let shouldYield = false;
 
-  while (nextUnitOfWork && !shouldYield) {
-    nextUnitOfWork = performUnitOfWork(nextUnitOfWork);
-    shouldYield = deadline.timeRemaining() < 1;
+  try {
+    while (nextUnitOfWork && !shouldYield) {
+      nextUnitOfWork = performUnitOfWork(nextUnitOfWork);
+      shouldYield = deadline.timeRemaining() < 1;
+    }
+    if (!nextUnitOfWork && wipRoot) {
+      commitRoot();
+    }
+  } catch (e) {
+    console.error("workLoop crashed, restarting:", e);
+    nextUnitOfWork = null;
+    wipRoot = null;
+  } finally {
+    requestIdleCallback(workLoop);
   }
-
-  if (!nextUnitOfWork && wipRoot) {
-    commitRoot();
-  }
-
-  requestIdleCallback(workLoop);
 }
 
 requestIdleCallback(workLoop);
