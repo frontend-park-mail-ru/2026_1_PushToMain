@@ -83,6 +83,7 @@ export const AppStorage = {
       refresh: "Обновить",
       unstarred: "Убрать избранное",
       move_to_folder: "Переместить в папку",
+      yesterday: "Вчера",
 
       //ReadPage
       //SendPage
@@ -191,6 +192,7 @@ export const AppStorage = {
       unstarred: "Unstarred",
       move_to_folder: "Move to folder",
       favorite: "Starred",
+      yesterday: "Yesterday",
 
       //ReadPage
       //SendPage

@@ -1,3 +1,5 @@
+import { AppStorage } from "../App";
+
 export function formatTime(dateString: string) {
   if (!dateString) return "";
 
@@ -24,7 +26,7 @@ export function formatTime(dateString: string) {
   const yesterday = new Date(currentTime);
   yesterday.setDate(currentTime.getDate() - 1);
   if (date.toDateString() === yesterday.toDateString()) {
-    return "Вчера";
+    return AppStorage.t("yesterday");
   }
 
   return date.toLocaleDateString("ru-RU", {
