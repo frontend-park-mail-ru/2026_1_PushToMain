@@ -1,12 +1,5 @@
+importScripts("/precache-assets.js");
 const CACHE_NAME = "app-v1";
-const APP_SHELL = [
-  "/",
-  "/index.html",
-  "8c1cbe877c7fb2a26df6.ttf",
-  "eab2686c0c146e017020.ttf",
-  "public/assets/svg/Logo.svg",
-  "public/assets/svg/favicon.svg",
-];
 
 self.addEventListener("install", (event) => {
   self.skipWaiting();
