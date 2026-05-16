@@ -59,13 +59,11 @@ class SendMail extends Death13.Component {
   }
 
   isFormValid = (
-    header: string,
     body: string,
     receivers: string[],
     invalidReceivers: string[],
   ): boolean => {
     return (
-      header.trim().length > 0 &&
       body.trim().length > 0 &&
       receivers.length > 0 &&
       (invalidReceivers || []).length === 0
@@ -73,8 +71,8 @@ class SendMail extends Death13.Component {
   };
 
   updateButtonState = () => {
-    const { header, body, receivers, invalidReceivers } = this.state;
-    const isValid = this.isFormValid(header, body, receivers, invalidReceivers);
+    const { body, receivers, invalidReceivers } = this.state;
+    const isValid = this.isFormValid(body, receivers, invalidReceivers);
     this.setState({ buttonBlock: !isValid });
   };
 
@@ -211,6 +209,7 @@ class SendMail extends Death13.Component {
             <div className="close-button" onClick={this.handleSaveDraft}></div>
             <div
               className="send-button"
+              block={buttonBlock}
               onClick={(event: any) => {
                 this.handleSubmit(event);
               }}

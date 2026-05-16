@@ -100,6 +100,7 @@ export const AppStorage = {
       draft_saved: "Черновик сохранен",
 
       //Error
+      no_internet: "Кажется, пропало соединение с интернетом.",
       email_required: "Поле почты обязательно",
       email_invalid_format: "Почта должна быть вида *@e-smail.ru",
       email_max_length: "Почта должна быть не более 40 символов",
@@ -211,6 +212,8 @@ export const AppStorage = {
       draft_saved: "Draft saved",
 
       //Error
+      no_internet:
+        "It seems like you're offline. Please check your internet connection.",
       email_required: "Email field is required",
       email_exists: "This address is already used",
       email_invalid_format: "Email must be in format *@e-smail.ru",

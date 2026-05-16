@@ -11,11 +11,13 @@ class SidebarProfile extends Death13.Component {
     email: AppStorage.email,
     avatarUrl: AppStorage.image_path,
     variant: "",
+    textAlign: "",
   };
 
   constructor(props: any) {
     super(props);
     this.state.variant = props.variant;
+    this.state.textAlign = props.textAlign;
   }
 
   handleAvatar = () => {
@@ -31,7 +33,7 @@ class SidebarProfile extends Death13.Component {
   };
 
   render() {
-    const { name, surname, email, variant = "" } = this.state;
+    const { name, surname, email, variant = "", textAlign = "" } = this.state;
     return (
       <div className={`sidebar-profile ${variant}`}>
         {variant === "mobile" ? (
@@ -47,7 +49,10 @@ class SidebarProfile extends Death13.Component {
             src={AppStorage.getAvatarUrl() || "../../assets/svg/Avatar.svg"}
           ></img>
         )}
-        <div className="sidebar-profile__text">
+        <div
+          className={`sidebar-profile__text ${textAlign}`}
+          onClick={variant === "mobile" ? this.handleAvatar : () => {}}
+        >
           <span className="sidebar-profile__name">
             {name} {surname}
           </span>
