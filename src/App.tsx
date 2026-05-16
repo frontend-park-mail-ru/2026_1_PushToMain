@@ -14,6 +14,7 @@ import SpamPage from "./pages/SpamPage/SpamPage";
 import DraftsPage from "./pages/DraftsPage/DraftsPage";
 import FolderPage from "./pages/FolderPage/FolderPage";
 import NotificationManager from "./widgets/NotificationManager/NotificationManager";
+import "./utils/OfflineManager";
 
 export const AppStorage = {
   csrfToken: "",
@@ -666,7 +667,6 @@ if ("serviceWorker" in navigator) {
   window.addEventListener("load", () => {
     navigator.serviceWorker
       .register("/sw.js", { scope: "/" })
-      .then((reg) => console.log("SW registered:", reg.scope))
       .catch((err) => console.error("SW registration failed:", err));
   });
 }
