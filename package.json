@@ -8,8 +8,8 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "lint": "eslint ./src",
     "lint:fix": "eslint --fix ./src",
-    "start": "webpack serve && node ./webpack/generate-asset-manifest.js",
-    "build": "npx webpack && node ../webpack/generate-asset-manifest.js"
+    "start": "webpack serve && node ./webpack/GeneratePrecacheManifest.js",
+    "build": "npx webpack && node ./webpack/GeneratePrecacheManifest.js"
   },
   "repository": {
     "type": "git",
