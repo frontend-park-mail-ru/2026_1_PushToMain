@@ -62,17 +62,17 @@ class BaseEmailPage extends Death13.Component {
 
   componentDidMount() {
     document.addEventListener("visibilitychange", this.handleVisibilityChange);
-    this.loadEmailInterval = window.setInterval(
-      () => this.loadEmails(this.state.offset),
-      30000,
-    );
+    // this.loadEmailInterval = window.setInterval(
+    //   () => this.loadEmails(this.state.offset),
+    //   30000,
+    // );
   }
 
   componentWillUnmount() {
-    if (this.loadEmailInterval) {
-      clearInterval(this.loadEmailInterval);
-      this.loadEmailInterval = null;
-    }
+    // if (this.loadEmailInterval) {
+    //   clearInterval(this.loadEmailInterval);
+    //   this.loadEmailInterval = null;
+    // }
 
     if (this.handleVisibilityChange) {
       document.removeEventListener(

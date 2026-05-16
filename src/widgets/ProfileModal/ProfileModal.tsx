@@ -23,6 +23,7 @@ class ProfileModal extends Death13.Component {
       is_male: false,
     });
     AppStorage.setUnReadCount(0);
+    AppStorage.setFolders([]);
 
     window.app.handleRoute("/login");
   };

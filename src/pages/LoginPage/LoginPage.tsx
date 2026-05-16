@@ -7,6 +7,8 @@ import "./LoginPage.scss";
 import { AppStorage } from "../../App";
 
 class LoginPage extends Death13.Component {
+  private suffix = "@e-smail.ru";
+
   state: any = {
     errors: {},
     isLoading: false,
@@ -15,9 +17,11 @@ class LoginPage extends Death13.Component {
   };
 
   validateField = (field: string, value: string) => {
-    const suffix = "@e-smail.ru";
     const data: any = {
-      email: field === "email" ? value + suffix : this.state.email + suffix,
+      email:
+        field === "email"
+          ? value + this.suffix
+          : this.state.email + this.suffix,
       password: field === "password" ? value : this.state.password,
     };
 
@@ -46,7 +50,7 @@ class LoginPage extends Death13.Component {
 
   validateAllFields = () => {
     const data = {
-      email: this.state.email,
+      email: this.state.email + this.suffix,
       password: this.state.password,
     };
 
@@ -68,7 +72,7 @@ class LoginPage extends Death13.Component {
   async handleSubmit(event: Event) {
     event.preventDefault();
 
-    this.state.email = this.state.email + "@e-smail.ru";
+    this.state.email = this.state.email;
 
     const isValid = this.validateAllFields();
 
@@ -79,7 +83,7 @@ class LoginPage extends Death13.Component {
     this.setState({ isLoading: true });
 
     const response = await postDataLogin({
-      email: this.state.email,
+      email: this.state.email + this.suffix,
       password: this.state.password,
     });
 
