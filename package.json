@@ -9,7 +9,7 @@
     "lint": "eslint ./src",
     "lint:fix": "eslint --fix ./src",
     "start": "webpack serve && node ./webpack/generate-asset-manifest.js",
-    "build": "npx webpack && node ./webpack/generate-asset-manifest.js"
+    "build": "npx webpack && node ../webpack/generate-asset-manifest.js"
   },
   "repository": {
     "type": "git",
