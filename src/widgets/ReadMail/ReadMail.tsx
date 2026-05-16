@@ -109,7 +109,14 @@ class ReadMail extends Death13.Component {
                 />
               </div>
               <div className="sender-data">
-                <div className="sender__email">{email.senderEmail}</div>
+                <div className="sender__email">
+                  <span>{email.senderEmail}</span>
+                  {isMobile ? (
+                    <div className="email-send-time">
+                      {formatTime(email.createdAt)}
+                    </div>
+                  ) : null}
+                </div>
                 <div className="recivers__emails">
                   {this.t("to")}
                   <div className="input-form">
@@ -123,12 +130,17 @@ class ReadMail extends Death13.Component {
                   </div>
                 </div>
               </div>
-              <div className="top-right-bar">
-                <span className="email-send-time">
-                  {formatTime(email.createdAt)}
-                </span>
-                <div className="close-button" onClick={this.handleCloseEmail} />
-              </div>
+              {!isMobile ? (
+                <div className="top-right-bar">
+                  <span className="email-send-time">
+                    {formatTime(email.createdAt)}
+                  </span>
+                  <div
+                    className="close-button"
+                    onClick={this.handleCloseEmail}
+                  />
+                </div>
+              ) : null}
             </div>
             <Input
               type="text"

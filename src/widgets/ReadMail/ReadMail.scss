@@ -36,6 +36,8 @@
                 }
                 .recivers__emails {
                     display: flex;
+                    flex-direction: row;
+                    align-items: center;
                     gap: 10px;
                     color: var(--tertiary-text);
 
@@ -161,18 +163,21 @@
         .read-form {
             .read-inputs {
                 .read-header {
-                    .sender-info {
-                        .sender-info__text {
-                            gap: 5px;
+                    gap: 10px;
+                    .sender-data {
+                        width: 100%;
+                        font-size: 0.75rem;
+                        .sender__email {
+                            display: flex;
+                            flex-direction: row;
+                            width: 100%;
+                            font-size: 1rem;
 
-                            .sender-name {
-                                flex-direction: column;
-                                height: fit-content;
-                                align-items: flex-start;
-
-                                small {
-                                    margin-left: 0;
-                                }
+                            .email-send-time {
+                                margin-left: auto;
+                                color: var(--secondary-text);
+                                font-weight: 500;
+                                font-size: 0.75rem;
                             }
                         }
                     }
