@@ -110,8 +110,10 @@ export const AppStorage = {
       name_only_letters: "Имя должно состоять только из букв",
       surname_required: "Поле фамилия обязательно",
       surname_only_letters: "Фамилия должно состоять только из букв",
-      server_error: "Ошибка сервера!",
+      server_error: "Сервер перестал работать, попробуйте позже",
+      client_error: "Проверьте введенные данные и попробуйте еще раз",
       too_many_folders: "Максимум 6 папок",
+      incorrect_credentials: "Неверная почта или пароль",
 
       // ProfilePage
       theme: "Тема",
@@ -209,6 +211,7 @@ export const AppStorage = {
 
       //Error
       email_required: "Email field is required",
+      email_exists: "This address is already used",
       email_invalid_format: "Email must be in format *@e-smail.ru",
       email_max_length: "Email must be no more than 40 characters",
       password_required: "Password field is required",
@@ -219,8 +222,10 @@ export const AppStorage = {
       name_only_letters: "Name must contain only letters",
       surname_required: "Surname field is required",
       surname_only_letters: "Surname must contain only letters",
-      server_error: "Server error!",
+      server_error: "Server stopped working, try again later",
+      client_error: "Check your data and try again",
       too_many_folders: "Limit of 6 folders reached",
+      incorrect_credentials: "Incorrect email or password",
 
       // ProfilePage
       theme: "Theme",
