@@ -531,6 +531,7 @@ class Component {
   }
 
   componentDidMount() {}
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   componentDidUpdate(_prevProps: any, _prevState: any) {}
   componentWillUnmount() {}
 
