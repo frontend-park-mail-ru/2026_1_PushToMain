@@ -144,9 +144,17 @@ class ProfilePage extends Death13.Component {
   async handleChangeProfileData(event: any) {
     const { birthDay, birthMonth, birthYear } = this.state;
 
-    const month = birthMonth.padStart(2, "0");
-    const day = birthDay.padStart(2, "0");
-    const birthDate = `${birthYear}-${month}-${day}T00:00:00Z`;
+    let birthDate = null;
+
+    if (
+      birthYear?.length > 0 &&
+      birthMonth?.length > 0 &&
+      birthDay?.length > 0
+    ) {
+      const month = birthMonth.padStart(2, "0");
+      const day = birthDay.padStart(2, "0");
+      birthDate = `${birthYear}-${month}-${day}T00:00:00Z`;
+    }
 
     event.preventDefault();
     try {

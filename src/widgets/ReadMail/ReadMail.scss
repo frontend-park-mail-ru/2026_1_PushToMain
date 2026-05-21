@@ -164,9 +164,11 @@
             .read-inputs {
                 .read-header {
                     gap: 10px;
+
                     .sender-data {
                         width: 100%;
                         font-size: 0.75rem;
+
                         .sender__email {
                             display: flex;
                             flex-direction: row;

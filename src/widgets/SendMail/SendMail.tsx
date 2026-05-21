@@ -48,7 +48,6 @@ class SendMail extends Death13.Component {
     }
 
     const isValid = this.isFormValid(
-      newState.header,
       newState.body,
       newState.receivers,
       newState.invalidReceivers,
