@@ -4,6 +4,7 @@ import MiniCssExtractPlugin from "mini-css-extract-plugin";
 import CssMinimizerPlugin from "css-minimizer-webpack-plugin";
 import ImageMinimizerPlugin from "image-minimizer-webpack-plugin";
 import CopyWebpackPlugin from "copy-webpack-plugin";
+import GeneratePrecacheManifest from "./webpack/GeneratePrecacheManifest.js";
 
 const __dirname = dirname("./");
 
@@ -32,6 +33,7 @@ export default {
         },
       ],
     }),
+    new GeneratePrecacheManifest(),
   ],
 
   optimization: {

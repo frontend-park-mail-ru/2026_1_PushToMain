@@ -10,7 +10,7 @@ interface Hook {
 }
 
 interface Fiber {
-  type: string | ((props: any) => any);
+  type: string | ((_props: any) => any);
   props: any;
   parent: Fiber | null;
   dom: Node | null;
@@ -21,9 +21,12 @@ interface Fiber {
   hooks?: Hook[];
   hookIndex?: number;
   instance?: any;
+  ref?: ((_node: Node | null) => void) | null;
 }
 
-function useState<T>(initial: T): [T, (action: T | ((prev: T) => T)) => void] {
+function useState<T>(
+  initial: T,
+): [T, (_action: T | ((_prev: T) => T)) => void] {
   const fiber = wipFiber;
   if (!fiber) throw new Error("useState must be called inside a component");
 
@@ -40,7 +43,7 @@ function useState<T>(initial: T): [T, (action: T | ((prev: T) => T)) => void] {
     hook.state = action instanceof Function ? action(hook.state) : action;
   });
 
-  const setState = (action: T | ((prev: T) => T)) => {
+  const setState = (action: T | ((_prev: T) => T)) => {
     hook.queue.push(action);
 
     wipRoot = {
@@ -122,12 +125,14 @@ function updateDomProperties(dom: Node, prevProps: any, nextProps: any) {
     } else if (name === "style") {
       if (prevProps.style && typeof prevProps.style === "object") {
         Object.keys(prevProps.style).forEach((cssProp: any) => {
-          element.style[cssProp] = "";
+          (element.style as any)[cssProp] = "";
         });
       }
     } else if (!(name in nextProps)) {
       if (name === "value") {
         (element as any).value = "";
+      } else if (name === "checked") {
+        (element as HTMLInputElement).checked = false;
       } else {
         element.removeAttribute(attrName);
       }
@@ -147,7 +152,7 @@ function updateDomProperties(dom: Node, prevProps: any, nextProps: any) {
       const styleObj = nextProps.style;
       if (styleObj && typeof styleObj === "object") {
         Object.keys(styleObj).forEach((cssProp: any) => {
-          element.style[cssProp] = styleObj[cssProp];
+          (element.style as any)[cssProp] = styleObj[cssProp];
         });
       }
     } else if (prevProps[name] !== nextProps[name]) {
@@ -158,12 +163,16 @@ function updateDomProperties(dom: Node, prevProps: any, nextProps: any) {
       ) {
         if (name === "value") {
           (element as any).value = "";
+        } else if (name === "checked") {
+          (element as HTMLInputElement).checked = false;
         } else {
           element.removeAttribute(attrName);
         }
       } else {
         if (name === "value") {
           (element as any).value = nextProps[name];
+        } else if (name === "checked") {
+          (element as HTMLInputElement).checked = nextProps[name];
         } else {
           element.setAttribute(attrName, String(nextProps[name]));
         }
@@ -183,16 +192,21 @@ function reconcileChildren(wipFiber: Fiber, elements: any[]) {
     const element = validElements[index];
     let newFiber: Fiber | null = null;
 
+    const elementProps = element ? { ...element.props } : null;
+    const ref = elementProps?.ref;
+    if (elementProps) delete elementProps.ref;
+
     const sameType = oldFiber && element && oldFiber.type === element.type;
 
     if (sameType) {
       newFiber = {
         type: oldFiber!.type,
-        props: element.props,
+        props: elementProps,
         parent: wipFiber,
         dom: oldFiber!.dom,
         alternate: oldFiber,
         effectTag: "UPDATE",
+        ref,
       };
       if (oldFiber?.instance) {
         newFiber.instance = oldFiber.instance;
@@ -205,6 +219,7 @@ function reconcileChildren(wipFiber: Fiber, elements: any[]) {
         dom: null,
         alternate: undefined,
         effectTag: "PLACEMENT",
+        ref,
       };
     }
 
@@ -229,6 +244,10 @@ function reconcileChildren(wipFiber: Fiber, elements: any[]) {
 
     index++;
   }
+
+  if (wipFiber) {
+    wipFiber.hookIndex = 0;
+  }
 }
 
 function updateFunctionComponent(fiber: Fiber) {
@@ -236,7 +255,7 @@ function updateFunctionComponent(fiber: Fiber) {
   wipFiber.hookIndex = 0;
   wipFiber.hooks = [];
 
-  const children = [(fiber.type as (props: any) => any)(fiber.props)];
+  const children = [(fiber.type as (_props: any) => any)(fiber.props)];
   reconcileChildren(fiber, children);
 }
 
@@ -318,9 +337,21 @@ function commitWork(fiber: Fiber | null | undefined) {
 
   if (fiber.effectTag === "PLACEMENT" && fiber.dom && domParent) {
     domParent.appendChild(fiber.dom);
+    if (typeof fiber.ref === "function") {
+      fiber.ref(fiber.dom);
+    }
   } else if (fiber.effectTag === "UPDATE" && fiber.dom) {
     updateDomProperties(fiber.dom, fiber.alternate?.props || {}, fiber.props);
+    const oldRef = fiber.alternate?.ref;
+    const newRef = fiber.ref;
+    if (oldRef !== newRef) {
+      if (typeof oldRef === "function") oldRef(null);
+      if (typeof newRef === "function") newRef(fiber.dom);
+    }
   } else if (fiber.effectTag === "DELETION") {
+    if (typeof fiber.ref === "function") {
+      fiber.ref(null);
+    }
     commitDeletion(fiber, domParent!);
     return;
   }
@@ -328,8 +359,23 @@ function commitWork(fiber: Fiber | null | undefined) {
   if (fiber.child) {
     commitWork(fiber.child);
   }
+
+  if (fiber.instance) {
+    if (fiber.effectTag === "PLACEMENT") {
+      fiber.instance.componentDidMount();
+    } else if (fiber.effectTag === "UPDATE") {
+      const prevProps = fiber.alternate?.props || {};
+      const prevState = fiber.alternate?.instance?.state || {};
+      fiber.instance.componentDidUpdate(prevProps, prevState);
+    }
+  }
+
   if (fiber.sibling) {
     commitWork(fiber.sibling);
+  }
+
+  if (fiber.hooks) {
+    fiber.hooks.forEach((h) => (h.queue = []));
   }
 }
 
@@ -349,16 +395,21 @@ function commitDeletion(fiber: Fiber, domParent: Node) {
 function workLoop(deadline: IdleDeadline) {
   let shouldYield = false;
 
-  while (nextUnitOfWork && !shouldYield) {
-    nextUnitOfWork = performUnitOfWork(nextUnitOfWork);
-    shouldYield = deadline.timeRemaining() < 1;
+  try {
+    while (nextUnitOfWork && !shouldYield) {
+      nextUnitOfWork = performUnitOfWork(nextUnitOfWork);
+      shouldYield = deadline.timeRemaining() < 1;
+    }
+    if (!nextUnitOfWork && wipRoot) {
+      commitRoot();
+    }
+  } catch (e) {
+    console.error("workLoop crashed, restarting:", e);
+    nextUnitOfWork = null;
+    wipRoot = null;
+  } finally {
+    requestIdleCallback(workLoop);
   }
-
-  if (!nextUnitOfWork && wipRoot) {
-    commitRoot();
-  }
-
-  requestIdleCallback(workLoop);
 }
 
 requestIdleCallback(workLoop);
@@ -423,6 +474,15 @@ class Component {
   setState(partialState: any) {
     const newState = { ...this.state, ...partialState };
 
+    const keys = Object.keys(newState);
+    for (const k of keys) {
+      if (newState[k] !== this.state[k]) {
+        this.state = newState;
+        this._scheduleUpdate();
+        return;
+      }
+    }
+
     if (JSON.stringify(this.state) === JSON.stringify(newState)) {
       return;
     }
@@ -450,6 +510,30 @@ class Component {
 
     requestIdleCallback(workLoop);
   }
+
+  private _scheduleUpdate() {
+    const fiber = this._fiber;
+    if (!fiber) return;
+    let rootFiber: Fiber = fiber;
+    while (rootFiber.parent) rootFiber = rootFiber.parent;
+
+    wipRoot = {
+      dom: rootFiber.dom,
+      props: rootFiber.props,
+      alternate: currentRoot,
+      type: "root",
+      parent: null,
+    } as Fiber;
+
+    deletions = [];
+    nextUnitOfWork = wipRoot;
+    requestIdleCallback(workLoop);
+  }
+
+  componentDidMount() {}
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  componentDidUpdate(_prevProps: any, _prevState: any) {}
+  componentWillUnmount() {}
 
   render(): any {
     return null;

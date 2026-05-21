@@ -8,9 +8,9 @@ import { validation } from "../../utils/validation";
 import { changePassword, getProfile, changeProfile } from "../../api/ApiAuth";
 import { AppStorage } from "../../App";
 import ProfileModal from "../../widgets/ProfileModal/ProfileModal";
-import ConfirmationModal from "../../widgets/ConfirmationModal/ConfirmationModal";
 import SelectDate from "../../components/SelectDate/SelectDate";
 import FolderChange from "../../widgets/FolderChange/FolderChange";
+import NotificationManager from "../../widgets/NotificationManager/NotificationManager";
 
 class ProfilePage extends Death13.Component {
   private unsubscribe: (() => void) | null = null;
@@ -116,7 +116,7 @@ class ProfilePage extends Death13.Component {
       avatarKey: this.state.avatarKey + 1,
       avatarUrl: AppStorage.getAvatarUrl(),
     });
-    this.addModal(true);
+    NotificationManager.show(true);
   };
 
   async handleChangePassword(event: any) {
@@ -132,21 +132,29 @@ class ProfilePage extends Death13.Component {
           oldPassword: "",
           newPassword: "",
         });
-        this.addModal(true);
+        NotificationManager.show(true);
       } else {
-        this.addModal(false, "passwords_dont_match");
+        NotificationManager.show(false, "passwords_dont_match");
       }
     } catch {
-      this.addModal(false);
+      NotificationManager.show(false);
     }
   }
 
   async handleChangeProfileData(event: any) {
     const { birthDay, birthMonth, birthYear } = this.state;
 
-    const month = birthMonth.padStart(2, "0");
-    const day = birthDay.padStart(2, "0");
-    const birthDate = `${birthYear}-${month}-${day}T00:00:00Z`;
+    let birthDate = null;
+
+    if (
+      birthYear?.length > 0 &&
+      birthMonth?.length > 0 &&
+      birthDay?.length > 0
+    ) {
+      const month = birthMonth.padStart(2, "0");
+      const day = birthDay.padStart(2, "0");
+      birthDate = `${birthYear}-${month}-${day}T00:00:00Z`;
+    }
 
     event.preventDefault();
     try {
@@ -181,9 +189,9 @@ class ProfilePage extends Death13.Component {
           birthMonth: birthMonth,
           birthYear: birthYear,
         });
-        this.addModal(true);
+        NotificationManager.show(true);
       } else {
-        this.addModal(false);
+        NotificationManager.show(false);
       }
     } catch (error) {
       console.error("Ошибка изменения профиля:", error);
@@ -287,25 +295,6 @@ class ProfilePage extends Death13.Component {
     if (sidebar) {
       sidebar.classList.toggle("open");
     }
-  };
-
-  handleShowConfirmationModal = (status: boolean, message: string) => {
-    this.setState({
-      isConfirm: true,
-      isStatus: status,
-      message: message,
-    });
-  };
-
-  addModal = (status: boolean, message?: string) => {
-    const id = Date.now();
-    const prevModals = this.state.modals;
-    this.setState({ modals: [...prevModals, { id, status, message }] });
-  };
-
-  removeModal = (id: Date) => {
-    const newModals = this.state.modals.filter((m: any) => m.id !== id);
-    this.setState({ modals: newModals });
   };
 
   t(key: string): string {
@@ -603,21 +592,12 @@ class ProfilePage extends Death13.Component {
                   </div>
                 ) : null}
                 <h1>{this.t("folder")}</h1>
-                <div className="profile-header">
-                  <Button
-                    name={this.state.isFolderEditMode ? "done" : "edit"}
-                    onClick={(event: any) => {
-                      event.preventDefault();
-                      this.handleToggleFolderEditMode();
-                    }}
-                  />
-                </div>
 
                 <div className="profile-content">
                   <form action="" className="profile-form">
                     <FolderChange
                       isEditMode={this.state.isFolderEditMode}
-                      showConfirmationModal={this.addModal}
+                      showConfirmationModal={NotificationManager.show}
                     />
                   </form>
                 </div>
@@ -631,16 +611,6 @@ class ProfilePage extends Death13.Component {
             onLogout={this.handleLogout}
           />
         </div>
-        {this.state.modals.map((modal: any, index: number) => (
-          <ConfirmationModal
-            key={modal.id}
-            isOpen={true}
-            onClose={() => this.removeModal(modal.id)}
-            isStatus={modal.status}
-            message={modal.message}
-            index={index}
-          />
-        ))}
       </div>
     );
   }

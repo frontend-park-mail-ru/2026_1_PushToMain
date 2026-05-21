@@ -1,19 +1,17 @@
 import { EMAIL_URL } from "./config";
-import { getCSRFToken } from "./ApiAuth";
+import { AppStorage } from "../App";
 
 // private.HandleFunc("/drafts/{id}", h.UpdateDraft).Methods(http.MethodPut, http.MethodOptions);
 // private.HandleFunc("/drafts/{id}/send", h.SendDraft).Methods(http.MethodPost, http.MethodOptions);
 //	private.HandleFunc("/drafts/{id}", h.UpdateDraft).Methods(http.MethodPut, http.MethodOptions)
 
-
 export async function createDraft(draftData: { header: string; body: string; receivers: string[] }) {
     try {
-        const csrfToken = await getCSRFToken();
         const response = await fetch(`${EMAIL_URL}/drafts`, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
-                "X-CSRF-Token": csrfToken,
+                "X-CSRF-Token": AppStorage.csrfToken,
             },
             credentials: "include",
             body: JSON.stringify({
@@ -34,12 +32,11 @@ export async function createDraft(draftData: { header: string; body: string; rec
 
 export async function getDraftByID(ID: number) {
     try {
-        const csrfToken = await getCSRFToken();
         const response = await fetch(`${EMAIL_URL}/drafts/${ID}`, {
             method: "GET",
             headers: {
                 "Content-Type": "application/json",
-                "X-CSRF-Token": csrfToken,
+                "X-CSRF-Token": AppStorage.csrfToken,
             },
             credentials: "include",
         });
@@ -51,12 +48,11 @@ export async function getDraftByID(ID: number) {
 
 export async function updateDraft(draftData: { header: string; body: string; receivers: string[] }, ID: number) {
     try {
-        const csrfToken = await getCSRFToken();
         const response = await fetch(`${EMAIL_URL}/drafts/${ID}`, {
             method: "PUT",
             headers: {
                 "Content-Type": "application/json",
-                "X-CSRF-Token": csrfToken,
+                "X-CSRF-Token": AppStorage.csrfToken,
             },
             credentials: "include",
             body: JSON.stringify({
@@ -77,12 +73,11 @@ export async function updateDraft(draftData: { header: string; body: string; rec
 
 export async function deleteDraft(IDs: number[]) {
     try {
-        const csrfToken = await getCSRFToken();
         const response = await fetch(`${EMAIL_URL}/drafts`, {
             method: "DELETE",
             headers: {
                 "Content-Type": "application/json",
-                "X-CSRF-Token": csrfToken,
+                "X-CSRF-Token": AppStorage.csrfToken,
             },
             credentials: "include",
             body: JSON.stringify({ ids: IDs }),
@@ -118,12 +113,11 @@ export async function getDrafts(offset: number) {
 
 export async function sendDraft(data = {}, draftID: number) {
     try {
-        const csrfToken = await getCSRFToken();
         const response = await fetch(`${EMAIL_URL}/drafts/${draftID}/send`, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
-                "X-CSRF-Token": csrfToken,
+                "X-CSRF-Token": AppStorage.csrfToken,
             },
             credentials: "include",
             body: JSON.stringify(data),

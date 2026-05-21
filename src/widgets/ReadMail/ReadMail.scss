@@ -36,6 +36,8 @@
                 }
                 .recivers__emails {
                     display: flex;
+                    flex-direction: row;
+                    align-items: center;
                     gap: 10px;
                     color: var(--tertiary-text);
 
@@ -54,6 +56,33 @@
                             padding: 0 10px;
                             height: 24px;
                         }
+                    }
+                }
+            }
+
+            .top-right-bar {
+                display: flex;
+                align-items: center;
+                margin-left: auto;
+                align-self: flex-start;
+                gap: 20px;
+
+                .email-send-time {
+                    color: var(--secondary-text);
+                }
+
+                .close-button {
+                    margin: 5px;
+                    height: 16px;
+                    width: 16px;
+                    background-color: var(--tertiary-text);
+                    mask-image: url(/assets/svg/Close.svg);
+                    mask-size: contain;
+                    mask-position: center;
+                    cursor: pointer;
+
+                    @media (max-width: 768px) {
+                        display: none;
                     }
                 }
             }
@@ -134,18 +163,23 @@
         .read-form {
             .read-inputs {
                 .read-header {
-                    .sender-info {
-                        .sender-info__text {
-                            gap: 5px;
+                    gap: 10px;
 
-                            .sender-name {
-                                flex-direction: column;
-                                height: fit-content;
-                                align-items: flex-start;
+                    .sender-data {
+                        width: 100%;
+                        font-size: 0.75rem;
 
-                                small {
-                                    margin-left: 0;
-                                }
+                        .sender__email {
+                            display: flex;
+                            flex-direction: row;
+                            width: 100%;
+                            font-size: 1rem;
+
+                            .email-send-time {
+                                margin-left: auto;
+                                color: var(--secondary-text);
+                                font-weight: 500;
+                                font-size: 0.75rem;
                             }
                         }
                     }

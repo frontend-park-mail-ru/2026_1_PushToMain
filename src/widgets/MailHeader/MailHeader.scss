@@ -28,6 +28,19 @@
             }
         }
 
+        @keyframes spin {
+            from {
+                transform: rotate(0deg);
+            }
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        [name="refresh"].refreshing::before {
+            animation: spin 1s linear infinite;
+        }
+
         .select-all-container {
             display: flex;
             gap: 5px;
@@ -294,10 +307,6 @@
                 width: 20px;
                 height: 20px;
                 background-color: var(--secondary-text);
-                mask-image: url("/assets/svg/ArrowLeft.svg");
-                mask-size: contain;
-                mask-repeat: no-repeat;
-                mask-position: center;
             }
         }
     }

@@ -4,9 +4,9 @@ let folderUrl: string;
 
 // чтобы можно было на локальной машине тестить
 if (location.hostname === "localhost") {
-  userUrl = `${location.protocol}//localhost:8081/api/v1`;
-  emailUrl = `${location.protocol}//localhost:8082/api/v1`;
-  folderUrl = `${location.protocol}//localhost:8083/api/v1`;
+  userUrl = `${location.protocol}//localhost:8081/api/v1/user`;
+  emailUrl = `${location.protocol}//localhost:8082/api/v1/email`;
+  folderUrl = `${location.protocol}//localhost:8083/api/v1/folder`;
 } else {
   userUrl = `${location.protocol}//${location.hostname}/api/v1/user`;
   emailUrl = `${location.protocol}//${location.hostname}/api/v1/email`;

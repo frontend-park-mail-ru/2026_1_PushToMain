@@ -1,12 +1,12 @@
 import { EMAIL_URL } from "./config";
-import { getCSRFToken } from "./ApiAuth";
+import { AppStorage } from "../App";
 /**
- * Отправляет GET-запрос на эндпоинт /emails.
+ * Отправляет GET-запрос на эндпоинт /inbox.
  */
 export async function getEmailAll(offset: number) {
   try {
     const response = await fetch(
-      `${EMAIL_URL}/emails?limit=50&offset=${offset}`,
+      `${EMAIL_URL}/inbox?limit=50&offset=${offset}`,
       {
         method: "GET",
         headers: {
@@ -27,12 +27,11 @@ export async function getEmailAll(offset: number) {
 
 export async function sendEmail(data = {}) {
   try {
-    const csrfToken = await getCSRFToken();
     const response = await fetch(`${EMAIL_URL}/send`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        "X-CSRF-Token": csrfToken,
+        "X-CSRF-Token": AppStorage.csrfToken,
       },
       credentials: "include",
       body: JSON.stringify(data),
@@ -53,12 +52,11 @@ export async function sendEmail(data = {}) {
     */
 export async function readEmail(email_ids: number[]) {
   try {
-    const csrfToken = await getCSRFToken();
     const response = await fetch(`${EMAIL_URL}/emails/read`, {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",
-        "X-CSRF-Token": csrfToken,
+        "X-CSRF-Token": AppStorage.csrfToken,
       },
       credentials: "include",
       body: JSON.stringify({ email_ids: email_ids }),
@@ -76,12 +74,11 @@ export async function readEmail(email_ids: number[]) {
 
 export async function unReadEmail(email_ids: number[]) {
   try {
-    const csrfToken = await getCSRFToken();
     const response = await fetch(`${EMAIL_URL}/emails/unread`, {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",
-        "X-CSRF-Token": csrfToken,
+        "X-CSRF-Token": AppStorage.csrfToken,
       },
       credentials: "include",
       body: JSON.stringify({ email_ids: email_ids }),
@@ -99,12 +96,11 @@ export async function unReadEmail(email_ids: number[]) {
 
 export async function getEmailByID(ID: number) {
   try {
-    const csrfToken = await getCSRFToken();
     const response = await fetch(`${EMAIL_URL}/emails/${ID}`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
-        "X-CSRF-Token": csrfToken,
+        "X-CSRF-Token": AppStorage.csrfToken,
       },
       credentials: "include",
     });
@@ -123,7 +119,7 @@ export async function getEmailByID(ID: number) {
 export async function getEmailSend(offset: number) {
   try {
     const response = await fetch(
-      `${EMAIL_URL}/myemails?limit=50&offset=${offset}`,
+      `${EMAIL_URL}/sent?limit=50&offset=${offset}`,
       {
         method: "GET",
         headers: {
@@ -144,12 +140,11 @@ export async function getEmailSend(offset: number) {
 
 export async function seacrhEmail(data: string) {
   try {
-    const csrfToken = await getCSRFToken();
     const response = await fetch(`${EMAIL_URL}/emails/search`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        "X-CSRF-Token": csrfToken,
+        "X-CSRF-Token": AppStorage.csrfToken,
       },
       credentials: "include",
       body: JSON.stringify(data),
@@ -165,7 +160,6 @@ export async function seacrhEmail(data: string) {
 }
 
 export async function uploadFile(file: File, emailId: number) {
-  const csrfToken = await getCSRFToken();
   try {
     const formData = new FormData();
     formData.append("file", file);
@@ -173,7 +167,7 @@ export async function uploadFile(file: File, emailId: number) {
     const response = await fetch(`${EMAIL_URL}/emails/send/${emailId}/file`, {
       method: "POST",
       headers: {
-        "X-CSRF-Token": csrfToken,
+        "X-CSRF-Token": AppStorage.csrfToken,
       },
       credentials: "include",
       body: formData,

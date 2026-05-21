@@ -26,7 +26,7 @@
 .input__title {
     font-size: 16px;
     padding-left: 15px;
-    color: var(--tertiary-text)
+    color: var(--tertiary-text);
 }
 
 .input-form {
@@ -35,6 +35,7 @@
     align-items: center;
     border: solid 2px var(--input-stroke);
     border-radius: 20px;
+    overflow: visible;
 
     input {
         width: 100%;
@@ -63,6 +64,20 @@
         width: 20px;
         height: 20px;
         cursor: pointer;
+    }
+
+    .input-suffix {
+        position: absolute;
+        right: 14px;
+        top: 50%;
+        transform: translateY(-50%);
+        font-size: 16px;
+        color: var(--tertiary-text);
+        pointer-events: none;
+        user-select: none;
+        background: transparent;
+        white-space: nowrap;
+        line-height: 1;
     }
 
     .password-toggle {
@@ -94,6 +109,10 @@
             color: var(--error-text);
         }
 
+        .input-suffix {
+            color: var(--error-text);
+        }
+
         .password-toggle {
             background-color: var(--error-text);
         }
@@ -109,5 +128,13 @@
         .password-toggle {
             background-color: var(--button-active-background);
         }
+    }
+}
+
+.input-form.has-suffix input {
+    padding-right: 25%;
+
+    @media (max-width: 768px) {
+        padding-right: 26vw;
     }
 }

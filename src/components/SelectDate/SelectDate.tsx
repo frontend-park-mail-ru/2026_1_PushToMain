@@ -16,6 +16,16 @@ class SelectDate extends Death13.Component {
     year: "",
   };
 
+  private daysInMonth(month: number, year: number): number {
+    return new Date(year, month, 0).getDate();
+  }
+
+  private isValidDay(day: number, month: number, year: number): boolean {
+    if (isNaN(day) || isNaN(month) || isNaN(year)) return false;
+    const max = this.daysInMonth(month, year);
+    return day >= 1 && day <= max;
+  }
+
   getDay() {
     return this.state.day || this.props.birthDay || "";
   }
@@ -40,23 +50,50 @@ class SelectDate extends Death13.Component {
   }
 
   handleMonthChange(value: string) {
-    this.setState({ month: value, day: "" });
+    const newMonth = value;
+    const currentYear = this.getYear();
+    const currentDay = this.getDay();
+
+    let newDay = currentDay;
+    if (currentDay && newMonth && currentYear) {
+      const dayNum = parseInt(currentDay, 10);
+      const monthNum = parseInt(newMonth, 10);
+      const yearNum = parseInt(currentYear, 10);
+      if (!this.isValidDay(dayNum, monthNum, yearNum)) {
+        newDay = "";
+      }
+    }
+    this.setState({ month: newMonth, day: newDay });
     if (this.props.onChange) {
       this.props.onChange({
-        day: "",
-        month: value,
-        year: this.getYear(),
+        day: newDay,
+        month: newMonth,
+        year: currentYear,
       });
     }
   }
 
   handleYearChange(value: string) {
-    this.setState({ year: value, day: "" });
+    const newYear = value;
+    const currentMonth = this.getMonth();
+    const currentDay = this.getDay();
+
+    let newDay = currentDay;
+    if (currentDay && currentMonth && newYear) {
+      const dayNum = parseInt(currentDay, 10);
+      const monthNum = parseInt(currentMonth, 10);
+      const yearNum = parseInt(newYear, 10);
+      if (!this.isValidDay(dayNum, monthNum, yearNum)) {
+        newDay = "";
+      }
+    }
+
+    this.setState({ year: newYear, day: newDay });
     if (this.props.onChange) {
       this.props.onChange({
-        day: "",
-        month: this.getMonth(),
-        year: value,
+        day: newDay,
+        month: currentMonth,
+        year: newYear,
       });
     }
   }

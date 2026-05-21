@@ -1,5 +1,5 @@
 import { EMAIL_URL } from "./config";
-import { getCSRFToken } from "./ApiAuth";
+import { AppStorage } from "../App";
 
 export async function getEmailsTrash(offset: number) {
     try {
@@ -22,12 +22,11 @@ export async function getEmailsTrash(offset: number) {
 
 export async function trash(IDs: number[]) {
     try {
-        const csrfToken = await getCSRFToken();
         const response = await fetch(`${EMAIL_URL}/emails/trash`, {
             method: "PUT",
             headers: {
                 "Content-Type": "application/json",
-                "X-CSRF-Token": csrfToken,
+                "X-CSRF-Token": AppStorage.csrfToken,
             },
             credentials: "include",
             body: JSON.stringify({ ids: IDs }),
@@ -44,12 +43,11 @@ export async function trash(IDs: number[]) {
 
 export async function untrash(IDs: number[]) {
     try {
-        const csrfToken = await getCSRFToken();
         const response = await fetch(`${EMAIL_URL}/emails/untrash`, {
             method: "PUT",
             headers: {
                 "Content-Type": "application/json",
-                "X-CSRF-Token": csrfToken,
+                "X-CSRF-Token": AppStorage.csrfToken,
             },
             credentials: "include",
             body: JSON.stringify({ ids: IDs }),
