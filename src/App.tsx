@@ -599,6 +599,11 @@ class App {
         component: FolderPage,
         paramName: "folderId",
       },
+      {
+        pattern: /^\/profile\/(personal|password|interface|folders)$/,
+        component: ProfilePage,
+        paramName: "tab",
+      },
     ];
 
     window.addEventListener("popstate", () => {

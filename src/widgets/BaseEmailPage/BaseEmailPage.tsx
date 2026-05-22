@@ -142,13 +142,13 @@ class BaseEmailPage extends Death13.Component {
 
   handleProfileClick = () => {
     this.setState({ isModalOpen: false });
-    window.app.handleRoute("/profile");
+    window.app.handleRoute("/profile/personal");
   };
 
   handleSettingsClick = () => {
     this.setState({ isModalOpen: false });
     AppStorage.setOpenSettingsOnProfile(true);
-    window.app.handleRoute("/profile");
+    window.app.handleRoute("/profile/interface");
   };
 
   handleNewMail = () => {

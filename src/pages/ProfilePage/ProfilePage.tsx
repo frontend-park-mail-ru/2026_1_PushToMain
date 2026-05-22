@@ -23,6 +23,7 @@ class ProfilePage extends Death13.Component {
     });
 
     this.loadProfile();
+    this.syncTabFromUrl();
 
     const shouldOpenSettings = AppStorage.getOpenSettingsOnProfile();
 
@@ -50,7 +51,42 @@ class ProfilePage extends Death13.Component {
       isFolderEditMode: false,
       message: null,
     };
+
+    this.syncTabFromUrl();
   }
+
+  componentDidMount() {
+    window.addEventListener("popstate", this.syncTabFromUrl);
+  }
+
+  componentWillUnmount() {
+    window.removeEventListener("popstate", this.syncTabFromUrl);
+  }
+
+  syncTabFromUrl = () => {
+    const match = window.location.pathname.match(/\/profile\/(.+)$/);
+    if (match) {
+      const tab = match[1];
+      switch (tab) {
+        case "personal":
+          this.setState({ profileState: 0 });
+          break;
+        case "password":
+          this.setState({ profileState: 1 });
+          break;
+        case "interface":
+          this.setState({ profileState: 2 });
+          break;
+        case "folders":
+          this.setState({ profileState: 3 });
+          break;
+        default:
+          this.setState({ profileState: 0 });
+      }
+    } else if (window.location.pathname === "/profile") {
+      this.setState({ profileState: 0 });
+    }
+  };
 
   loadProfile = async () => {
     const data = await getProfile();
@@ -253,24 +289,33 @@ class ProfilePage extends Death13.Component {
   };
 
   handleProfileClick = () => {
-    this.setState({ isModalOpen: false, isConfirm: false });
-    window.app.handleRoute("/profile");
+    this.setState({ isModalOpen: false, isConfirm: false, profileState: 0 });
+    window.app.handleRoute("/profile/personal");
+  };
+
+  handleSettingsClick = () => {
+    this.setState({ isModalOpen: false, isConfirm: false, profileState: 2 });
+    window.app.handleRoute("/profile/interface");
   };
 
   handleChangeProfile = () => {
     this.setState({ profileState: 0 });
+    window.app.handleRoute("/profile/personal", true);
   };
 
   handleChangePasswordState = () => {
     this.setState({ profileState: 1 });
+    window.app.handleRoute("/profile/password", true);
   };
 
   handleSetting = () => {
     this.setState({ profileState: 2 });
+    window.app.handleRoute("/profile/interface", true);
   };
 
   handleFolder = () => {
     this.setState({ profileState: 3 });
+    window.app.handleRoute("/profile/folders", true);
   };
 
   handleToggleFolderEditMode = async () => {
@@ -608,6 +653,7 @@ class ProfilePage extends Death13.Component {
             isOpen={isModalOpen}
             onClose={this.handleCloseModal}
             onProfileClick={this.handleProfileClick}
+            onSettingsClick={this.handleSettingsClick}
             onLogout={this.handleLogout}
           />
         </div>
