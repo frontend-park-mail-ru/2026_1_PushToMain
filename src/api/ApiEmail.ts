@@ -3,10 +3,32 @@ import { AppStorage } from "../App";
 /**
  * Отправляет GET-запрос на эндпоинт /inbox.
  */
-export async function getEmailAll(offset: number) {
+export async function getInbox(offset: number) {
   try {
     const response = await fetch(
       `${EMAIL_URL}/inbox?limit=50&offset=${offset}`,
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        credentials: "include",
+      },
+    );
+
+    if (response.ok) {
+      const data = await response.json();
+      return data;
+    }
+  } catch {
+    return null;
+  }
+}
+
+export async function getAllEmails(offset: number) {
+  try {
+    const response = await fetch(
+      `${EMAIL_URL}/all-emails?limit=50&offset=${offset}`,
       {
         method: "GET",
         headers: {

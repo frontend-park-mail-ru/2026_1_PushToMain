@@ -108,9 +108,9 @@ class Sidebar extends Death13.Component {
 
   handleAllMailClick = (event: any) => {
     event.preventDefault();
-    AppStorage.setCurrentView("inbox");
+    AppStorage.setCurrentView("all-emails");
     AppStorage.setCurrentFolderId(null);
-    window.app.handleRoute("/");
+    window.app.handleRoute("/all-emails");
     this.toggleSidebar();
   };
 

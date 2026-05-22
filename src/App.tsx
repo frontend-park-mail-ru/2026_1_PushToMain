@@ -13,6 +13,7 @@ import FavoritePage from "./pages/FavoritePage/FavoritePage";
 import SpamPage from "./pages/SpamPage/SpamPage";
 import DraftsPage from "./pages/DraftsPage/DraftsPage";
 import FolderPage from "./pages/FolderPage/FolderPage";
+import AllEmailsPage from "./pages/AllEmailsPage/AllEmailsPage";
 import NotificationManager from "./widgets/NotificationManager/NotificationManager";
 import "./utils/OfflineManager";
 
@@ -584,6 +585,7 @@ class App {
       "/drafts": DraftsPage,
       "/spam": SpamPage,
       "/favorite": FavoritePage,
+      "/all-emails": AllEmailsPage,
     };
 
     this.dynamicRoutes = [
