@@ -68,8 +68,7 @@
                 color: var(--tertiary-text);
                 white-space: nowrap;
                 flex-shrink: 0;
-                max-width: 300px;
-                flex-shrink: 0;
+                max-width: 250px;
 
                 span[contenteditable="true"] {
                     outline: none;
@@ -93,7 +92,7 @@
                 color: var(--tertiary-text);
                 white-space: nowrap;
                 flex-shrink: 0;
-                min-width: 250px;
+                max-width: 250px;
                 overflow: hidden;
                 text-overflow: ellipsis;
                 flex-shrink: 0;
