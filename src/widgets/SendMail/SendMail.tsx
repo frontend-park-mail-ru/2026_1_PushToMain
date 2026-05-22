@@ -115,12 +115,16 @@ class SendMail extends Death13.Component {
       });
     }
 
-    if (responseSend) {
+    if (!responseSend.error) {
       window.AppStorage.clearMailActionData();
       this.props.backToMail();
     } else {
       this.setState({ buttonBlock: false });
-      NotificationManager.show(false, "Ошибка отправки письма");
+      if (responseSend.error.includes("recipient not found")) {
+        NotificationManager.show(false, "recipient_not_found");
+      } else {
+        NotificationManager.show(false, "email_send_error");
+      }
     }
   }
 

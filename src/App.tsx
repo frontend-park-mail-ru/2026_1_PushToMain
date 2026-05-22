@@ -117,6 +117,8 @@ export const AppStorage = {
       client_error: "Проверьте введенные данные и попробуйте еще раз",
       too_many_folders: "Максимум 6 папок",
       incorrect_credentials: "Неверная почта или пароль",
+      recipient_not_found: "Получатель не найден",
+      email_send_error: "Ошибка отправки письма, попробуйте позже",
 
       // ProfilePage
       theme: "Тема",
@@ -231,6 +233,8 @@ export const AppStorage = {
       client_error: "Check your data and try again",
       too_many_folders: "Limit of 6 folders reached",
       incorrect_credentials: "Incorrect email or password",
+      recipient_not_found: "Recipient not found",
+      email_send_error: "Could not send email, try again later",
 
       // ProfilePage
       theme: "Theme",
