@@ -226,12 +226,14 @@ class Sidebar extends Death13.Component {
                     isSelect={currentView === "trash"}
                     onClick={this.handleTrashClick}
                   />
+                  {/*
                   <Button
                     name="button-all-letter"
                     title={this.t("all_letter")}
                     isSelect={currentView === "all-emails"}
                     onClick={this.handleAllMailClick}
                   />
+                  */}
                   {AppStorage.folders &&
                     AppStorage.folders.map((folder: any) => (
                       <div key={folder.id} className="folder-item">
