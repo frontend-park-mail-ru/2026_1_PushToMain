@@ -125,7 +125,7 @@ class InputEmail extends Death13.Component {
   };
 
   validateEmail(email: string) {
-    const emailRegex = /^[a-zA-Z0-9._-]+@e-smail\.ru$/;
+    const emailRegex = /^[a-zA-Z0-9._-]+@([a-zA-Z0-9-]+\.)+[a-zA-Z]{2,}$/;
     return emailRegex.test(email);
   }
 
@@ -261,7 +261,9 @@ class InputEmail extends Death13.Component {
                     />
                   ) : (
                     [
-                      <span key="text">{email}</span>,
+                      <span className="email-text" key="text">
+                        {email}
+                      </span>,
                       <button
                         key="remove"
                         type="button"

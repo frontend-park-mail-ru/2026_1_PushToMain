@@ -68,9 +68,7 @@
                 color: var(--tertiary-text);
                 white-space: nowrap;
                 flex-shrink: 0;
-                max-width: 200px;
-                overflow: hidden;
-                text-overflow: ellipsis;
+                max-width: 300px;
                 flex-shrink: 0;
 
                 span[contenteditable="true"] {
@@ -95,7 +93,7 @@
                 color: var(--tertiary-text);
                 white-space: nowrap;
                 flex-shrink: 0;
-                max-width: 200px;
+                min-width: 250px;
                 overflow: hidden;
                 text-overflow: ellipsis;
                 flex-shrink: 0;
@@ -122,7 +120,6 @@
                 overflow: hidden;
                 text-overflow: ellipsis;
                 white-space: nowrap;
-                max-width: 180px;
                 display: inline-block;
                 height: auto;
                 align-self: center;
