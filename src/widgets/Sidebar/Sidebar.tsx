@@ -229,6 +229,7 @@ class Sidebar extends Death13.Component {
                   <Button
                     name="button-all-letter"
                     title={this.t("all_letter")}
+                    isSelect={currentView === "all-emails"}
                     onClick={this.handleAllMailClick}
                   />
                   {AppStorage.folders &&
