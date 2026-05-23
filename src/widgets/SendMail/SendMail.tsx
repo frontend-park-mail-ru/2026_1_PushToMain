@@ -162,6 +162,10 @@ class SendMail extends Death13.Component {
         NotificationManager.show(true, "draft_saved");
       }
     } else {
+      if (header === "" && body === "" && receivers.length === 0) {
+        this.props.backToMail();
+        return;
+      }
       const response = await createDraft({
         header: header.trim(),
         body: body.trim(),
