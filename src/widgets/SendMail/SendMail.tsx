@@ -99,6 +99,14 @@ class SendMail extends Death13.Component {
     let responseSend;
 
     if (draftId) {
+      await updateDraft(
+        {
+          header: header.trim(),
+          body: body.trim(),
+          receivers: receivers,
+        },
+        draftId,
+      );
       responseSend = await sendDraft(
         {
           header: header.trim(),

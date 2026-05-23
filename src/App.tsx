@@ -96,6 +96,7 @@ export const AppStorage = {
       enter_subject: "Введите тему",
       to: "Кому:",
       empty_subject: "<Без темы>",
+      no_recipient: "<Без получателя>",
 
       //Drafts
       draft_saved: "Черновик сохранен",
@@ -210,6 +211,7 @@ export const AppStorage = {
       enter_subject: "Enter subject",
       to: "To:",
       empty_subject: "<No subject>",
+      no_recipient: "<No recipient>",
 
       //Drafts
       draft_saved: "Draft saved",
