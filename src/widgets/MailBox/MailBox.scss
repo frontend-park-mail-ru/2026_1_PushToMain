@@ -79,14 +79,16 @@
         width: 24px;
         height: 24px;
         margin: 0;
-        background-image: url("/assets/svg/StarOff.svg");
-        background-size: contain;
-        background-position: center;
-        background-repeat: no-repeat;
+        background-color: var(--tertiary-text);
+        mask-image: url("/assets/svg/StarOff.svg");
+        mask-size: contain;
+        mask-repeat: no-repeat;
+        mask-position: center;
         cursor: pointer;
 
         &:checked {
-            background-image: url("/assets/svg/StarOn.svg");
+            mask-image: url("/assets/svg/StarOn.svg");
+            background-color: var(--button-background);
         }
     }
 
