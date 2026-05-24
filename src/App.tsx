@@ -166,6 +166,8 @@ export const AppStorage = {
       off: "Выкл",
       new_email_from: "Новое письмо от",
       from_unknown: "неизвестного",
+      notifications_enabled: "Уведомления в браузере включены",
+      notifications_disabled: "Уведомления в браузере выключены",
 
       //Sidebar
       new_letter: "Новое письмо",
@@ -306,6 +308,8 @@ export const AppStorage = {
       off: "Off",
       new_email_from: "New mail from",
       from_unknown: "unknown account",
+      notifications_enabled: "Browser notifications enabled",
+      notifications_disabled: "Browser notifications disabled",
 
       //Sidebar
       new_letter: "New mail",

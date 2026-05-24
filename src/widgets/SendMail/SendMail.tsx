@@ -413,6 +413,7 @@ class SendMail extends Death13.Component {
               onChange={this.handleFileChange}
               accept="*/*"
               disabled={uploadingFiles}
+              title={this.t("add_attachment")}
             />
             <div
               className="upload-attachments-button"

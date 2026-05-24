@@ -346,10 +346,12 @@ class ProfilePage extends Death13.Component {
   handleEnableNotifs = () => {
     AppStorage.setNotificationsEnabled(true);
     requestNotificationPermission();
+    NotificationManager.show(true, "notifications_enabled");
   };
 
   handleDisableNotifs = () => {
     AppStorage.setNotificationsEnabled(false);
+    NotificationManager.show(true, "notifications_disabled");
   };
 
   t(key: string): string {
