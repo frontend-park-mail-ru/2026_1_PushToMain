@@ -114,6 +114,11 @@
 
         .attachments-section {
             display: flex;
+
+            &.hidden {
+                display: none;
+            }
+
             .attachments-list {
                 display: flex;
                 flex-direction: row;
@@ -141,6 +146,30 @@
                         mask-image: url(/assets/svg/Draft.svg);
                         mask-size: contain;
                         mask-position: center;
+
+                        &.image {
+                            mask-image: url(/assets/svg/Image.svg);
+                        }
+
+                        &.video {
+                            mask-image: url(/assets/svg/Video.svg);
+                        }
+
+                        &.spreadsheet {
+                            mask-image: url(/assets/svg/Spreadsheet.svg);
+                        }
+
+                        &.archive {
+                            mask-image: url(/assets/svg/Zip.svg);
+                        }
+
+                        &.music {
+                            mask-image: url(/assets/svg/Music.svg);
+                        }
+
+                        &.presentation {
+                            mask-image: url(/assets/svg/Presentation.svg);
+                        }
                     }
 
                     .attachment-info {

@@ -97,8 +97,14 @@ export const AppStorage = {
       subject: "Тема:",
       enter_subject: "Введите тему",
       to: "Кому:",
+      from: "От кого:",
+      date: "Дата:",
+      unknown: "Неизвестно",
       empty_subject: "<Без темы>",
       no_recipient: "<Без получателя>",
+      original_email: "--- Оригинальное сообщение ---",
+      forwarded_email: "--- Пересылаемое сообщение ---",
+      message_sent: "Письмо успешно отправлено",
 
       //File sizes
       zero_bytes: "0 байт",
@@ -131,6 +137,8 @@ export const AppStorage = {
       email_send_error: "Ошибка отправки письма, попробуйте позже",
       notifs_not_supported: "Ваш браузер не поддерживает уведомления.",
       auth_error: "Ошибка авторизации, попробуйте еще раз",
+      file_too_large: "Файл слишком большой (макс. 25 Мбайт)",
+      file_upload_error: "Не удалось загрузить файл",
 
       // ProfilePage
       theme: "Тема",
@@ -227,8 +235,14 @@ export const AppStorage = {
       subject: "Subject:",
       enter_subject: "Enter subject",
       to: "To:",
+      from: "From:",
+      date: "Date:",
+      unknown: "Unknown",
       empty_subject: "<No subject>",
       no_recipient: "<No recipient>",
+      original_email: "--- Original email ---",
+      forwarded_email: "--- Forwarded email ---",
+      message_sent: "Email sent successfully",
 
       //File sizes
       zero_bytes: "0 Bytes",
@@ -263,6 +277,8 @@ export const AppStorage = {
       email_send_error: "Could not send email, try again later",
       notifs_not_supported: "Your browser does not support notifications",
       auth_error: "Could not authorize the user, please log in",
+      file_too_large: "File is too large (25 MB max)",
+      file_upload_error: "Could not upload file, try again later",
 
       // ProfilePage
       theme: "Theme",

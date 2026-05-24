@@ -10,7 +10,7 @@ import { sendSpam } from "../../api/ApiSpam";
 import { trash } from "../../api/ApiTrash";
 import { formatTime } from "../../utils/date";
 import { getAttachments, downloadAttachment } from "../../api/ApiAttachments";
-import { formatFileSize } from "../../utils/files";
+import { formatFileSize, getIconByContentType } from "../../utils/files";
 
 class ReadMail extends Death13.Component {
   state = {
@@ -100,7 +100,7 @@ class ReadMail extends Death13.Component {
       type: "reply",
       to: email.senderEmail || "",
       subject: `Re: ${email.header}`,
-      body: `\n\n--- Оригинальное сообщение ---\nОт кого: ${email.senderEmail || ""}\nДата: ${email.createdAt ? new Date(email.createdAt).toLocaleString("ru-RU") : "Неизвестно"} \n\n${email.body}`,
+      body: `\n\n${this.t("original_email")}\n${this.t("from")} ${email.senderEmail || ""}\n${this.t("date")} ${email.createdAt ? new Date(email.createdAt).toLocaleString("ru-RU") : this.t("unknown")} \n\n${email.body}`,
       originalEmail: email,
     });
 
@@ -113,7 +113,7 @@ class ReadMail extends Death13.Component {
     window.AppStorage.setForwardData({
       type: "forward",
       subject: `Fwd: ${email.header || "Без темы"}`,
-      body: `\n\n--- Пересылаемое сообщение ---\nОт: ${email.senderEmail}\nДата: ${email.createdAt ? new Date(email.createdAt).toLocaleString("ru-RU") : "Неизвестно"}\nТема: ${email.header || "Без темы"}\nКому: ${email.receiverList}\n\n${email.body || ""}`,
+      body: `\n\n${this.t("forwarded_email")}\n${this.t("from")} ${email.senderEmail}\n${this.t("date")} ${email.createdAt ? new Date(email.createdAt).toLocaleString("ru-RU") : this.t("unknown")}\n${this.t("subject")} ${email.header || this.t("empty_subject")}\n${this.t("to")} ${email.receiverList}\n\n${email.body || ""}`,
       originalEmail: email,
     });
 
@@ -140,10 +140,9 @@ class ReadMail extends Death13.Component {
 
   render() {
     const { email } = this.props;
-    const { attachments, attachmentsLoading } = this.state;
+    const { attachments } = this.state;
     const isMobile = window.innerWidth < 769;
-
-    console.log(attachments);
+    const hasAttachments = attachments.length > 0;
 
     return (
       <div className="read-mail">
@@ -209,7 +208,7 @@ class ReadMail extends Death13.Component {
             </div>
             <Input
               type="text"
-              placeholder="Введите тему"
+              placeholder={this.t("empty_subject")}
               input_title={this.t("subject")}
               name="theme"
               readonly={true}
@@ -217,11 +216,15 @@ class ReadMail extends Death13.Component {
               onInput={() => {}}
             />
           </div>
-          <div className="attachments-section">
+          <div
+            className={`attachments-section${hasAttachments ? "" : " hidden"}`}
+          >
             <div className="attachments-list">
               {attachments.map((att: any) => (
                 <div className="attachment-item">
-                  <div className="attachment-icon" />
+                  <div
+                    className={`attachment-icon ${getIconByContentType(att.content_type)}`}
+                  />
                   <div className="attachment-info">
                     <span className="attachment-name">{att.file_name}</span>
                     <span className="attachment-size">

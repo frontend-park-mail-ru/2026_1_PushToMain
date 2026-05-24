@@ -6,10 +6,14 @@ import Textarea from "../../components/Textarea/Textarea";
 import Button from "../../components/Button/Button";
 import NotificationManager from "../NotificationManager/NotificationManager";
 import { sendEmail } from "../../api/ApiEmail";
-import { uploadAttachment } from "../../api/ApiAttachments";
+import {
+  uploadAttachment,
+  getAttachments,
+  deleteAttachments,
+} from "../../api/ApiAttachments";
 import { AppStorage } from "../../App";
 import { createDraft, sendDraft, updateDraft } from "../../api/ApiDraft";
-import { formatFileSize } from "../../utils/files";
+import { formatFileSize, getIconByContentType } from "../../utils/files";
 
 class SendMail extends Death13.Component {
   state: any = {
@@ -63,6 +67,12 @@ class SendMail extends Death13.Component {
     this.state = newState;
   }
 
+  componentDidMount() {
+    if (this.state.draftId) {
+      this.fetchDraftAttachments();
+    }
+  }
+
   isFormValid = (
     body: string,
     receivers: string[],
@@ -94,6 +104,40 @@ class SendMail extends Death13.Component {
   handleReceiversChange = (emails: string[], invalidEmails: string[]) => {
     this.setState({ receivers: emails, invalidReceivers: invalidEmails });
     this.updateButtonState();
+  };
+
+  fetchDraftAttachments = async () => {
+    const { draftId } = this.state;
+    if (!draftId) return;
+
+    try {
+      const data = await getAttachments(draftId);
+
+      if (!data) return;
+
+      let attachmentsArray = [];
+      if (Array.isArray(data)) {
+        attachmentsArray = data;
+      } else if (data && Array.isArray(data.attachments)) {
+        attachmentsArray = data.attachments;
+      } else if (data && Array.isArray(data.data)) {
+        attachmentsArray = data.data;
+      } else if (data && typeof data === "object") {
+        attachmentsArray = [data];
+      }
+
+      const draftFiles = attachmentsArray.map((att: any) => ({
+        id: att.id || Math.random(),
+        name: att.file_name || att.fileName,
+        size: att.size_bytes || att.sizeBytes,
+        type: att.content_type || att.contentType || "application/octet-stream",
+        attachmentId: att.id,
+      }));
+
+      this.setState({ files: [...this.state.files, ...draftFiles] });
+    } catch (err) {
+      console.error("Failed to fetch draft attachments", err);
+    }
   };
 
   async handleSubmit(e: any) {
@@ -133,6 +177,7 @@ class SendMail extends Death13.Component {
     if (!responseSend.error) {
       window.AppStorage.clearMailActionData();
       this.props.backToMail();
+      NotificationManager.show(true, "message_sent");
     } else {
       this.setState({ buttonBlock: false });
       if (responseSend.error.includes("recipient not found")) {
@@ -229,7 +274,7 @@ class SendMail extends Death13.Component {
     }));
 
     this.setState({
-      files: [...this.state.files, ...processedFiles],
+      files: [...processedFiles, ...this.state.files],
     });
   };
 
@@ -239,7 +284,18 @@ class SendMail extends Death13.Component {
     }
   };
 
-  removeFile = (fileId: number) => {
+  removeFile = async (fileId: number) => {
+    const fileItem = this.state.files.find((f: any) => f.id === fileId);
+    if (!fileItem) return;
+
+    if (fileItem.attachmentId) {
+      try {
+        await deleteAttachments(this.state.draftId, [fileItem.attachmentId]);
+      } catch (err) {
+        console.error("Failed to delete attachment", err);
+      }
+    }
+
     this.setState({
       files: this.state.files.filter((file: any) => file.id !== fileId),
     });
@@ -323,7 +379,9 @@ class SendMail extends Death13.Component {
             <div className="files-list">
               {files.map((fileItem: any) => (
                 <div key={fileItem.id} className="file-item">
-                  <div className="file-icon" />
+                  <div
+                    className={`file-icon ${getIconByContentType(fileItem.type)}`}
+                  />
                   <div className="file-info">
                     <span className="file-name">{fileItem.name}</span>
                     <span className="file-size">

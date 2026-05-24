@@ -45,7 +45,10 @@ export async function uploadAttachment(emailId: number, file: File) {
   }
 }
 
-export async function downloadAttachment(emailId: number, attachmentId: number) {
+export async function downloadAttachment(
+  emailId: number,
+  attachmentId: number,
+) {
   try {
     const response = await fetch(
       `${EMAIL_URL}/emails/${emailId}/attachments/${attachmentId}`,
@@ -55,7 +58,7 @@ export async function downloadAttachment(emailId: number, attachmentId: number) 
           "X-CSRF-Token": AppStorage.csrfToken,
         },
         credentials: "include",
-      }
+      },
     );
 
     if (response.ok) {
@@ -68,7 +71,10 @@ export async function downloadAttachment(emailId: number, attachmentId: number) 
   }
 }
 
-export async function deleteAttachments(emailId: number, attachmentIds: number[]) {
+export async function deleteAttachments(
+  emailId: number,
+  attachmentIds: number[],
+) {
   try {
     const response = await fetch(`${EMAIL_URL}/emails/${emailId}/attachments`, {
       method: "DELETE",
@@ -77,7 +83,7 @@ export async function deleteAttachments(emailId: number, attachmentIds: number[]
         "X-CSRF-Token": AppStorage.csrfToken,
       },
       credentials: "include",
-      body: JSON.stringify({ attachment_ids: attachmentIds }),
+      body: JSON.stringify({ ids: attachmentIds }),
     });
 
     if (response.ok) {
