@@ -111,6 +111,65 @@
                 font-size: 16px;
             }
         }
+
+        .attachments-section {
+            display: flex;
+            .attachments-list {
+                display: flex;
+                flex-direction: row;
+                gap: 5px;
+                margin: 10px;
+                overflow: hidden;
+                overflow-x: auto;
+                scrollbar-width: none;
+
+                .attachment-item {
+                    display: flex;
+                    flex-direction: row;
+                    align-items: center;
+                    gap: 5px;
+                    background-color: var(--color-main-background);
+                    border-radius: 20px;
+                    padding: 10px 20px;
+                    flex-shrink: 0;
+                    height: fit-content;
+
+                    .attachment-icon {
+                        height: 28px;
+                        width: 28px;
+                        background-color: var(--tertiary-text);
+                        mask-image: url(/assets/svg/Draft.svg);
+                        mask-size: contain;
+                        mask-position: center;
+                    }
+
+                    .attachment-info {
+                        display: flex;
+                        flex-direction: column;
+                        gap: 3px;
+
+                        .attachment-name {
+                            font-weight: 500;
+                        }
+
+                        .attachment-size {
+                            color: var(--muted-text);
+                        }
+                    }
+
+                    .attachment-download-btn {
+                        height: 24px;
+                        width: 24px;
+                        margin-left: 15px;
+                        cursor: pointer;
+                        background-color: var(--tertiary-text);
+                        mask-image: url(/assets/svg/Download.svg);
+                        mask-size: contain;
+                        mask-position: center;
+                    }
+                }
+            }
+        }
     }
 
     .read-actions {

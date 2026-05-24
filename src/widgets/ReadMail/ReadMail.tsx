@@ -9,8 +9,70 @@ import { deleteEmailsFromFolder } from "../../api/ApiFolder";
 import { sendSpam } from "../../api/ApiSpam";
 import { trash } from "../../api/ApiTrash";
 import { formatTime } from "../../utils/date";
+import { getAttachments, downloadAttachment } from "../../api/ApiAttachments";
+import { formatFileSize } from "../../utils/files";
 
 class ReadMail extends Death13.Component {
+  state = {
+    attachments: [],
+    attachmentsLoading: false,
+  };
+
+  componentDidMount() {
+    this.fetchAttachments();
+  }
+
+  componentDidUpdate(prevProps: any) {
+    if (prevProps.email?.id !== this.props.email?.id) {
+      this.fetchAttachments();
+    }
+  }
+
+  fetchAttachments = async () => {
+    const { email } = this.props;
+    if (!email?.id) return;
+
+    this.setState({ attachmentsLoading: true });
+    try {
+      const data = await getAttachments(email.id);
+
+      let attachmentsArray = [];
+      if (Array.isArray(data)) {
+        attachmentsArray = data;
+      } else if (data && Array.isArray(data.attachments)) {
+        attachmentsArray = data.attachments;
+      } else if (data && typeof data === "object") {
+        attachmentsArray = [data];
+      }
+
+      this.setState({
+        attachments: attachmentsArray,
+        attachmentsLoading: false,
+      });
+    } catch {
+      this.setState({ attachments: [], attachmentsLoading: false });
+    }
+  };
+
+  handleDownload = async (attachmentId: number, fileName: string) => {
+    const { email } = this.props;
+    if (!email?.id) return;
+
+    try {
+      const blob = await downloadAttachment(email.id, attachmentId);
+      if (!blob) return;
+
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = fileName;
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      window.URL.revokeObjectURL(url);
+    } catch {}
+  };
+
   handleCloseEmail = () => {
     window.app.handleRoute("/");
   };
@@ -78,7 +140,10 @@ class ReadMail extends Death13.Component {
 
   render() {
     const { email } = this.props;
+    const { attachments, attachmentsLoading } = this.state;
     const isMobile = window.innerWidth < 769;
+
+    console.log(attachments);
 
     return (
       <div className="read-mail">
@@ -151,6 +216,28 @@ class ReadMail extends Death13.Component {
               value={email.header}
               onInput={() => {}}
             />
+          </div>
+          <div className="attachments-section">
+            <div className="attachments-list">
+              {attachments.map((att: any) => (
+                <div className="attachment-item">
+                  <div className="attachment-icon" />
+                  <div className="attachment-info">
+                    <span className="attachment-name">{att.file_name}</span>
+                    <span className="attachment-size">
+                      {formatFileSize(att.size_bytes)}
+                    </span>
+                  </div>
+                  <div
+                    className="attachment-download-btn"
+                    onClick={(e: any) => {
+                      e.preventDefault();
+                      this.handleDownload(att.id, att.file_name);
+                    }}
+                  ></div>
+                </div>
+              ))}
+            </div>
           </div>
           <Textarea readonly={true} value={email.body} />
         </form>

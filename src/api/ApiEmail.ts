@@ -47,22 +47,38 @@ export async function getAllEmails(offset: number) {
   }
 }
 
-export async function sendEmail(data = {}) {
+export async function sendEmail(data: {
+  header?: string;
+  body?: string;
+  receivers?: string[];
+  files?: File[];
+}) {
   try {
+    const formData = new FormData();
+    formData.append("header", data.header || "");
+    formData.append("body", data.body || "");
+    formData.append("receivers", JSON.stringify(data.receivers || []));
+
+    if (data.files && data.files.length > 0) {
+      data.files.forEach((file) => {
+        formData.append("files", file);
+      });
+    }
+
     const response = await fetch(`${EMAIL_URL}/send`, {
       method: "POST",
       headers: {
-        "Content-Type": "application/json",
         "X-CSRF-Token": AppStorage.csrfToken,
       },
       credentials: "include",
-      body: JSON.stringify(data),
+      body: formData,
     });
 
-    if (response) {
+    if (response.ok) {
       const res = await response.json();
       return res;
     }
+    return false;
   } catch {
     return false;
   }

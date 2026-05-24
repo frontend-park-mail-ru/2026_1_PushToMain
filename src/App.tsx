@@ -100,6 +100,13 @@ export const AppStorage = {
       empty_subject: "<Без темы>",
       no_recipient: "<Без получателя>",
 
+      //File sizes
+      zero_bytes: "0 байт",
+      bytes: "байт",
+      kb: "Кб",
+      mb: "Мб",
+      gb: "Гб",
+
       //Drafts
       draft_saved: "Черновик сохранен",
 
@@ -123,6 +130,7 @@ export const AppStorage = {
       recipient_not_found: "Получатель не найден",
       email_send_error: "Ошибка отправки письма, попробуйте позже",
       notifs_not_supported: "Ваш браузер не поддерживает уведомления.",
+      auth_error: "Ошибка авторизации, попробуйте еще раз",
 
       // ProfilePage
       theme: "Тема",
@@ -222,6 +230,13 @@ export const AppStorage = {
       empty_subject: "<No subject>",
       no_recipient: "<No recipient>",
 
+      //File sizes
+      zero_bytes: "0 Bytes",
+      bytes: "Bytes",
+      kb: "KB",
+      mb: "MB",
+      gb: "GB",
+
       //Drafts
       draft_saved: "Draft saved",
 
@@ -247,6 +262,7 @@ export const AppStorage = {
       recipient_not_found: "Recipient not found",
       email_send_error: "Could not send email, try again later",
       notifs_not_supported: "Your browser does not support notifications",
+      auth_error: "Could not authorize the user, please log in",
 
       // ProfilePage
       theme: "Theme",

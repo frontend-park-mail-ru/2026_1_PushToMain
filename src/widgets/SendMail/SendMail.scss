@@ -48,8 +48,86 @@
         }
     }
 
+    .files-list {
+        display: flex;
+        flex-direction: row;
+        gap: 5px;
+        margin: 10px;
+        height: 85px;
+        overflow: hidden;
+        overflow-x: auto;
+        scrollbar-width: none;
+
+        .file-item {
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            gap: 5px;
+            background-color: var(--color-main-background);
+            border-radius: 20px;
+            padding: 10px 20px;
+            flex-shrink: 0;
+            height: fit-content;
+
+            .file-icon {
+                height: 28px;
+                width: 28px;
+                background-color: var(--tertiary-text);
+                mask-image: url(/assets/svg/Draft.svg);
+                mask-size: contain;
+                mask-position: center;
+            }
+
+            .file-info {
+                display: flex;
+                flex-direction: column;
+
+                .file-name {
+                    font-weight: 500;
+                }
+
+                .file-size {
+                    color: var(--muted-text);
+                }
+            }
+
+            .file-remove-btn {
+                height: 12px;
+                width: 12px;
+                margin-left: 15px;
+                cursor: pointer;
+                background-color: var(--tertiary-text);
+                mask-image: url(/assets/svg/Close.svg);
+                mask-size: contain;
+                mask-position: center;
+            }
+        }
+    }
+
     .send-down {
-        margin-left: auto;
+        display: flex;
+        gap: auto;
+
+        .send-tools {
+            display: flex;
+            align-items: center;
+
+            .upload-attachments-button {
+                height: 36px;
+                width: 36px;
+                cursor: pointer;
+                background-color: var(--tertiary-text);
+                mask-image: url(/assets/svg/Attachment.svg);
+                mask-size: contain;
+                mask-position: center;
+
+                &:hover {
+                    background-color: var(--secondary-text);
+                    transition: background-color 0.15s ease-in-out;
+                }
+            }
+        }
+
         .send-actions {
             display: flex;
             flex-direction: row;

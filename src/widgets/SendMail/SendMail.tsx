@@ -6,8 +6,10 @@ import Textarea from "../../components/Textarea/Textarea";
 import Button from "../../components/Button/Button";
 import NotificationManager from "../NotificationManager/NotificationManager";
 import { sendEmail } from "../../api/ApiEmail";
+import { uploadAttachment } from "../../api/ApiAttachments";
 import { AppStorage } from "../../App";
 import { createDraft, sendDraft, updateDraft } from "../../api/ApiDraft";
+import { formatFileSize } from "../../utils/files";
 
 class SendMail extends Death13.Component {
   state: any = {
@@ -18,7 +20,11 @@ class SendMail extends Death13.Component {
     buttonBlock: true,
     files: [],
     draftId: null,
+    emailId: null,
+    uploadingFiles: false,
   };
+
+  fileInputRef: HTMLInputElement | null = null;
 
   constructor(props: any) {
     super(props);
@@ -91,7 +97,7 @@ class SendMail extends Death13.Component {
   };
 
   async handleSubmit(e: any) {
-    const { header, body, receivers, draftId } = this.state;
+    const { header, body, receivers, draftId, files } = this.state;
     e.preventDefault();
 
     this.setState({ buttonBlock: true });
@@ -120,6 +126,7 @@ class SendMail extends Death13.Component {
         header: header.trim(),
         body: body.trim(),
         receivers: receivers,
+        files: files.map((f: any) => f.file),
       });
     }
 
@@ -142,9 +149,11 @@ class SendMail extends Death13.Component {
   };
 
   handleSaveDraft = async (event: any) => {
-    const { header, body, receivers, draftId } = this.state;
+    const { header, body, receivers, draftId, files } = this.state;
 
     event.preventDefault();
+
+    let savedDraftId: number | null = null;
 
     if (draftId) {
       const response = await updateDraft(
@@ -157,12 +166,15 @@ class SendMail extends Death13.Component {
       );
 
       if (response) {
-        window.AppStorage.clearMailActionData();
-        this.props.backToMail();
-        NotificationManager.show(true, "draft_saved");
+        savedDraftId = draftId;
       }
     } else {
-      if (header === "" && body === "" && receivers.length === 0) {
+      if (
+        header === "" &&
+        body === "" &&
+        receivers.length === 0 &&
+        files.length === 0
+      ) {
         this.props.backToMail();
         return;
       }
@@ -173,34 +185,58 @@ class SendMail extends Death13.Component {
       });
 
       if (response) {
-        window.AppStorage.clearMailActionData();
-        this.props.backToMail();
-        NotificationManager.show(true, "draft_saved");
+        savedDraftId = response.id;
       }
+    }
+
+    if (savedDraftId && files.length > 0) {
+      await this.uploadFiles(savedDraftId);
+    }
+
+    if (savedDraftId) {
+      window.AppStorage.clearMailActionData();
+      this.props.backToMail();
+      NotificationManager.show(true, "draft_saved");
     }
   };
 
   handleFileChange = (e: any) => {
-    const files: File[] = Array.from(e.target.files || []);
+    const newFiles: File[] = Array.from(e.target.files || []);
 
-    if (files.length === 0) return;
+    if (this.fileInputRef) {
+      this.fileInputRef.value = "";
+    }
 
-    const newFiles = files.map((file: File) => ({
+    if (newFiles.length === 0) return;
+
+    const MAX_FILE_SIZE = 25 * 1024 * 1024; // 25MB
+    const validFiles = newFiles.filter((file) => {
+      if (file.size > MAX_FILE_SIZE) {
+        NotificationManager.show(false, "file_too_large");
+        return false;
+      }
+      return true;
+    });
+
+    if (validFiles.length === 0) return;
+
+    const processedFiles = validFiles.map((file: File) => ({
       file: file,
-      id: Date.now(),
+      id: Date.now() + Math.random(),
       name: file.name,
       size: file.size,
       type: file.type,
     }));
 
     this.setState({
-      files: [...this.state.files, ...newFiles],
+      files: [...this.state.files, ...processedFiles],
     });
+  };
 
-    files.forEach((file: File) => {
-      const reader = new FileReader();
-      reader.readAsDataURL(file);
-    });
+  handleFileButtonClick = () => {
+    if (this.fileInputRef) {
+      this.fileInputRef.click();
+    }
   };
 
   removeFile = (fileId: number) => {
@@ -209,12 +245,43 @@ class SendMail extends Death13.Component {
     });
   };
 
+  uploadFiles = async (emailId: number) => {
+    const { files } = this.state;
+
+    if (files.length === 0) return true;
+
+    this.setState({ uploadingFiles: true });
+
+    try {
+      const uploadPromises = files.map((fileItem: any) =>
+        uploadAttachment(emailId, fileItem.file),
+      );
+
+      const results = await Promise.all(uploadPromises);
+
+      const allSuccessful = results.every((result) => result !== null);
+
+      if (!allSuccessful) {
+        NotificationManager.show(false, "file_upload_error");
+        return false;
+      }
+
+      return true;
+    } catch {
+      NotificationManager.show(false, "file_upload_error");
+      return false;
+    } finally {
+      this.setState({ uploadingFiles: false });
+    }
+  };
+
   t(key: string): string {
     return AppStorage.t(key);
   }
 
   render() {
-    const { body, header, receivers, buttonBlock, files } = this.state;
+    const { body, header, receivers, buttonBlock, files, uploadingFiles } =
+      this.state;
     const isMobile = window.innerWidth < 769;
 
     return (
@@ -252,24 +319,48 @@ class SendMail extends Death13.Component {
               onInput={this.handleHeaderChange.bind(this)}
             />
           </div>
+          {files.length > 0 ? (
+            <div className="files-list">
+              {files.map((fileItem: any) => (
+                <div key={fileItem.id} className="file-item">
+                  <div className="file-icon" />
+                  <div className="file-info">
+                    <span className="file-name">{fileItem.name}</span>
+                    <span className="file-size">
+                      {formatFileSize(fileItem.size)}
+                    </span>
+                  </div>
+                  <div
+                    className="file-remove-btn"
+                    onClick={() => this.removeFile(fileItem.id)}
+                    disabled={uploadingFiles}
+                  />
+                </div>
+              ))}
+            </div>
+          ) : null}
           <Textarea
             readonly={false}
             value={body}
             onInput={this.handleBodyChange}
           />
-          <div className="files-list">
-            {files.map((fileItem: any) => (
-              <div key={fileItem.id} className="file-item">
-                <span>{fileItem.name}</span>
-                <button onClick={() => this.removeFile(fileItem.id)}>✕</button>
-              </div>
-            ))}
-          </div>
         </form>
         <div className="send-down">
           <div className="send-tools">
-            {/* <input type="file" name="file" id="input-file" hidden multiple onChange={this.handleFileChange} />
-                        <label htmlFor="input-file" name="button-file"></label>*/}
+            <input
+              type="file"
+              ref={(ref: any) => (this.fileInputRef = ref)}
+              hidden
+              multiple
+              onChange={this.handleFileChange}
+              accept="*/*"
+              disabled={uploadingFiles}
+            />
+            <div
+              className="upload-attachments-button"
+              onClick={this.handleFileButtonClick}
+              block={uploadingFiles}
+            />
           </div>
           {!isMobile ? (
             <div className="send-actions">
