@@ -15,6 +15,7 @@ import DraftsPage from "./pages/DraftsPage/DraftsPage";
 import FolderPage from "./pages/FolderPage/FolderPage";
 import AllEmailsPage from "./pages/AllEmailsPage/AllEmailsPage";
 import NotificationManager from "./widgets/NotificationManager/NotificationManager";
+import { initEmailNotifications } from "./utils/emailNotifications";
 import "./utils/OfflineManager";
 
 export const AppStorage = {
@@ -49,6 +50,7 @@ export const AppStorage = {
   forwardData: null as any,
   theme: "light" as "light" | "dark",
   language: "ru" as "ru" | "en",
+  notificationsEnabled: true as boolean,
 
   translations: {
     ru: {
@@ -120,6 +122,7 @@ export const AppStorage = {
       incorrect_credentials: "Неверная почта или пароль",
       recipient_not_found: "Получатель не найден",
       email_send_error: "Ошибка отправки письма, попробуйте позже",
+      notifs_not_supported: "Ваш браузер не поддерживает уведомления.",
 
       // ProfilePage
       theme: "Тема",
@@ -141,6 +144,12 @@ export const AppStorage = {
       add_a_folder: "Добавить папку...",
       new_folder: "Новая папка",
       confirm_delete_folder: "Вы точно хотите удалить папку",
+      notifications: "Уведомления в браузере",
+      new_mail_notification: "У вас новое письмо",
+      on: "Вкл",
+      off: "Выкл",
+      new_email_from: "Новое письмо от",
+      from_unknown: "неизвестного",
 
       //Sidebar
       new_letter: "Новое письмо",
@@ -237,6 +246,7 @@ export const AppStorage = {
       incorrect_credentials: "Incorrect email or password",
       recipient_not_found: "Recipient not found",
       email_send_error: "Could not send email, try again later",
+      notifs_not_supported: "Your browser does not support notifications",
 
       // ProfilePage
       theme: "Theme",
@@ -258,6 +268,12 @@ export const AppStorage = {
       add_a_folder: "Add a folder...",
       new_folder: "New folder",
       confirm_delete_folder: "Are you sure you want to delete folder",
+      notifications: "Browser notifications",
+      new_mail_notification: "You have a new email",
+      on: "On",
+      off: "Off",
+      new_email_from: "New mail from",
+      from_unknown: "unknown account",
 
       //Sidebar
       new_letter: "New mail",
@@ -334,6 +350,11 @@ export const AppStorage = {
       }
 
       document.documentElement.setAttribute("data-theme", this.theme);
+
+      const savedNotif = localStorage.getItem("notificationsEnabled");
+      if (savedNotif !== null) {
+        this.notificationsEnabled = savedNotif === "true";
+      }
     } catch (e) {
       console.warn("Failed to load profile from localStorage", e);
     }
@@ -432,6 +453,10 @@ export const AppStorage = {
       localStorage.setItem("language", this.language);
       localStorage.setItem("unReadCount", this.unReadCount.toString());
       localStorage.setItem("theme", this.theme);
+      localStorage.setItem(
+        "notificationsEnabled",
+        String(this.notificationsEnabled),
+      );
     } catch {}
   },
 
@@ -565,6 +590,12 @@ export const AppStorage = {
     }
     return "/assets/svg/Avatar.svg";
   },
+
+  setNotificationsEnabled(value: boolean) {
+    this.notificationsEnabled = value;
+    this._saveToStorage();
+    this._notify();
+  },
 };
 
 class App {
@@ -686,6 +717,8 @@ if ("serviceWorker" in navigator) {
       .catch((err) => console.error("SW registration failed:", err));
   });
 }
+
+initEmailNotifications();
 
 window.app = new App();
 
