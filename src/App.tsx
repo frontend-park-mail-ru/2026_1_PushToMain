@@ -107,6 +107,9 @@ export const AppStorage = {
       message_sent: "Письмо успешно отправлено",
       add_attachment: "Добавить вложение",
       sending: "Отправка",
+      confirm_save_draft: "Вы хотите сохранить черновик?",
+      delete_draft: "Удалить",
+      save_draft: "Сохранить",
 
       //File sizes
       zero_bytes: "0 байт",
@@ -249,6 +252,9 @@ export const AppStorage = {
       message_sent: "Email sent successfully",
       add_attachment: "Add an attachment",
       sending: "Sending",
+      confirm_save_draft: "Save current draft?",
+      delete_draft: "Delete",
+      save_draft: "Save",
 
       //File sizes
       zero_bytes: "0 Bytes",

@@ -22,7 +22,7 @@
     .__content {
         position: relative;
         z-index: 2;
-        background: white;
+        background: var(--color-sidebar-background);
         padding: 1.5rem 2rem;
         border-radius: 8px;
         box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
@@ -31,6 +31,7 @@
         text-align: center;
 
         h2 {
+            color: var(--tertiary-text);
             margin: 0 0 1rem 0;
             font-size: 1.5rem;
             font-weight: 500;
@@ -46,10 +47,16 @@
         }
 
         .__buttons {
+            display: grid;
+            grid-template-columns: 50% 50%;
             margin-top: 1rem;
-            display: flex;
             gap: 1rem;
             justify-content: center;
+
+            .secondary {
+                background-color: var(--button-background-second);
+                color: var(--tertiary-text);
+            }
         }
     }
 }
