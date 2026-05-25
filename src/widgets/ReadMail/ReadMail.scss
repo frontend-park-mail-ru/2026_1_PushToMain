@@ -201,6 +201,12 @@
         }
     }
 
+    .tools-container {
+        .tools-right {
+            gap: 0;
+        }
+    }
+
     .read-actions {
         display: flex;
         flex-direction: row;
