@@ -147,7 +147,7 @@ class SendMail extends Death13.Component {
   };
 
   async handleSubmit(e: any) {
-    const { header, body, receivers, draftId, files } = this.state;
+    const { header, body, receivers, draftId, files, newFiles } = this.state;
     e.preventDefault();
 
     this.setState({ buttonBlock: true, sending: true });
@@ -174,11 +174,12 @@ class SendMail extends Death13.Component {
         draftId,
       );
     } else {
+      const totalFiles = [...newFiles, ...files];
       responseSend = await sendEmail({
         header: header.trim(),
         body: body.trim(),
         receivers: receivers,
-        files: files.map((f: any) => f.file),
+        files: totalFiles.map((f: any) => f.file),
       });
     }
 
