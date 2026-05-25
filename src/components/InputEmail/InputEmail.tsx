@@ -19,7 +19,8 @@ class InputEmail extends Death13.Component {
   }
   state: any = {
     emails: this.props.emails || [AppStorage.email],
-    invalidEmails: [],
+    invalidEmails:
+      this.props.emails.filter((e: any) => !this.validateEmail(e)) || [],
     currentInput: "",
     error: "",
     editingIndex: null,
@@ -214,6 +215,19 @@ class InputEmail extends Death13.Component {
     }
   }
 
+  trimEmailAddress(email: string): string {
+    const wRegex = new RegExp("[mMwWQODCGBNU]", "g");
+    const wideCharCnt = email.match(wRegex)?.length || 0;
+    const maxLen =
+      27 - Math.round(wideCharCnt * (1 - wideCharCnt / email.length));
+
+    if (email.length <= maxLen) return email;
+
+    const atIdx = email.lastIndexOf("@");
+    const domain = email.substring(atIdx, email.length);
+    return email.substring(0, maxLen - domain.length) + "..." + domain;
+  }
+
   render() {
     const { emails, currentInput, invalidEmails, editingIndex, editValue } =
       this.state;
@@ -262,7 +276,7 @@ class InputEmail extends Death13.Component {
                   ) : (
                     [
                       <span className="email-text" key="text">
-                        {email}
+                        {this.trimEmailAddress(email)}
                       </span>,
                       <button
                         key="remove"

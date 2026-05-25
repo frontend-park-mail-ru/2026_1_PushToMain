@@ -76,6 +76,7 @@ class MailBox extends Death13.Component {
           {showFavoriteCheckbox && (
             <input
               type="checkbox"
+              className="favorites-checkbox"
               name="favorites-checkbox"
               checked={isFavorite}
               onChange={this.handleFavorite}

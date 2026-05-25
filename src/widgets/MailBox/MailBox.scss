@@ -23,11 +23,15 @@
         text-decoration: none;
     }
 
-    &.mail.selected {
+    &.selected {
         box-shadow: 0 0 0 2px var(--accent);
         opacity: 1;
         background-color: #9cc8fe;
-        color: var(--tretiry-text);
+        color: var(--tertiary-text);
+
+        .checkbox-container .favorites-checkbox {
+            background-color: black;
+        }
     }
 
     &:hover {
@@ -210,15 +214,11 @@
                             margin: 0;
                             height: 20px;
                             width: 20px;
-                            background-color: var(--secondary-text);
+                            background-color: var(--tertiary-text);
                             mask-size: contain;
                             mask-position: center;
                             mask-repeat: no-repeat;
                             cursor: pointer;
-
-                            &:hover {
-                                background-color: var(--tertiary-text);
-                            }
 
                             &--read {
                                 mask-image: url("/assets/svg/ReadAllMail.svg");
