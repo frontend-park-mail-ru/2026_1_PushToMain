@@ -27,9 +27,11 @@ class SendMail extends Death13.Component {
     invalidReceivers: [],
     buttonBlock: true,
     files: [],
+    newFiles: [],
     draftId: null,
     emailId: null,
     uploadingFiles: false,
+    sending: false,
   };
 
   fileInputRef: HTMLInputElement | null = null;
@@ -148,7 +150,7 @@ class SendMail extends Death13.Component {
     const { header, body, receivers, draftId, files } = this.state;
     e.preventDefault();
 
-    this.setState({ buttonBlock: true });
+    this.setState({ buttonBlock: true, sending: true });
 
     let responseSend;
 
@@ -161,6 +163,8 @@ class SendMail extends Death13.Component {
         },
         draftId,
       );
+
+      this.uploadFiles(draftId);
       responseSend = await sendDraft(
         {
           header: header.trim(),
@@ -183,7 +187,7 @@ class SendMail extends Death13.Component {
       this.props.backToMail();
       NotificationManager.show(true, "message_sent");
     } else {
-      this.setState({ buttonBlock: false });
+      this.setState({ buttonBlock: false, sending: false });
       if (responseSend.error.includes("recipient not found")) {
         NotificationManager.show(false, "recipient_not_found");
       } else {
@@ -198,7 +202,7 @@ class SendMail extends Death13.Component {
   };
 
   handleSaveDraft = async (event: any) => {
-    const { header, body, receivers, draftId, files } = this.state;
+    const { header, body, receivers, draftId, files, newFiles } = this.state;
 
     event.preventDefault();
 
@@ -238,13 +242,14 @@ class SendMail extends Death13.Component {
       }
     }
 
-    if (savedDraftId && files.length > 0) {
+    if (savedDraftId && newFiles.length > 0) {
       await this.uploadFiles(savedDraftId);
     }
 
     if (savedDraftId) {
       window.AppStorage.clearMailActionData();
       this.props.backToMail();
+      this.setState({ newFiles: [] });
       NotificationManager.show(true, "draft_saved");
     }
   };
@@ -278,7 +283,8 @@ class SendMail extends Death13.Component {
     }));
 
     this.setState({
-      files: [...processedFiles, ...this.state.files],
+      files: [...this.state.files],
+      newFiles: [...processedFiles],
     });
   };
 
@@ -306,14 +312,14 @@ class SendMail extends Death13.Component {
   };
 
   uploadFiles = async (emailId: number) => {
-    const { files } = this.state;
+    const { newFiles } = this.state;
 
-    if (files.length === 0) return true;
+    if (newFiles.length === 0) return true;
 
-    this.setState({ uploadingFiles: true });
+    this.setState({ uploadingFiles: true, sending: true });
 
     try {
-      const uploadPromises = files.map((fileItem: any) =>
+      const uploadPromises = newFiles.map((fileItem: any) =>
         uploadAttachment(emailId, fileItem.file),
       );
 
@@ -331,7 +337,7 @@ class SendMail extends Death13.Component {
       NotificationManager.show(false, "file_upload_error");
       return false;
     } finally {
-      this.setState({ uploadingFiles: false });
+      this.setState({ uploadingFiles: false, sending: false });
     }
   };
 
@@ -340,23 +346,45 @@ class SendMail extends Death13.Component {
   }
 
   render() {
-    const { body, header, receivers, buttonBlock, files, uploadingFiles } =
-      this.state;
+    const {
+      body,
+      header,
+      receivers,
+      buttonBlock,
+      files,
+      newFiles,
+      uploadingFiles,
+      sending,
+    } = this.state;
     const isMobile = window.innerWidth < 769;
+
+    const totalFiles = [...newFiles, ...files];
 
     return (
       <div className="send-mail">
         {isMobile ? (
-          <div className="send-mail-mobile-buttons">
-            <div className="close-button" onClick={this.handleSaveDraft}></div>
-            <div
-              className="send-button"
-              block={buttonBlock}
-              onClick={(event: any) => {
-                this.handleSubmit(event);
-              }}
-            ></div>
-          </div>
+          sending ? (
+            <div className="send-mail-mobile-buttons">
+              <div className="close-button" disabled></div>
+              <div className="sending-loader">
+                <div className="spinner" />
+              </div>
+            </div>
+          ) : (
+            <div className="send-mail-mobile-buttons">
+              <div
+                className="close-button"
+                onClick={this.handleSaveDraft}
+              ></div>
+              <div
+                className="send-button"
+                block={buttonBlock}
+                onClick={(event: any) => {
+                  this.handleSubmit(event);
+                }}
+              ></div>
+            </div>
+          )
         ) : null}
         <div className="send-mail-header">
           <span className="send-mail-header__text">{this.t("new_letter")}</span>
@@ -379,9 +407,9 @@ class SendMail extends Death13.Component {
               onInput={this.handleHeaderChange.bind(this)}
             />
           </div>
-          {files.length > 0 ? (
+          {totalFiles.length > 0 ? (
             <div className="files-list">
-              {files.map((fileItem: any) => (
+              {totalFiles.map((fileItem: any) => (
                 <div key={fileItem.id} className="file-item">
                   <div
                     className={`file-icon ${getIconByContentType(fileItem.type)}`}
@@ -428,21 +456,31 @@ class SendMail extends Death13.Component {
             />
           </div>
           {!isMobile ? (
-            <div className="send-actions">
-              <Button
-                title={this.t("save")}
-                name="save-mail"
-                onClick={this.handleSaveDraft}
-              />
-              <Button
-                title={this.t("send")}
-                name="send-mail"
-                block={buttonBlock}
-                onClick={(event: any) => {
-                  this.handleSubmit(event);
-                }}
-              />
-            </div>
+            sending ? (
+              <div className="send-actions">
+                <div className="sending-loader">
+                  <div className="spinner" />
+                  <span>{this.t("sending")}...</span>
+                </div>
+              </div>
+            ) : (
+              <div className="send-actions">
+                <Button
+                  title={this.t("save")}
+                  name="save-mail"
+                  onClick={this.handleSaveDraft}
+                  block={sending}
+                />
+                <Button
+                  title={this.t("send")}
+                  name="send-mail"
+                  block={buttonBlock || sending}
+                  onClick={(event: any) => {
+                    this.handleSubmit(event);
+                  }}
+                />
+              </div>
+            )
           ) : null}
         </div>
       </div>
