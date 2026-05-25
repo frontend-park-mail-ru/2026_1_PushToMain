@@ -27,7 +27,6 @@ class SendMail extends Death13.Component {
     invalidReceivers: [],
     buttonBlock: true,
     files: [],
-    newFiles: [],
     draftId: null,
     emailId: null,
     uploadingFiles: false,
@@ -138,6 +137,8 @@ class SendMail extends Death13.Component {
         size: att.size_bytes || att.sizeBytes,
         type: att.content_type || att.contentType || "application/octet-stream",
         attachmentId: att.id,
+        uploaded: true,
+        file: null,
       }));
 
       this.setState({ files: [...this.state.files, ...draftFiles] });
@@ -147,7 +148,7 @@ class SendMail extends Death13.Component {
   };
 
   async handleSubmit(e: any) {
-    const { header, body, receivers, draftId, files, newFiles } = this.state;
+    const { header, body, receivers, draftId, files } = this.state;
     e.preventDefault();
 
     this.setState({ buttonBlock: true, sending: true });
@@ -174,12 +175,11 @@ class SendMail extends Death13.Component {
         draftId,
       );
     } else {
-      const totalFiles = [...newFiles, ...files];
       responseSend = await sendEmail({
         header: header.trim(),
         body: body.trim(),
         receivers: receivers,
-        files: totalFiles.map((f: any) => f.file),
+        files: files.map((f: any) => f.file),
       });
     }
 
@@ -203,7 +203,7 @@ class SendMail extends Death13.Component {
   };
 
   handleSaveDraft = async (event: any) => {
-    const { header, body, receivers, draftId, files, newFiles } = this.state;
+    const { header, body, receivers, draftId, files } = this.state;
 
     event.preventDefault();
 
@@ -243,14 +243,13 @@ class SendMail extends Death13.Component {
       }
     }
 
-    if (savedDraftId && newFiles.length > 0) {
+    if (savedDraftId && files.length > 0) {
       await this.uploadFiles(savedDraftId);
     }
 
     if (savedDraftId) {
       window.AppStorage.clearMailActionData();
       this.props.backToMail();
-      this.setState({ newFiles: [] });
       NotificationManager.show(true, "draft_saved");
     }
   };
@@ -281,11 +280,11 @@ class SendMail extends Death13.Component {
       name: file.name,
       size: file.size,
       type: file.type,
+      uploaded: false,
     }));
 
     this.setState({
-      files: [...this.state.files],
-      newFiles: [...processedFiles],
+      files: [...processedFiles, ...this.state.files],
     });
   };
 
@@ -296,10 +295,11 @@ class SendMail extends Death13.Component {
   };
 
   removeFile = async (fileId: number) => {
-    const fileItem = this.state.files.find((f: any) => f.id === fileId);
+    const { files } = this.state;
+    const fileItem = files.find((f: any) => f.id === fileId);
     if (!fileItem) return;
 
-    if (fileItem.attachmentId) {
+    if (fileItem.uploaded && fileItem.attachmentId && this.state.draftId) {
       try {
         await deleteAttachments(this.state.draftId, [fileItem.attachmentId]);
       } catch (err) {
@@ -313,7 +313,9 @@ class SendMail extends Death13.Component {
   };
 
   uploadFiles = async (emailId: number) => {
-    const { newFiles } = this.state;
+    const { files } = this.state;
+
+    const newFiles = files.filter((f: any) => !f.uploaded);
 
     if (newFiles.length === 0) return true;
 
@@ -353,13 +355,10 @@ class SendMail extends Death13.Component {
       receivers,
       buttonBlock,
       files,
-      newFiles,
       uploadingFiles,
       sending,
     } = this.state;
     const isMobile = window.innerWidth < 769;
-
-    const totalFiles = [...newFiles, ...files];
 
     return (
       <div className="send-mail">
@@ -408,9 +407,9 @@ class SendMail extends Death13.Component {
               onInput={this.handleHeaderChange.bind(this)}
             />
           </div>
-          {totalFiles.length > 0 ? (
+          {files.length > 0 ? (
             <div className="files-list">
-              {totalFiles.map((fileItem: any) => (
+              {files.map((fileItem: any) => (
                 <div key={fileItem.id} className="file-item">
                   <div
                     className={`file-icon ${getIconByContentType(fileItem.type)}`}
