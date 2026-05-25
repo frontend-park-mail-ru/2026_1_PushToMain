@@ -50,30 +50,18 @@ class BaseEmailPage extends Death13.Component {
     this.initialLoadDone = false;
     this.state.fetchEmails = props.fetchEmails;
 
-    if (!AppStorage.isProfileLoaded) {
-      AppStorage.isProfileLoaded = true;
-      this.loadProfile();
-    }
-
     AppStorage.currentView = props.currentView;
-
-    this.loadEmails(0);
   }
 
   componentDidMount() {
+    if (!AppStorage.isProfileLoaded) {
+      this.loadProfile();
+    }
     document.addEventListener("visibilitychange", this.handleVisibilityChange);
-    // this.loadEmailInterval = window.setInterval(
-    //   () => this.loadEmails(this.state.offset),
-    //   30000,
-    // );
+    this.loadEmails(0);
   }
 
   componentWillUnmount() {
-    // if (this.loadEmailInterval) {
-    //   clearInterval(this.loadEmailInterval);
-    //   this.loadEmailInterval = null;
-    // }
-
     if (this.handleVisibilityChange) {
       document.removeEventListener(
         "visibilitychange",
@@ -99,13 +87,19 @@ class BaseEmailPage extends Death13.Component {
         window.app.handleRoute("/login");
       } else {
         AppStorage.setProfileData(data);
+        AppStorage.isProfileLoaded = true;
       }
     } catch (error) {
       console.error("Failed to load profile:", error);
+      window.app.handleRoute("/login");
     }
   };
 
   loadEmails = async (offset: number) => {
+    if (!AppStorage.email || AppStorage.email === "") {
+      return;
+    }
+
     this.setState({ isLoading: true });
 
     if (!this.state.fetchEmails) {
@@ -148,13 +142,13 @@ class BaseEmailPage extends Death13.Component {
 
   handleProfileClick = () => {
     this.setState({ isModalOpen: false });
-    window.app.handleRoute("/profile");
+    window.app.handleRoute("/profile/personal");
   };
 
   handleSettingsClick = () => {
     this.setState({ isModalOpen: false });
     AppStorage.setOpenSettingsOnProfile(true);
-    window.app.handleRoute("/profile");
+    window.app.handleRoute("/profile/interface");
   };
 
   handleNewMail = () => {

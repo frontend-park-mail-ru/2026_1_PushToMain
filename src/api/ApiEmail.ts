@@ -3,7 +3,7 @@ import { AppStorage } from "../App";
 /**
  * Отправляет GET-запрос на эндпоинт /inbox.
  */
-export async function getEmailAll(offset: number) {
+export async function getInbox(offset: number) {
   try {
     const response = await fetch(
       `${EMAIL_URL}/inbox?limit=50&offset=${offset}`,
@@ -25,22 +25,60 @@ export async function getEmailAll(offset: number) {
   }
 }
 
-export async function sendEmail(data = {}) {
+export async function getAllEmails(offset: number) {
   try {
+    const response = await fetch(
+      `${EMAIL_URL}/all-emails?limit=50&offset=${offset}`,
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        credentials: "include",
+      },
+    );
+
+    if (response.ok) {
+      const data = await response.json();
+      return data;
+    }
+  } catch {
+    return null;
+  }
+}
+
+export async function sendEmail(data: {
+  header?: string;
+  body?: string;
+  receivers?: string[];
+  files?: File[];
+}) {
+  try {
+    const formData = new FormData();
+    formData.append("header", data.header || "");
+    formData.append("body", data.body || "");
+    formData.append("receivers", JSON.stringify(data.receivers || []));
+
+    if (data.files && data.files.length > 0) {
+      data.files.forEach((file) => {
+        formData.append("files", file);
+      });
+    }
+
     const response = await fetch(`${EMAIL_URL}/send`, {
       method: "POST",
       headers: {
-        "Content-Type": "application/json",
         "X-CSRF-Token": AppStorage.csrfToken,
       },
       credentials: "include",
-      body: JSON.stringify(data),
+      body: formData,
     });
 
-    if (response) {
+    if (response.ok) {
       const res = await response.json();
       return res;
     }
+    return false;
   } catch {
     return false;
   }

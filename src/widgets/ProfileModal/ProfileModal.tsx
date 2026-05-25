@@ -24,6 +24,7 @@ class ProfileModal extends Death13.Component {
     });
     AppStorage.setUnReadCount(0);
     AppStorage.setFolders([]);
+    AppStorage.isProfileLoaded = false;
 
     window.app.handleRoute("/login");
   };

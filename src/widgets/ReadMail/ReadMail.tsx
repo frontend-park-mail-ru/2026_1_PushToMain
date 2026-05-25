@@ -9,8 +9,74 @@ import { deleteEmailsFromFolder } from "../../api/ApiFolder";
 import { sendSpam } from "../../api/ApiSpam";
 import { trash } from "../../api/ApiTrash";
 import { formatTime } from "../../utils/date";
+import { getAttachments, downloadAttachment } from "../../api/ApiAttachments";
+import {
+  formatFileSize,
+  getIconByContentType,
+  trimFileName,
+} from "../../utils/files";
 
 class ReadMail extends Death13.Component {
+  state = {
+    attachments: [],
+    attachmentsLoading: false,
+  };
+
+  componentDidMount() {
+    this.fetchAttachments();
+  }
+
+  componentDidUpdate(prevProps: any) {
+    if (prevProps.email?.id !== this.props.email?.id) {
+      this.fetchAttachments();
+    }
+  }
+
+  fetchAttachments = async () => {
+    const { email } = this.props;
+    if (!email?.id) return;
+
+    this.setState({ attachmentsLoading: true });
+    try {
+      const data = await getAttachments(email.id);
+
+      let attachmentsArray = [];
+      if (Array.isArray(data)) {
+        attachmentsArray = data;
+      } else if (data && Array.isArray(data.attachments)) {
+        attachmentsArray = data.attachments;
+      } else if (data && typeof data === "object") {
+        attachmentsArray = [data];
+      }
+
+      this.setState({
+        attachments: attachmentsArray,
+        attachmentsLoading: false,
+      });
+    } catch {
+      this.setState({ attachments: [], attachmentsLoading: false });
+    }
+  };
+
+  handleDownload = async (attachmentId: number, fileName: string) => {
+    const { email } = this.props;
+    if (!email?.id) return;
+
+    try {
+      const blob = await downloadAttachment(email.id, attachmentId);
+      if (!blob) return;
+
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = fileName;
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      window.URL.revokeObjectURL(url);
+    } catch {}
+  };
+
   handleCloseEmail = () => {
     window.app.handleRoute("/");
   };
@@ -38,7 +104,7 @@ class ReadMail extends Death13.Component {
       type: "reply",
       to: email.senderEmail || "",
       subject: `Re: ${email.header}`,
-      body: `\n\n--- Оригинальное сообщение ---\nОт кого: ${email.senderEmail || ""}\nДата: ${email.createdAt ? new Date(email.createdAt).toLocaleString("ru-RU") : "Неизвестно"} \n\n${email.body}`,
+      body: `\n\n${this.t("original_email")}\n${this.t("from")} ${email.senderEmail || ""}\n${this.t("date")} ${email.createdAt ? new Date(email.createdAt).toLocaleString("ru-RU") : this.t("unknown")} \n\n${email.body}`,
       originalEmail: email,
     });
 
@@ -51,7 +117,7 @@ class ReadMail extends Death13.Component {
     window.AppStorage.setForwardData({
       type: "forward",
       subject: `Fwd: ${email.header || "Без темы"}`,
-      body: `\n\n--- Пересылаемое сообщение ---\nОт: ${email.senderEmail}\nДата: ${email.createdAt ? new Date(email.createdAt).toLocaleString("ru-RU") : "Неизвестно"}\nТема: ${email.header || "Без темы"}\nКому: ${email.receiverList}\n\n${email.body || ""}`,
+      body: `\n\n${this.t("forwarded_email")}\n${this.t("from")} ${email.senderEmail}\n${this.t("date")} ${email.createdAt ? new Date(email.createdAt).toLocaleString("ru-RU") : this.t("unknown")}\n${this.t("subject")} ${email.header || this.t("empty_subject")}\n${this.t("to")} ${email.receiverList}\n\n${email.body || ""}`,
       originalEmail: email,
     });
 
@@ -78,7 +144,9 @@ class ReadMail extends Death13.Component {
 
   render() {
     const { email } = this.props;
+    const { attachments } = this.state;
     const isMobile = window.innerWidth < 769;
+    const hasAttachments = attachments.length > 0;
 
     return (
       <div className="read-mail">
@@ -144,13 +212,41 @@ class ReadMail extends Death13.Component {
             </div>
             <Input
               type="text"
-              placeholder="Введите тему"
+              placeholder={this.t("empty_subject")}
               input_title={this.t("subject")}
               name="theme"
               readonly={true}
               value={email.header}
               onInput={() => {}}
             />
+          </div>
+          <div
+            className={`attachments-section${hasAttachments ? "" : " hidden"}`}
+          >
+            <div className="attachments-list">
+              {attachments.map((att: any) => (
+                <div className="attachment-item">
+                  <div
+                    className={`attachment-icon ${getIconByContentType(att.content_type)}`}
+                  />
+                  <div className="attachment-info">
+                    <span className="attachment-name">
+                      {trimFileName(att.file_name)}
+                    </span>
+                    <span className="attachment-size">
+                      {formatFileSize(att.size_bytes)}
+                    </span>
+                  </div>
+                  <div
+                    className="attachment-download-btn"
+                    onClick={(e: any) => {
+                      e.preventDefault();
+                      this.handleDownload(att.id, att.file_name);
+                    }}
+                  ></div>
+                </div>
+              ))}
+            </div>
           </div>
           <Textarea readonly={true} value={email.body} />
         </form>

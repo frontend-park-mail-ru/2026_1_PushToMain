@@ -67,7 +67,7 @@
         flex-direction: column;
         height: 100%;
         min-height: 0;
-        overflow: hidden;
+        overflow-y: auto;
 
         &::-webkit-scrollbar {
             width: 6px;
@@ -171,7 +171,7 @@
                 display: flex;
                 flex-direction: column;
                 gap: 12px;
-                width: auto;
+                width: 50%;
                 min-width: 0;
 
                 .input-form {
@@ -261,7 +261,8 @@
                                 }
 
                                 [name="radio-theme"],
-                                [name="radio-language"] {
+                                [name="radio-language"],
+                                [name="radio-notifications"] {
                                     padding: 0;
                                     -webkit-appearance: none;
                                     -moz-appearance: none;

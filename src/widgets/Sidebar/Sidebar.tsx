@@ -108,9 +108,9 @@ class Sidebar extends Death13.Component {
 
   handleAllMailClick = (event: any) => {
     event.preventDefault();
-    AppStorage.setCurrentView("inbox");
+    AppStorage.setCurrentView("all-emails");
     AppStorage.setCurrentFolderId(null);
-    window.app.handleRoute("/");
+    window.app.handleRoute("/all-emails");
     this.toggleSidebar();
   };
 
@@ -226,11 +226,14 @@ class Sidebar extends Death13.Component {
                     isSelect={currentView === "trash"}
                     onClick={this.handleTrashClick}
                   />
+                  {/*
                   <Button
                     name="button-all-letter"
                     title={this.t("all_letter")}
+                    isSelect={currentView === "all-emails"}
                     onClick={this.handleAllMailClick}
                   />
+                  */}
                   {AppStorage.folders &&
                     AppStorage.folders.map((folder: any) => (
                       <div key={folder.id} className="folder-item">

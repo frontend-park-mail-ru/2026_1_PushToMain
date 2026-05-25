@@ -1,5 +1,6 @@
 importScripts("/precache-assets.js");
 const CACHE_NAME = "app-v1";
+let lastShownEmailId = null;
 
 self.addEventListener("install", (event) => {
   self.skipWaiting();
@@ -93,5 +94,46 @@ self.addEventListener("fetch", (event) => {
 
       return cached || networkPromise;
     })(),
+  );
+});
+
+self.addEventListener("message", (event) => {
+  console.log("SW got a message: ", event);
+  const { title, body, icon, url, emailId } = event.data;
+
+  if (emailId && lastShownEmailId === emailId) return;
+  if (emailId) lastShownEmailId = emailId;
+
+  const options = {
+    body: body || "You have a new email",
+    icon: icon || "/images/email-icon.png",
+    badge: "/images/badge-icon.png",
+    data: { url: url || "/" },
+    requireInteraction: false,
+  };
+
+  console.log("Options before calling showNotification: ", options);
+
+  event.waitUntil(
+    self.registration.showNotification(title || "New Email", options),
+  );
+});
+
+self.addEventListener("notificationclick", (event) => {
+  event.notification.close();
+  const urlToOpen = event.notification.data?.url || "/";
+
+  event.waitUntil(
+    clients.matchAll({ type: "window" }).then((windowClients) => {
+      for (const client of windowClients) {
+        if (client.url === urlToOpen && "focus" in client) {
+          return client.focus();
+        }
+      }
+
+      if (clients.openWindow) {
+        return clients.openWindow(urlToOpen);
+      }
+    }),
   );
 });

@@ -11,6 +11,7 @@ import ProfileModal from "../../widgets/ProfileModal/ProfileModal";
 import SelectDate from "../../components/SelectDate/SelectDate";
 import FolderChange from "../../widgets/FolderChange/FolderChange";
 import NotificationManager from "../../widgets/NotificationManager/NotificationManager";
+import { requestNotificationPermission } from "../../utils/emailNotifications";
 
 class ProfilePage extends Death13.Component {
   private unsubscribe: (() => void) | null = null;
@@ -23,6 +24,7 @@ class ProfilePage extends Death13.Component {
     });
 
     this.loadProfile();
+    this.syncTabFromUrl();
 
     const shouldOpenSettings = AppStorage.getOpenSettingsOnProfile();
 
@@ -50,7 +52,42 @@ class ProfilePage extends Death13.Component {
       isFolderEditMode: false,
       message: null,
     };
+
+    this.syncTabFromUrl();
   }
+
+  componentDidMount() {
+    window.addEventListener("popstate", this.syncTabFromUrl);
+  }
+
+  componentWillUnmount() {
+    window.removeEventListener("popstate", this.syncTabFromUrl);
+  }
+
+  syncTabFromUrl = () => {
+    const match = window.location.pathname.match(/\/profile\/(.+)$/);
+    if (match) {
+      const tab = match[1];
+      switch (tab) {
+        case "personal":
+          this.setState({ profileState: 0 });
+          break;
+        case "password":
+          this.setState({ profileState: 1 });
+          break;
+        case "interface":
+          this.setState({ profileState: 2 });
+          break;
+        case "folders":
+          this.setState({ profileState: 3 });
+          break;
+        default:
+          this.setState({ profileState: 0 });
+      }
+    } else if (window.location.pathname === "/profile") {
+      this.setState({ profileState: 0 });
+    }
+  };
 
   loadProfile = async () => {
     const data = await getProfile();
@@ -253,24 +290,33 @@ class ProfilePage extends Death13.Component {
   };
 
   handleProfileClick = () => {
-    this.setState({ isModalOpen: false, isConfirm: false });
-    window.app.handleRoute("/profile");
+    this.setState({ isModalOpen: false, isConfirm: false, profileState: 0 });
+    window.app.handleRoute("/profile/personal");
+  };
+
+  handleSettingsClick = () => {
+    this.setState({ isModalOpen: false, isConfirm: false, profileState: 2 });
+    window.app.handleRoute("/profile/interface");
   };
 
   handleChangeProfile = () => {
     this.setState({ profileState: 0 });
+    window.app.handleRoute("/profile/personal", true);
   };
 
   handleChangePasswordState = () => {
     this.setState({ profileState: 1 });
+    window.app.handleRoute("/profile/password", true);
   };
 
   handleSetting = () => {
     this.setState({ profileState: 2 });
+    window.app.handleRoute("/profile/interface", true);
   };
 
   handleFolder = () => {
     this.setState({ profileState: 3 });
+    window.app.handleRoute("/profile/folders", true);
   };
 
   handleToggleFolderEditMode = async () => {
@@ -295,6 +341,17 @@ class ProfilePage extends Death13.Component {
     if (sidebar) {
       sidebar.classList.toggle("open");
     }
+  };
+
+  handleEnableNotifs = () => {
+    AppStorage.setNotificationsEnabled(true);
+    requestNotificationPermission();
+    NotificationManager.show(true, "notifications_enabled");
+  };
+
+  handleDisableNotifs = () => {
+    AppStorage.setNotificationsEnabled(false);
+    NotificationManager.show(true, "notifications_disabled");
   };
 
   t(key: string): string {
@@ -576,6 +633,31 @@ class ProfilePage extends Death13.Component {
                         </div>
                       </div>
                     </div>
+                    <div className="profile__checkbox">
+                      <span>{this.t("notifications")}</span>
+                      <div className="checkbox-actions">
+                        <div className="checkbox-form">
+                          <Input
+                            id="notif-on"
+                            type="radio"
+                            name="radio-notifications"
+                            checked={AppStorage.notificationsEnabled === true}
+                            onChange={() => this.handleEnableNotifs()}
+                          />
+                          <label for="notif-on">{this.t("on")}</label>
+                        </div>
+                        <div className="checkbox-form">
+                          <Input
+                            id="notif-off"
+                            type="radio"
+                            name="radio-notifications"
+                            checked={AppStorage.notificationsEnabled === false}
+                            onChange={() => this.handleDisableNotifs()}
+                          />
+                          <label for="notif-off">{this.t("off")}</label>
+                        </div>
+                      </div>
+                    </div>
                   </form>
                 </div>
               </div>
@@ -608,6 +690,7 @@ class ProfilePage extends Death13.Component {
             isOpen={isModalOpen}
             onClose={this.handleCloseModal}
             onProfileClick={this.handleProfileClick}
+            onSettingsClick={this.handleSettingsClick}
             onLogout={this.handleLogout}
           />
         </div>

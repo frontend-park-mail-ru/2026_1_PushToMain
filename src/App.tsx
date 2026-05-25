@@ -13,7 +13,9 @@ import FavoritePage from "./pages/FavoritePage/FavoritePage";
 import SpamPage from "./pages/SpamPage/SpamPage";
 import DraftsPage from "./pages/DraftsPage/DraftsPage";
 import FolderPage from "./pages/FolderPage/FolderPage";
+import AllEmailsPage from "./pages/AllEmailsPage/AllEmailsPage";
 import NotificationManager from "./widgets/NotificationManager/NotificationManager";
+import { initEmailNotifications } from "./utils/emailNotifications";
 import "./utils/OfflineManager";
 
 export const AppStorage = {
@@ -48,6 +50,7 @@ export const AppStorage = {
   forwardData: null as any,
   theme: "light" as "light" | "dark",
   language: "ru" as "ru" | "en",
+  notificationsEnabled: true as boolean,
 
   translations: {
     ru: {
@@ -94,7 +97,23 @@ export const AppStorage = {
       subject: "Тема:",
       enter_subject: "Введите тему",
       to: "Кому:",
+      from: "От кого:",
+      date: "Дата:",
+      unknown: "Неизвестно",
       empty_subject: "<Без темы>",
+      no_recipient: "<Без получателя>",
+      original_email: "--- Оригинальное сообщение ---",
+      forwarded_email: "--- Пересылаемое сообщение ---",
+      message_sent: "Письмо успешно отправлено",
+      add_attachment: "Добавить вложение",
+      sending: "Отправка",
+
+      //File sizes
+      zero_bytes: "0 байт",
+      bytes: "байт",
+      kb: "Кб",
+      mb: "Мб",
+      gb: "Гб",
 
       //Drafts
       draft_saved: "Черновик сохранен",
@@ -116,6 +135,12 @@ export const AppStorage = {
       client_error: "Проверьте введенные данные и попробуйте еще раз",
       too_many_folders: "Максимум 6 папок",
       incorrect_credentials: "Неверная почта или пароль",
+      recipient_not_found: "Получатель не найден",
+      email_send_error: "Ошибка отправки письма, попробуйте позже",
+      notifs_not_supported: "Ваш браузер не поддерживает уведомления.",
+      auth_error: "Ошибка авторизации, попробуйте еще раз",
+      file_too_large: "Файл слишком большой (макс. 25 Мбайт)",
+      file_upload_error: "Не удалось загрузить файл",
 
       // ProfilePage
       theme: "Тема",
@@ -137,6 +162,14 @@ export const AppStorage = {
       add_a_folder: "Добавить папку...",
       new_folder: "Новая папка",
       confirm_delete_folder: "Вы точно хотите удалить папку",
+      notifications: "Уведомления в браузере",
+      new_mail_notification: "У вас новое письмо",
+      on: "Вкл",
+      off: "Выкл",
+      new_email_from: "Новое письмо от",
+      from_unknown: "неизвестного",
+      notifications_enabled: "Уведомления в браузере включены",
+      notifications_disabled: "Уведомления в браузере выключены",
 
       //Sidebar
       new_letter: "Новое письмо",
@@ -206,7 +239,23 @@ export const AppStorage = {
       subject: "Subject:",
       enter_subject: "Enter subject",
       to: "To:",
+      from: "From:",
+      date: "Date:",
+      unknown: "Unknown",
       empty_subject: "<No subject>",
+      no_recipient: "<No recipient>",
+      original_email: "--- Original email ---",
+      forwarded_email: "--- Forwarded email ---",
+      message_sent: "Email sent successfully",
+      add_attachment: "Add an attachment",
+      sending: "Sending",
+
+      //File sizes
+      zero_bytes: "0 Bytes",
+      bytes: "Bytes",
+      kb: "KB",
+      mb: "MB",
+      gb: "GB",
 
       //Drafts
       draft_saved: "Draft saved",
@@ -230,6 +279,12 @@ export const AppStorage = {
       client_error: "Check your data and try again",
       too_many_folders: "Limit of 6 folders reached",
       incorrect_credentials: "Incorrect email or password",
+      recipient_not_found: "Recipient not found",
+      email_send_error: "Could not send email, try again later",
+      notifs_not_supported: "Your browser does not support notifications",
+      auth_error: "Could not authorize the user, please log in",
+      file_too_large: "File is too large (25 MB max)",
+      file_upload_error: "Could not upload file, try again later",
 
       // ProfilePage
       theme: "Theme",
@@ -251,6 +306,14 @@ export const AppStorage = {
       add_a_folder: "Add a folder...",
       new_folder: "New folder",
       confirm_delete_folder: "Are you sure you want to delete folder",
+      notifications: "Browser notifications",
+      new_mail_notification: "You have a new email",
+      on: "On",
+      off: "Off",
+      new_email_from: "New mail from",
+      from_unknown: "unknown account",
+      notifications_enabled: "Browser notifications enabled",
+      notifications_disabled: "Browser notifications disabled",
 
       //Sidebar
       new_letter: "New mail",
@@ -327,6 +390,11 @@ export const AppStorage = {
       }
 
       document.documentElement.setAttribute("data-theme", this.theme);
+
+      const savedNotif = localStorage.getItem("notificationsEnabled");
+      if (savedNotif !== null) {
+        this.notificationsEnabled = savedNotif === "true";
+      }
     } catch (e) {
       console.warn("Failed to load profile from localStorage", e);
     }
@@ -425,6 +493,10 @@ export const AppStorage = {
       localStorage.setItem("language", this.language);
       localStorage.setItem("unReadCount", this.unReadCount.toString());
       localStorage.setItem("theme", this.theme);
+      localStorage.setItem(
+        "notificationsEnabled",
+        String(this.notificationsEnabled),
+      );
     } catch {}
   },
 
@@ -558,6 +630,12 @@ export const AppStorage = {
     }
     return "/assets/svg/Avatar.svg";
   },
+
+  setNotificationsEnabled(value: boolean) {
+    this.notificationsEnabled = value;
+    this._saveToStorage();
+    this._notify();
+  },
 };
 
 class App {
@@ -584,6 +662,7 @@ class App {
       "/drafts": DraftsPage,
       "/spam": SpamPage,
       "/favorite": FavoritePage,
+      "/all-emails": AllEmailsPage,
     };
 
     this.dynamicRoutes = [
@@ -596,6 +675,11 @@ class App {
         pattern: /^\/folder\/(\d+)$/,
         component: FolderPage,
         paramName: "folderId",
+      },
+      {
+        pattern: /^\/profile\/(personal|password|interface|folders)$/,
+        component: ProfilePage,
+        paramName: "tab",
       },
     ];
 
@@ -673,6 +757,8 @@ if ("serviceWorker" in navigator) {
       .catch((err) => console.error("SW registration failed:", err));
   });
 }
+
+initEmailNotifications();
 
 window.app = new App();
 

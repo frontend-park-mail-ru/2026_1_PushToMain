@@ -48,8 +48,125 @@
         }
     }
 
+    .files-list {
+        display: flex;
+        flex-direction: row;
+        gap: 5px;
+        margin: 10px;
+        height: 85px;
+        overflow: hidden;
+        overflow-x: auto;
+        scrollbar-width: none;
+
+        @media (max-width: 768px) {
+            height: 90px;
+        }
+
+        .file-item {
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            gap: 5px;
+            background-color: var(--color-main-background);
+            border-radius: 20px;
+            padding: 10px 20px;
+            flex-shrink: 0;
+            max-width: 400px;
+            overflow: hidden;
+            height: fit-content;
+
+            .file-icon {
+                height: 28px;
+                width: 28px;
+                background-color: var(--tertiary-text);
+                mask-image: url(/assets/svg/Draft.svg);
+                mask-size: contain;
+                mask-position: center;
+
+                &.image {
+                    mask-image: url(/assets/svg/Image.svg);
+                }
+
+                &.video {
+                    mask-image: url(/assets/svg/Video.svg);
+                }
+
+                &.spreadsheet {
+                    mask-image: url(/assets/svg/Spreadsheet.svg);
+                }
+
+                &.archive {
+                    mask-image: url(/assets/svg/Zip.svg);
+                }
+
+                &.music {
+                    mask-image: url(/assets/svg/Music.svg);
+                }
+
+                &.presentation {
+                    mask-image: url(/assets/svg/Presentation.svg);
+                }
+            }
+
+            .file-info {
+                display: flex;
+                flex-direction: column;
+
+                .file-name {
+                    font-weight: 500;
+                    max-width: 300px;
+                    overflow: hidden;
+                    white-space: nowrap;
+                    text-overflow: ellipsis;
+                }
+
+                .file-size {
+                    color: var(--muted-text);
+                }
+            }
+
+            .file-remove-btn {
+                height: 12px;
+                width: 12px;
+                margin-left: 15px;
+                cursor: pointer;
+                background-color: var(--tertiary-text);
+                mask-image: url(/assets/svg/Close.svg);
+                mask-size: contain;
+                mask-position: center;
+            }
+        }
+    }
+
     .send-down {
-        margin-left: auto;
+        display: flex;
+        gap: auto;
+
+        .send-tools {
+            margin-left: 15px;
+            display: flex;
+            align-items: center;
+
+            @media (max-width: 768px) {
+                margin-bottom: 15px;
+            }
+
+            .upload-attachments-button {
+                height: 36px;
+                width: 36px;
+                cursor: pointer;
+                background-color: var(--tertiary-text);
+                mask-image: url(/assets/svg/Attachment.svg);
+                mask-size: contain;
+                mask-position: center;
+
+                &:hover {
+                    background-color: var(--secondary-text);
+                    transition: background-color 0.15s ease-in-out;
+                }
+            }
+        }
+
         .send-actions {
             display: flex;
             flex-direction: row;
@@ -69,6 +186,36 @@
                     &:hover {
                         background-color: var(--color-main-background);
                     }
+                }
+            }
+
+            .sending-loader {
+                display: flex;
+                align-items: center;
+                gap: 10px;
+                padding: 8px 16px;
+
+                span {
+                    color: #666;
+                    font-size: 14px;
+                }
+            }
+
+            .spinner {
+                width: 24px;
+                height: 24px;
+                border: 3px solid var(--main-background);
+                border-top: 3px solid var(--accent-2);
+                border-radius: 50%;
+                animation: spin 0.8s linear infinite;
+            }
+
+            @keyframes spin {
+                0% {
+                    transform: rotate(0deg);
+                }
+                100% {
+                    transform: rotate(360deg);
                 }
             }
         }
@@ -100,6 +247,24 @@
                 mask-image: url(/assets/svg/Sent.svg);
                 mask-size: contain;
                 mask-position: center;
+            }
+
+            .spinner {
+                width: 28px;
+                height: 28px;
+                border: 3px solid var(--main-background);
+                border-top: 3px solid var(--accent-2);
+                border-radius: 50%;
+                animation: spin 0.8s linear infinite;
+            }
+
+            @keyframes spin {
+                0% {
+                    transform: rotate(0deg);
+                }
+                100% {
+                    transform: rotate(360deg);
+                }
             }
         }
 

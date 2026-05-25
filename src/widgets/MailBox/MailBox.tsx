@@ -54,7 +54,7 @@ class MailBox extends Death13.Component {
     const showSenderInfo = !isSentView && (sender_name || sender_email);
     const showFavoriteCheckbox = !isSentView && !isDraftsView;
 
-    let sentToString = "";
+    let sentToString = this.t("no_recipient");
     if (receivers_emails) {
       sentToString = "To: " + receivers_emails.join(", ");
     }
@@ -103,7 +103,7 @@ class MailBox extends Death13.Component {
                   ? sender_name
                     ? `${sender_name} ${sender_surname || ""}`.trim()
                     : sender_email
-                  : ""}
+                  : this.t("no_recipient")}
             </span>
             {}
             {!isMobile ? (
