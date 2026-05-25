@@ -10,7 +10,11 @@ import { sendSpam } from "../../api/ApiSpam";
 import { trash } from "../../api/ApiTrash";
 import { formatTime } from "../../utils/date";
 import { getAttachments, downloadAttachment } from "../../api/ApiAttachments";
-import { formatFileSize, getIconByContentType } from "../../utils/files";
+import {
+  formatFileSize,
+  getIconByContentType,
+  trimFileName,
+} from "../../utils/files";
 
 class ReadMail extends Death13.Component {
   state = {
@@ -226,7 +230,9 @@ class ReadMail extends Death13.Component {
                     className={`attachment-icon ${getIconByContentType(att.content_type)}`}
                   />
                   <div className="attachment-info">
-                    <span className="attachment-name">{att.file_name}</span>
+                    <span className="attachment-name">
+                      {trimFileName(att.file_name)}
+                    </span>
                     <span className="attachment-size">
                       {formatFileSize(att.size_bytes)}
                     </span>

@@ -105,6 +105,7 @@ export const AppStorage = {
       original_email: "--- Оригинальное сообщение ---",
       forwarded_email: "--- Пересылаемое сообщение ---",
       message_sent: "Письмо успешно отправлено",
+      add_attachment: "Добавить вложение",
 
       //File sizes
       zero_bytes: "0 байт",
@@ -245,6 +246,7 @@ export const AppStorage = {
       original_email: "--- Original email ---",
       forwarded_email: "--- Forwarded email ---",
       message_sent: "Email sent successfully",
+      add_attachment: "Add an attachment",
 
       //File sizes
       zero_bytes: "0 Bytes",

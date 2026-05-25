@@ -13,7 +13,11 @@ import {
 } from "../../api/ApiAttachments";
 import { AppStorage } from "../../App";
 import { createDraft, sendDraft, updateDraft } from "../../api/ApiDraft";
-import { formatFileSize, getIconByContentType } from "../../utils/files";
+import {
+  formatFileSize,
+  getIconByContentType,
+  trimFileName,
+} from "../../utils/files";
 
 class SendMail extends Death13.Component {
   state: any = {
@@ -383,7 +387,9 @@ class SendMail extends Death13.Component {
                     className={`file-icon ${getIconByContentType(fileItem.type)}`}
                   />
                   <div className="file-info">
-                    <span className="file-name">{fileItem.name}</span>
+                    <span className="file-name">
+                      {trimFileName(fileItem.name)}
+                    </span>
                     <span className="file-size">
                       {formatFileSize(fileItem.size)}
                     </span>

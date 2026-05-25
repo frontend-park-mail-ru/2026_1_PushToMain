@@ -13,7 +13,21 @@ export function formatFileSize(bytes: number): string {
   return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + " " + sizes[i];
 }
 
-export function getIconByContentType(contentType: string) {
+export function trimFileName(fileName: string): string {
+  if (fileName.length < 40) return fileName;
+
+  const lastDotIdx = fileName.lastIndexOf(".");
+  const extension = fileName.substring(lastDotIdx, fileName.length);
+  return (
+    fileName.substring(0, 20).trim() +
+    "..." +
+    fileName
+      .substring(lastDotIdx - 12 + extension.length, fileName.length)
+      .trim()
+  );
+}
+
+export function getIconByContentType(contentType: string): string {
   const imageRegex = /^image\/(jpeg|png|webp|gif|svg\+xml|avif|bmp|tiff)$/;
   const videoRegex =
     /^video\/(mp4|webm|ogg|quicktime|x-msvideo|x-matroska|mpeg|x-ms-wmv|3gpp|x-flv)$/;
@@ -44,4 +58,6 @@ export function getIconByContentType(contentType: string) {
   if (presentationRegex.test(contentType)) {
     return "presentation";
   }
+
+  return "";
 }
