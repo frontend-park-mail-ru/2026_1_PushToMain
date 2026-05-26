@@ -12,7 +12,6 @@
         .read-header {
             display: flex;
             align-items: center;
-            gap: 30px;
             padding: 10px;
 
             .sender-avatar {
@@ -28,6 +27,7 @@
                 display: flex;
                 flex-direction: column;
                 gap: 10px;
+                margin-left: 20px;
 
                 .sender__email {
                     font-weight: bold;

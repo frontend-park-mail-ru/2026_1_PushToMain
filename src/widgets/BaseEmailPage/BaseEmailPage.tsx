@@ -419,6 +419,10 @@ class BaseEmailPage extends Death13.Component {
           <Sidebar
             isProfile={0}
             isPress={0}
+            name={AppStorage.name}
+            surname={AppStorage.surname}
+            avatarUrl={AppStorage.getAvatarUrl()}
+            email={AppStorage.email}
             newMail={this.handleNewMail}
             backToMail={this.handleGoToMain}
             updateMail={() => this.loadEmails(this.state.offset)}

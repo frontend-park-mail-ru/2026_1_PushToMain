@@ -27,6 +27,10 @@ class MailBox extends Death13.Component {
     this.props.onToggleFavorite?.(this.props.id, e.target.checked);
   };
 
+  trimEmailAddress(email: string): string {
+    return email.substring(0, email.lastIndexOf("@"));
+  }
+
   t(key: string): string {
     return AppStorage.t(key);
   }
@@ -86,7 +90,10 @@ class MailBox extends Death13.Component {
         </div>
         <div className="mail-content">
           <div className="mail-content__left-part">
-            <span className="mail-sender">
+            <span
+              className="mail-sender"
+              title={this.t("from") + " " + sender_email}
+            >
               {pageMain && (
                 <input
                   type="checkbox"
@@ -103,7 +110,7 @@ class MailBox extends Death13.Component {
                 : showSenderInfo
                   ? sender_name
                     ? `${sender_name} ${sender_surname || ""}`.trim()
-                    : sender_email
+                    : this.trimEmailAddress(sender_email)
                   : this.t("no_recipient")}
             </span>
             {}
