@@ -1,5 +1,5 @@
 importScripts("/precache-assets.js");
-const CACHE_NAME = "app-v2";
+const CACHE_NAME = "app-v1";
 let lastShownEmailId = null;
 
 self.addEventListener("install", (event) => {
@@ -59,7 +59,7 @@ self.addEventListener("fetch", (event) => {
     event.respondWith(
       (async () => {
         try {
-          const network = await fetch(req, { cache: "no_cache" });
+          const network = await fetch(req);
           cache.put("/index.html", network.clone());
           return network;
         } catch {
