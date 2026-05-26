@@ -10,7 +10,7 @@ export default class GeneratePrecacheManifest {
         compilation.hooks.processAssets.tap(
           {
             name: "GeneratePrecacheManifest",
-            stage: compiler.webpack.Compilation.PROCESS_ASSETS_STAGE_REPORT,
+            stage: compiler.webpack.Compilation.PROCESS_ASSETS_STAGE_ADDITIONS,
           },
           (assets) => {
             const svgUrls = [];

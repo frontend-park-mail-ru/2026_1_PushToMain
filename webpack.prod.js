@@ -2,7 +2,6 @@ import { merge } from "webpack-merge";
 import MiniCssExtractPlugin from "mini-css-extract-plugin";
 import CssMinimizerPlugin from "css-minimizer-webpack-plugin";
 import ImageMinimizerPlugin from "image-minimizer-webpack-plugin";
-import GeneratePrecacheManifest from "./webpack/GeneratePrecacheManifest.js";
 import common from "./webpack.common.js";
 
 export default merge(common, {
@@ -31,7 +30,6 @@ export default merge(common, {
           },
         },
       }),
-      new GeneratePrecacheManifest(),
     ],
     splitChunks: {
       chunks: "all",

@@ -1,6 +1,7 @@
 import path, { dirname } from "path";
 import HtmlWebpackPlugin from "html-webpack-plugin";
 import CopyWebpackPlugin from "copy-webpack-plugin";
+import GeneratePrecacheManifest from "./webpack/GeneratePrecacheManifest.js";
 
 const __dirname = dirname("./");
 
@@ -60,7 +61,14 @@ export default {
     }),
     new CopyWebpackPlugin({
       patterns: [
-        { from: "public/sw.js", to: "sw.js" },
+        {
+          from: "public/sw.js",
+          to: "sw.js",
+          transform: (content) => {
+            const version = Date.now();
+            return `${content.toString()}\nconst BUILD_VERSION = ${version};`;
+          },
+        },
         {
           from: "**/*",
           to: "assets/",
@@ -69,5 +77,6 @@ export default {
         },
       ],
     }),
+    new GeneratePrecacheManifest(),
   ],
 };
