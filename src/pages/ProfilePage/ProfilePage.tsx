@@ -359,7 +359,6 @@ class ProfilePage extends Death13.Component {
   }
 
   render() {
-    console.log("ProfilePage rerender");
     const {
       errors,
       oldPassword,
