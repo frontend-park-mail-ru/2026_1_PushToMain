@@ -11,6 +11,7 @@ class Button extends Death13.Component {
       count,
       block,
       isSelect,
+      active,
       type,
       name,
       help,
@@ -21,6 +22,7 @@ class Button extends Death13.Component {
         className={className}
         disabled={block}
         data-is-select={isSelect}
+        data-active={active ? "true" : "false"}
         type={type || "button"}
         name={name}
         title={help || ""}

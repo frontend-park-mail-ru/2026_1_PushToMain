@@ -153,6 +153,14 @@ class ReadEmailPage extends Death13.Component {
     window.app.handleRoute("/");
   };
 
+  handleFavoriteToggled = (newIsFavorite: boolean) => {
+    const updatedEmail = {
+      ...this.state.email,
+      is_favorite: newIsFavorite,
+    };
+    this.setState({ email: updatedEmail });
+  };
+
   t(key: string): string {
     return AppStorage.t(key);
   }
@@ -207,6 +215,7 @@ class ReadEmailPage extends Death13.Component {
               backToMail={this.handleBackToMail}
               backToSent={this.handleBackToSent}
               selectedFolderId={selectedFolderId}
+              onFavoriteToggled={this.handleFavoriteToggled}
             />
           </div>
 

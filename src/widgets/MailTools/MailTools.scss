@@ -45,7 +45,7 @@
             background-color: var(--muted-text);
         }
 
-        [name="favorites"]::before,
+        [name="favorite"]::before,
         [name="unfavorite"]::before,
         [name="spam"]::before,
         [name="unspam"]::before,
@@ -60,9 +60,14 @@
             mask-position: center;
         }
 
-        [name="favorites"]::before {
+        [name="favorite"]::before {
             mask-image: url("/assets/svg/SidebarFavorites.svg");
         }
+
+        [name="favorite"][data-active="true"]::before {
+            mask-image: url("/assets/svg/StarOn.svg");
+        }
+
         [name="spam"]::before {
             mask-image: url("/assets/svg/Spam.svg");
         }

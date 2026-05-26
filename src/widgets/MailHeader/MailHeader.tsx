@@ -194,7 +194,9 @@ class MailHeader extends Death13.Component {
 
           {hasSelected && (
             <div className="select-all-container">
-              <div className="select-all__tools-left">
+              <div
+                className={`select-all__tools-left${isDrafts || isSent || isSpamOrTrash ? " hide-separator" : ""}`}
+              >
                 {isSpamOrTrash && (
                   <Button
                     name="move-to-inbox"
