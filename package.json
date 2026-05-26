@@ -47,6 +47,7 @@
     "globals": "^17.4.0",
     "html-webpack-plugin": "^5.6.6",
     "imagemin-mozjpeg": "^10.0.0",
+    "imagemin-pngquant": "^10.0.0",
     "postcss-loader": "^8.2.1",
     "sass": "^1.98.0",
     "sass-loader": "^16.0.7",
