@@ -70,10 +70,6 @@
                 flex-shrink: 0;
                 max-width: 250px;
 
-                span {
-                    flex-shrink: 0; // this span
-                }
-
                 span[contenteditable="true"] {
                     outline: none;
                     border: none;

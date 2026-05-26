@@ -215,17 +215,61 @@ class InputEmail extends Death13.Component {
     }
   }
 
-  trimEmailAddress(email: string): string {
-    const wRegex = new RegExp("[mMwWQODCGBNU]", "g");
-    const wideCharCnt = email.match(wRegex)?.length || 0;
-    const maxLen =
-      27 - Math.round(wideCharCnt * (1 - wideCharCnt / email.length));
+  measureTextWidth(text: string, font: string): number {
+    const canvas = document.createElement("canvas");
+    const context = canvas.getContext("2d")!;
+    context.font = font;
+    return context.measureText(text).width;
+  }
 
-    if (email.length <= maxLen) return email;
+  trimEmailToFit(
+    email: string,
+    maxWidth: number = 240,
+    font: string = "16px system-ui, sans-serif",
+  ): string {
+    if (this.measureTextWidth(email, font) <= maxWidth) return email;
 
     const atIdx = email.lastIndexOf("@");
-    const domain = email.substring(atIdx, email.length);
-    return email.substring(0, maxLen - domain.length) + "..." + domain;
+    if (atIdx <= 0) {
+      let truncated = email;
+      while (
+        this.measureTextWidth(truncated + "...", font) > maxWidth &&
+        truncated.length > 0
+      ) {
+        truncated = truncated.slice(0, -1);
+      }
+      return truncated + "...";
+    }
+
+    const localPart = email.substring(0, atIdx);
+    const domain = email.substring(atIdx);
+
+    if (this.measureTextWidth(domain, font) > maxWidth) {
+      return email.substring(0, maxWidth / 8) + "...";
+    }
+
+    const remainingWidth =
+      maxWidth -
+      this.measureTextWidth(domain, font) -
+      this.measureTextWidth("...", font);
+    if (remainingWidth <= 0) return "..." + domain;
+
+    let low = 0,
+      high = localPart.length;
+    let best = 0;
+    while (low <= high) {
+      const mid = Math.floor((low + high) / 2);
+      const candidate = localPart.substring(0, mid);
+      if (this.measureTextWidth(candidate, font) <= remainingWidth) {
+        best = mid;
+        low = mid + 1;
+      } else {
+        high = mid - 1;
+      }
+    }
+
+    const trimmedLocal = localPart.substring(0, best);
+    return trimmedLocal + "..." + domain;
   }
 
   render() {
@@ -276,7 +320,7 @@ class InputEmail extends Death13.Component {
                   ) : (
                     [
                       <span className="email-text" key="text">
-                        {this.trimEmailAddress(email)}
+                        {this.trimEmailToFit(email)}
                       </span>,
                       <button
                         key="remove"
