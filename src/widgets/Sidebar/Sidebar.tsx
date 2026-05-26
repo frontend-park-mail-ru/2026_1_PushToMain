@@ -7,33 +7,12 @@ import SidebarProfile from "../../components/SidebarProfile/SidebarProfile";
 class Sidebar extends Death13.Component {
   state: any = {
     isVisible: AppStorage.getSidebarDropdownVisible() || false,
-    name: AppStorage.name,
-    surname: AppStorage.surname,
-    email: AppStorage.email,
-    avatarUrl: AppStorage.getAvatarUrl(),
     language: AppStorage.language,
     unReadCount: AppStorage.unReadCount,
     currentView: AppStorage.currentView || "inbox",
   };
 
   private unsubscribe: (() => void) | null = null;
-
-  constructor(props: any) {
-    super(props);
-
-    this.unsubscribe = AppStorage.subscribe(() => {
-      this.setState({
-        name: AppStorage.name,
-        surname: AppStorage.surname,
-        email: AppStorage.email,
-        avatarUrl: AppStorage.getAvatarUrl(),
-        unReadCount: AppStorage.unReadCount,
-        language: AppStorage.language,
-        currentView: AppStorage.currentView || "inbox",
-        selectedFolderId: AppStorage.currentFolderId || null,
-      });
-    });
-  }
 
   toggleDropdown = (event: any) => {
     event.preventDefault();
@@ -119,21 +98,17 @@ class Sidebar extends Death13.Component {
   }
 
   render() {
-    const {
-      isVisible,
-      name,
-      surname,
-      email,
-      avatarUrl,
-      unReadCount,
-      currentView,
-    } = this.state;
+    const { isVisible, unReadCount, currentView } = this.state;
     const {
       isProfile = 0,
       backToMail,
       changeProfile,
       changePassword,
       newMail,
+      name,
+      surname,
+      email,
+      avatarUrl,
       handleSetting,
       handleFolder,
       selectedFolderId,

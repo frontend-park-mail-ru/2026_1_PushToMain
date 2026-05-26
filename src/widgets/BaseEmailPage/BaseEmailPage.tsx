@@ -61,6 +61,18 @@ class BaseEmailPage extends Death13.Component {
     this.loadEmails(0);
   }
 
+  componentDidUpdate() {
+    const currentFolderId = this.props.currentFolderId;
+
+    if (
+      this.props.currentView === "folder" &&
+      currentFolderId !== this.lastFolderId
+    ) {
+      this.lastFolderId = currentFolderId;
+      this.loadEmails(0);
+    }
+  }
+
   componentWillUnmount() {
     if (this.handleVisibilityChange) {
       document.removeEventListener(
@@ -395,16 +407,6 @@ class BaseEmailPage extends Death13.Component {
 
     if (!this.props) {
       return <div>Loading...</div>;
-    }
-
-    const currentFolderId = this.props.currentFolderId;
-
-    if (
-      this.props.currentView === "folder" &&
-      currentFolderId !== this.lastFolderId
-    ) {
-      this.lastFolderId = currentFolderId;
-      this.loadEmails(0);
     }
 
     const mobileHeaderTitle =
