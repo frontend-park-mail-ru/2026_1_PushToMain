@@ -51,6 +51,12 @@
             padding-right: 15px;
             position: relative;
 
+            &.hide-separator {
+                &::after {
+                    display: none;
+                }
+            }
+
             &::after {
                 content: "";
                 position: absolute;

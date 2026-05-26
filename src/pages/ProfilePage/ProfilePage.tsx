@@ -380,6 +380,10 @@ class ProfilePage extends Death13.Component {
           <Sidebar
             isProfile={1}
             isPressProfile={profileState}
+            avatarUrl={AppStorage.getAvatarUrl()}
+            name={AppStorage.name}
+            surname={AppStorage.surname}
+            email={AppStorage.email}
             backToMail={this.handleBackToMail}
             changeProfile={this.handleChangeProfile}
             changePassword={this.handleChangePasswordState}

@@ -258,6 +258,8 @@ class ReadMail extends Death13.Component {
             email={email}
             reloadMail={this.props.reloadMail}
             backToMail={this.props.backToMail}
+            onFavoriteToggled={this.props.onFavoriteToggled}
+            isFavorite={email.is_favorite}
           />
         ) : (
           <div className="tools-bottom-mobile">

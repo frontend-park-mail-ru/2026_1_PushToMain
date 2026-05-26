@@ -61,6 +61,18 @@ class BaseEmailPage extends Death13.Component {
     this.loadEmails(0);
   }
 
+  componentDidUpdate() {
+    const currentFolderId = this.props.currentFolderId;
+
+    if (
+      this.props.currentView === "folder" &&
+      currentFolderId !== this.lastFolderId
+    ) {
+      this.lastFolderId = currentFolderId;
+      this.loadEmails(0);
+    }
+  }
+
   componentWillUnmount() {
     if (this.handleVisibilityChange) {
       document.removeEventListener(
@@ -397,16 +409,6 @@ class BaseEmailPage extends Death13.Component {
       return <div>Loading...</div>;
     }
 
-    const currentFolderId = this.props.currentFolderId;
-
-    if (
-      this.props.currentView === "folder" &&
-      currentFolderId !== this.lastFolderId
-    ) {
-      this.lastFolderId = currentFolderId;
-      this.loadEmails(0);
-    }
-
     const mobileHeaderTitle =
       currentView === "folder" ? currentFolderName : this.t(currentView);
 
@@ -417,6 +419,10 @@ class BaseEmailPage extends Death13.Component {
           <Sidebar
             isProfile={0}
             isPress={0}
+            name={AppStorage.name}
+            surname={AppStorage.surname}
+            avatarUrl={AppStorage.getAvatarUrl()}
+            email={AppStorage.email}
             newMail={this.handleNewMail}
             backToMail={this.handleGoToMain}
             updateMail={() => this.loadEmails(this.state.offset)}

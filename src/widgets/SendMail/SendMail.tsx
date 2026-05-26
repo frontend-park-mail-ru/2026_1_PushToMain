@@ -5,6 +5,7 @@ import Input from "../../components/Input/Input";
 import Textarea from "../../components/Textarea/Textarea";
 import Button from "../../components/Button/Button";
 import NotificationManager from "../NotificationManager/NotificationManager";
+import ConfirmationDialog from "../../widgets/ConfirmationDialog/ConfirmationDialog";
 import { sendEmail } from "../../api/ApiEmail";
 import {
   uploadAttachment,
@@ -199,13 +200,12 @@ class SendMail extends Death13.Component {
 
   handleCancel = () => {
     window.AppStorage.clearMailActionData();
+    this.setState({ showDraftConfirm: false });
     this.props.backToMail();
   };
 
-  handleSaveDraft = async (event: any) => {
+  handleSaveDraft = async () => {
     const { header, body, receivers, draftId, files } = this.state;
-
-    event.preventDefault();
 
     let savedDraftId: number | null = null;
 
@@ -252,6 +252,8 @@ class SendMail extends Death13.Component {
       this.props.backToMail();
       NotificationManager.show(true, "draft_saved");
     }
+
+    this.setState({ showDraftConfirm: false });
   };
 
   handleFileChange = (e: any) => {
@@ -344,6 +346,21 @@ class SendMail extends Death13.Component {
     }
   };
 
+  handleMobileCloseButton = () => {
+    const { header, body, receivers, files } = this.state;
+    if (
+      header === "" &&
+      body === "" &&
+      receivers.length === 0 &&
+      files.length === 0
+    ) {
+      this.handleCancel();
+      return;
+    }
+
+    this.setState({ showDraftConfirm: true });
+  };
+
   t(key: string): string {
     return AppStorage.t(key);
   }
@@ -374,7 +391,7 @@ class SendMail extends Death13.Component {
             <div className="send-mail-mobile-buttons">
               <div
                 className="close-button"
-                onClick={this.handleSaveDraft}
+                onClick={this.handleMobileCloseButton}
               ></div>
               <div
                 className="send-button"
@@ -483,6 +500,16 @@ class SendMail extends Death13.Component {
             )
           ) : null}
         </div>
+        {this.state.showDraftConfirm && (
+          <ConfirmationDialog
+            text={this.t("confirm_save_draft")}
+            cancelButtonTitle={this.t("delete_draft")}
+            confirmButtonTitle={this.t("save_draft")}
+            callbackCancel={this.handleCancel}
+            callbackConfirm={this.handleSaveDraft}
+            highlightCancel={false}
+          />
+        )}
       </div>
     );
   }

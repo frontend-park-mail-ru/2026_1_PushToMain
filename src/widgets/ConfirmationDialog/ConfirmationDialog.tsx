@@ -17,15 +17,24 @@ class ConfirmationDialog extends Death13.Component {
   }
 
   render() {
-    const { text } = this.props;
+    const { text, cancelButtonTitle, confirmButtonTitle, highlightCancel } =
+      this.props;
     return (
       <div className="confirmation-dialog">
         <div className="__overlay" />
         <div className="__content">
           <h2>{text}</h2>
           <div className="__buttons">
-            <Button title={this.t("action_cancel")} onClick={this.onCancel} />
-            <Button title={this.t("action_confirm")} onClick={this.onConfirm} />
+            <Button
+              className={highlightCancel ? "primary" : "secondary"}
+              title={this.t(cancelButtonTitle || "action_cancel")}
+              onClick={this.onCancel}
+            />
+            <Button
+              className={!highlightCancel ? "primary" : "secondary"}
+              title={this.t(confirmButtonTitle || "action_confirm")}
+              onClick={this.onConfirm}
+            />
           </div>
         </div>
       </div>

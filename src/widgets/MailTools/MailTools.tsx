@@ -46,21 +46,19 @@ class MailTools extends Death13.Component {
     }
   };
 
-  handleFavoriteClick = async (event: any) => {
+  handleFavoriteToggle = async (event: any) => {
     event.preventDefault();
-    const { email } = this.props;
-    if (email) {
-      await sendFavorite([email.id]);
-      this.props.reloadMail?.();
-    }
-  };
+    event.stopPropagation();
+    const { email, onFavoriteToggled } = this.props;
 
-  handleUnFavoriteClick = async (event: any) => {
-    event.preventDefault();
-    const { email } = this.props;
     if (email) {
-      await unFavorite([email.id]);
-      this.props.reloadMail?.();
+      if (email.is_favorite) {
+        await unFavorite([email.id]);
+        onFavoriteToggled?.(false);
+      } else {
+        await sendFavorite([email.id]);
+        onFavoriteToggled?.(true);
+      }
     }
   };
 
@@ -69,26 +67,18 @@ class MailTools extends Death13.Component {
   }
 
   render() {
-    const { email } = this.props;
-    const isFavorite = email?.is_favorite;
+    const { email, isFavorite } = this.props;
     const isSpam = email?.is_spam;
 
     return (
       <div className="tools-container">
         <div className="tools-left">
-          {isFavorite ? (
-            <Button
-              name="unfavorite"
-              help={this.t("unstarred")}
-              onClick={this.handleUnFavoriteClick}
-            />
-          ) : (
-            <Button
-              name="favorites"
-              help={this.t("starred")}
-              onClick={this.handleFavoriteClick}
-            />
-          )}
+          <Button
+            name="favorite"
+            active={isFavorite}
+            help={isFavorite ? this.t("unstarred") : this.t("starred")}
+            onClick={this.handleFavoriteToggle}
+          />
           {isSpam ? (
             <Button
               name="unspam"

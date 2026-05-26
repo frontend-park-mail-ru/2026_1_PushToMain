@@ -19,7 +19,8 @@ class InputEmail extends Death13.Component {
   }
   state: any = {
     emails: this.props.emails || [AppStorage.email],
-    invalidEmails: [],
+    invalidEmails:
+      this.props.emails.filter((e: any) => !this.validateEmail(e)) || [],
     currentInput: "",
     error: "",
     editingIndex: null,
@@ -214,6 +215,63 @@ class InputEmail extends Death13.Component {
     }
   }
 
+  measureTextWidth(text: string, font: string): number {
+    const canvas = document.createElement("canvas");
+    const context = canvas.getContext("2d")!;
+    context.font = font;
+    return context.measureText(text).width;
+  }
+
+  trimEmailToFit(
+    email: string,
+    maxWidth: number = 240,
+    font: string = "16px system-ui, sans-serif",
+  ): string {
+    if (this.measureTextWidth(email, font) <= maxWidth) return email;
+
+    const atIdx = email.lastIndexOf("@");
+    if (atIdx <= 0) {
+      let truncated = email;
+      while (
+        this.measureTextWidth(truncated + "...", font) > maxWidth &&
+        truncated.length > 0
+      ) {
+        truncated = truncated.slice(0, -1);
+      }
+      return truncated + "...";
+    }
+
+    const localPart = email.substring(0, atIdx);
+    const domain = email.substring(atIdx);
+
+    if (this.measureTextWidth(domain, font) > maxWidth) {
+      return email.substring(0, maxWidth / 8) + "...";
+    }
+
+    const remainingWidth =
+      maxWidth -
+      this.measureTextWidth(domain, font) -
+      this.measureTextWidth("...", font);
+    if (remainingWidth <= 0) return "..." + domain;
+
+    let low = 0,
+      high = localPart.length;
+    let best = 0;
+    while (low <= high) {
+      const mid = Math.floor((low + high) / 2);
+      const candidate = localPart.substring(0, mid);
+      if (this.measureTextWidth(candidate, font) <= remainingWidth) {
+        best = mid;
+        low = mid + 1;
+      } else {
+        high = mid - 1;
+      }
+    }
+
+    const trimmedLocal = localPart.substring(0, best);
+    return trimmedLocal + "..." + domain;
+  }
+
   render() {
     const { emails, currentInput, invalidEmails, editingIndex, editValue } =
       this.state;
@@ -262,7 +320,7 @@ class InputEmail extends Death13.Component {
                   ) : (
                     [
                       <span className="email-text" key="text">
-                        {email}
+                        {this.trimEmailToFit(email)}
                       </span>,
                       <button
                         key="remove"

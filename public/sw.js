@@ -22,6 +22,17 @@ self.addEventListener("activate", (event) => {
           }
         }),
       );
+
+      const cache = await caches.open(CACHE_NAME);
+      const cachedIndex = await cache.match("/index.html");
+      if (!cachedIndex) {
+        try {
+          const response = await fetch("/index.html");
+          await cache.put("/index.html", response);
+        } catch (e) {
+          console.log("Could not repopulate cache");
+        }
+      }
       await self.clients.claim();
     })(),
   );
@@ -47,15 +58,14 @@ self.addEventListener("fetch", (event) => {
   if (req.mode === "navigate") {
     event.respondWith(
       (async () => {
-        const cache = await caches.open(CACHE_NAME);
-        const cached = await cache.match("/index.html");
-
         try {
           const network = await fetch(req);
           cache.put("/index.html", network.clone());
           return network;
         } catch {
-          return cached;
+          const cache = await caches.open(CACHE_NAME);
+          const cached = await cache.match("/index.html");
+          return cached || new Response("Offline", { status: 503 });
         }
       })(),
     );
@@ -98,7 +108,6 @@ self.addEventListener("fetch", (event) => {
 });
 
 self.addEventListener("message", (event) => {
-  console.log("SW got a message: ", event);
   const { title, body, icon, url, emailId } = event.data;
 
   if (emailId && lastShownEmailId === emailId) return;
@@ -111,8 +120,6 @@ self.addEventListener("message", (event) => {
     data: { url: url || "/" },
     requireInteraction: false,
   };
-
-  console.log("Options before calling showNotification: ", options);
 
   event.waitUntil(
     self.registration.showNotification(title || "New Email", options),

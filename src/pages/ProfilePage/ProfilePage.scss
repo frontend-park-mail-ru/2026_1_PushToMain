@@ -343,6 +343,7 @@
             .profile-content-area {
                 .profile-container {
                     height: 100%;
+                    scrollbar-width: thin;
                     overflow-y: auto;
                     gap: 0;
 
@@ -365,6 +366,7 @@
                         }
 
                         .profile-form {
+                            width: 100%;
                             gap: 0;
                         }
                     }
