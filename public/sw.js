@@ -22,6 +22,17 @@ self.addEventListener("activate", (event) => {
           }
         }),
       );
+
+      const cache = await caches.open(CACHE_NAME);
+      const cachedIndex = await cache.match("/index.html");
+      if (!cachedIndex) {
+        try {
+          const response = await fetch("/index.html");
+          await cache.put("/index.html", response);
+        } catch (e) {
+          console.log("Could not repopulate cache");
+        }
+      }
       await self.clients.claim();
     })(),
   );
