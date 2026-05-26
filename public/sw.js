@@ -1,5 +1,5 @@
 importScripts("/precache-assets.js");
-const CACHE_NAME = "app-v1";
+const CACHE_NAME = "app-v2";
 let lastShownEmailId = null;
 
 self.addEventListener("install", (event) => {
