@@ -1,4 +1,5 @@
 import Death13 from "@react/stands";
+import "./HorizontalScroller.scss";
 
 interface HorizontalScrollerProps {
   className?: string;
@@ -12,9 +13,19 @@ class HorizontalScroller extends Death13.Component {
   private currentScroll = 0;
   private velocity = 0;
   private rafId: number | null = null;
+  private observer: ResizeObserver | null = null;
 
   constructor(props: HorizontalScrollerProps) {
     super(props);
+  }
+
+  updateFadeState() {
+    const el = this.containerRef;
+    if (!el) return;
+    const overflowing = el.scrollWidth > el.clientWidth;
+    const isAtEnd = el.scrollLeft + el.clientWidth >= el.scrollWidth;
+    const showFade = overflowing && !isAtEnd;
+    el.classList.toggle("has-overflow-fade", showFade);
   }
 
   private startLoop = () => {
@@ -42,6 +53,8 @@ class HorizontalScroller extends Death13.Component {
       this.targetScroll = this.currentScroll;
 
       el.scrollLeft = this.currentScroll;
+      this.updateFadeState();
+
       this.rafId = requestAnimationFrame(step);
     };
 
@@ -97,6 +110,14 @@ class HorizontalScroller extends Death13.Component {
       this.containerRef.addEventListener("touchmove", this.handleTouchMove, {
         passive: false,
       });
+
+      this.observer = new ResizeObserver(() => {
+        this.updateFadeState();
+      });
+      this.observer.observe(this.containerRef);
+
+      // Initial fade check
+      this.updateFadeState();
     }
   }
 
