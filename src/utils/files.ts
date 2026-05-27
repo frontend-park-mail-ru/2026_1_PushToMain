@@ -19,7 +19,7 @@ export function trimFileName(fileName: string): string {
   const lastDotIdx = fileName.lastIndexOf(".");
   const extension = fileName.substring(lastDotIdx, fileName.length);
   return (
-    fileName.substring(0, 20).trim() +
+    fileName.substring(0, 17).trim() +
     "..." +
     fileName
       .substring(lastDotIdx - 12 + extension.length, fileName.length)
@@ -39,25 +39,24 @@ export function getIconByContentType(contentType: string): string {
     /^audio\/(mpeg|ogg|wav|x-wav|x-ms-wma|aac|flac|midi|x-midi|webm|mp4)$/;
   const presentationRegex =
     /^application\/(vnd\.ms-powerpoint|vnd\.openxmlformats-officedocument\.presentationml\.presentation|vnd\.oasis\.opendocument\.presentation)$/;
+  const executableRegex =
+    /^application\/(x-msdownload|x-msi|x-ms-dos-executable|x-msdos-program|x-sh|x-python|x-perl|x-php|x-shellscript|x-java-archive|java-archive|x-elf|x-mach-binary|x-executable)$/;
+  const pdfRegex = /^application\/pdf$/;
+  const documentRegex =
+    /^(text\/(plain|rtf|richtext)|application\/(rtf|msword|vnd\.openxmlformats-officedocument\.wordprocessingml\.document|vnd\.oasis\.opendocument\.text))$/;
+  const codeRegex =
+    /^(text\/(javascript|html|css|xml|x-?php|x-?python|x-?perl|x-?ruby|x-shellscript|x-sh|x-bash|x-csrc|x-c\+\+src|x-java-source|markdown))|application\/(javascript|json|xml|xhtml\+xml|ld\+json|x-httpd-php|x-python|x-perl|x-sh|x-shellscript|x-csh)$/;
 
-  if (imageRegex.test(contentType)) {
-    return "image";
-  }
-  if (videoRegex.test(contentType)) {
-    return "video";
-  }
-  if (spreadsheetRegex.test(contentType)) {
-    return "spreadsheet";
-  }
-  if (archiveRegex.test(contentType)) {
-    return "archive";
-  }
-  if (musicRegex.test(contentType)) {
-    return "music";
-  }
-  if (presentationRegex.test(contentType)) {
-    return "presentation";
-  }
+  if (imageRegex.test(contentType)) return "image";
+  if (videoRegex.test(contentType)) return "video";
+  if (pdfRegex.test(contentType)) return "pdf";
+  if (documentRegex.test(contentType)) return "document";
+  if (spreadsheetRegex.test(contentType)) return "spreadsheet";
+  if (archiveRegex.test(contentType)) return "archive";
+  if (musicRegex.test(contentType)) return "music";
+  if (presentationRegex.test(contentType)) return "presentation";
+  if (codeRegex.test(contentType)) return "code";
+  if (executableRegex.test(contentType)) return "executable";
 
   return "";
 }

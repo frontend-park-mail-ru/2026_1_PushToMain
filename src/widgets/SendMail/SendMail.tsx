@@ -6,6 +6,7 @@ import Textarea from "../../components/Textarea/Textarea";
 import Button from "../../components/Button/Button";
 import NotificationManager from "../NotificationManager/NotificationManager";
 import ConfirmationDialog from "../../widgets/ConfirmationDialog/ConfirmationDialog";
+import HorizontalScroller from "../../components/HorizontalScroller/HorizontalScroller";
 import { sendEmail } from "../../api/ApiEmail";
 import {
   uploadAttachment,
@@ -21,6 +22,13 @@ import {
 } from "../../utils/files";
 
 class SendMail extends Death13.Component {
+  fileInputRef: HTMLInputElement | null = null;
+  filesListRef: HTMLDivElement | null = null;
+  private targetScroll = 0;
+  private currentScroll = 0;
+  private velocity = 0;
+  private rafId: number | null = null;
+
   state: any = {
     header: "",
     body: "",
@@ -33,8 +41,6 @@ class SendMail extends Death13.Component {
     uploadingFiles: false,
     sending: false,
   };
-
-  fileInputRef: HTMLInputElement | null = null;
 
   constructor(props: any) {
     super(props);
@@ -71,23 +77,103 @@ class SendMail extends Death13.Component {
     newState.buttonBlock = !isValid;
 
     this.state = newState;
+
+    this.handleWheel = this.handleWheel.bind(this);
   }
+
+  private startScrollLoop = () => {
+    if (this.rafId !== null) return;
+
+    const step = () => {
+      const el = this.filesListRef;
+      if (!el) return;
+
+      const diff = this.targetScroll - this.currentScroll;
+
+      if (Math.abs(diff) < 0.3 && Math.abs(this.velocity) < 0.1) {
+        this.currentScroll = this.targetScroll;
+        el.scrollLeft = this.currentScroll;
+        this.rafId = null;
+        return;
+      }
+
+      this.currentScroll += diff * 0.3;
+      this.velocity *= 0.52;
+      this.currentScroll += this.velocity;
+
+      const max = el.scrollWidth - el.clientWidth;
+      this.currentScroll = Math.max(0, Math.min(max, this.currentScroll));
+      this.targetScroll = this.currentScroll;
+
+      el.scrollLeft = this.currentScroll;
+      this.rafId = requestAnimationFrame(step);
+    };
+
+    this.rafId = requestAnimationFrame(step);
+  };
+
+  private addScrollDelta = (delta: number) => {
+    const el = this.filesListRef;
+    if (!el) return;
+
+    const max = el.scrollWidth - el.clientWidth;
+    this.targetScroll += delta;
+    this.targetScroll = Math.max(0, Math.min(max, this.targetScroll));
+    this.velocity += delta * 0.08;
+
+    if (this.rafId === null) {
+      this.startScrollLoop();
+    }
+  };
+
+  touchStartX = 0;
+
+  handleTouchStart = (e: TouchEvent) => {
+    this.touchStartX = e.touches[0].clientX;
+    this.velocity = 0;
+  };
+
+  handleTouchMove = (e: TouchEvent) => {
+    e.preventDefault();
+    const dx = this.touchStartX - e.touches[0].clientX;
+    this.touchStartX = e.touches[0].clientX;
+    this.addScrollDelta(dx);
+  };
+
+  handleTouchEnd = () => {};
+
+  handleWheel = (event: WheelEvent) => {
+    event.preventDefault();
+
+    const isMouseWheel = event.deltaMode === 1;
+
+    let rawDelta = event.deltaY + event.deltaX;
+
+    if (isMouseWheel) {
+      rawDelta *= 16;
+    }
+    this.addScrollDelta(rawDelta * 2);
+  };
 
   componentDidMount() {
     if (this.state.draftId) {
       this.fetchDraftAttachments();
     }
+  }
 
-    const list = document.querySelector(".files-list");
-
-    list?.addEventListener(
-      "wheel",
-      (event: any) => {
-        event.preventDefault();
-        list.scrollLeft += event.deltaY;
-      },
-      { passive: false },
-    );
+  componentWillUnmount() {
+    if (this.filesListRef) {
+      this.filesListRef.removeEventListener("wheel", this.handleWheel);
+      this.filesListRef.removeEventListener(
+        "touchstart",
+        this.handleTouchStart,
+      );
+      this.filesListRef.removeEventListener("touchmove", this.handleTouchMove);
+      this.filesListRef.removeEventListener("touchend", this.handleTouchEnd);
+    }
+    if (this.rafId !== null) {
+      cancelAnimationFrame(this.rafId);
+    }
   }
 
   isFormValid = (
@@ -436,7 +522,7 @@ class SendMail extends Death13.Component {
             />
           </div>
           {files.length > 0 ? (
-            <div className="files-list">
+            <HorizontalScroller className="files-list">
               {files.map((fileItem: any) => (
                 <div key={fileItem.id} className="file-item">
                   <div
@@ -457,7 +543,7 @@ class SendMail extends Death13.Component {
                   />
                 </div>
               ))}
-            </div>
+            </HorizontalScroller>
           ) : null}
           <Textarea
             readonly={false}

@@ -22,11 +22,17 @@
 }
 
 html,
-body,
-#root {
-    height: 100vh;
+body {
+    margin: 0;
+    padding: 0;
+    height: 100%; 
     overflow: hidden;
     overscroll-behavior: none;
+}
+
+#root {
+    height: 100%;
+    overflow: hidden;
 }
 
 :root {

@@ -2,6 +2,7 @@ import Death13 from "@react/stands";
 import "./ReadMail.scss";
 import Input from "../../components/Input/Input";
 import Textarea from "../../components/Textarea/Textarea";
+import HorizontalScroller from "../../components/HorizontalScroller/HorizontalScroller";
 import MailTools from "../MailTools/MailTools";
 import { AppStorage } from "../../App";
 import { URLMINIO } from "../../api/config";
@@ -223,7 +224,7 @@ class ReadMail extends Death13.Component {
           <div
             className={`attachments-section${hasAttachments ? "" : " hidden"}`}
           >
-            <div className="attachments-list">
+            <HorizontalScroller className="attachments-list">
               {attachments.map((att: any) => (
                 <div className="attachment-item">
                   <div
@@ -246,7 +247,7 @@ class ReadMail extends Death13.Component {
                   ></div>
                 </div>
               ))}
-            </div>
+            </HorizontalScroller>
           </div>
           <Textarea readonly={true} value={email.body} />
         </form>

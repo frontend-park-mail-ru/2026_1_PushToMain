@@ -143,9 +143,21 @@
                         height: 28px;
                         width: 28px;
                         background-color: var(--tertiary-text);
-                        mask-image: url(/assets/svg/Draft.svg);
+                        mask-image: url(/assets/svg/File.svg);
                         mask-size: contain;
                         mask-position: center;
+
+                        &.document {
+                            mask-image: url(/assets/svg/Draft.svg);
+                        }
+
+                        &.pdf {
+                            mask-image: url(/assets/svg/Pdf.svg);
+                        }
+
+                        &.code {
+                            mask-image: url(/assets/svg/Code.svg);
+                        }
 
                         &.image {
                             mask-image: url(/assets/svg/Image.svg);
@@ -169,6 +181,10 @@
 
                         &.presentation {
                             mask-image: url(/assets/svg/Presentation.svg);
+                        }
+
+                        &.executable {
+                            mask-image: url(/assets/svg/Settings.svg);
                         }
                     }
 

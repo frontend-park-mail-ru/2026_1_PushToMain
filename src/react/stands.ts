@@ -214,7 +214,7 @@ function reconcileChildren(wipFiber: Fiber, elements: any[]) {
     } else if (element) {
       newFiber = {
         type: element.type,
-        props: element.props,
+        props: elementProps,
         parent: wipFiber,
         dom: null,
         alternate: undefined,
