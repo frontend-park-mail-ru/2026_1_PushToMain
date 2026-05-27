@@ -34,7 +34,7 @@ export function getIconByContentType(contentType: string): string {
   const spreadsheetRegex =
     /^application\/(vnd\.ms-excel|vnd\.openxmlformats-officedocument\.spreadsheetml\.sheet|vnd\.oasis\.opendocument\.spreadsheet)$/;
   const archiveRegex =
-    /^application\/(zip|x-tar|x-gzip|gzip|x-bzip2|x-7z-compressed|x-rar-compressed|x-xz)$/;
+    /^application\/(zip|x-tar|x-gzip|gzip|x-bzip2|x-7z-compressed|x-rar-compressed|x-zip-compressed|x-xz)$/;
   const musicRegex =
     /^audio\/(mpeg|ogg|wav|x-wav|x-ms-wma|aac|flac|midi|x-midi|webm|mp4)$/;
   const presentationRegex =

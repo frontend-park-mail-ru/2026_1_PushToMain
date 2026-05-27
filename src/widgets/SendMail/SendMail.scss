@@ -62,6 +62,8 @@
         overflow: hidden;
         overflow-x: auto;
         scrollbar-width: none;
+        overscroll-behavior: none;
+        height: inherit;
 
         @media (max-width: 768px) {
             height: 90px;

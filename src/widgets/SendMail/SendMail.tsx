@@ -77,6 +77,17 @@ class SendMail extends Death13.Component {
     if (this.state.draftId) {
       this.fetchDraftAttachments();
     }
+
+    const list = document.querySelector(".files-list");
+
+    list?.addEventListener(
+      "wheel",
+      (event: any) => {
+        event.preventDefault();
+        list.scrollLeft += event.deltaY;
+      },
+      { passive: false },
+    );
   }
 
   isFormValid = (
