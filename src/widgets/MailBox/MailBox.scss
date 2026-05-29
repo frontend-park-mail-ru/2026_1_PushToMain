@@ -154,6 +154,7 @@
                 padding-right: 20px;
                 width: fit-content;
                 min-width: 200px;
+                max-width: 30%;
                 font-weight: 500;
                 overflow: hidden;
                 white-space: nowrap;
@@ -214,6 +215,7 @@
                     white-space: nowrap;
                     margin-left: auto;
                     flex-shrink: 0;
+                    min-width: fit-content;
 
                     &__actions {
                         display: none;
