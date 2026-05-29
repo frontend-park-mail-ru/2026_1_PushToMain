@@ -193,6 +193,36 @@
             margin-left: auto;
             padding: 10px;
 
+            .anonymous-radio {
+                display: flex;
+                flex-direction: row;
+                width: auto;
+                align-items: center;
+                padding: 0 10px;
+
+                [name="radio-anonymous"] {
+                    padding: 0;
+                    -webkit-appearance: none;
+                    -moz-appearance: none;
+                    appearance: none;
+                    border-radius: 50%;
+                    width: 18px;
+                    height: 18px;
+                    border: 2px solid var(--accent-2);
+                    cursor: pointer;
+                    transition: all 0.2s ease;
+                    margin-right: 10px;
+
+                    &:checked {
+                        border: 6px solid var(--accent-2);
+                    }
+
+                    &:hover {
+                        border-color: var(--accent);
+                    }
+                }
+            }
+
             button {
                 height: 40px;
 

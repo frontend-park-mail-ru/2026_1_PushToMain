@@ -548,6 +548,7 @@ class BaseEmailPage extends Death13.Component {
                             ? email.is_starred
                             : false
                         }
+                        isAnonymous={email.is_anonymous}
                         pageMain={currentView === "inbox"}
                         currentView={currentView}
                         onClick={() => this.handleReadMail(email)}

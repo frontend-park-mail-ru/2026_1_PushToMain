@@ -23,6 +23,11 @@
         background-color: var(--input-error-background);
     }
 
+    &__title {
+        align-self: center;
+        max-width: 90%;
+    }
+
     @media (max-width: 768px) {
         width: 80%;
         right: auto;

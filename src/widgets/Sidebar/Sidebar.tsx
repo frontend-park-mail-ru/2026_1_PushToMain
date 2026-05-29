@@ -272,7 +272,7 @@ class Sidebar extends Death13.Component {
               />
               <Button
                 name="button-settings"
-                title={this.t("interface")}
+                title={this.t("settings")}
                 isSelect={this.props.isPressProfile === 2}
                 onClick={(event: any) => {
                   event.preventDefault();
@@ -292,7 +292,7 @@ class Sidebar extends Death13.Component {
               />
               <Button
                 name="button-support"
-                title="Поддержка"
+                title={this.t("support")}
                 isSelect={this.props.isPressProfile === 4}
                 onClick={(event: any) => {
                   event.preventDefault();

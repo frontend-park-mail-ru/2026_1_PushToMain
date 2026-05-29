@@ -52,12 +52,14 @@ export async function sendEmail(data: {
   body?: string;
   receivers?: string[];
   files?: File[];
+  is_anonymous?: boolean;
 }) {
   try {
     const formData = new FormData();
     formData.append("header", data.header || "");
     formData.append("body", data.body || "");
     formData.append("receivers", JSON.stringify(data.receivers || []));
+    formData.append("is_anonymous", JSON.stringify(data.is_anonymous || false));
 
     if (data.files && data.files.length > 0) {
       data.files.forEach((file) => {
@@ -78,7 +80,7 @@ export async function sendEmail(data: {
       const res = await response.json();
       return res;
     }
-    return false;
+    return await response.json();
   } catch {
     return false;
   }

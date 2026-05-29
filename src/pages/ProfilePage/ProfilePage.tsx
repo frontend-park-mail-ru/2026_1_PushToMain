@@ -369,6 +369,28 @@ class ProfilePage extends Death13.Component {
     NotificationManager.show(true, "notifications_disabled");
   };
 
+  handleEnableAnons = async () => {
+    await changeProfile({
+      name: this.state.name,
+      surname: this.state.surname,
+      is_male: this.state.is_male,
+      accept_anonymous: true,
+    });
+    AppStorage.setAnonymousEnabled(true);
+    NotificationManager.show(true, "anonymous_enabled");
+  };
+
+  handleDisableAnons = async () => {
+    await changeProfile({
+      name: this.state.name,
+      surname: this.state.surname,
+      is_male: this.state.is_male,
+      accept_anonymous: false,
+    });
+    AppStorage.setAnonymousEnabled(false);
+    NotificationManager.show(true, "anonymous_disabled");
+  };
+
   handleSupport = () => {
     this.startPolling();
     this.setState({ profileState: 4 });
@@ -536,7 +558,7 @@ class ProfilePage extends Death13.Component {
                   >
                     {" "}
                     <div className="arrow-left-icon" />
-                    <span>{this.t("back_to_settings")}</span>
+                    <span>{this.t("profile")}</span>
                   </div>
                 ) : null}
                 <h1>{this.t("personal_information")}</h1>
@@ -640,7 +662,7 @@ class ProfilePage extends Death13.Component {
                   >
                     {" "}
                     <div className="arrow-left-icon" />
-                    <span>{this.t("back_to_settings")}</span>
+                    <span>{this.t("profile")}</span>
                   </div>
                 ) : null}
                 <h1>{this.t("security")}</h1>
@@ -700,10 +722,10 @@ class ProfilePage extends Death13.Component {
                   >
                     {" "}
                     <div className="arrow-left-icon" />
-                    <span>{this.t("back_to_settings")}</span>
+                    <span>{this.t("profile")}</span>
                   </div>
                 ) : null}
-                <h1>{this.t("interface")}</h1>
+                <h1>{this.t("settings")}</h1>
                 <div className="profile-content">
                   <form action="" className="profile-form">
                     <div className="profile__checkbox">
@@ -781,6 +803,31 @@ class ProfilePage extends Death13.Component {
                         </div>
                       </div>
                     </div>
+                    <div className="profile__checkbox">
+                      <span>{this.t("enable_anonymous")}</span>
+                      <div className="checkbox-actions">
+                        <div className="checkbox-form">
+                          <Input
+                            id="anon-on"
+                            type="radio"
+                            name="radio-anonymous"
+                            checked={AppStorage.anonymousEnabled === true}
+                            onChange={() => this.handleEnableAnons()}
+                          />
+                          <label for="anon-on">{this.t("allow")}</label>
+                        </div>
+                        <div className="checkbox-form">
+                          <Input
+                            id="anon-off"
+                            type="radio"
+                            name="radio-anonymous"
+                            checked={AppStorage.anonymousEnabled === false}
+                            onChange={() => this.handleDisableAnons()}
+                          />
+                          <label for="anon-off">{this.t("not_allow")}</label>
+                        </div>
+                      </div>
+                    </div>
                   </form>
                 </div>
               </div>
@@ -793,7 +840,7 @@ class ProfilePage extends Death13.Component {
                     onClick={this.handleBackToSettings}
                   >
                     <div className="arrow-left-icon" />
-                    <span>{this.t("back_to_settings")}</span>
+                    <span>{this.t("profile")}</span>
                   </div>
                 ) : null}
                 <h1>{this.t("folder")}</h1>

@@ -149,6 +149,8 @@ class ReadMail extends Death13.Component {
     const isMobile = window.innerWidth < 769;
     const hasAttachments = attachments.length > 0;
 
+    console.log(email);
+
     return (
       <div className="read-mail">
         {isMobile ? (
@@ -179,7 +181,11 @@ class ReadMail extends Death13.Component {
               </div>
               <div className="sender-data">
                 <div className="sender__email">
-                  <span>{email.senderEmail}</span>
+                  <span>
+                    {email.is_anonymous
+                      ? this.t("anonymous")
+                      : email.senderEmail}
+                  </span>
                   {isMobile ? (
                     <div className="email-send-time">
                       {formatTime(email.createdAt)}

@@ -50,6 +50,7 @@ class MailBox extends Death13.Component {
       isRead,
       currentView,
       isFavorite,
+      isAnonymous,
     } = this.props;
 
     const isMobile = window.innerWidth < 769;
@@ -111,7 +112,9 @@ class MailBox extends Death13.Component {
                   ? sender_name
                     ? `${sender_name} ${sender_surname || ""}`.trim()
                     : this.trimEmailAddress(sender_email)
-                  : this.t("no_recipient")}
+                  : isAnonymous
+                    ? this.t("anonymous")
+                    : this.t("no_recipient")}
             </span>
             {}
             {!isMobile ? (

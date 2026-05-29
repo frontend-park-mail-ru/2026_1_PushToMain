@@ -40,6 +40,7 @@ class SendMail extends Death13.Component {
     emailId: null,
     uploadingFiles: false,
     sending: false,
+    isAnonymous: false,
   };
 
   constructor(props: any) {
@@ -246,7 +247,7 @@ class SendMail extends Death13.Component {
   };
 
   async handleSubmit(e: any) {
-    const { header, body, receivers, draftId, files } = this.state;
+    const { header, body, receivers, draftId, files, isAnonymous } = this.state;
     e.preventDefault();
 
     this.setState({ buttonBlock: true, sending: true });
@@ -269,6 +270,7 @@ class SendMail extends Death13.Component {
           header: header.trim(),
           body: body.trim(),
           receivers: receivers,
+          is_anonymous: isAnonymous,
         },
         draftId,
       );
@@ -278,6 +280,7 @@ class SendMail extends Death13.Component {
         body: body.trim(),
         receivers: receivers,
         files: files.map((f: any) => f.file),
+        is_anonymous: isAnonymous,
       });
     }
 
@@ -289,6 +292,12 @@ class SendMail extends Death13.Component {
       this.setState({ buttonBlock: false, sending: false });
       if (responseSend.error.includes("recipient not found")) {
         NotificationManager.show(false, "recipient_not_found");
+      } else if (
+        responseSend.error.includes(
+          "some recipients do not accept anonymous emails",
+        )
+      ) {
+        NotificationManager.show(false, "anonymous_forbidden");
       } else {
         NotificationManager.show(false, "email_send_error");
       }
@@ -458,6 +467,10 @@ class SendMail extends Death13.Component {
     this.setState({ showDraftConfirm: true });
   };
 
+  handleSetAnonymous = () => {
+    this.setState({ isAnonymous: !this.state.isAnonymous });
+  };
+
   t(key: string): string {
     return AppStorage.t(key);
   }
@@ -579,6 +592,16 @@ class SendMail extends Death13.Component {
               </div>
             ) : (
               <div className="send-actions">
+                <div className="anonymous-radio">
+                  <input
+                    id="anon-toggle"
+                    type="checkbox"
+                    name="radio-anonymous"
+                    checked={this.state.isAnonymous}
+                    onChange={this.handleSetAnonymous}
+                  />
+                  <label htmlFor="anon-toggle">{this.t("toggle_anon")}</label>
+                </div>
                 <Button
                   title={this.t("save")}
                   name="save-mail"
