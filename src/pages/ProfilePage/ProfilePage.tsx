@@ -4,8 +4,10 @@ import Sidebar from "../../widgets/Sidebar/Sidebar";
 import Button from "../../components/Button/Button";
 import Input from "../../components/Input/Input";
 import UploadAvatar from "../../components/UploadAvatar/UploadAvatar";
+import Textarea from "../../components/Textarea/Textarea";
 import { validation } from "../../utils/validation";
 import { changePassword, getProfile, changeProfile } from "../../api/ApiAuth";
+import { getMyTickets, getMessages, answerTicket } from "../../api/ApiSupport";
 import { AppStorage } from "../../App";
 import ProfileModal from "../../widgets/ProfileModal/ProfileModal";
 import SelectDate from "../../components/SelectDate/SelectDate";
@@ -15,6 +17,7 @@ import { requestNotificationPermission } from "../../utils/emailNotifications";
 
 class ProfilePage extends Death13.Component {
   private unsubscribe: (() => void) | null = null;
+  pollingInterval: any = null;
 
   constructor(props: any) {
     super(props);
@@ -51,6 +54,13 @@ class ProfilePage extends Death13.Component {
       birthYear: AppStorage.birthYear,
       isFolderEditMode: false,
       message: null,
+      supportTickets: [],
+      selectedTicketId: null,
+      chatMessages: [],
+      chatInputText: "",
+      showNewTicketForm: false,
+      newTicketSubject: "",
+      newTicketMessage: "",
     };
 
     this.syncTabFromUrl();
@@ -62,6 +72,7 @@ class ProfilePage extends Death13.Component {
 
   componentWillUnmount() {
     window.removeEventListener("popstate", this.syncTabFromUrl);
+    this.stopPolling();
   }
 
   syncTabFromUrl = () => {
@@ -301,21 +312,25 @@ class ProfilePage extends Death13.Component {
 
   handleChangeProfile = () => {
     this.setState({ profileState: 0 });
+    this.stopPolling();
     window.app.handleRoute("/profile/personal", true);
   };
 
   handleChangePasswordState = () => {
     this.setState({ profileState: 1 });
+    this.stopPolling();
     window.app.handleRoute("/profile/password", true);
   };
 
   handleSetting = () => {
     this.setState({ profileState: 2 });
+    this.stopPolling();
     window.app.handleRoute("/profile/interface", true);
   };
 
   handleFolder = () => {
     this.setState({ profileState: 3 });
+    this.stopPolling();
     window.app.handleRoute("/profile/folders", true);
   };
 
@@ -354,6 +369,102 @@ class ProfilePage extends Death13.Component {
     NotificationManager.show(true, "notifications_disabled");
   };
 
+  handleSupport = () => {
+    this.startPolling();
+    this.setState({ profileState: 4 });
+  };
+
+  handleNewTicket = () => {
+    const supportModal = document.querySelector(".support-modal");
+    if (supportModal) {
+      supportModal.classList.toggle("show");
+    }
+  };
+
+  startPolling = () => {
+    this.fetchSupportTickets();
+    this.pollingInterval = setInterval(() => {
+      this.fetchSupportTickets();
+      if (this.state.selectedTicketId) {
+        this.fetchTicketMessages(this.state.selectedTicketId);
+      }
+    }, 10000);
+  };
+
+  stopPolling = () => {
+    if (this.pollingInterval) {
+      clearInterval(this.pollingInterval);
+      this.pollingInterval = null;
+    }
+  };
+
+  fetchSupportTickets = async () => {
+    const tickets = await getMyTickets();
+    this.setState({ supportTickets: tickets });
+  };
+
+  fetchTicketMessages = async (ticketId: number) => {
+    const messages = await getMessages(ticketId);
+    this.setState({ chatMessages: messages });
+  };
+
+  handleSelectTicket = (ticketId: number) => {
+    this.setState({ selectedTicketId: ticketId });
+    this.fetchTicketMessages(ticketId);
+  };
+
+  handleChatInputChange = (e: any) => {
+    this.setState({ chatInputText: e.target.value });
+  };
+
+  handleSendMessage = async () => {
+    const { chatInputText, selectedTicketId, chatMessages } = this.state;
+    const resp = await answerTicket(selectedTicketId, chatInputText);
+    if (resp) {
+      this.setState({
+        chatInputText: "",
+        chatMessages: [...chatMessages, resp],
+      });
+    }
+  };
+
+  handleCreateTicket = () => {
+    const { newTicketSubject, newTicketMessage, supportTickets } = this.state;
+    if (!newTicketSubject.trim() || !newTicketMessage.trim()) return;
+
+    const newTicket = {
+      id: Date.now(),
+      subject: newTicketSubject,
+      status: "open",
+      lastMessagePreview:
+        newTicketMessage.slice(0, 50) +
+        (newTicketMessage.length > 50 ? "..." : ""),
+    };
+    const initialMsg = {
+      id: Date.now(),
+      text: newTicketMessage,
+      timestamp: new Date().toISOString(),
+      is_admin: false,
+    };
+
+    this.setState({
+      supportTickets: [...supportTickets, newTicket],
+      showNewTicketForm: false,
+      newTicketSubject: "",
+      newTicketMessage: "",
+      selectedTicketId: newTicket.id,
+      chatMessages: [initialMsg],
+    });
+  };
+
+  getTicketStatus = (ticket: any) => {
+    const status = ticket.status;
+    if (status === "open") return "открыт";
+    if (status === "in_progress") return "в обработке";
+    if (status === "closed") return "закрыт";
+    return status;
+  };
+
   t(key: string): string {
     return AppStorage.t(key);
   }
@@ -370,6 +481,13 @@ class ProfilePage extends Death13.Component {
       avatarUrl,
       isModalOpen,
       is_male,
+      supportTickets,
+      selectedTicketId,
+      chatMessages,
+      chatInputText,
+      showNewTicketForm,
+      newTicketSubject,
+      newTicketMessage,
     } = this.state;
 
     const isMobile = window.innerWidth < 769;
@@ -389,6 +507,7 @@ class ProfilePage extends Death13.Component {
             changePassword={this.handleChangePasswordState}
             handleSetting={this.handleSetting}
             handleFolder={this.handleFolder}
+            handleSupport={this.handleSupport}
             newMail={() => {}}
           />
         </aside>
@@ -686,6 +805,123 @@ class ProfilePage extends Death13.Component {
                       showConfirmationModal={NotificationManager.show}
                     />
                   </form>
+                </div>
+              </div>
+            )}
+            {profileState === 4 && (
+              <div className="profile-support">
+                <div className="support-container">
+                  <div className="support-tickets-panel">
+                    <div className="support-tickets-header">
+                      <h2>Поддержка</h2>
+                      <Button
+                        svg="../../assets/svg/Compose.svg"
+                        className="small-text"
+                        name="new-ticket"
+                        onClick={this.handleNewTicket}
+                      />
+                    </div>
+                    {showNewTicketForm && (
+                      <div className="new-ticket-form">
+                        <Input
+                          type="text"
+                          placeholder="Subject"
+                          value={newTicketSubject}
+                          onInput={(e: any) =>
+                            this.setState({ newTicketSubject: e.target.value })
+                          }
+                        />
+                        <textarea
+                          placeholder="Describe your issue..."
+                          value={newTicketMessage}
+                          onChange={(e: any) =>
+                            this.setState({ newTicketMessage: e.target.value })
+                          }
+                          rows={4}
+                        />
+                        <div className="form-actions">
+                          <Button
+                            title="Create"
+                            name="create-ticket"
+                            onClick={this.handleCreateTicket}
+                          />
+                          <Button
+                            title="Cancel"
+                            name="cancel-ticket"
+                            onClick={() =>
+                              this.setState({
+                                showNewTicketForm: false,
+                                newTicketSubject: "",
+                                newTicketMessage: "",
+                              })
+                            }
+                          />
+                        </div>
+                      </div>
+                    )}
+                    <ul className="tickets-list">
+                      {supportTickets.map((ticket: any) => (
+                        <li
+                          key={ticket.id}
+                          className={`ticket-item ${selectedTicketId === ticket.id ? "active" : ""}`}
+                          onClick={() =>
+                            this.handleSelectTicket(ticket.ticket_id)
+                          }
+                        >
+                          <div className="ticket-subject">{ticket.header}</div>
+                          <div
+                            className="ticket-status"
+                            data-status={this.getTicketStatus(ticket)}
+                          >
+                            {this.getTicketStatus(ticket)}
+                          </div>
+                          <div className="ticket-preview">
+                            {ticket.lastMessagePreview}
+                          </div>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+
+                  <div className="support-chat-panel">
+                    {!selectedTicketId ? (
+                      <div className="chat-empty">
+                        Выберите тикет для просмотра
+                      </div>
+                    ) : (
+                      <>
+                        <div className="chat-messages">
+                          {chatMessages.map((msg: any) => (
+                            <div
+                              key={msg.id}
+                              className={`message ${msg.is_admin ? "admin" : "user"}`}
+                            >
+                              <div className="message-bubble">
+                                <div className="message-text">{msg.text}</div>
+                                {/*<div className="message-time">
+																	{new Date(msg.timestamp).toLocaleTimeString()}
+																</div>*/}
+                              </div>
+                            </div>
+                          ))}
+                        </div>
+                        <div className="chat-input-area">
+                          <Textarea
+                            type="text"
+                            className="chat-input"
+                            placeholder="Введите сообщение..."
+                            value={chatInputText}
+                            onInput={this.handleChatInputChange}
+                          />
+                          <Button
+                            title="Send"
+                            name="send-message"
+                            onClick={this.handleSendMessage}
+                          />
+                        </div>
+                      </>
+                    )}
+                  </div>
                 </div>
               </div>
             )}

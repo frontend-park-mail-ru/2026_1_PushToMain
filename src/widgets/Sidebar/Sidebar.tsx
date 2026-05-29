@@ -111,6 +111,7 @@ class Sidebar extends Death13.Component {
       avatarUrl,
       handleSetting,
       handleFolder,
+      handleSupport,
       selectedFolderId,
     } = this.props;
 
@@ -287,6 +288,15 @@ class Sidebar extends Death13.Component {
                   event.preventDefault();
                   handleFolder();
                   this.toggleSidebar();
+                }}
+              />
+              <Button
+                name="button-support"
+                title="Поддержка"
+                isSelect={this.props.isPressProfile === 4}
+                onClick={(event: any) => {
+                  event.preventDefault();
+                  handleSupport();
                 }}
               />
             </div>

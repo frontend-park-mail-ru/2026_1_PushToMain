@@ -118,6 +118,15 @@
                     object-fit: cover;
                 }
             }
+
+            &[name="support"] {
+                img {
+                    margin: 16px;
+                    width: 28px;
+                    height: 28px;
+                    object-fit: cover;
+                }
+            }
         }
     }
 

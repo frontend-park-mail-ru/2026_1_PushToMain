@@ -14,6 +14,8 @@ import SpamPage from "./pages/SpamPage/SpamPage";
 import DraftsPage from "./pages/DraftsPage/DraftsPage";
 import FolderPage from "./pages/FolderPage/FolderPage";
 import AllEmailsPage from "./pages/AllEmailsPage/AllEmailsPage";
+import SupportPage from "./pages/SupportPage/SupportPage";
+import AdminSupportPage from "./pages/AdminSupportPage/AdminSupportPage";
 import NotificationManager from "./widgets/NotificationManager/NotificationManager";
 import { initEmailNotifications } from "./utils/emailNotifications";
 import "./utils/OfflineManager";
@@ -669,6 +671,8 @@ class App {
       "/spam": SpamPage,
       "/favorite": FavoritePage,
       "/all-emails": AllEmailsPage,
+      "/admin-support": AdminSupportPage,
+      "/support": SupportPage,
     };
 
     this.dynamicRoutes = [

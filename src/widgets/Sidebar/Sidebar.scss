@@ -350,6 +350,20 @@
                 mask-position: center;
             }
         }
+
+        [name="button-support"] {
+            &::before {
+                content: "";
+                display: inline-block;
+                width: 28px;
+                height: 28px;
+                background-color: var(--tertiary-text);
+                mask-image: url("/assets/svg/Support.svg");
+                mask-size: contain;
+                mask-repeat: no-repeat;
+                mask-position: center;
+            }
+        }
     }
 
     .drop-down .extra-button-container {

@@ -1,0 +1,19 @@
+.support-page-container {
+    background-color: var(--color-sidebar-background);
+    border-radius: 20px;
+    padding: 30px;
+    display: flex;
+    flex-direction: column;
+    align-items: left;
+
+    .support-page__title {
+        font-size: 24px;
+        color: var(--tertiary-text);
+        margin-bottom: 15px;
+    }
+
+    .support-page__subtitle {
+        font-size: 16px;
+        padding-left: 15px;
+    }
+}
