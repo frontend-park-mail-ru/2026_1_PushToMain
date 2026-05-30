@@ -30,5 +30,10 @@
         height: 80%;
         max-height: 80vh;
         border: none;
+
+        @media (max-width: 768px) {
+            width: 100%;
+            max-width: 100%;
+        }
     }
 }
