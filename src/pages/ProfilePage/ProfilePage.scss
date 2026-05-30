@@ -345,6 +345,11 @@
             overflow: hidden;
             min-height: 0;
 
+            .support-wrapper {
+                height: 100%;
+                overflow: hidden;
+            }
+
             .support-container {
                 display: flex;
                 height: 100%;
@@ -356,15 +361,15 @@
         .support-tickets-panel {
             width: 300px;
             min-width: 250px;
-            background-color: #f5f7fa;
-            border-right: 1px solid #ddd;
+            background-color: var(--color-main-background);
+            border-right: 1px solid var(--input-stroke);
             display: flex;
             flex-direction: column;
             overflow-y: auto;
 
             .support-tickets-header {
                 padding: 16px;
-                border-bottom: 1px solid #ddd;
+                border-bottom: 1px solid var(--input-stroke);
                 display: flex;
                 justify-content: space-between;
                 align-items: center;
@@ -372,7 +377,7 @@
                 h2 {
                     margin: 0;
                     font-size: 18px;
-                    color: #333;
+                    color: var(--tertiary-text);
                 }
             }
 
@@ -400,7 +405,7 @@
                     .ticket-subject {
                         font-weight: 600;
                         font-size: 14px;
-                        color: #333;
+                        color: var(--tertiary-text);
                         margin-bottom: 4px;
                     }
 
@@ -429,7 +434,7 @@
 
                     .ticket-preview {
                         font-size: 13px;
-                        color: #666;
+                        color: var(--tertiary-text);
                         white-space: nowrap;
                         overflow: hidden;
                         text-overflow: ellipsis;
@@ -442,7 +447,7 @@
             flex: 1;
             display: flex;
             flex-direction: column;
-            background-color: #fff;
+            background-color: var(--color-sidebar-background);
             overflow: hidden;
             min-height: 0;
 
@@ -451,7 +456,7 @@
                 display: flex;
                 align-items: center;
                 justify-content: center;
-                color: #999;
+                color: var(--muted-text);
                 font-size: 16px;
             }
 
@@ -576,6 +581,58 @@
 }
 
 @media (max-width: 768px) {
+    .profile-page .right-part .profile-content-area .profile-support {
+        height: 100%;
+        overflow: hidden;
+
+        .support-wrapper {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+
+            .support-container {
+                position: relative;
+                width: 200%;
+                height: 100%;
+                transition: transform 0.3s ease;
+
+                .support-tickets-panel,
+                .support-chat-panel {
+                    width: 50%;
+                    float: left;
+                    height: 100%;
+                    overflow-y: auto;
+                }
+
+                transform: translateX(0);
+            }
+
+            &.chat-open .support-container {
+                transform: translateX(-50%);
+            }
+        }
+
+        .support-chat-panel .chat-mobile-back {
+            display: flex;
+            align-items: center;
+            padding: 10px 16px;
+            background: var(--color-sidebar-background);
+            border-bottom: 1px solid var(--input-stroke);
+            cursor: pointer;
+            color: var(--tertiary-text);
+            font-size: 14px;
+            gap: 6px;
+
+            .arrow-left-icon {
+                width: 20px;
+                height: 20px;
+                background-color: var(--tertiary-text);
+                mask: url(/assets/svg/ArrowLeft.svg) center/contain no-repeat;
+            }
+        }
+    }
+
     .profile-page {
         .sidebar {
             position: fixed;
@@ -641,7 +698,8 @@
 
                 .profile-container,
                 .profile-security,
-                .profile-folder {
+                .profile-folder,
+                .profile-support {
                     .settings-back-to-menu-button-mobile {
                         display: flex;
                         align-items: center;
@@ -649,6 +707,7 @@
                         gap: 5px;
                         padding: 15px 0 0 15px;
                         margin-bottom: 5px;
+                        color: var(--tertiary-text);
                     }
 
                     h1 {

@@ -297,6 +297,7 @@ class Sidebar extends Death13.Component {
                 onClick={(event: any) => {
                   event.preventDefault();
                   handleSupport();
+                  this.toggleSidebar();
                 }}
               />
             </div>

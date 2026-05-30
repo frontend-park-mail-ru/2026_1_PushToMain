@@ -62,6 +62,7 @@ class ProfilePage extends Death13.Component {
       showNewTicketForm: false,
       newTicketSubject: "",
       newTicketMessage: "",
+      mobileChatOpen: false,
     };
 
     this.syncTabFromUrl();
@@ -397,6 +398,7 @@ class ProfilePage extends Death13.Component {
   handleSupport = () => {
     this.startPolling();
     this.setState({ profileState: 4 });
+    window.app.handleRoute("/profile/support", true);
   };
 
   handleNewTicket = () => {
@@ -434,8 +436,12 @@ class ProfilePage extends Death13.Component {
   };
 
   handleSelectTicket = (ticketId: number) => {
-    this.setState({ selectedTicketId: ticketId });
+    this.setState({ selectedTicketId: ticketId, mobileChatOpen: true });
     this.fetchTicketMessages(ticketId);
+  };
+
+  handleBackToTicketList = () => {
+    this.setState({ selectedTicketId: null, mobileChatOpen: false });
   };
 
   handleChatInputChange = (e: any) => {
@@ -513,6 +519,7 @@ class ProfilePage extends Death13.Component {
       showNewTicketForm,
       newTicketSubject,
       newTicketMessage,
+      mobileChatOpen,
     } = this.state;
 
     const isMobile = window.innerWidth < 769;
@@ -861,117 +868,150 @@ class ProfilePage extends Death13.Component {
             )}
             {profileState === 4 && (
               <div className="profile-support">
-                <div className="support-container">
-                  <div className="support-tickets-panel">
-                    <div className="support-tickets-header">
-                      <h2>Поддержка</h2>
-                      <Button
-                        svg="../../assets/svg/Compose.svg"
-                        className="small-text"
-                        name="new-ticket"
-                        onClick={this.handleNewTicket}
-                      />
-                    </div>
-                    {showNewTicketForm && (
-                      <div className="new-ticket-form">
-                        <Input
-                          type="text"
-                          placeholder="Subject"
-                          value={newTicketSubject}
-                          onInput={(e: any) =>
-                            this.setState({ newTicketSubject: e.target.value })
-                          }
+                {/* Mobile back button – same as other panels */}
+                {isMobile ? (
+                  <div
+                    className="settings-back-to-menu-button-mobile"
+                    onClick={this.handleBackToSettings}
+                  >
+                    <div className="arrow-left-icon" />
+                    <span>{this.t("profile")}</span>
+                  </div>
+                ) : null}
+
+                <div
+                  className={`support-wrapper ${isMobile ? "mobile" : ""} ${mobileChatOpen ? "chat-open" : ""}`}
+                >
+                  <div className="support-container">
+                    {/* ---------- TICKETS PANEL ---------- */}
+                    <div className="support-tickets-panel">
+                      <div className="support-tickets-header">
+                        <h2>Поддержка</h2>
+                        <Button
+                          svg="../../assets/svg/Compose.svg"
+                          className="small-text"
+                          name="new-ticket"
+                          onClick={this.handleNewTicket}
                         />
-                        <textarea
-                          placeholder="Describe your issue..."
-                          value={newTicketMessage}
-                          onChange={(e: any) =>
-                            this.setState({ newTicketMessage: e.target.value })
-                          }
-                          rows={4}
-                        />
-                        <div className="form-actions">
-                          <Button
-                            title="Create"
-                            name="create-ticket"
-                            onClick={this.handleCreateTicket}
-                          />
-                          <Button
-                            title="Cancel"
-                            name="cancel-ticket"
-                            onClick={() =>
+                      </div>
+                      {/* new ticket form (unchanged) */}
+                      {showNewTicketForm && (
+                        <div className="new-ticket-form">
+                          <Input
+                            type="text"
+                            placeholder="Subject"
+                            value={newTicketSubject}
+                            onInput={(e: any) =>
                               this.setState({
-                                showNewTicketForm: false,
-                                newTicketSubject: "",
-                                newTicketMessage: "",
+                                newTicketSubject: e.target.value,
                               })
                             }
                           />
+                          <textarea
+                            placeholder="Describe your issue..."
+                            value={newTicketMessage}
+                            onChange={(e: any) =>
+                              this.setState({
+                                newTicketMessage: e.target.value,
+                              })
+                            }
+                            rows={4}
+                          />
+                          <div className="form-actions">
+                            <Button
+                              title="Create"
+                              name="create-ticket"
+                              onClick={this.handleCreateTicket}
+                            />
+                            <Button
+                              title="Cancel"
+                              name="cancel-ticket"
+                              onClick={() =>
+                                this.setState({
+                                  showNewTicketForm: false,
+                                  newTicketSubject: "",
+                                  newTicketMessage: "",
+                                })
+                              }
+                            />
+                          </div>
                         </div>
-                      </div>
-                    )}
-                    <ul className="tickets-list">
-                      {supportTickets.map((ticket: any) => (
-                        <li
-                          key={ticket.id}
-                          className={`ticket-item ${selectedTicketId === ticket.id ? "active" : ""}`}
-                          onClick={() =>
-                            this.handleSelectTicket(ticket.ticket_id)
-                          }
-                        >
-                          <div className="ticket-subject">{ticket.header}</div>
-                          <div
-                            className="ticket-status"
-                            data-status={this.getTicketStatus(ticket)}
-                          >
-                            {this.getTicketStatus(ticket)}
-                          </div>
-                          <div className="ticket-preview">
-                            {ticket.lastMessagePreview}
-                          </div>
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
+                      )}
 
-                  <div className="support-chat-panel">
-                    {!selectedTicketId ? (
-                      <div className="chat-empty">
-                        Выберите тикет для просмотра
-                      </div>
-                    ) : (
-                      <>
-                        <div className="chat-messages">
-                          {chatMessages.map((msg: any) => (
-                            <div
-                              key={msg.id}
-                              className={`message ${msg.is_admin ? "admin" : "user"}`}
-                            >
-                              <div className="message-bubble">
-                                <div className="message-text">{msg.text}</div>
-                                {/*<div className="message-time">
-																	{new Date(msg.timestamp).toLocaleTimeString()}
-																</div>*/}
-                              </div>
+                      <ul className="tickets-list">
+                        {supportTickets.map((ticket: any) => (
+                          <li
+                            key={ticket.id}
+                            className={`ticket-item ${selectedTicketId === ticket.ticket_id ? "active" : ""}`}
+                            onClick={() =>
+                              this.handleSelectTicket(ticket.ticket_id)
+                            }
+                          >
+                            <div className="ticket-subject">
+                              {ticket.header}
                             </div>
-                          ))}
+                            <div
+                              className="ticket-status"
+                              data-status={this.getTicketStatus(ticket)}
+                            >
+                              {this.getTicketStatus(ticket)}
+                            </div>
+                            <div className="ticket-preview">
+                              {ticket.lastMessagePreview}
+                            </div>
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+
+                    {/* ---------- CHAT PANEL ---------- */}
+                    <div className="support-chat-panel">
+                      {/* Mobile back arrow */}
+                      {isMobile && selectedTicketId && (
+                        <div
+                          className="chat-mobile-back"
+                          onClick={this.handleBackToTicketList}
+                        >
+                          <div className="arrow-left-icon" />
+                          <span>Back to tickets</span>
                         </div>
-                        <div className="chat-input-area">
-                          <Textarea
-                            type="text"
-                            className="chat-input"
-                            placeholder="Введите сообщение..."
-                            value={chatInputText}
-                            onInput={this.handleChatInputChange}
-                          />
-                          <Button
-                            title="Send"
-                            name="send-message"
-                            onClick={this.handleSendMessage}
-                          />
+                      )}
+
+                      {!selectedTicketId ? (
+                        <div className="chat-empty">
+                          Выберите тикет для просмотра
                         </div>
-                      </>
-                    )}
+                      ) : (
+                        <>
+                          <div className="chat-messages">
+                            {chatMessages.map((msg: any) => (
+                              <div
+                                key={msg.id}
+                                className={`message ${msg.is_admin ? "admin" : "user"}`}
+                              >
+                                <div className="message-bubble">
+                                  <div className="message-text">{msg.text}</div>
+                                </div>
+                              </div>
+                            ))}
+                          </div>
+                          <div className="chat-input-area">
+                            <Textarea
+                              type="text"
+                              className="chat-input"
+                              placeholder="Введите сообщение..."
+                              value={chatInputText}
+                              onInput={this.handleChatInputChange}
+                            />
+                            <Button
+                              title="Send"
+                              name="send-message"
+                              onClick={this.handleSendMessage}
+                            />
+                          </div>
+                        </>
+                      )}
+                    </div>
                   </div>
                 </div>
               </div>

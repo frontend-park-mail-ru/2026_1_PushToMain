@@ -595,6 +595,18 @@ class SendMail extends Death13.Component {
                 ))}
               </HorizontalScroller>
             ) : null}
+            {isMobile && (
+              <div className="anonymous-radio">
+                <input
+                  id="anon-toggle"
+                  type="checkbox"
+                  name="radio-anonymous"
+                  checked={this.state.isAnonymous}
+                  onChange={this.handleSetAnonymous}
+                />
+                <label htmlFor="anon-toggle">{this.t("toggle_anon")}</label>
+              </div>
+            )}
             <Textarea
               readonly={false}
               value={body}

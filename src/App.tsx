@@ -133,6 +133,7 @@ export const AppStorage = {
       email_required: "Поле почты обязательно",
       email_invalid_format: "Почта должна быть вида *@e-smail.ru",
       email_max_length: "Почта должна быть не более 40 символов",
+      email_exists: "Этот адрес уже занят, попробуйте другой",
       password_required: "Поле пароля обязательно",
       password_min_length: "Пароль должен быть не менее 8 символов",
       password_max_length: "Пароль должен быть не более 20 символов",
@@ -719,7 +720,7 @@ class App {
         paramName: "folderId",
       },
       {
-        pattern: /^\/profile\/(personal|password|interface|folders)$/,
+        pattern: /^\/profile\/(personal|password|interface|folders|support)$/,
         component: ProfilePage,
         paramName: "tab",
       },
