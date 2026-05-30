@@ -10,7 +10,7 @@ class Textarea extends Death13.Component {
 
   render() {
     return (
-      <div>
+      <div className="text-area">
         <span className="input__title">{this.props.input_title}</span>
         <textarea
           className={this.props.className}

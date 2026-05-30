@@ -1,5 +1,6 @@
 importScripts("/precache-assets.js");
-const CACHE_NAME = "app-v2";
+
+const CACHE_NAME = "app-v3";
 let lastShownEmailId = null;
 
 self.addEventListener("install", (event) => {
@@ -16,24 +17,15 @@ self.addEventListener("activate", (event) => {
     (async () => {
       const keys = await caches.keys();
       await Promise.all(
-        keys.map((key) => {
-          if (key !== CACHE_NAME) {
-            return caches.delete(key);
-          }
-        }),
+        keys
+          .filter((key) => key !== CACHE_NAME)
+          .map((key) => caches.delete(key)),
       );
 
-      const cache = await caches.open(CACHE_NAME);
-      const cachedIndex = await cache.match("/index.html");
-      if (!cachedIndex) {
-        try {
-          const response = await fetch("/index.html");
-          await cache.put("/index.html", response);
-        } catch (e) {
-          console.log("Could not repopulate cache");
-        }
-      }
       await self.clients.claim();
+
+      const allClients = await self.clients.matchAll({ type: "window" });
+      allClients.forEach((client) => client.navigate(client.url));
     })(),
   );
 });
@@ -59,7 +51,10 @@ self.addEventListener("fetch", (event) => {
     event.respondWith(
       (async () => {
         try {
-          const network = await fetch(req);
+          // bypass the browser’s HTTP cache completely
+          const network = await fetch(req, { cache: "no-cache" });
+          // update the cache so the offline fallback is fresh
+          const cache = await caches.open(CACHE_NAME);
           cache.put("/index.html", network.clone());
           return network;
         } catch {
@@ -72,44 +67,33 @@ self.addEventListener("fetch", (event) => {
     return;
   }
 
-  if (req.destination === "font" || req.destination === "image") {
-    event.respondWith(
-      (async () => {
-        const cache = await caches.open(CACHE_NAME);
-        const cached = await cache.match(req);
-
-        if (cached) return cached;
-
-        const network = await fetch(req);
-        cache.put(req, network.clone());
-        return network;
-      })(),
-    );
-    return;
-  }
-
   event.respondWith(
     (async () => {
-      const cache = await caches.open(CACHE_NAME);
-      const cached = await cache.match(req);
+      try {
+        const networkResponse = await fetch(req);
+        if (networkResponse.status === 200) {
+          const cache = await caches.open(CACHE_NAME);
+          cache.put(req, networkResponse.clone());
+        }
+        return networkResponse;
+      } catch (networkError) {
+        const cached = await caches.match(req);
+        if (cached) return cached;
 
-      const networkPromise = fetch(req)
-        .then((res) => {
-          if (res && res.status === 200) {
-            cache.put(req, res.clone());
-          }
-          return res;
-        })
-        .catch(() => null);
-
-      return cached || networkPromise;
+        if (req.destination === "image") {
+          return new Response(
+            '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1 1"/>',
+            { headers: { "Content-Type": "image/svg+xml" } },
+          );
+        }
+        return new Response("Resource not available offline", { status: 503 });
+      }
     })(),
   );
 });
 
 self.addEventListener("message", (event) => {
   const { title, body, icon, url, emailId } = event.data;
-
   if (emailId && lastShownEmailId === emailId) return;
   if (emailId) lastShownEmailId = emailId;
 
@@ -137,10 +121,7 @@ self.addEventListener("notificationclick", (event) => {
           return client.focus();
         }
       }
-
-      if (clients.openWindow) {
-        return clients.openWindow(urlToOpen);
-      }
+      if (clients.openWindow) return clients.openWindow(urlToOpen);
     }),
   );
 });

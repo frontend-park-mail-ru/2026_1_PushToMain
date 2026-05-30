@@ -105,9 +105,12 @@ class ReadMail extends Death13.Component {
       type: "reply",
       to: email.senderEmail || "",
       subject: `Re: ${email.header}`,
-      body: `\n\n${this.t("original_email")}\n${this.t("from")} ${email.senderEmail || ""}\n${this.t("date")} ${email.createdAt ? new Date(email.createdAt).toLocaleString("ru-RU") : this.t("unknown")} \n\n${email.body}`,
+      body: `\n\n${this.t("original_email")}\n${this.t("from")} ${email.is_anonymous ? this.t("anonymous") : email.senderEmail || ""}\n${this.t("date")} ${email.createdAt ? new Date(email.createdAt).toLocaleString("ru-RU") : this.t("unknown")} \n\n${email.body}`,
       originalEmail: email,
     });
+
+    AppStorage.replyingToAnonymous = email.is_anonymous;
+    AppStorage.emailReplyingId = email.id;
 
     window.app.handleRoute("/send");
   };

@@ -26,6 +26,10 @@
             width: 100%;
             overflow: hidden;
 
+            &[name="anonymous"] {
+                margin: 10px 15px;
+            }
+
             &[data-input-name="theme"] {
                 border-top: 1px solid var(--secondary-text);
                 border-bottom: 1px solid var(--secondary-text);
@@ -51,6 +55,19 @@
                 overflow-x: auto !important;
                 white-space: nowrap;
             }
+        }
+
+        .text-area {
+            flex: 1;
+            min-height: 0; 
+            display: flex; 
+            flex-direction: column;
+        }
+        
+        .text-area textarea {
+            flex: 1;
+            min-height: 0;
+            height: 100%;
         }
     }
 
@@ -220,6 +237,10 @@
                     &:hover {
                         border-color: var(--accent);
                     }
+                }
+
+                label {
+                    color: var(--tertiary-text);
                 }
             }
 

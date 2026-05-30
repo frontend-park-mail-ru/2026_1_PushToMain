@@ -17,15 +17,20 @@
         color: var(--tertiary-text);
     }
 
-    img {
+    .arrow-down {
         width: 16px;
         height: 16px;
         transition: transform 0.3s;
+        background-color: var(--tertiary-text);
+        mask-image: url("/assets/svg/ArrowDown.svg");
+        mask-size: contain;
+        mask-repeat: no-repeat;
+        mask-position: center;
     }
 
     .select__toggle {
         &.open {
-            img {
+            .arrow-down {
                 transform: rotate(180deg);
             }
         }

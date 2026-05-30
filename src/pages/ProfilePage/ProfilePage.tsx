@@ -13,6 +13,7 @@ import ProfileModal from "../../widgets/ProfileModal/ProfileModal";
 import SelectDate from "../../components/SelectDate/SelectDate";
 import FolderChange from "../../widgets/FolderChange/FolderChange";
 import NotificationManager from "../../widgets/NotificationManager/NotificationManager";
+import SupportModal from "../../widgets/SupportModal/SupportModal";
 import { requestNotificationPermission } from "../../utils/emailNotifications";
 
 class ProfilePage extends Death13.Component {
@@ -124,6 +125,7 @@ class ProfilePage extends Death13.Component {
         birthDay: birthDay,
         birthMonth: birthMonth,
         birthYear: birthYear,
+        anonymousEnabled: data.accept_anonymous,
       });
       this.setState({
         name: data.name || "",
@@ -228,6 +230,7 @@ class ProfilePage extends Death13.Component {
           birthDay: birthDay,
           birthMonth: birthMonth,
           birthYear: birthYear,
+          anonymousEnabled: AppStorage.anonymousEnabled,
         });
         this.setState({
           is_male: this.state.is_male,
@@ -516,6 +519,7 @@ class ProfilePage extends Death13.Component {
 
     return (
       <div className="profile-page" onClick={() => this.handleCloseModal()}>
+        <SupportModal />
         <aside className={`sidebar ${isMobile ? "open" : ""}`}>
           <Sidebar
             isProfile={1}

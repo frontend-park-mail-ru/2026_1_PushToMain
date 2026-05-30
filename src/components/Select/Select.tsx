@@ -129,7 +129,7 @@ class Select extends Death13.Component {
           {selectedLabel || this.props.placeholder}
         </div>
         <div className={`select__toggle ${isOpen ? "open" : ""}`}>
-          <img src="../../assets/svg/ArrowDown.svg" />
+          <div className="arrow-down" src="../../assets/svg/ArrowDown.svg" />
         </div>
         {isOpen && (
           <div className="select__dropdown shadow">

@@ -54,6 +54,8 @@ export const AppStorage = {
   language: "ru" as "ru" | "en",
   notificationsEnabled: false as boolean,
   anonymousEnabled: true as boolean,
+  replyingToAnonymous: false as boolean,
+  emailReplyingId: -1,
 
   translations: {
     ru: {
@@ -481,6 +483,7 @@ export const AppStorage = {
       birthDay: string;
       birthMonth: string;
       birthYear: string;
+      anonymousEnabled: boolean;
     } | null,
   ) {
     if (!data) {
@@ -496,6 +499,7 @@ export const AppStorage = {
     this.birthDay = data.birthDay;
     this.birthMonth = data.birthMonth;
     this.birthYear = data.birthYear;
+    this.anonymousEnabled = data.anonymousEnabled;
     this._lastUpdate = Date.now();
 
     this._saveToStorage();
@@ -651,6 +655,7 @@ export const AppStorage = {
   clearMailActionData() {
     this.replyData = null;
     this.forwardData = null;
+    this.replyingToAnonymous = false;
   },
 
   getAvatarUrl() {

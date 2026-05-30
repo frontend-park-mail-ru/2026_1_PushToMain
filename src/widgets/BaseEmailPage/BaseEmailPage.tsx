@@ -471,10 +471,8 @@ class BaseEmailPage extends Death13.Component {
               />
             </div>
             <div className="top-right-menu">
-              <Button
-                svg="../../assets/svg/Support.svg"
-                size={28}
-                name="support"
+              <div
+                className="support"
                 help="Поддержка"
                 onClick={this.handleSupport}
               />
