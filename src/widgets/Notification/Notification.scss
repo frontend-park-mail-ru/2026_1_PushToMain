@@ -5,7 +5,8 @@
     position: fixed;
     right: 3%;
     z-index: 100;
-    height: 50px;
+    height: auto;
+    padding: 15px;
     width: 400px;
     border-radius: 20px;
     animation: popUp 0.2s ease-out;
@@ -23,8 +24,15 @@
         background-color: var(--input-error-background);
     }
 
+    &__title {
+        align-self: center;
+        max-width: 90%;
+        text-align: center;
+    }
+
     @media (max-width: 768px) {
         width: 80%;
+        height: 50px;
         right: auto;
         left: 50%;
         top: 10%;

@@ -21,6 +21,7 @@ class ProfileModal extends Death13.Component {
       birthMonth: "",
       birthYear: "",
       is_male: false,
+      anonymousEnabled: false,
     });
     AppStorage.setUnReadCount(0);
     AppStorage.setFolders([]);

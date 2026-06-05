@@ -14,6 +14,8 @@ import SpamPage from "./pages/SpamPage/SpamPage";
 import DraftsPage from "./pages/DraftsPage/DraftsPage";
 import FolderPage from "./pages/FolderPage/FolderPage";
 import AllEmailsPage from "./pages/AllEmailsPage/AllEmailsPage";
+import SupportPage from "./pages/SupportPage/SupportPage";
+import AdminSupportPage from "./pages/AdminSupportPage/AdminSupportPage";
 import NotificationManager from "./widgets/NotificationManager/NotificationManager";
 import { initEmailNotifications } from "./utils/emailNotifications";
 import "./utils/OfflineManager";
@@ -50,7 +52,10 @@ export const AppStorage = {
   forwardData: null as any,
   theme: "light" as "light" | "dark",
   language: "ru" as "ru" | "en",
-  notificationsEnabled: true as boolean,
+  notificationsEnabled: false as boolean,
+  anonymousEnabled: true as boolean,
+  replyingToAnonymous: false as boolean,
+  emailReplyingId: -1,
 
   translations: {
     ru: {
@@ -88,6 +93,7 @@ export const AppStorage = {
       unstarred: "Убрать избранное",
       move_to_folder: "Переместить в папку",
       yesterday: "Вчера",
+      anonymous: "<Аноним>",
 
       //ReadPage
       //SendPage
@@ -110,6 +116,7 @@ export const AppStorage = {
       confirm_save_draft: "Вы хотите сохранить черновик?",
       delete_draft: "Удалить",
       save_draft: "Сохранить",
+      toggle_anon: "Отправить как аноним",
 
       //File sizes
       zero_bytes: "0 байт",
@@ -126,6 +133,7 @@ export const AppStorage = {
       email_required: "Поле почты обязательно",
       email_invalid_format: "Почта должна быть вида *@e-smail.ru",
       email_max_length: "Почта должна быть не более 40 символов",
+      email_exists: "Этот адрес уже занят, попробуйте другой",
       password_required: "Поле пароля обязательно",
       password_min_length: "Пароль должен быть не менее 8 символов",
       password_max_length: "Пароль должен быть не более 20 символов",
@@ -144,6 +152,8 @@ export const AppStorage = {
       auth_error: "Ошибка авторизации, попробуйте еще раз",
       file_too_large: "Файл слишком большой (макс. 25 Мбайт)",
       file_upload_error: "Не удалось загрузить файл",
+      anonymous_forbidden:
+        "Кто-то из получателей запретил анонимные письма себе",
 
       // ProfilePage
       theme: "Тема",
@@ -173,6 +183,11 @@ export const AppStorage = {
       from_unknown: "неизвестного",
       notifications_enabled: "Уведомления в браузере включены",
       notifications_disabled: "Уведомления в браузере выключены",
+      anonymous_enabled: "Анонимные письма разрешены",
+      anonymous_disabled: "Анонимные письма запрещены",
+      enable_anonymous: "Анонимные письма",
+      allow: "Разрешить",
+      not_allow: "Запретить",
 
       //Sidebar
       new_letter: "Новое письмо",
@@ -191,6 +206,7 @@ export const AppStorage = {
       security: "Безопасность",
       interface: "Интерфейс",
       folder: "Папки",
+      support: "Поддержка",
 
       //Navigation
       back_to_settings: "Настройки",
@@ -233,6 +249,7 @@ export const AppStorage = {
       move_to_folder: "Move to folder",
       favorite: "Starred",
       yesterday: "Yesterday",
+      anonymous: "<Anonymous>",
 
       //ReadPage
       //SendPage
@@ -255,6 +272,7 @@ export const AppStorage = {
       confirm_save_draft: "Save current draft?",
       delete_draft: "Delete",
       save_draft: "Save",
+      toggle_anon: "Send as anonymous",
 
       //File sizes
       zero_bytes: "0 Bytes",
@@ -291,6 +309,8 @@ export const AppStorage = {
       auth_error: "Could not authorize the user, please log in",
       file_too_large: "File is too large (25 MB max)",
       file_upload_error: "Could not upload file, try again later",
+      anonymous_forbidden:
+        "One of the recipients does not accept anonymous emails",
 
       // ProfilePage
       theme: "Theme",
@@ -320,6 +340,11 @@ export const AppStorage = {
       from_unknown: "unknown account",
       notifications_enabled: "Browser notifications enabled",
       notifications_disabled: "Browser notifications disabled",
+      anonymous_enabled: "Anonymous emails enabled",
+      anonymous_disabled: "Anonymous emails disabled",
+      enable_anonymous: "Anonymous emails",
+      allow: "Allow",
+      not_allow: "Not allow",
 
       //Sidebar
       new_letter: "New mail",
@@ -338,6 +363,7 @@ export const AppStorage = {
       security: "Security",
       interface: "Interface",
       folder: "Folders",
+      support: "Support",
 
       //Navigation
       back_to_settings: "Settings",
@@ -458,6 +484,7 @@ export const AppStorage = {
       birthDay: string;
       birthMonth: string;
       birthYear: string;
+      anonymousEnabled: boolean;
     } | null,
   ) {
     if (!data) {
@@ -473,6 +500,7 @@ export const AppStorage = {
     this.birthDay = data.birthDay;
     this.birthMonth = data.birthMonth;
     this.birthYear = data.birthYear;
+    this.anonymousEnabled = data.anonymousEnabled;
     this._lastUpdate = Date.now();
 
     this._saveToStorage();
@@ -628,6 +656,7 @@ export const AppStorage = {
   clearMailActionData() {
     this.replyData = null;
     this.forwardData = null;
+    this.replyingToAnonymous = false;
   },
 
   getAvatarUrl() {
@@ -639,6 +668,12 @@ export const AppStorage = {
 
   setNotificationsEnabled(value: boolean) {
     this.notificationsEnabled = value;
+    this._saveToStorage();
+    this._notify();
+  },
+
+  setAnonymousEnabled(value: boolean) {
+    this.anonymousEnabled = value;
     this._saveToStorage();
     this._notify();
   },
@@ -669,6 +704,8 @@ class App {
       "/spam": SpamPage,
       "/favorite": FavoritePage,
       "/all-emails": AllEmailsPage,
+      "/admin-support": AdminSupportPage,
+      "/support": SupportPage,
     };
 
     this.dynamicRoutes = [
@@ -683,7 +720,7 @@ class App {
         paramName: "folderId",
       },
       {
-        pattern: /^\/profile\/(personal|password|interface|folders)$/,
+        pattern: /^\/profile\/(personal|password|interface|folders|support)$/,
         component: ProfilePage,
         paramName: "tab",
       },

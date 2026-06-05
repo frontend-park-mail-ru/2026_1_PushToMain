@@ -80,6 +80,7 @@ class ReadEmailPage extends Death13.Component {
         senderName: data.sender_name,
         senderSurname: data.sender_surname,
         receiverList: data.receiver_list,
+        is_anonymous: data.is_anonymous,
       },
     });
   }

@@ -38,6 +38,7 @@
     }
 
     .search-bar {
+        visibility: hidden;
         display: flex;
         align-items: center;
         background-color: var(--color-sidebar-background);
@@ -47,6 +48,11 @@
         font-size: 18px;
         min-width: 0;
         margin-right: 50px;
+        pointer-events: none;
+
+        @media (max-width: 768px) {
+            visibility: visible;
+        }
 
         .input-container {
             gap: 0;
@@ -94,6 +100,17 @@
         display: flex;
         align-items: center;
         gap: 20px;
+
+        .support {
+            cursor: pointer;
+            width: 32px;
+            height: 32px;
+            background-color: var(--tertiary-text);
+            mask-image: url("/assets/svg/Support.svg");
+            mask-size: contain;
+            mask-repeat: no-repeat;
+            mask-position: center;
+        }
 
         button {
             display: flex;

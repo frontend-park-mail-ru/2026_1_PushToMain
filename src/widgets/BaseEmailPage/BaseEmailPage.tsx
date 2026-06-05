@@ -8,6 +8,7 @@ import { getProfile } from "../../api/ApiAuth";
 import { readEmail, seacrhEmail, unReadEmail } from "../../api/ApiEmail";
 import "./BaseEmailPage.scss";
 import ProfileModal from "../../widgets/ProfileModal/ProfileModal";
+import SupportModal from "../../widgets/SupportModal/SupportModal";
 import { AppStorage } from "../../App";
 import { addEmailsInFolder, deleteEmailsFromFolder } from "../../api/ApiFolder";
 import { deleteDraft } from "../../api/ApiDraft";
@@ -391,6 +392,13 @@ class BaseEmailPage extends Death13.Component {
     }
   };
 
+  handleSupport = () => {
+    const supportModal = document.querySelector(".support-modal");
+    if (supportModal) {
+      supportModal.classList.toggle("show");
+    }
+  };
+
   render() {
     const { emails, isModalOpen, total } = this.state;
     const {
@@ -414,6 +422,7 @@ class BaseEmailPage extends Death13.Component {
 
     return (
       <div className="main-page" onClick={() => this.handleCloseModal()}>
+        <SupportModal />
         <div className="sidebar-overlay" onClick={this.toggleSidebar}></div>
         <aside className="sidebar">
           <Sidebar
@@ -462,6 +471,11 @@ class BaseEmailPage extends Death13.Component {
               />
             </div>
             <div className="top-right-menu">
+              <div
+                className="support"
+                help="Поддержка"
+                onClick={this.handleSupport}
+              />
               <Button
                 svg={AppStorage.getAvatarUrl()}
                 name="avatar"
@@ -532,6 +546,7 @@ class BaseEmailPage extends Death13.Component {
                             ? email.is_starred
                             : false
                         }
+                        isAnonymous={email.is_anonymous}
                         pageMain={currentView === "inbox"}
                         currentView={currentView}
                         onClick={() => this.handleReadMail(email)}

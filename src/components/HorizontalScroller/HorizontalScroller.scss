@@ -1,0 +1,25 @@
+.horizontal-scroller {
+    display: flex;
+    overflow: hidden;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+}
+
+.horizontal-scroller::-webkit-scrollbar {
+    display: none;
+}
+
+.horizontal-scroller.has-overflow-fade {
+    -webkit-mask-image: linear-gradient(
+        to right,
+        black 0%,
+        black calc(100% - 30px),
+        transparent 100%
+    );
+    mask-image: linear-gradient(
+        to right,
+        black 0%,
+        black calc(100% - 30px),
+        transparent 100%
+    );
+}

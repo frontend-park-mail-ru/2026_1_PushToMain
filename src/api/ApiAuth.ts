@@ -242,6 +242,7 @@ export async function changeProfile(data: {
   name: string;
   surname: string;
   is_male: string;
+  accept_anonymous: boolean;
 }) {
   try {
     const response = await fetch(`${USER_URL}/profile/change`, {

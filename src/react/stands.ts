@@ -1,4 +1,5 @@
 let nextUnitOfWork: Fiber | null = null;
+let pendingWipRoot: Fiber | null = null;
 let wipRoot: Fiber | null = null;
 let currentRoot: Fiber | null = null;
 let deletions: Fiber[] = [];
@@ -214,7 +215,7 @@ function reconcileChildren(wipFiber: Fiber, elements: any[]) {
     } else if (element) {
       newFiber = {
         type: element.type,
-        props: element.props,
+        props: elementProps,
         parent: wipFiber,
         dom: null,
         alternate: undefined,
@@ -315,7 +316,6 @@ function performUnitOfWork(fiber: Fiber): Fiber | null {
 
 function commitRoot() {
   deletions.forEach(commitWork);
-
   if (wipRoot?.child) {
     commitWork(wipRoot.child);
   }
@@ -323,6 +323,14 @@ function commitRoot() {
   currentRoot = wipRoot;
   wipRoot = null;
   deletions = [];
+
+  if (pendingWipRoot) {
+    wipRoot = pendingWipRoot;
+    pendingWipRoot = null;
+    nextUnitOfWork = wipRoot;
+    deletions = [];
+    requestIdleCallback(workLoop);
+  }
 }
 
 function commitWork(fiber: Fiber | null | undefined) {
@@ -380,6 +388,13 @@ function commitWork(fiber: Fiber | null | undefined) {
 }
 
 function commitDeletion(fiber: Fiber, domParent: Node) {
+  if (
+    fiber.instance &&
+    typeof fiber.instance.componentWillUnmount === "function"
+  ) {
+    fiber.instance.componentWillUnmount();
+  }
+
   if (fiber.dom) {
     if (domParent.contains(fiber.dom)) {
       domParent.removeChild(fiber.dom);
@@ -387,6 +402,7 @@ function commitDeletion(fiber: Fiber, domParent: Node) {
   } else if (fiber.child) {
     commitDeletion(fiber.child, domParent);
   }
+
   if (fiber.sibling) {
     commitDeletion(fiber.sibling, domParent);
   }
@@ -517,7 +533,7 @@ class Component {
     let rootFiber: Fiber = fiber;
     while (rootFiber.parent) rootFiber = rootFiber.parent;
 
-    wipRoot = {
+    const newRoot = {
       dom: rootFiber.dom,
       props: rootFiber.props,
       alternate: currentRoot,
@@ -525,6 +541,7 @@ class Component {
       parent: null,
     } as Fiber;
 
+    wipRoot = newRoot;
     deletions = [];
     nextUnitOfWork = wipRoot;
     requestIdleCallback(workLoop);

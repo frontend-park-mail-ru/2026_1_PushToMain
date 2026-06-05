@@ -2,6 +2,7 @@ import Death13 from "@react/stands";
 import "./ReadMail.scss";
 import Input from "../../components/Input/Input";
 import Textarea from "../../components/Textarea/Textarea";
+import HorizontalScroller from "../../components/HorizontalScroller/HorizontalScroller";
 import MailTools from "../MailTools/MailTools";
 import { AppStorage } from "../../App";
 import { URLMINIO } from "../../api/config";
@@ -104,9 +105,12 @@ class ReadMail extends Death13.Component {
       type: "reply",
       to: email.senderEmail || "",
       subject: `Re: ${email.header}`,
-      body: `\n\n${this.t("original_email")}\n${this.t("from")} ${email.senderEmail || ""}\n${this.t("date")} ${email.createdAt ? new Date(email.createdAt).toLocaleString("ru-RU") : this.t("unknown")} \n\n${email.body}`,
+      body: `\n\n${this.t("original_email")}\n${this.t("from")} ${email.is_anonymous ? this.t("anonymous") : email.senderEmail || ""}\n${this.t("date")} ${email.createdAt ? new Date(email.createdAt).toLocaleString("ru-RU") : this.t("unknown")} \n\n${email.body}`,
       originalEmail: email,
     });
+
+    AppStorage.replyingToAnonymous = email.is_anonymous;
+    AppStorage.emailReplyingId = email.id;
 
     window.app.handleRoute("/send");
   };
@@ -178,7 +182,11 @@ class ReadMail extends Death13.Component {
               </div>
               <div className="sender-data">
                 <div className="sender__email">
-                  <span>{email.senderEmail}</span>
+                  <span>
+                    {email.is_anonymous
+                      ? this.t("anonymous")
+                      : email.senderEmail}
+                  </span>
                   {isMobile ? (
                     <div className="email-send-time">
                       {formatTime(email.createdAt)}
@@ -223,7 +231,7 @@ class ReadMail extends Death13.Component {
           <div
             className={`attachments-section${hasAttachments ? "" : " hidden"}`}
           >
-            <div className="attachments-list">
+            <HorizontalScroller className="attachments-list">
               {attachments.map((att: any) => (
                 <div className="attachment-item">
                   <div
@@ -246,7 +254,7 @@ class ReadMail extends Death13.Component {
                   ></div>
                 </div>
               ))}
-            </div>
+            </HorizontalScroller>
           </div>
           <Textarea readonly={true} value={email.body} />
         </form>
