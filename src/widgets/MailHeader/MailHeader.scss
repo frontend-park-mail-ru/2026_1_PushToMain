@@ -28,6 +28,19 @@
             }
         }
 
+        @keyframes spin {
+            from {
+                transform: rotate(0deg);
+            }
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        [name="refresh"].refreshing::before {
+            animation: spin 1s linear infinite;
+        }
+
         .select-all-container {
             display: flex;
             gap: 5px;
@@ -37,6 +50,12 @@
             display: flex;
             padding-right: 15px;
             position: relative;
+
+            &.hide-separator {
+                &::after {
+                    display: none;
+                }
+            }
 
             &::after {
                 content: "";
@@ -56,12 +75,27 @@
                     width: 24px;
                     height: 24px;
                     background-color: var(--tertiary-text);
+                    mask-image: url("/assets/svg/StarOn.svg");
+                    mask-size: contain;
+                    mask-repeat: no-repeat;
+                    mask-position: center;
+                }
+            }
+
+            [name="unfavorite"] {
+                &::before {
+                    content: "";
+                    display: inline-block;
+                    width: 24px;
+                    height: 24px;
+                    background-color: var(--tertiary-text);
                     mask-image: url("/assets/svg/SidebarFavorites.svg");
                     mask-size: contain;
                     mask-repeat: no-repeat;
                     mask-position: center;
                 }
             }
+
             [name="spam"] {
                 &::before {
                     content: "";
@@ -115,6 +149,20 @@
                     height: 24px;
                     background-color: var(--tertiary-text);
                     mask-image: url("/assets/svg/ReadAllMail.svg");
+                    mask-size: contain;
+                    mask-repeat: no-repeat;
+                    mask-position: center;
+                }
+            }
+
+            [name="unread-all-mail"] {
+                &::before {
+                    content: "";
+                    display: inline-block;
+                    width: 24px;
+                    height: 24px;
+                    background-color: var(--tertiary-text);
+                    mask-image: url("/assets/svg/Mail.svg");
                     mask-size: contain;
                     mask-repeat: no-repeat;
                     mask-position: center;
@@ -265,10 +313,6 @@
                 width: 20px;
                 height: 20px;
                 background-color: var(--secondary-text);
-                mask-image: url("/assets/svg/ArrowLeft.svg");
-                mask-size: contain;
-                mask-repeat: no-repeat;
-                mask-position: center;
             }
         }
     }
@@ -297,5 +341,89 @@
         mask-size: contain;
         mask-repeat: no-repeat;
         mask-position: center;
+    }
+}
+
+@media (max-width: 768px) {
+    .mail-header {
+        &__left-container {
+            [name="refresh"] {
+                &::before {
+                    width: 36px;
+                    height: 36px;
+                }
+            }
+
+            .select-all__tools-left {
+                display: flex;
+                padding-right: 15px;
+                position: relative;
+
+                &::after {
+                    content: "";
+                    position: absolute;
+                    right: 0;
+                    top: 50%;
+                    transform: translateY(-50%);
+                    width: 2px;
+                    height: 40%;
+                    background-color: var(--muted-text);
+                }
+
+                [name="favorites"] {
+                    &::before {
+                        content: "";
+                        display: inline-block;
+                        width: 32px;
+                        height: 32px;
+                        background-color: var(--tertiary-text);
+                        mask-image: url("/assets/svg/SidebarFavorites.svg");
+                        mask-size: contain;
+                        mask-repeat: no-repeat;
+                        mask-position: center;
+                    }
+                }
+                [name="spam"] {
+                    &::before {
+                        content: "";
+                        display: inline-block;
+                        width: 32px;
+                        height: 32px;
+                        background-color: var(--tertiary-text);
+                        mask-image: url("/assets/svg/Spam.svg");
+                        mask-size: contain;
+                        mask-repeat: no-repeat;
+                        mask-position: center;
+                    }
+                }
+                [name="trash"] {
+                    &::before {
+                        content: "";
+                        display: inline-block;
+                        width: 32px;
+                        height: 32px;
+                        background-color: var(--tertiary-text);
+                        mask-image: url("/assets/svg/Trash.svg");
+                        mask-size: contain;
+                        mask-repeat: no-repeat;
+                        mask-position: center;
+                    }
+                }
+
+                [name="move-to-inbox"] {
+                    &::before {
+                        content: "";
+                        display: inline-block;
+                        width: 32px;
+                        height: 32px;
+                        background-color: var(--tertiary-text);
+                        mask-image: url("/assets/svg/Inbox.svg");
+                        mask-size: contain;
+                        mask-repeat: no-repeat;
+                        mask-position: center;
+                    }
+                }
+            }
+        }
     }
 }

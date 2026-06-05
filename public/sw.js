@@ -1,12 +1,7 @@
-const CACHE_NAME = "app-v1";
-const APP_SHELL = [
-  "/",
-  "/index.html",
-  "8c1cbe877c7fb2a26df6.ttf",
-  "eab2686c0c146e017020.ttf",
-  "public/assets/svg/Logo.svg",
-  "public/assets/svg/favicon.svg",
-];
+importScripts("/precache-assets.js");
+
+const CACHE_NAME = "app-v3";
+let lastShownEmailId = null;
 
 self.addEventListener("install", (event) => {
   self.skipWaiting();
@@ -22,13 +17,15 @@ self.addEventListener("activate", (event) => {
     (async () => {
       const keys = await caches.keys();
       await Promise.all(
-        keys.map((key) => {
-          if (key !== CACHE_NAME) {
-            return caches.delete(key);
-          }
-        }),
+        keys
+          .filter((key) => key !== CACHE_NAME)
+          .map((key) => caches.delete(key)),
       );
+
       await self.clients.claim();
+
+      const allClients = await self.clients.matchAll({ type: "window" });
+      allClients.forEach((client) => client.navigate(client.url));
     })(),
   );
 });
@@ -53,32 +50,18 @@ self.addEventListener("fetch", (event) => {
   if (req.mode === "navigate") {
     event.respondWith(
       (async () => {
-        const cache = await caches.open(CACHE_NAME);
-        const cached = await cache.match("/index.html");
-
         try {
-          const network = await fetch(req);
+          // bypass the browser’s HTTP cache completely
+          const network = await fetch(req, { cache: "no-cache" });
+          // update the cache so the offline fallback is fresh
+          const cache = await caches.open(CACHE_NAME);
           cache.put("/index.html", network.clone());
           return network;
         } catch {
-          return cached;
+          const cache = await caches.open(CACHE_NAME);
+          const cached = await cache.match("/index.html");
+          return cached || new Response("Offline", { status: 503 });
         }
-      })(),
-    );
-    return;
-  }
-
-  if (req.destination === "font" || req.destination === "image") {
-    event.respondWith(
-      (async () => {
-        const cache = await caches.open(CACHE_NAME);
-        const cached = await cache.match(req);
-
-        if (cached) return cached;
-
-        const network = await fetch(req);
-        cache.put(req, network.clone());
-        return network;
       })(),
     );
     return;
@@ -86,19 +69,59 @@ self.addEventListener("fetch", (event) => {
 
   event.respondWith(
     (async () => {
-      const cache = await caches.open(CACHE_NAME);
-      const cached = await cache.match(req);
+      try {
+        const networkResponse = await fetch(req);
+        if (networkResponse.status === 200) {
+          const cache = await caches.open(CACHE_NAME);
+          cache.put(req, networkResponse.clone());
+        }
+        return networkResponse;
+      } catch (networkError) {
+        const cached = await caches.match(req);
+        if (cached) return cached;
 
-      const networkPromise = fetch(req)
-        .then((res) => {
-          if (res && res.status === 200) {
-            cache.put(req, res.clone());
-          }
-          return res;
-        })
-        .catch(() => null);
-
-      return cached || networkPromise;
+        if (req.destination === "image") {
+          return new Response(
+            '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1 1"/>',
+            { headers: { "Content-Type": "image/svg+xml" } },
+          );
+        }
+        return new Response("Resource not available offline", { status: 503 });
+      }
     })(),
+  );
+});
+
+self.addEventListener("message", (event) => {
+  const { title, body, icon, url, emailId } = event.data;
+  if (emailId && lastShownEmailId === emailId) return;
+  if (emailId) lastShownEmailId = emailId;
+
+  const options = {
+    body: body || "You have a new email",
+    icon: icon || "/images/email-icon.png",
+    badge: "/images/badge-icon.png",
+    data: { url: url || "/" },
+    requireInteraction: false,
+  };
+
+  event.waitUntil(
+    self.registration.showNotification(title || "New Email", options),
+  );
+});
+
+self.addEventListener("notificationclick", (event) => {
+  event.notification.close();
+  const urlToOpen = event.notification.data?.url || "/";
+
+  event.waitUntil(
+    clients.matchAll({ type: "window" }).then((windowClients) => {
+      for (const client of windowClients) {
+        if (client.url === urlToOpen && "focus" in client) {
+          return client.focus();
+        }
+      }
+      if (clients.openWindow) return clients.openWindow(urlToOpen);
+    }),
   );
 });

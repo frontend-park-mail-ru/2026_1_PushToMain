@@ -1,12 +1,12 @@
 .mail {
     display: flex;
     flex-direction: row;
-    align-items: center;
-    border: solid 2px var(--mail-stroke);
+    justify-content: space-between;
+    box-shadow: 0 0 0 2px var(--mail-stroke);
     border-radius: 20px;
-    padding: 10px 20px;
+    padding: 10px 22.5px;
     gap: 15px;
-    max-height: 60px;
+    max-height: 75px;
     font-size: 20px;
     margin-top: 5px;
     cursor: pointer;
@@ -16,20 +16,36 @@
     color: var(--tertiary-text);
 
     &.read {
-        background-color: var(--mail-read-background);
+        background-color: var(--input-success-background);
         color: var(--secondary-text);
-        border: none;
+        opacity: 0.75;
+        box-shadow: none;
         text-decoration: none;
     }
 
-    &.mail.selected {
+    &.selected {
+        box-shadow: 0 0 0 2px var(--accent);
+        opacity: 1;
         background-color: #9cc8fe;
         color: var(--tertiary-text);
+
+        .checkbox-container .favorites-checkbox {
+            background-color: black;
+        }
     }
 
     &:hover {
         background-color: var(--color-main-background);
         transition: 100ms;
+
+        .mail-date {
+            &__text {
+                display: none !important;
+            }
+            &__actions {
+                display: flex !important;
+            }
+        }
     }
 
     .checkbox-container {
@@ -44,32 +60,21 @@
         }
     }
 
-    .select-checkbox{
+    input[name="select-checkbox"] {
         appearance: none;
         -webkit-appearance: none;
         width: 24px;
         height: 24px;
         margin: 0;
-        background-color: var(--accent-2);
-        mask-image: url("/assets/svg/CheckboxOff.svg");
-        mask-size: contain;
-        mask-position: center;
-        mask-repeat: no-repeat;
+        background-image: url("/assets/svg/CheckboxOff.svg");
+        background-size: contain;
+        background-position: center;
+        background-repeat: no-repeat;
         cursor: pointer;
-    }
 
-    .select-checkbox.selected  {
-        appearance: none;
-        -webkit-appearance: none;
-        width: 24px;
-        height: 24px;
-        margin: 0;
-        background-color: var(--accent-2);
-        mask-image: url("/assets/svg/CheckboxOn.svg");
-        mask-size: contain;
-        mask-position: center;
-        mask-repeat: no-repeat;
-        cursor: pointer;
+        &:checked {
+            background-image: url("/assets/svg/CheckboxOn.svg");
+        }
     }
 
     input[name="favorites-checkbox"] {
@@ -81,17 +86,18 @@
         background-color: var(--tertiary-text);
         mask-image: url("/assets/svg/StarOff.svg");
         mask-size: contain;
-        mask-position: center;
         mask-repeat: no-repeat;
+        mask-position: center;
         cursor: pointer;
 
         &:checked {
-            background-color: var(--accent-2);
             mask-image: url("/assets/svg/StarOn.svg");
+            background-color: var(--button-background);
         }
     }
 
     .read-checkbox.read {
+        display: none;
         padding: 0;
         -webkit-appearance: none;
         -moz-appearance: none;
@@ -115,48 +121,127 @@
         -moz-appearance: none;
         appearance: none;
         border-radius: 50%;
-        width: 9px;
-        height: 9px;
-        border: 5px solid var(--accent-2);
+        width: 8px;
+        height: 8px;
+        border: 4px solid var(--accent-2);
         cursor: pointer;
         transition: all 0.2s ease;
-        margin-left: 20px;
+        margin: 0 10px 0 5px;
     }
 
-    .sent-checkbox {
-        margin-left: 10px;
-    }
     .mail-content {
         display: flex;
+        height: 100%;
+        width: 100%;
         align-items: center;
-        justify-content: space-between;
-        gap: 20px;
-        min-width: 0;
-        flex: 1;
 
-        .mail-theme {
-            width: 220px;
-            overflow: hidden;
-            white-space: nowrap;
-            text-overflow: ellipsis;
-            font-weight: 500;
-            flex-shrink: 0;
+        .mail-content__right-part-mobile {
+            display: none;
         }
 
-        .mail-title {
+        .mail-content__left-part {
+            height: 100%;
+            display: flex;
+            justify-self: center;
+            gap: 0;
+            min-width: 0;
             flex: 1;
-            overflow: hidden;
-            white-space: nowrap;
-            text-overflow: ellipsis;
-        }
+            font-size: 16px;
 
-        .mail-date {
-            width: 120px;
-            text-align: right;
-            overflow: hidden;
-            white-space: nowrap;
-            text-overflow: ellipsis;
-            flex-shrink: 0;
+            .mail-sender {
+                align-self: center;
+                justify-self: flex-start;
+                padding-right: 20px;
+                width: fit-content;
+                min-width: 200px;
+                max-width: 30%;
+                font-weight: 500;
+                overflow: hidden;
+                white-space: nowrap;
+                text-overflow: ellipsis;
+
+                @media (max-width: 1000px) {
+                    min-width: 150px;
+                }
+            }
+
+            .unread-dot {
+                width: 8px;
+                height: 8px;
+                background-color: var(--accent);
+                border-radius: 50%;
+                vertical-align: middle;
+                margin-right: 8px;
+                display: inline-block;
+
+                &.mail-read {
+                    display: none;
+                }
+            }
+
+            .mail-text-content {
+                display: grid;
+                width: 100%;
+                grid-template-columns: minmax(0, 85%) 15%;
+                align-items: center;
+                justify-content: space-between;
+
+                @media (max-width: 1000px) {
+                    grid-template-columns: minmax(0, 65%) 35%;
+                }
+
+                .mail-theme {
+                    width: 100%;
+                    overflow: hidden;
+                    white-space: nowrap;
+                    text-overflow: ellipsis;
+                    font-weight: 500;
+                    flex-shrink: 0;
+
+                    .mail-title {
+                        flex: 1;
+                        width: 25vw;
+                        overflow: hidden;
+                        white-space: nowrap;
+                        text-overflow: ellipsis;
+                        opacity: 0.5;
+                    }
+                }
+
+                .mail-date {
+                    justify-self: end;
+                    width: auto;
+                    text-align: right;
+                    white-space: nowrap;
+                    margin-left: auto;
+                    flex-shrink: 0;
+                    min-width: fit-content;
+
+                    &__actions {
+                        display: none;
+                        gap: 10px;
+                        align-items: center;
+
+                        .action-btn {
+                            margin: 0;
+                            height: 20px;
+                            width: 20px;
+                            background-color: var(--tertiary-text);
+                            mask-size: contain;
+                            mask-position: center;
+                            mask-repeat: no-repeat;
+                            cursor: pointer;
+
+                            &--read {
+                                mask-image: url("/assets/svg/ReadAllMail.svg");
+                            }
+                            &--trash {
+                                mask-image: url("/assets/svg/Trash.svg");
+                            }
+                        }
+                    }
+                }
+            }
         }
     }
 }
@@ -164,4 +249,93 @@
 .mail.selected {
     background-color: var(--color-main-background);
     border-color: var(--accent);
+}
+
+@media (max-width: 768px) {
+    .mail {
+        align-items: center;
+        border: none;
+
+        input[name="favorites-checkbox"] {
+            display: none;
+        }
+
+        .checkbox-container {
+            .select-checkbox {
+                height: 24px;
+                width: 24px;
+            }
+        }
+
+        .mail-content {
+            display: grid;
+            width: 100%;
+            grid-template-columns: 1fr 60px;
+
+            .mail-content__left-part {
+                display: flex;
+                flex-direction: column;
+                align-items: flex-start;
+                justify-content: flex-start;
+                justify-self: flex-start;
+                gap: 3px;
+                width: 100%;
+
+                .mail-sender {
+                    width: 100%;
+                    font-size: 15px;
+                    font-weight: 700;
+                    align-self: flex-start;
+                }
+
+                .mail-text-content {
+                    display: flex;
+                    flex-direction: column;
+                    align-items: flex-start;
+                    gap: 3px;
+                    width: 100%;
+
+                    .mail-theme {
+                        font-size: 12px;
+                        font-weight: 500;
+                    }
+
+                    .mail-title {
+                        flex: 1;
+                        width: 25vw;
+                        overflow: hidden;
+                        white-space: nowrap;
+                        text-overflow: ellipsis;
+                        font-size: 12px;
+                        width: 100%;
+                    }
+
+                    .mail-date {
+                        display: none;
+                    }
+                }
+            }
+
+            .mail-content__right-part-mobile {
+                display: flex;
+                flex-direction: column;
+                justify-content: right;
+                align-items: end;
+                gap: 10px;
+                width: 100%;
+                padding-top: 3px;
+
+                .mail-date-mobile {
+                    font-size: 12px;
+                    text-align: right;
+                    justify-self: flex-start;
+                }
+
+                .favorites-checkbox-mobile {
+                    display: flex;
+                    align-self: flex-end;
+                }
+            }
+        }
+    }
 }

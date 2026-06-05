@@ -1,12 +1,14 @@
 .folder-container {
-    width: 350px;
+    max-width: 350px;
     .folder-list {
+        max-width: 100%;
         .folder-item {
             display: flex;
             align-items: center;
             gap: 15px;
-            padding: 10px 20px;
+            padding: 10px 0px;
             font-size: 16px;
+            max-width: 100%;
 
             .folder-delete-btn {
                 width: 24px;
@@ -18,23 +20,41 @@
             }
 
             .folder-name {
-                display: flex;
+                display: block;
                 align-items: center;
-                justify-content: center;
+                justify-content: flex-start;
                 gap: 15px;
-                padding: 10px 20px;
+                padding: 10px 0px;
                 font-size: 16px;
+                min-width: 0;
+                max-width: 100%;
+                overflow: hidden;
+                white-space: nowrap;
+                text-overflow: ellipsis;
+                flex: 1;
 
                 &::before {
                     content: "";
                     display: inline-block;
+                    vertical-align: middle;
                     width: 32px;
+                    min-width: 32px;
                     height: 32px;
+                    margin-right: 10px;
                     background-color: var(--tertiary-text);
                     mask-image: url("/assets/svg/Folder.svg");
                     mask-size: contain;
                     mask-repeat: no-repeat;
                     mask-position: center;
+                }
+
+                span {
+                    display: inline-block;
+                    max-width: calc(100% - 47px); // 32px icon + 15px gap
+                    overflow: hidden;
+                    white-space: nowrap;
+                    text-overflow: ellipsis;
+                    vertical-align: middle;
                 }
             }
 
@@ -50,8 +70,9 @@
                     font-size: 16px;
                     background-color: transparent;
                     color: var(--tertiary-text);
+                    outline: none;
+                    border: none;
                 }
-
 
                 &::before {
                     content: "";
@@ -93,6 +114,8 @@
             display: flex;
             align-items: center;
             gap: 15px;
+            padding-left: 38px;
+            padding-top: 20px;
 
             &::before {
                 content: "";

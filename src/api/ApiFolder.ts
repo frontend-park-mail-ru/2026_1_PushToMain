@@ -1,14 +1,13 @@
-import { URL } from "./config";
-import { getCSRFToken } from "./ApiAuth";
+import { FOLDER_URL } from "./config";
+import { AppStorage } from "../App";
 
 export async function createNewFolder(folderName: string = "Новая папка") {
     try {
-        const csrfToken = await getCSRFToken();
-        const response = await fetch(`${URL}/folder/new`, {
+        const response = await fetch(`${FOLDER_URL}/folder/new`, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
-                "X-CSRF-Token": csrfToken,
+                "X-CSRF-Token": AppStorage.csrfToken,
             },
             credentials: "include",
             body: JSON.stringify({
@@ -27,12 +26,11 @@ export async function createNewFolder(folderName: string = "Новая папк�
 
 export async function changeFolderName(folderID: number, folderName: string) {
     try {
-        const csrfToken = await getCSRFToken();
-        const response = await fetch(`${URL}/folder/${folderID}/name`, {
+        const response = await fetch(`${FOLDER_URL}/folder/${folderID}/name`, {
             method: "PUT",
             headers: {
                 "Content-Type": "application/json",
-                "X-CSRF-Token": csrfToken,
+                "X-CSRF-Token": AppStorage.csrfToken,
             },
             credentials: "include",
             body: JSON.stringify({ folder_name: folderName }),
@@ -45,7 +43,7 @@ export async function changeFolderName(folderID: number, folderName: string) {
 
 export async function getEmailsFromFolder(offset: number, folderID: number) {
     try {
-        const response = await fetch(`${URL}/folder/${folderID}?limit=50&offset=${offset}`, {
+        const response = await fetch(`${FOLDER_URL}/folder/${folderID}?limit=50&offset=${offset}`, {
             method: "GET",
             headers: {
                 "Content-Type": "application/json",
@@ -64,12 +62,11 @@ export async function getEmailsFromFolder(offset: number, folderID: number) {
 
 export async function deleteEmailsFromFolder(folderID: number, emailID: number[]) {
     try {
-        const csrfToken = await getCSRFToken();
-        const response = await fetch(`${URL}/folder/${folderID}/delete`, {
+        const response = await fetch(`${FOLDER_URL}/folder/${folderID}/delete`, {
             method: "DELETE",
             headers: {
                 "Content-Type": "application/json",
-                "X-CSRF-Token": csrfToken,
+                "X-CSRF-Token": AppStorage.csrfToken,
             },
             credentials: "include",
             body: JSON.stringify({ emails_id: emailID }),
@@ -86,12 +83,11 @@ export async function deleteEmailsFromFolder(folderID: number, emailID: number[]
 
 export async function addEmailsInFolder(folderID: number, emailID: number[]) {
     try {
-        const csrfToken = await getCSRFToken();
-        const response = await fetch(`${URL}/folder/${folderID}/add`, {
+        const response = await fetch(`${FOLDER_URL}/folder/${folderID}/add`, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
-                "X-CSRF-Token": csrfToken,
+                "X-CSRF-Token": AppStorage.csrfToken,
             },
             credentials: "include",
             body: JSON.stringify({ emails_id: emailID }),
@@ -108,12 +104,11 @@ export async function addEmailsInFolder(folderID: number, emailID: number[]) {
 
 export async function deleteFolder(folderID: number) {
     try {
-        const csrfToken = await getCSRFToken();
-        const response = await fetch(`${URL}/folder/${folderID}`, {
+        const response = await fetch(`${FOLDER_URL}/folder/${folderID}`, {
             method: "DELETE",
             headers: {
                 "Content-Type": "application/json",
-                "X-CSRF-Token": csrfToken,
+                "X-CSRF-Token": AppStorage.csrfToken,
             },
             credentials: "include",
         });

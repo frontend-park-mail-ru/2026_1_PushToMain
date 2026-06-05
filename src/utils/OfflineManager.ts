@@ -1,4 +1,5 @@
 import "../styles/OfflineBanner.scss";
+import { AppStorage } from "../App";
 
 class OfflineManager {
   private banner: HTMLDivElement | null = null;
@@ -26,7 +27,7 @@ class OfflineManager {
 
     this.banner = document.createElement("div");
     this.banner.className = "offline-banner";
-    this.banner.textContent = "Кажется, пропало соединение с интернетом...";
+    this.banner.textContent = AppStorage.t("no_internet");
     document.body.insertBefore(this.banner, document.body.firstChild);
   }
 

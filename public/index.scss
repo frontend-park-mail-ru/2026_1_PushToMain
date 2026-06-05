@@ -2,13 +2,15 @@
 
 @font-face {
     font-family: "Ubuntu Sans";
-    src: url("/public/assets/font/Ubuntu_Sans/UbuntuSans-VariableFont_wdth,wght.ttf") format("truetype");
+    src: url("/public/assets/font/Ubuntu_Sans/UbuntuSans-VariableFont_wdth,wght.ttf")
+        format("truetype");
     font-style: normal;
 }
 
 @font-face {
     font-family: "Shantell Sans";
-    src: url("/public/assets/font/Shantell_Sans/ShantellSans-VariableFont_BNCE\,INFM\,SPAC\,wght.ttf") format("truetype");
+    src: url("/public/assets/font/Shantell_Sans/ShantellSans-VariableFont_BNCE\,INFM\,SPAC\,wght.ttf")
+        format("truetype");
     font-style: normal;
 }
 
@@ -20,9 +22,17 @@
 }
 
 html,
-body,
+body {
+    margin: 0;
+    padding: 0;
+    height: 100%; 
+    overflow: hidden;
+    overscroll-behavior: none;
+}
+
 #root {
-    height: 100vh;
+    height: 100%;
+    overflow: hidden;
 }
 
 :root {
@@ -67,7 +77,12 @@ body,
         --muted-text: #888888;
 
         /* Background */
-        --background-gradient: linear-gradient(#1a1a2e, #16213e, #0f3460, #1a1a2e);
+        --background-gradient: linear-gradient(
+            #1a1a2e,
+            #16213e,
+            #0f3460,
+            #1a1a2e
+        );
         --color-main-background: #1e1e2f;
         --color-sidebar-background: #252538;
 
@@ -80,7 +95,7 @@ body,
         --input-background: #2a2a3d;
         --input-success-background: #1a2a4a;
         --input-stroke: #404060;
-        
+
         --mail-stroke: rgba(80, 80, 120, 0.4);
         --mail-read-background: rgba(30, 40, 60, 0.5);
     }

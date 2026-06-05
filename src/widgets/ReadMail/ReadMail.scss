@@ -12,7 +12,6 @@
         .read-header {
             display: flex;
             align-items: center;
-            gap: 30px;
             padding: 10px;
 
             .sender-avatar {
@@ -28,6 +27,7 @@
                 display: flex;
                 flex-direction: column;
                 gap: 10px;
+                margin-left: 20px;
 
                 .sender__email {
                     font-weight: bold;
@@ -36,9 +36,11 @@
                 }
                 .recivers__emails {
                     display: flex;
+                    flex-direction: row;
+                    align-items: center;
                     gap: 10px;
                     color: var(--tertiary-text);
-                    
+
                     .input-form {
                         display: flex;
                         flex-direction: row;
@@ -54,6 +56,33 @@
                             padding: 0 10px;
                             height: 24px;
                         }
+                    }
+                }
+            }
+
+            .top-right-bar {
+                display: flex;
+                align-items: center;
+                margin-left: auto;
+                align-self: flex-start;
+                gap: 20px;
+
+                .email-send-time {
+                    color: var(--secondary-text);
+                }
+
+                .close-button {
+                    margin: 5px;
+                    height: 16px;
+                    width: 16px;
+                    background-color: var(--tertiary-text);
+                    mask-image: url(/assets/svg/Close.svg);
+                    mask-size: contain;
+                    mask-position: center;
+                    cursor: pointer;
+
+                    @media (max-width: 768px) {
+                        display: none;
                     }
                 }
             }
@@ -82,6 +111,130 @@
                 font-size: 16px;
             }
         }
+
+        .attachments-section {
+            display: flex;
+
+            &.hidden {
+                display: none;
+            }
+
+            .attachments-list {
+                display: flex;
+                flex-direction: row;
+                gap: 5px;
+                margin: 10px;
+                overflow: hidden;
+                overflow-x: auto;
+                scrollbar-width: none;
+
+                .attachment-item {
+                    display: flex;
+                    flex-direction: row;
+                    align-items: center;
+                    gap: 8px;
+                    background-color: var(--color-main-background);
+                    border-radius: 20px;
+                    padding: 10px 20px;
+                    flex-shrink: 0;
+                    height: fit-content;
+
+                    .attachment-icon {
+                        height: 28px;
+                        width: 28px;
+                        background-color: var(--tertiary-text);
+                        mask-image: url(/assets/svg/File.svg);
+                        mask-size: contain;
+                        mask-position: center;
+
+                        &.document {
+                            mask-image: url(/assets/svg/Draft.svg);
+                        }
+
+                        &.pdf {
+                            mask-image: url(/assets/svg/Pdf.svg);
+                        }
+
+                        &.code {
+                            mask-image: url(/assets/svg/Code.svg);
+                        }
+
+                        &.image {
+                            mask-image: url(/assets/svg/Image.svg);
+                        }
+
+                        &.video {
+                            mask-image: url(/assets/svg/Video.svg);
+                        }
+
+                        &.spreadsheet {
+                            mask-image: url(/assets/svg/Spreadsheet.svg);
+                        }
+
+                        &.archive {
+                            mask-image: url(/assets/svg/Zip.svg);
+                        }
+
+                        &.music {
+                            mask-image: url(/assets/svg/Music.svg);
+                        }
+
+                        &.presentation {
+                            mask-image: url(/assets/svg/Presentation.svg);
+                        }
+
+                        &.executable {
+                            mask-image: url(/assets/svg/Settings.svg);
+                        }
+                    }
+
+                    .attachment-info {
+                        display: flex;
+                        flex-direction: column;
+                        gap: 3px;
+
+                        .attachment-name {
+                            color: var(--tertiary-text);
+                            font-weight: 500;
+                        }
+
+                        .attachment-size {
+                            color: var(--muted-text);
+                        }
+                    }
+
+                    .attachment-download-btn {
+                        height: 24px;
+                        width: 24px;
+                        margin-left: 15px;
+                        cursor: pointer;
+                        background-color: var(--tertiary-text);
+                        mask-image: url(/assets/svg/Download.svg);
+                        mask-size: contain;
+                        mask-position: center;
+                    }
+                }
+            }
+        }
+
+        .text-area {
+            flex: 1;
+            min-height: 0;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .text-area textarea {
+            flex: 1;
+            min-height: 0;
+            height: 100%;
+        }
+    }
+
+    .tools-container {
+        .tools-right {
+            gap: 0;
+        }
     }
 
     .read-actions {
@@ -93,6 +246,108 @@
 
         button {
             height: 40px;
+        }
+    }
+}
+
+@media (max-width: 768px) {
+    .read-mail {
+        padding: 5px;
+
+        .read-mail__header-mobile {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 5px;
+
+            .back-button {
+                margin: 0 10px;
+                padding: 0;
+                height: 28px;
+                width: 28px;
+                background-color: var(--tertiary-text);
+                mask-image: url(/assets/svg/ArrowLeft.svg);
+                mask-size: contain;
+                mask-position: center;
+            }
+
+            .tools-container {
+                .tools-left {
+                    padding-right: 0;
+                }
+                .tools-left::after {
+                    display: none;
+                }
+                .tools-right {
+                    display: none;
+                }
+            }
+        }
+
+        .read-form {
+            .read-inputs {
+                .read-header {
+                    gap: 10px;
+
+                    .sender-data {
+                        width: 100%;
+                        font-size: 0.75rem;
+
+                        .sender__email {
+                            display: flex;
+                            flex-direction: row;
+                            width: 100%;
+                            font-size: 1rem;
+
+                            .email-send-time {
+                                margin-left: auto;
+                                color: var(--secondary-text);
+                                font-weight: 500;
+                                font-size: 0.75rem;
+                            }
+                        }
+                    }
+                }
+            }
+
+            textarea {
+                width: auto;
+            }
+        }
+
+        .tools-bottom-mobile {
+            display: flex;
+            justify-content: flex-end;
+            padding: 10px;
+            gap: 20px;
+
+            .reply,
+            .answer {
+                display: flex;
+                align-items: center;
+                background-color: transparent;
+                color: var(--tertiary-text);
+                height: 32px;
+                width: 32px;
+                font-size: 16px;
+                gap: 10px;
+                padding: 0;
+                background-color: var(--tertiary-text);
+                mask-size: contain;
+                mask-position: center;
+
+                &:hover {
+                    background-color: var(--color-main-background);
+                }
+            }
+
+            .reply {
+                mask-image: url(/assets/svg/Reply.svg);
+            }
+
+            .answer {
+                mask-image: url(/assets/svg/Answer.svg);
+            }
         }
     }
 }

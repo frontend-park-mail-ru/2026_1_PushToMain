@@ -3,6 +3,14 @@
     flex-direction: column;
     height: 100%;
 
+    .send-mail-header {
+        display: none;
+
+        .send-mail-header__text {
+            color: var(--tertiary-text);
+        }
+    }
+
     .send-form {
         display: flex;
         flex-direction: column;
@@ -18,6 +26,10 @@
             width: 100%;
             overflow: hidden;
 
+            &[name="anonymous"] {
+                margin: 10px 15px;
+            }
+
             &[data-input-name="theme"] {
                 border-top: 1px solid var(--secondary-text);
                 border-bottom: 1px solid var(--secondary-text);
@@ -28,6 +40,12 @@
                 width: 100%;
                 min-width: 0;
                 overflow: visible;
+
+                @media (max-width: 768px) {
+                    .email-input {
+                        margin: 0;
+                    }
+                }
             }
 
             input {
@@ -36,58 +54,187 @@
                 font-size: 16px;
                 overflow-x: auto !important;
                 white-space: nowrap;
-
-                &::placeholder {
-                    font-size: 16px;
-                }
             }
         }
 
-        .files-list{
-            .file-item{
-                color: var(--tertiary-text);
-                width: 300px;
-                border: 2px solid var(--tertiary-text);
-                padding: 10px 20px;
-                border-radius: 20px;
+        .text-area {
+            flex: 1;
+            min-height: 0;
+            display: flex;
+            flex-direction: column;
+        }
 
-                button {
-                    background-color: transparent;
-                    width: 24px;
-                    height: 24px;
+        .text-area textarea {
+            flex: 1;
+            min-height: 0;
+            height: 100%;
+        }
+
+        @media (max-width: 768px) {
+            .anonymous-radio {
+                display: flex;
+                flex-direction: row;
+                width: auto;
+                align-items: center;
+                padding: 15px;
+
+                [name="radio-anonymous"] {
                     padding: 0;
-                    margin-left: auto;
+                    -webkit-appearance: none;
+                    -moz-appearance: none;
+                    appearance: none;
+                    border-radius: 50%;
+                    width: 18px;
+                    height: 18px;
+                    border: 2px solid var(--accent-2);
+                    cursor: pointer;
+                    transition: all 0.2s ease;
+                    margin-right: 10px;
+
+                    &:checked {
+                        border: 6px solid var(--accent-2);
+                    }
+
+                    &:hover {
+                        border-color: var(--accent);
+                    }
                 }
+
+                label {
+                    color: var(--tertiary-text);
+                }
+            }
+        }
+    }
+
+    .files-list {
+        display: flex;
+        flex-direction: row;
+        gap: 5px;
+        padding: 10px;
+        overflow: hidden;
+        scrollbar-width: none;
+        overscroll-behavior: none;
+        scroll-behavior: auto;
+        height: 90px;
+
+        .file-item {
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            gap: 5px;
+            background-color: var(--color-main-background);
+            border-radius: 20px;
+            padding: 10px 20px;
+            flex-shrink: 0;
+            max-width: 400px;
+            height: fit-content;
+
+            .file-icon {
+                height: 28px;
+                width: 28px;
+                background-color: var(--tertiary-text);
+                mask-image: url(/assets/svg/File.svg);
+                mask-size: contain;
+                mask-position: center;
+
+                &.document {
+                    mask-image: url(/assets/svg/Draft.svg);
+                }
+
+                &.pdf {
+                    mask-image: url(/assets/svg/Pdf.svg);
+                }
+
+                &.code {
+                    mask-image: url(/assets/svg/Code.svg);
+                }
+
+                &.image {
+                    mask-image: url(/assets/svg/Image.svg);
+                }
+
+                &.video {
+                    mask-image: url(/assets/svg/Video.svg);
+                }
+
+                &.spreadsheet {
+                    mask-image: url(/assets/svg/Spreadsheet.svg);
+                }
+
+                &.archive {
+                    mask-image: url(/assets/svg/Zip.svg);
+                }
+
+                &.music {
+                    mask-image: url(/assets/svg/Music.svg);
+                }
+
+                &.presentation {
+                    mask-image: url(/assets/svg/Presentation.svg);
+                }
+
+                &.executable {
+                    mask-image: url(/assets/svg/Settings.svg);
+                }
+            }
+
+            .file-info {
+                display: flex;
+                flex-direction: column;
+
+                .file-name {
+                    color: var(--tertiary-text);
+                    font-weight: 500;
+                    max-width: 300px;
+                    overflow: hidden;
+                    white-space: nowrap;
+                    text-overflow: ellipsis;
+                }
+
+                .file-size {
+                    color: var(--muted-text);
+                }
+            }
+
+            .file-remove-btn {
+                height: 12px;
+                width: 12px;
+                margin-left: 15px;
+                cursor: pointer;
+                background-color: var(--tertiary-text);
+                mask-image: url(/assets/svg/Close.svg);
+                mask-size: contain;
+                mask-position: center;
             }
         }
     }
 
     .send-down {
         display: flex;
-        flex-direction: row;
-        align-items: center;
+        gap: auto;
 
         .send-tools {
-            width: 24px;
-            height: 24px;
-            label {
-                display: inline-block;
-                width: 24px;
-                height: 24px;
-                cursor: pointer;
-            }
-            [name="button-file"] {
+            margin-left: 15px;
+            display: flex;
+            align-items: center;
 
-                &::before {
-                    content: "";
-                    display: inline-block;
-                    width: 24px;
-                    height: 24px;
-                    background-color: var(--tertiary-text);
-                    mask-image: url("/assets/svg/Attachment.svg");
-                    mask-size: contain;
-                    mask-repeat: no-repeat;
-                    mask-position: center;
+            @media (max-width: 768px) {
+                margin-bottom: 15px;
+            }
+
+            .upload-attachments-button {
+                height: 36px;
+                width: 36px;
+                cursor: pointer;
+                background-color: var(--tertiary-text);
+                mask-image: url(/assets/svg/Attachment.svg);
+                mask-size: contain;
+                mask-position: center;
+
+                &:hover {
+                    background-color: var(--secondary-text);
+                    transition: background-color 0.15s ease-in-out;
                 }
             }
         }
@@ -99,13 +246,47 @@
             margin-left: auto;
             padding: 10px;
 
+            .anonymous-radio {
+                display: flex;
+                flex-direction: row;
+                width: auto;
+                align-items: center;
+                padding: 0 10px;
+
+                [name="radio-anonymous"] {
+                    padding: 0;
+                    -webkit-appearance: none;
+                    -moz-appearance: none;
+                    appearance: none;
+                    border-radius: 50%;
+                    width: 18px;
+                    height: 18px;
+                    border: 2px solid var(--accent-2);
+                    cursor: pointer;
+                    transition: all 0.2s ease;
+                    margin-right: 10px;
+
+                    &:checked {
+                        border: 6px solid var(--accent-2);
+                    }
+
+                    &:hover {
+                        border-color: var(--accent);
+                    }
+                }
+
+                label {
+                    color: var(--tertiary-text);
+                }
+            }
+
             button {
                 height: 40px;
 
                 &[name="save-mail"] {
                     display: flex;
                     align-items: center;
-                    background-color: var(--button-background-second);
+                    background-color: var(--color-main-background);
                     color: var(--tertiary-text);
 
                     &:hover {
@@ -113,6 +294,91 @@
                     }
                 }
             }
+
+            .sending-loader {
+                display: flex;
+                align-items: center;
+                gap: 10px;
+                padding: 8px 16px;
+
+                span {
+                    color: #666;
+                    font-size: 14px;
+                }
+            }
+
+            .spinner {
+                width: 24px;
+                height: 24px;
+                border: 3px solid var(--main-background);
+                border-top: 3px solid var(--accent-2);
+                border-radius: 50%;
+                animation: spin 0.8s linear infinite;
+            }
+
+            @keyframes spin {
+                0% {
+                    transform: rotate(0deg);
+                }
+                100% {
+                    transform: rotate(360deg);
+                }
+            }
+        }
+    }
+}
+
+@media (max-width: 768px) {
+    .send-mail {
+        .send-mail-mobile-buttons {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 15px 20px;
+
+            .close-button {
+                height: 22px;
+                width: 22px;
+                fill: black;
+                background-color: var(--tertiary-text);
+                mask-image: url(/assets/svg/Close.svg);
+                mask-size: contain;
+                mask-position: center;
+            }
+
+            .send-button {
+                height: 32px;
+                width: 32px;
+                background-color: var(--tertiary-text);
+                mask-image: url(/assets/svg/Sent.svg);
+                mask-size: contain;
+                mask-position: center;
+            }
+
+            .spinner {
+                width: 28px;
+                height: 28px;
+                border: 3px solid var(--main-background);
+                border-top: 3px solid var(--accent-2);
+                border-radius: 50%;
+                animation: spin 0.8s linear infinite;
+            }
+
+            @keyframes spin {
+                0% {
+                    transform: rotate(0deg);
+                }
+                100% {
+                    transform: rotate(360deg);
+                }
+            }
+        }
+
+        .send-mail-header {
+            display: block;
+            font-size: 1.3rem;
+            font-weight: 600;
+            padding: 10px 20px 0 20px;
         }
     }
 }

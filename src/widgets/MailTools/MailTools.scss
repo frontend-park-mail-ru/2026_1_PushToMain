@@ -7,27 +7,26 @@
         display: flex;
         flex-direction: row;
         gap: 15px;
+        align-items: center;
     }
 
     button {
+        position: relative;
         display: flex;
         align-items: center;
         justify-content: center;
         background-color: transparent;
         color: var(--tertiary-text);
-        height: 30px;
+        width: 48px;
+        height: 48px;
+        padding: 0;
         font-size: 16px;
-        gap: 10px;
-        padding: 21px 0;
+        border-radius: 50%;
+        border: none;
+        cursor: pointer;
 
         &:hover {
             background-color: var(--color-main-background);
-        }
-
-        img {
-            margin-left: 8px;
-            width: 24px;
-            height: 24px;
         }
     }
 
@@ -46,80 +45,71 @@
             background-color: var(--muted-text);
         }
 
-        button {
-            width: auto;
+        [name="favorite"]::before,
+        [name="unfavorite"]::before,
+        [name="spam"]::before,
+        [name="unspam"]::before,
+        [name="trash"]::before {
+            content: "";
+            position: absolute;
+            width: 24px;
+            height: 24px;
+            background-color: var(--tertiary-text);
+            mask-size: contain;
+            mask-repeat: no-repeat;
+            mask-position: center;
         }
-        [name="favorites"] {
-            &::before {
-                content: "";
-                display: inline-block;
-                width: 24px;
-                height: 24px;
-                background-color: var(--tertiary-text);
-                mask-image: url("/assets/svg/SidebarFavorites.svg");
-                mask-size: contain;
-                mask-repeat: no-repeat;
-                mask-position: center;
-            }
+
+        [name="favorite"]::before {
+            mask-image: url("/assets/svg/SidebarFavorites.svg");
         }
-        [name="spam"] {
-            &::before {
-                content: "";
-                display: inline-block;
-                width: 24px;
-                height: 24px;
-                background-color: var(--tertiary-text);
-                mask-image: url("/assets/svg/Spam.svg");
-                mask-size: contain;
-                mask-repeat: no-repeat;
-                mask-position: center;
-            }
+
+        [name="favorite"][data-active="true"]::before {
+            mask-image: url("/assets/svg/StarOn.svg");
         }
-        [name="trash"] {
-            &::before {
-                content: "";
-                display: inline-block;
-                width: 24px;
-                height: 24px;
-                background-color: var(--tertiary-text);
-                mask-image: url("/assets/svg/Trash.svg");
-                mask-size: contain;
-                mask-repeat: no-repeat;
-                mask-position: center;
-            }
+
+        [name="spam"]::before {
+            mask-image: url("/assets/svg/Spam.svg");
+        }
+        [name="trash"]::before {
+            mask-image: url("/assets/svg/Trash.svg");
         }
     }
 
     .tools-right {
         padding-left: 15px;
+
         button {
-            width: auto;
-        }
-        [name="answer"] {
-            &::before {
-                content: "";
-                display: inline-block;
-                width: 24px;
-                height: 24px;
-                background-color: var(--tertiary-text);
-                mask-image: url("/assets/svg/Answer.svg");
-                mask-size: contain;
-                mask-repeat: no-repeat;
-                mask-position: center;
+            width: 150px;
+            border-radius: 30px;
+
+            span {
+                margin-left: 10px;
             }
         }
-        [name="reply"] {
-            &::before {
-                content: "";
-                display: inline-block;
-                width: 24px;
-                height: 24px;
-                background-color: var(--tertiary-text);
-                mask-image: url("/assets/svg/Reply.svg");
-                mask-size: contain;
-                mask-repeat: no-repeat;
-                mask-position: center;
-            }
+
+        [name="answer"]::before,
+        [name="reply"]::before {
+            content: "";
+            margin-left: 5px;
+
+            display: block;
+            width: 24px;
+            height: 24px;
+            background-color: var(--tertiary-text);
+            mask-size: contain;
+            mask-repeat: no-repeat;
+            mask-position: center;
+        }
+        [name="answer"]::before {
+            margin-left: 10px;
+        }
+
+        [name="answer"]::before {
+            mask-image: url("/assets/svg/Answer.svg");
+        }
+        [name="reply"]::before {
+            mask-image: url("/assets/svg/Reply.svg");
         }
     }
 }

@@ -23,12 +23,17 @@ button {
     }
 
     img {
-        width: 20px;
-        height: 20px;
+        align-self: center;
     }
 
     .button-count {
         margin-left: auto;
         font-size: 14px;
+    }
+
+    span {
+        overflow: hidden;
+        white-space: nowrap;
+        text-overflow: ellipsis;
     }
 }

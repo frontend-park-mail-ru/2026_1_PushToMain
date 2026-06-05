@@ -4,52 +4,73 @@ import { AppStorage } from "../../App";
 import { uploadAvatar } from "../../api/ApiAuth";
 
 class UploadAvatar extends Death13.Component {
-    constructor(props: any) {
-        super(props);
-        this.handleImageChange = this.handleImageChange.bind(this);
-        this.state = {
-            localPreview: null,
-        };
-    }
+  state = {
+    localPreview: null,
+    isLoading: false,
+  };
 
-    handleImageChange = async (e: any) => {
-        const file = e.target.files?.[0];
-        if (!file) return;
+  constructor(props: any) {
+    super(props);
+    this.handleImageChange = this.handleImageChange.bind(this);
+  }
 
-        const reader = new FileReader();
-        reader.onload = (event: any) => {
-            this.setState({ localPreview: event.target.result });
-        };
-        reader.readAsDataURL(file);
+  handleImageChange = async (e: any) => {
+    this.setState({ isLoading: true });
+    const file = e.target.files?.[0];
+    if (!file) return;
 
-        const imagePath = await uploadAvatar(file);
-        if (imagePath) {
-            AppStorage.setImagePath(imagePath);
-            this.setState({ localPreview: null });
-
-            if (this.props.onAvatarUpdate) {
-                this.props.onAvatarUpdate();
-            }
-        }
+    const reader = new FileReader();
+    reader.onload = (event: any) => {
+      this.setState({ localPreview: event.target.result });
     };
+    reader.readAsDataURL(file);
 
-    t(key: string): string {
-        return AppStorage.t(key);
+    const imagePath = await uploadAvatar(file);
+    if (imagePath) {
+      AppStorage.setImagePath(imagePath);
+      this.setState({ localPreview: null });
+
+      if (this.props.onAvatarUpdate) {
+        this.props.onAvatarUpdate();
+      }
     }
 
-    render() {
-        const src = this.state.localPreview || this.props.image || AppStorage.getAvatarUrl() || "../../assets/svg/Avatar.svg";
+    this.setState({ isLoading: false });
+  };
 
-        return (
-            <div className="upload">
-                <div className="upload__preview">
-                    <img id="upload-image" src={src} alt="avatar" />
-                </div>
-                <input id="file-input" type="file" name="file" accept="image/*" hidden onChange={this.handleImageChange} />
-                <label for="file-input">{this.t("change_avatar")}</label>
+  t(key: string): string {
+    return AppStorage.t(key);
+  }
+
+  render() {
+    const src =
+      this.state.localPreview ||
+      this.props.image ||
+      AppStorage.getAvatarUrl() ||
+      "../../assets/svg/Avatar.svg";
+
+    return (
+      <div className="upload">
+        <div className="upload__preview">
+          <img id="upload-image" src={src} alt="avatar" />
+          {this.state.isLoading && (
+            <div className="upload__overlay">
+              <div className="upload__spinner"></div>
             </div>
-        );
-    }
+          )}
+        </div>
+        <input
+          id="file-input"
+          type="file"
+          name="file"
+          accept="image/*"
+          hidden
+          onChange={this.handleImageChange}
+        />
+        <label for="file-input">{this.t("change_avatar")}</label>
+      </div>
+    );
+  }
 }
 
 export default UploadAvatar;
